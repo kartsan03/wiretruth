@@ -1,0 +1,44 @@
+name: Grade dispute
+description: You think a cell's grade is wrong (maintainers especially welcome).
+title: "Grade dispute: <library> · <scenario> · <provider>"
+labels: ["grade-dispute", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for checking. Grades come from code in this repo, and we'd rather fix a wrong one quickly.
+        You'll get a response within 7 days.
+  - type: input
+    id: cell
+    attributes:
+      label: Cell link
+      description: The link to the cell page on the matrix.
+      placeholder: https://kartsan03.github.io/wiretruth/cells/<library>/<scenario>/<provider>.html
+    validations:
+      required: true
+  - type: dropdown
+    id: reason
+    attributes:
+      label: What do you think is wrong?
+      options:
+        - The shim doesn't call the library the idiomatic way
+        - The shim reads the wrong field, or misses where the library reports this
+        - The scenario's requirement is too strict or wrong
+        - The fixture isn't realistic for this provider
+        - The behavior is intended and documented
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What the library actually does, and links to docs or code if relevant.
+    validations:
+      required: true
+  - type: checkboxes
+    id: maintainer
+    attributes:
+      label: Relationship
+      options:
+        - label: I maintain this library
