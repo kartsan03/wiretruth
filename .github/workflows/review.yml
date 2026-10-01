@@ -6,7 +6,8 @@ name: Review
 # The maintainer can also start it from the Actions tab or with
 # `gh workflow run review.yml [--ref <branch>] -f number=<n> [-f command="/review max"]`, which is how changes to
 # this workflow get tested on a branch before they are merged. Such a run takes the workflow, the review criteria and
-# the base/ snapshot from that branch instead of main.
+# the base/ snapshot from that branch instead of main. It also has no inline-comment tool (the action adds it only for
+# pull request events), so every finding goes into the summary.
 #
 # issue_comment runs with repository secrets even for pull requests from forks. So all GitHub access happens
 # in the workflow's own steps, the pull request's code is checked out outside the repository's worktree and
@@ -212,6 +213,13 @@ jobs:
           CLAUDE_CODE_EFFORT_LEVEL: ${{ env.EFFORT }}
           CLAUDE_CODE_SUBAGENT_MODEL: ${{ env.REVIEW_MODEL }}
           CLAUDE_CODE_SUBAGENT_MODEL_FORCE: "1"
+          # Claude Code's own small background calls (such as the session title) use this model, not Haiku.
+          ANTHROPIC_DEFAULT_HAIKU_MODEL: ${{ env.REVIEW_MODEL }}
+          # Subagents run in the foreground, so their results are in before the summary. In the background the
+          # session ended with the reviewers still running.
+          CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: "1"
+          # Subagent messages go into the transcript too, so the model of every subagent turn can be checked.
+          CLAUDE_CODE_FORWARD_SUBAGENT_TEXT: "1"
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ github.token }}
@@ -221,8 +229,9 @@ jobs:
             --effort ${{ env.EFFORT }}
             --max-turns ${{ env.KIND == 'pr' && 100 || 50 }}
             --add-dir ${{ env.REVIEW_DIR }}
+            --tools "Read,Grep,Glob,Agent,ToolSearch"
             --allowedTools "Read,Grep,Glob,Agent,mcp__github_inline_comment__create_inline_comment"
-            --disallowedTools "Bash,Edit,Write,NotebookEdit,WebFetch,WebSearch,Skill,Workflow,CronCreate,CronDelete,CronList,EnterWorktree,ExitWorktree,SendMessage,ScheduleWakeup,TaskStop,ListAgents,ReportFindings"
+            --disallowedTools "Bash,Edit,Write,NotebookEdit,WebFetch,WebSearch"
           settings: >-
             {"permissions": {"blockReadsOutsideWorkingDirectories": true,
             "deny": ["Read(//proc/**)", "Read(//home/runner/work/_temp/**)", "Read(**/.git/**)",
@@ -238,10 +247,15 @@ jobs:
           summary="$RUNNER_TEMP/summary.md"
           jq -rs 'flatten | map(select(.type? == "result")) | last | .result // empty' "$EXECUTION_FILE" > "$summary"
           [ -s "$summary" ] || echo "The review finished without a summary." > "$summary"
+          # The footer names the models that were actually billed and the number of agents started.
+          models=$(jq -rs 'flatten | map(select(.type? == "result")) | last | .modelUsage // {} | keys | join(" + ")' \
+            "$EXECUTION_FILE")
+          agents=$(jq -rs '[.. | objects | select(.type? == "tool_use" and (.name? == "Agent" or .name? == "Task"))]
+            | length' "$EXECUTION_FILE")
           commit=""
           [ "$KIND" = pr ] && commit=", commit ${HEAD_SHA:0:7}"
-          printf '\n\n<sub>%s, effort %s%s · [run](%s)</sub>\n<!-- wiretruth-review %s %s -->\n' \
-            "$REVIEW_MODEL" "$EFFORT" "$commit" "$RUN_URL" "$KIND" "${HEAD_SHA:-}" >> "$summary"
+          printf '\n\n<sub>%s, effort %s, %s agents%s · [run](%s)</sub>\n<!-- wiretruth-review %s %s -->\n' \
+            "${models:-unknown model}" "$EFFORT" "$agents" "$commit" "$RUN_URL" "$KIND" "${HEAD_SHA:-}" >> "$summary"
           gh api "repos/$REPO/issues/$NUMBER/comments" -F body=@"$summary" > /dev/null
 
       - name: Report models and tools used
@@ -256,8 +270,12 @@ jobs:
           jq -rs 'flatten | map(select(.type? == "system" and .subtype? == "init")) | first | {model, permissionMode, tools}' \
             "$EXECUTION_FILE" || true
           echo "Result:"
-          jq -rs 'flatten | map(select(.type? == "result")) | last | {is_error, subtype, num_turns, modelUsage}' \
+          jq -rs 'flatten | map(select(.type? == "result")) | last | {is_error, subtype, num_turns, duration_ms,
+            models: (.modelUsage // {} | map_values({inputTokens, outputTokens, cacheReadInputTokens}))}' \
             "$EXECUTION_FILE" || true
+          echo "Agents started:"
+          jq -rs '.. | objects | select(.type? == "tool_use" and (.name? == "Agent" or .name? == "Task"))
+            | .input | {description, subagent_type, model}' -c "$EXECUTION_FILE" || true
           # On a failed run the last assistant message holds the error (for example an authentication or usage
           # limit message), which the action doesn't print.
           if [ "${{ steps.review.outcome }}" != success ]; then
