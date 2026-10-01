@@ -3,6 +3,10 @@ name: Review
 # The maintainer comments "/review" on a pull request or an issue, or "/review max" for maximum effort. On a
 # pull request from someone without write access, the comment must also name the head commit that was
 # checked, for example "/review 1a2b3c4". Every comment starts this workflow; the gate job ignores the rest.
+# The maintainer can also start it from the Actions tab or with
+# `gh workflow run review.yml [--ref <branch>] -f number=<n> [-f command="/review max"]`, which is how changes to
+# this workflow get tested on a branch before they are merged. Such a run takes the workflow, the review criteria and
+# the base/ snapshot from that branch instead of main.
 #
 # issue_comment runs with repository secrets even for pull requests from forks. So all GitHub access happens
 # in the workflow's own steps, the pull request's code is checked out outside the repository's worktree and
@@ -12,6 +16,17 @@ name: Review
 on:
   issue_comment:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      number:
+        description: Pull request or issue number
+        required: true
+        type: number
+      command:
+        description: The command, written as it would be commented
+        required: false
+        default: /review
+        type: string
 
 permissions: {}
 
@@ -22,16 +37,17 @@ defaults:
 env:
   REVIEW_MODEL: claude-sonnet-5-5
   REVIEW_DIR: /home/runner/review
-  NUMBER: ${{ github.event.issue.number }}
+  NUMBER: ${{ github.event.issue.number || inputs.number }}
   REPO: ${{ github.repository }}
   RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
 jobs:
   gate:
     if: >-
-      startsWith(github.event.comment.body, '/review') &&
+      (github.event_name == 'workflow_dispatch' && github.actor == 'kartsan03') ||
+      (startsWith(github.event.comment.body, '/review') &&
       github.event.comment.user.login == 'kartsan03' &&
-      github.event.issue.state == 'open'
+      github.event.issue.state == 'open')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -50,8 +66,7 @@ jobs:
         id: check
         env:
           GH_TOKEN: ${{ github.token }}
-          BODY: ${{ github.event.comment.body }}
-          IS_PR: ${{ github.event.issue.pull_request && 'true' || 'false' }}
+          BODY: ${{ github.event.comment.body || inputs.command }}
           COMMENT_ID: ${{ github.event.comment.id }}
         run: |
           say() { gh api "repos/$REPO/issues/$NUMBER/comments" -f body="$1" > /dev/null; }
@@ -61,8 +76,10 @@ jobs:
           effort=high
           [ -n "${BASH_REMATCH[1]}" ] && effort=max
           vetted=${BASH_REMATCH[3]}
+          issue=$(gh api "repos/$REPO/issues/$NUMBER")
+          [ "$(jq -r .state <<< "$issue")" = open ] || stop
           kind=issue head="" base="" outside=false
-          if [ "$IS_PR" = true ]; then
+          if [ "$(jq -r '.pull_request != null' <<< "$issue")" = true ]; then
             kind=pr
             pr=$(gh api "repos/$REPO/pulls/$NUMBER")
             head=$(jq -r .head.sha <<< "$pr")
@@ -80,7 +97,9 @@ jobs:
               stop
             fi
           fi
-          gh api -X POST "repos/$REPO/issues/comments/$COMMENT_ID/reactions" -f content=eyes > /dev/null || true
+          if [ -n "$COMMENT_ID" ]; then
+            gh api -X POST "repos/$REPO/issues/comments/$COMMENT_ID/reactions" -f content=eyes > /dev/null || true
+          fi
           {
             echo "ok=true"
             echo "kind=$kind"
@@ -96,7 +115,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ needs.gate.outputs.effort == 'max' && 60 || 40 }}
     concurrency:
-      group: review-${{ github.event.issue.number }}
+      group: review-${{ github.event.issue.number || inputs.number }}
       cancel-in-progress: false
     permissions:
       contents: read
@@ -203,7 +222,7 @@ jobs:
             --max-turns ${{ env.KIND == 'pr' && 100 || 50 }}
             --add-dir ${{ env.REVIEW_DIR }}
             --allowedTools "Read,Grep,Glob,Agent,mcp__github_inline_comment__create_inline_comment"
-            --disallowedTools "Bash,Edit,Write,NotebookEdit,WebFetch,WebSearch"
+            --disallowedTools "Bash,Edit,Write,NotebookEdit,WebFetch,WebSearch,Skill,Workflow,CronCreate,CronDelete,CronList,EnterWorktree,ExitWorktree,SendMessage,ScheduleWakeup,TaskStop,ListAgents,ReportFindings"
           settings: >-
             {"permissions": {"blockReadsOutsideWorkingDirectories": true,
             "deny": ["Read(//proc/**)", "Read(//home/runner/work/_temp/**)", "Read(**/.git/**)",
@@ -236,6 +255,16 @@ jobs:
           echo "Session settings:"
           jq -rs 'flatten | map(select(.type? == "system" and .subtype? == "init")) | first | {model, permissionMode, tools}' \
             "$EXECUTION_FILE" || true
+          echo "Result:"
+          jq -rs 'flatten | map(select(.type? == "result")) | last | {is_error, subtype, num_turns, modelUsage}' \
+            "$EXECUTION_FILE" || true
+          # On a failed run the last assistant message holds the error (for example an authentication or usage
+          # limit message), which the action doesn't print.
+          if [ "${{ steps.review.outcome }}" != success ]; then
+            echo "Last assistant message:"
+            jq -rs 'flatten | map(select(.type? == "assistant") | .message.content[]? | select(.type? == "text") | .text)
+              | last // "" | .[0:2000]' "$EXECUTION_FILE" || true
+          fi
 
       - name: Report a failure
         if: failure() || cancelled()
