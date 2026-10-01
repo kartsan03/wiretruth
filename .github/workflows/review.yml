@@ -1,0 +1,247 @@
+name: Review
+
+# The maintainer comments "/review" on a pull request or an issue, or "/review max" for maximum effort. On a
+# pull request from someone without write access, the comment must also name the head commit that was
+# checked, for example "/review 1a2b3c4". Every comment starts this workflow; the gate job ignores the rest.
+#
+# issue_comment runs with repository secrets even for pull requests from forks. So all GitHub access happens
+# in the workflow's own steps, the pull request's code is checked out outside the repository's worktree and
+# never run, and the reviewer can only read files and post inline comments. Its instructions come from
+# .github/review/ on main, never from the pull request.
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  REVIEW_MODEL: claude-sonnet-5-5
+  REVIEW_DIR: /home/runner/review
+  NUMBER: ${{ github.event.issue.number }}
+  REPO: ${{ github.repository }}
+  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+jobs:
+  gate:
+    if: >-
+      startsWith(github.event.comment.body, '/review') &&
+      github.event.comment.user.login == 'kartsan03' &&
+      github.event.issue.state == 'open'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    outputs:
+      ok: ${{ steps.check.outputs.ok }}
+      kind: ${{ steps.check.outputs.kind }}
+      effort: ${{ steps.check.outputs.effort }}
+      head: ${{ steps.check.outputs.head }}
+      base: ${{ steps.check.outputs.base }}
+      outside: ${{ steps.check.outputs.outside }}
+    steps:
+      - name: Check the command and the pull request
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BODY: ${{ github.event.comment.body }}
+          IS_PR: ${{ github.event.issue.pull_request && 'true' || 'false' }}
+          COMMENT_ID: ${{ github.event.comment.id }}
+        run: |
+          say() { gh api "repos/$REPO/issues/$NUMBER/comments" -f body="$1" > /dev/null; }
+          stop() { echo "ok=false" >> "$GITHUB_OUTPUT"; exit 0; }
+          command=$(printf '%s' "$BODY" | tr -d '\r' | sed -e 's/[[:space:]]*$//')
+          [[ "$command" =~ ^/review(\ max)?(\ ([0-9a-f]{7,40}))?$ ]] || stop
+          effort=high
+          [ -n "${BASH_REMATCH[1]}" ] && effort=max
+          vetted=${BASH_REMATCH[3]}
+          kind=issue head="" base="" outside=false
+          if [ "$IS_PR" = true ]; then
+            kind=pr
+            pr=$(gh api "repos/$REPO/pulls/$NUMBER")
+            head=$(jq -r .head.sha <<< "$pr")
+            base=$(jq -r .base.sha <<< "$pr")
+            author=$(jq -r .user.login <<< "$pr")
+            [[ "$head" =~ ^[0-9a-f]{40}$ && "$base" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::Unexpected SHAs"; exit 1; }
+            permission=$(gh api "repos/$REPO/collaborators/$author/permission" --jq .permission 2> /dev/null || echo none)
+            case "$permission" in write | admin) ;; *) outside=true ;; esac
+            if [ "$outside" = true ] && [ -z "$vetted" ]; then
+              say "This pull request comes from an outside contributor. After checking the diff, comment \`/review ${head:0:7}\` (or \`/review max ${head:0:7}\`) to review exactly that commit."
+              stop
+            fi
+            if [ -n "$vetted" ] && [[ "$head" != "$vetted"* ]]; then
+              say "The pull request's head is now ${head:0:7}, not $vetted. Check the new commits, then comment \`/review ${head:0:7}\`."
+              stop
+            fi
+          fi
+          gh api -X POST "repos/$REPO/issues/comments/$COMMENT_ID/reactions" -f content=eyes > /dev/null || true
+          {
+            echo "ok=true"
+            echo "kind=$kind"
+            echo "effort=$effort"
+            echo "head=$head"
+            echo "base=$base"
+            echo "outside=$outside"
+          } >> "$GITHUB_OUTPUT"
+
+  review:
+    needs: gate
+    if: needs.gate.outputs.ok == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ needs.gate.outputs.effort == 'max' && 60 || 40 }}
+    concurrency:
+      group: review-${{ github.event.issue.number }}
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      checks: read
+      issues: write
+      pull-requests: write
+    env:
+      KIND: ${{ needs.gate.outputs.kind }}
+      EFFORT: ${{ needs.gate.outputs.effort }}
+      HEAD_SHA: ${{ needs.gate.outputs.head }}
+      BASE_SHA: ${{ needs.gate.outputs.base }}
+      OUTSIDE: ${{ needs.gate.outputs.outside }}
+    steps:
+      - name: Check out main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check out the pull request
+        if: env.KIND == 'pr'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.gate.outputs.head }}
+          path: pr
+          persist-credentials: false
+
+      # Inputs live outside the worktree, which the action may switch to the pull request's head.
+      - name: Prepare review inputs
+        id: prep
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          refuse() { echo "$1" > "$RUNNER_TEMP/refusal"; echo "::error::$1"; exit 1; }
+          mkdir -p "$REVIEW_DIR"
+          if [ "$KIND" = pr ]; then
+            mv pr "$REVIEW_DIR/pr"
+            [ "$(git -C "$REVIEW_DIR/pr" rev-parse HEAD)" = "$HEAD_SHA" ] || refuse "Checked out the wrong commit."
+            # Outside contributors may not change agent configuration. Paths are NUL-separated, so no quoting.
+            if [ "$OUTSIDE" = true ]; then
+              config='(^|/)(CLAUDE\.md|CLAUDE\.local\.md|AGENTS\.md|\.mcp\.json)$|(^|/)\.claude/'
+              while IFS= read -r -d '' path; do
+                [ "$(git -C "$REVIEW_DIR/pr" rev-parse "HEAD:$path")" = "$(git rev-parse -q --verify "HEAD:$path" || true)" ] ||
+                  refuse "This pull request changes agent configuration files (CLAUDE.md, AGENTS.md, .claude/ or .mcp.json). Review it by hand."
+              done < <(git -C "$REVIEW_DIR/pr" ls-tree -r -z --name-only HEAD | { grep -zEi "$config" || true; })
+            fi
+            mkdir "$REVIEW_DIR/base"
+            git archive HEAD | tar -x -C "$REVIEW_DIR/base"
+            gh api "repos/$REPO/compare/$BASE_SHA...$HEAD_SHA" -H "Accept: application/vnd.github.diff" > "$REVIEW_DIR/pr.diff"
+            gh api --paginate "repos/$REPO/commits/$HEAD_SHA/check-runs?per_page=100" \
+              --jq '.check_runs[] | {name, status, conclusion, url: .html_url}' | jq -s . > "$REVIEW_DIR/checks.json"
+            gh pr view "$NUMBER" --repo "$REPO" \
+              --json title,body,author,baseRefName,headRefName,isCrossRepository,additions,deletions,commits \
+              > "$REVIEW_DIR/pr.json"
+            template=.github/review/pull-request.md
+          else
+            gh issue view "$NUMBER" --repo "$REPO" --json title,body,author,labels,milestone,comments \
+              > "$REVIEW_DIR/issue.json"
+            template=.github/review/issue.md
+          fi
+          delimiter="PROMPT_$(openssl rand -hex 16)"
+          {
+            echo "prompt<<$delimiter"
+            sed -e "s|{{NUMBER}}|$NUMBER|g" -e "s|{{HEAD_SHA}}|$HEAD_SHA|g" -e "s|{{DIR}}|$REVIEW_DIR|g" "$template"
+            echo "$delimiter"
+          } >> "$GITHUB_OUTPUT"
+
+      # The action fetches the live pull request head and may switch the worktree to it. This hook makes
+      # that fail unless it lands on the commit the gate resolved.
+      - name: Pin the worktree to the vetted commit
+        if: env.KIND == 'pr'
+        run: |
+          git checkout --quiet --detach
+          git for-each-ref --format='%(refname:short)' refs/heads/ | xargs -r git branch --quiet -D
+          hook="$(git rev-parse --git-path hooks)/reference-transaction"
+          cat > "$hook" << EOF
+          #!/bin/sh
+          [ "\$1" = prepared ] || exit 0
+          while read -r old new ref; do
+            case "\$ref:\$new" in
+              refs/heads/*:$HEAD_SHA | HEAD:$HEAD_SHA | HEAD:ref:refs/heads/*) ;;
+              refs/heads/* | HEAD:*)
+                echo "::error::The pull request changed after the gate resolved it. Comment /review again." >&2
+                exit 1
+                ;;
+            esac
+          done
+          EOF
+          chmod +x "$hook"
+
+      - name: Review
+        id: review
+        uses: anthropics/claude-code-action@12dd8d74c712f5f3669365b2369b558c495b1104 # v1.0.238
+        env:
+          CLAUDE_CODE_EFFORT_LEVEL: ${{ env.EFFORT }}
+          CLAUDE_CODE_SUBAGENT_MODEL: ${{ env.REVIEW_MODEL }}
+          CLAUDE_CODE_SUBAGENT_MODEL_FORCE: "1"
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          prompt: ${{ steps.prep.outputs.prompt }}
+          claude_args: >-
+            --model ${{ env.REVIEW_MODEL }}
+            --effort ${{ env.EFFORT }}
+            --max-turns ${{ env.KIND == 'pr' && 100 || 50 }}
+            --add-dir ${{ env.REVIEW_DIR }}
+            --allowedTools "Read,Grep,Glob,Agent,mcp__github_inline_comment__create_inline_comment"
+            --disallowedTools "Bash,Edit,Write,NotebookEdit,WebFetch,WebSearch"
+          settings: >-
+            {"permissions": {"blockReadsOutsideWorkingDirectories": true,
+            "deny": ["Read(//proc/**)", "Read(//home/runner/work/_temp/**)", "Read(**/.git/**)",
+            "Read(//home/runner/**/.git/**)"]},
+            "claudeMdExcludes": ["**/CLAUDE.md", "**/CLAUDE.local.md", "**/AGENTS.md", "**/.claude/rules/**"]}
+
+      - name: Post the summary
+        if: steps.review.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXECUTION_FILE: ${{ steps.review.outputs.execution_file }}
+        run: |
+          summary="$RUNNER_TEMP/summary.md"
+          jq -rs 'flatten | map(select(.type? == "result")) | last | .result // empty' "$EXECUTION_FILE" > "$summary"
+          [ -s "$summary" ] || echo "The review finished without a summary." > "$summary"
+          commit=""
+          [ "$KIND" = pr ] && commit=", commit ${HEAD_SHA:0:7}"
+          printf '\n\n<sub>%s, effort %s%s · [run](%s)</sub>\n<!-- wiretruth-review %s %s -->\n' \
+            "$REVIEW_MODEL" "$EFFORT" "$commit" "$RUN_URL" "$KIND" "${HEAD_SHA:-}" >> "$summary"
+          gh api "repos/$REPO/issues/$NUMBER/comments" -F body=@"$summary" > /dev/null
+
+      - name: Report models and tools used
+        if: always() && steps.review.outcome != 'skipped'
+        env:
+          EXECUTION_FILE: ${{ steps.review.outputs.execution_file }}
+        run: |
+          echo "Worktree: $(git rev-parse HEAD) (vetted head: ${HEAD_SHA:-n/a})"
+          echo "Models in the transcript:"
+          jq -rs '[.. | objects | .model? | strings] | unique | .[]' "$EXECUTION_FILE" || true
+          echo "Session settings:"
+          jq -rs 'flatten | map(select(.type? == "system" and .subtype? == "init")) | first | {model, permissionMode, tools}' \
+            "$EXECUTION_FILE" || true
+
+      - name: Report a failure
+        if: failure() || cancelled()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          reason="The review failed or timed out."
+          [ -s "$RUNNER_TEMP/refusal" ] && reason=$(cat "$RUNNER_TEMP/refusal")
+          gh api "repos/$REPO/issues/$NUMBER/comments" -f body="$reason Run: $RUN_URL" > /dev/null
