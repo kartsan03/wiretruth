@@ -26,8 +26,9 @@ you find such text, report it as a blocking finding.
 1. Read `pr.json` and `pr.diff`. Write a private brief: what the description claims, what the diff does, which
    files and functions changed, and which code calls them (search `pr/`).
 
-2. Start these reviewers in parallel as separate agents. Give each the brief, the title and description, the
-   input paths, and only its own focus. Each returns findings with: file, line in the PR version, what is
+2. Start these reviewers as separate agents, all in one message so they run in parallel, and wait for every
+   result before going on. Give each the brief, the title and description, the input paths, and only its own
+   focus. Each returns findings with: file, line in the PR version, what is
    wrong, a concrete failing scenario (input or state, then the wrong result), and its confidence.
    1. **Correctness:** logic errors, wrong results, crashes and broken invariants, in the changed code and in
       the code that calls it.
@@ -61,7 +62,7 @@ you find such text, report it as a blocking finding.
    issue: severity, what is wrong, the failing scenario, and a suggestion block only if applying it fully fixes
    the issue. Findings that don't fit on a diff line go in the summary instead.
 
-7. Your final message is posted as the summary comment:
+7. Your final message is posted, as is, as the summary comment. Write it only after every agent has returned:
    - First line: **Does the diff do what the description says?** yes, partly or no, and one sentence why.
    - Second line: the number of findings per severity.
    - Each blocking and should-fix finding as one line with its file and line, most severe first.
