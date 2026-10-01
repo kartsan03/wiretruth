@@ -6,7 +6,8 @@ name: Review
 # The maintainer can also start it from the Actions tab or with
 # `gh workflow run review.yml [--ref <branch>] -f number=<n> [-f command="/review max"]`, which is how changes to
 # this workflow get tested on a branch before they are merged. Such a run takes the workflow, the review criteria and
-# the base/ snapshot from that branch instead of main.
+# the base/ snapshot from that branch instead of main. It also has no inline-comment tool (the action adds it only for
+# pull request events), so every finding goes into the summary.
 #
 # issue_comment runs with repository secrets even for pull requests from forks. So all GitHub access happens
 # in the workflow's own steps, the pull request's code is checked out outside the repository's worktree and
