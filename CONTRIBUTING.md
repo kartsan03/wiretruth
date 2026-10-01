@@ -23,6 +23,8 @@ uv run mypy src
 - Fill in the PR template, including how you tested it.
 - Add a line to `CHANGELOG.md` under `Unreleased` for anything a user would notice.
 - CI must be green: lint, types and tests on Python 3.11, 3.12 and 3.13.
+- A maintainer may request an automated review by commenting `/review`. Its comments are suggestions to
+  consider, not merge requirements. What it checks is described in `.github/review/`.
 
 ## Code of conduct
 
