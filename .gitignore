@@ -1,0 +1,22 @@
+# Python
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+
+# wiretruth
+.wiretruth/
+_site/
+
+# Local environment files
+.env*
