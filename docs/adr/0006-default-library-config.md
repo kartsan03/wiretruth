@@ -17,8 +17,9 @@ offline, for example to stop a network fetch at import time.
   shown with the results.
 - A feature the library can't express is reported as unsupported, with a documentation link. The shim never works
   around it. One exception: when a library can't send a requested reasoning setting (such as reasoning effort
-  `none`), the shim makes the call without it and records a note. The replayed response is the same either way,
-  so the library's handling of it is still graded.
+  `none`), the shim makes the call without it and adds a note to the observation's `notes`, which the cell shows.
+  The replayed response is the same either way, so the library's handling of it is still graded. This is the only
+  case where a call the library can't fully express is not graded UNSUPPORTED.
 - Shims never retry, repair output or read private attributes.
 
 ## Consequences

@@ -11,17 +11,17 @@ behind each design choice is in the [decision records](index.md#decisions).
 wiretruth replays real provider responses through LLM SDKs and checks whether each SDK reports what actually
 happened.
 
-1. A provider response is saved byte for byte, together with what it means: why the model stopped, how many tokens
+1. A provider response is saved as it was sent, together with what it means: why the model stopped, how many tokens
    it used, what text and tool calls it returned.
-2. A small local server replays those bytes. The library under test is pointed at that server through its normal
+2. A small local server replays it. The library under test is pointed at that server through its normal
    base URL option, so it runs its real HTTP and parsing code.
 3. A small adapter program calls the library the way its documentation shows and writes down what the library
    reported.
 4. Checks compare the library's report with what the provider actually sent, and the result is a grade.
 
-No API keys are needed to run the suite. Recording new responses is a separate step. Most fixtures are recorded
-from the real APIs; the rest are transcribed from official documentation or derived from other fixtures, and every
-result says which.
+No API keys are needed to run the suite. Recording new responses is a separate step. Fixtures are recorded from
+the real APIs where possible. The rest are transcribed from official documentation or derived from other fixtures,
+and every result says which.
 
 ## How one cell runs
 
@@ -50,8 +50,9 @@ output token limit".
 
 **Fixture.** What one provider sent for one scenario. It holds the HTTP exchanges (status, the allowed headers, and the
 body as JSON, server-sent events, NDJSON lines, plain text or raw byte chunks), where the response came from, and
-the truth. Stream events are kept exactly as sent. JSON bodies are kept as parsed JSON, and raw byte chunks are
-used where exact bytes matter. Fixtures come in three tiers, shown on every result:
+the truth. Stream events are kept exactly as sent. JSON bodies are kept as parsed JSON with their key order, so
+whitespace, escapes and number formatting can differ from the original. A scenario that depends on exact bytes uses
+raw byte chunks. Fixtures come in three tiers, shown on every result:
 
 - **recorded**: sent by the real API and saved by the recorder, with the model, the time and, when it was
   recorded in CI, the run;
@@ -99,25 +100,38 @@ the grade, the status of every requirement, the full observation and the fixture
 | PASS | Reports what happened. |
 | LOSSY | Doesn't contradict what happened, but you only find it in raw metadata, or not at all. |
 | WRONG | Reports something that contradicts what happened. |
-| CRASH | Throws an unexpected internal error on a valid provider response. |
+| CRASH | Fails with an internal error, such as a `KeyError` in its own parser. |
 | HANG | Doesn't return after receiving a response that ended right away. |
 | UNSUPPORTED | The library doesn't support this provider or feature, according to its documentation. |
 | HARNESS | Our problem, not the library's. |
 
 The grade comes from the first rule that applies:
 
-1. The time limit ran out: HANG if the library had received the whole response, otherwise HARNESS.
-2. The shim's process ended without an observation: CRASH if it was killed by a signal after the response was
-   served, otherwise HARNESS.
+1. The shim's time limit ran out: HANG if the response had been served, otherwise HARNESS.
+2. The shim's process ended without an observation: CRASH if a signal killed it (a segfault, for example) after the
+   response had been served, otherwise HARNESS.
 3. The observation is invalid, or the library called a different endpoint or stream mode than the fixture serves:
    HARNESS.
 4. The shim reports, with a documentation link, that the library can't express the call: UNSUPPORTED.
-5. The library raised a language builtin from its own code (`IndexError`, `KeyError`, `TypeError`, …): CRASH.
+5. The library raised an internal error: CRASH. An internal error is a language builtin such as `IndexError`,
+   `KeyError` or `TypeError`, raised from a frame inside the library's code. JSON decode errors
+   (`json.JSONDecodeError`, `SyntaxError` from `JSON.parse`) and schema validation errors don't count, even where
+   they subclass a builtin. They are parse or validation errors.
 6. A MUST requirement is CONTRADICTED: WRONG.
 7. A MUST requirement is NOT_OBSERVABLE: LOSSY.
 8. Otherwise: PASS.
 
-SHOULD requirements never change the grade. When one isn't met, the cell gets a note.
+"Served" means the replay server finished sending the fixture's response, including the deliberate early close of a
+fixture that ends with an aborted connection. The server records this for every request, so a slow start-up is never
+blamed on the library. A shim catches every error the library raises and reports it in the observation, so a missing
+observation without a signal is the shim's fault.
+
+A reasoning setting that the library can't send doesn't make a cell UNSUPPORTED. The replayed response is the same
+either way, so the shim leaves the setting out and adds a note ([decision 0006](adr/0006-default-library-config.md)).
+
+SHOULD requirements never change the grade. When one is NOT_OBSERVABLE or CONTRADICTED, the cell gets a note that
+says which. A value that is the subject of a scenario is a MUST there: token counts, for example, are MUST
+requirements in the `usage.*` scenarios.
 
 ## A worked example: structured output cut off by the token limit
 
@@ -126,7 +140,8 @@ The scenario `truncation.structured-output` asks for a list of ten Ukrainian cit
 also turns reasoning off: current models reason by default, and a small token limit would otherwise be spent on
 reasoning before any JSON appears.
 
-The JSON on this page is shortened and illustrative. Real fixtures live in `suite/fixtures/`.
+The JSON on this page is shortened and illustrative. Required fields such as `format` and `provenance` are left out,
+and `…` marks cut values. Real fixtures live in `suite/fixtures/`, and `wiretruth lint` checks them.
 
 ### 1. The scenario
 
@@ -147,7 +162,7 @@ The JSON on this page is shortened and illustrative. Real fixtures live in `suit
     {"id": "cause-is-truncation", "level": "MUST", "check": "truncation_is_signalled",
      "text": "The caller can tell that the output stopped at the token limit."},
     {"id": "usage-reported", "level": "SHOULD", "check": "usage_matches_truth", "args": {"fields": ["input", "output"]},
-     "text": "Token usage is reported even though the result is unusable."}
+     "text": "Token usage is reported, and matches the provider's counts, even though the result is unusable."}
   ]
 }
 ```
@@ -181,9 +196,9 @@ JSON object.
 ### 3. The run
 
 The runner starts the replay server with this fixture on a free local port. It starts the shim with the server's
-URL in `WIRETRUTH_BASE_URL_OPENAI_CHAT` and the call spec on stdin. The library sends its request to the local
-server, which answers with the recorded bytes. The library parses them, and the shim prints what the library
-reported.
+URL in `WIRETRUTH_BASE_URL_OPENAI_CHAT` (one variable per provider) and the call spec on stdin. The library sends its
+request to the local server, which answers with the recorded response. The library parses it, and the shim prints
+what the library reported.
 
 ### 4. Observations and grades
 

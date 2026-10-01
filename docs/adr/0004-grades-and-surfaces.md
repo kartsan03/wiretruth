@@ -17,17 +17,22 @@ project avoids.
 - Each value in an observation records its surface: `primary` (a documented field of the main result), `raw`
   (provider metadata or the raw payload) or `absent`.
 - A cell's grade comes from the first rule that applies:
-  1. The time limit ran out: HANG if the library had received the whole response, otherwise HARNESS.
-  2. The process ended without an observation: CRASH if it was killed by a signal after the response was served,
+  1. The shim's time limit ran out: HANG if the response had been served, otherwise HARNESS.
+  2. The process ended without an observation: CRASH if a signal killed it after the response had been served,
      otherwise HARNESS.
   3. The observation is invalid, or the library called a different endpoint or stream mode than the fixture
      serves: HARNESS.
-  4. The shim reports the call as unsupported, with a documentation link: UNSUPPORTED.
-  5. The library raised a language builtin from its own code: CRASH.
+  4. The shim reports the call as unsupported, with a documentation link: UNSUPPORTED. A reasoning setting the
+     library can't send is not a reason ([0006](0006-default-library-config.md)).
+  5. The library raised an internal error, a language builtin raised from a frame inside its own code: CRASH. JSON
+     decode and schema validation errors don't count, even where they subclass a builtin.
   6. A MUST requirement is CONTRADICTED: WRONG.
   7. A MUST requirement is NOT_OBSERVABLE: LOSSY.
   8. Otherwise: PASS.
-- SHOULD requirements add notes and never change the grade.
+- "Served" means the replay server finished sending the fixture's response, including the deliberate early close of
+  an aborted-connection fixture. The server records this for every request.
+- SHOULD requirements add notes, saying whether the requirement was NOT_OBSERVABLE or CONTRADICTED, and never change
+  the grade. A value that is the subject of a scenario is a MUST there.
 - There is no overall score and no ranking.
 
 ## Consequences

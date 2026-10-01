@@ -24,6 +24,10 @@ Every fixture has one of three tiers, stored in the fixture and shown on every c
 
 Whatever the tier, the truth is recomputed from the fixture's bytes by the provider's reference parser.
 
+Fixtures never contain credentials. Keys travel only in request headers, and the recorder keeps only the
+`content-type` and `retry-after` response headers. The recorder refuses to write, and `wiretruth lint` rejects, a
+fixture that contains anything that looks like a key or an authentication header.
+
 Each cell uses one fixture, `suite/fixtures/<provider>/<scenario>.json`. A fixture is replaced only by one of the
 same or a better tier, where recorded is better than documented and documented is better than derived. The
 replaced file can be kept as a dated variant (`<scenario>@<date>.json`), which no cell uses by default.

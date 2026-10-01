@@ -16,21 +16,23 @@ parsers with a small stdin/stdout contract that any language can implement.
 Each library gets a shim: a separate program that runs in that library's own environment (a uv virtualenv for
 Python, an npm prefix for JavaScript).
 
-- The runner starts the shim with the command from its manifest and sends one call spec as JSON on stdin.
+- The runner starts the shim with the command from its manifest and sends one call spec as JSON on stdin. It
+  passes the replay server's address in one environment variable per provider, such as
+  `WIRETRUTH_BASE_URL_OPENAI_CHAT`, and a placeholder key in `WIRETRUTH_API_KEY`.
 - The shim prints exactly one observation as JSON on stdout and exits 0, also when the library raised. Everything
   else, including anything the library prints, goes to stderr.
 - The shim also catches failures that escape the library call, such as an unhandled promise rejection, and reports
   them in the observation.
 - The runner enforces a time limit and turns a missing or invalid observation into a grade, using the rules in
-  [0004](0004-grades-and-surfaces.md): a hang after the library received the response is HANG, a process killed by
-  a signal after that point is CRASH, and everything else is HARNESS.
+  [0004](0004-grades-and-surfaces.md): a hang after the replay server finished sending the response is HANG, a
+  process killed by a signal after that point is CRASH, and everything else is HARNESS.
 
 ## Consequences
 
 - Shims can be written in any language, and each library version runs in an isolated environment.
 - A library that crashes or hangs can't take the runner down with it.
-- Every cell pays for a process start, which counts against the time limit. Because HANG needs the library to have
-  received the response, slow start-up is graded HARNESS, not blamed on the library.
+- Every cell pays for a process start, which counts against the time limit. Because HANG needs the response to
+  have been served, slow start-up is graded HARNESS, not blamed on the library.
 - The contract has to be documented precisely, and observations are validated against a JSON Schema on every run.
 
 ## Alternatives considered

@@ -19,19 +19,25 @@ is pointed at it through its documented base URL option, so the library runs its
 
 - Stream events are stored and sent exactly as the provider sent them, over HTTP/1.1 chunked transfer encoding,
   one chunk per event, flushed with a short gap between events.
-- JSON bodies are stored as parsed JSON with the key order kept, and sent with `Content-Length`. Whitespace and
-  escapes can differ from the original; the hash of the original bytes stays in the fixture's provenance.
-- When exact bytes or chunk boundaries matter, a fixture gives the raw byte chunks instead, and it can end with an
-  aborted connection instead of the final chunk.
-- The server logs every request it receives (with credentials removed), so checks can look at what the library
-  sent.
+- JSON bodies are stored as parsed JSON with the key order kept, and sent with `Content-Length`. Whitespace,
+  escapes and number formatting can differ from the original. Parsed JSON keeps fixtures readable in review and lets
+  transforms edit them. The recorder also stores a hash of the original bytes. It identifies the original response,
+  but it can be checked again only when the fixture keeps those bytes.
+- When exact bytes or chunk boundaries matter (a scenario about string escapes or number formats, or a split inside
+  a multi-byte character), a fixture gives the raw byte chunks instead, and it can end with an aborted connection
+  instead of the final chunk.
+- The server logs every request it receives (with credentials removed) and whether it finished sending the
+  response. Checks use the requests to see what the library sent. Grading uses the second part to tell a library
+  that hangs from one that never got the response ([0004](0004-grades-and-surfaces.md)).
 
 ## Consequences
 
 - One server serves every language, and adding a library needs no new replay code.
 - Libraries are tested through their real network and parsing paths.
-- Only libraries that accept a custom base URL can be tested. Most do. When one doesn't, the shim reports the
-  provider as unsupported.
+- Only libraries that accept a custom base URL can be tested. Most do. When one doesn't, that library and provider
+  pair is shown as not covered, with a note saying why. It isn't graded UNSUPPORTED, because that grade is about
+  what the library's documentation says it supports.
+- A bug in how a library decodes JSON escapes or number formats shows up only in a scenario that uses raw chunks.
 - The server controls how bytes are framed and flushed, not how the client's reader groups them. A client can read
   two chunks in one call, so a library could pass a chunk-boundary scenario only because the split never reached
   it. Flushing each chunk with a gap makes separate reads likely, not certain. A correct library passes either way.
@@ -46,5 +52,7 @@ is pointed at it through its documented base URL option, so the library runs its
   boundaries or aborted connections.
 - **A mock server that renders responses from a model of the API (such as aimock):** it re-encodes streams, which
   is the layer we want to test. aimock is a good fit for application tests, which is a different job.
+- **Storing every body as raw bytes:** exact, but the fixtures become hard to read in review and hard to
+  transform. Raw chunks are used where the bytes are the point.
 - **Calling the live APIs in CI:** needs keys, costs money, and isn't reproducible, because the same request
   returns different bytes each time.
