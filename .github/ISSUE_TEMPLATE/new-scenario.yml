@@ -1,0 +1,36 @@
+name: Scenario proposal
+description: Propose an edge case that SDKs should handle.
+title: "Scenario: <family>.<name>"
+labels: ["new-scenario", "needs-triage"]
+body:
+  - type: textarea
+    id: provider-sends
+    attributes:
+      label: What the provider sends
+      description: The wire behavior, e.g. "Gemini returns finishReason MAX_TOKENS with no content parts when a thinking model spends the budget on thoughts."
+    validations:
+      required: true
+  - type: textarea
+    id: effect
+    attributes:
+      label: What goes wrong for users
+      description: The effect when an SDK mishandles it.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence it happens
+      description: Provider docs, upstream issues, or a recorded response.
+    validations:
+      required: true
+  - type: input
+    id: providers
+    attributes:
+      label: Providers
+      placeholder: "openai-chat, openai-responses, anthropic, gemini, ollama"
+  - type: textarea
+    id: requirement
+    attributes:
+      label: What a correct SDK should do
+      description: Phrase it as MUST / SHOULD statements if you can.

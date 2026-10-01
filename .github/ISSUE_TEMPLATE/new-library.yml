@@ -1,0 +1,31 @@
+name: Library request
+description: Ask for a library to be added to the matrix (or offer to write the shim).
+title: "Library: <name>"
+labels: ["new-library", "needs-triage"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Library
+      placeholder: "package name and link"
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options: [Python, JavaScript / TypeScript, Other]
+    validations:
+      required: true
+  - type: textarea
+    id: base-url
+    attributes:
+      label: How to point it at a custom base URL
+      description: Link to the docs that show the base URL option for each provider, if you know them.
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Contribution
+      options:
+        - label: I'm willing to write the shim
+        - label: I maintain this library

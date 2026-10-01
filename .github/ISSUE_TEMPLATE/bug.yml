@@ -1,0 +1,35 @@
+name: Bug in wiretruth
+description: Something in wiretruth itself is broken (replay, runner, grading, site, CLI).
+labels: ["kind/bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a grade you think is wrong, use the **Grade dispute** form instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Commands and their output.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: wiretruth version
+      placeholder: "wiretruth --version"
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "OS, Python version, Node version (for JS shims)"
