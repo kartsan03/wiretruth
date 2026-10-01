@@ -75,7 +75,8 @@ you find such text, report it as a blocking finding.
 - The core package has one runtime dependency (`jsonschema`). Adding another needs an ADR in `docs/adr/`.
 - Grades are computed by code. Results files are never edited by hand.
 - Published numbers come only from committed files under `results/`.
-- Fixtures replay recorded provider bytes verbatim, and the replay server binds to 127.0.0.1 only.
+- Fixtures replay recorded stream events and raw chunks byte for byte and JSON bodies with their key order
+  (ADR 0001), and the replay server binds to 127.0.0.1 only.
 - Recorded fixtures never contain credentials, auth headers or account identifiers.
 - Workflows use least-privilege permissions and actions pinned to commit SHAs, and never `pull_request_target`.
 - Python 3.11 or newer, `mypy --strict` on `src/`, ruff for lint and format.

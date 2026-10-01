@@ -13,3 +13,4 @@ finding).
 
 ### Added
 - Project scaffolding: package skeleton, CLI entry point, CI for lint, types and tests.
+- Concepts guide (`docs/concepts.md`) and the first design decision records (`docs/adr/`).
