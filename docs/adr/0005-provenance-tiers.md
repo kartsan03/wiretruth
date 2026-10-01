@@ -24,9 +24,14 @@ Every fixture has one of three tiers, stored in the fixture and shown on every c
 
 Whatever the tier, the truth is recomputed from the fixture's bytes by the provider's reference parser.
 
-Fixtures never contain credentials. Keys travel only in request headers, and the recorder keeps only the
-`content-type` and `retry-after` response headers. The recorder refuses to write, and `wiretruth lint` rejects, a
-fixture that contains anything that looks like a key or an authentication header.
+Fixtures never contain credentials, authentication headers or account identifiers:
+
+- The recorder sends keys only in request headers (for Gemini, `x-goog-api-key`, never the `?key=` parameter), and
+  it keeps only the `content-type` and `retry-after` response headers.
+- Recordings use public base models, so model names carry no organization.
+- The recorder refuses to write, and `wiretruth lint` rejects, a fixture that contains anything that looks like a
+  key (`sk-…`, `AIza…`, a bearer token), an organization or project id (`org-…`, `proj_…`), or an authentication
+  or cookie header, anywhere in the file, including error bodies and paths.
 
 Each cell uses one fixture, `suite/fixtures/<provider>/<scenario>.json`. A fixture is replaced only by one of the
 same or a better tier, where recorded is better than documented and documented is better than derived. The

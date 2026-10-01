@@ -25,7 +25,8 @@ Python, an npm prefix for JavaScript).
   them in the observation.
 - The runner enforces a time limit and turns a missing or invalid observation into a grade, using the rules in
   [0004](0004-grades-and-surfaces.md): a hang after the replay server finished sending the response is HANG, a
-  process killed by a signal after that point is CRASH, and everything else is HARNESS.
+  process killed by a signal after the library's request reached the server is CRASH, and everything else is
+  HARNESS.
 
 ## Consequences
 

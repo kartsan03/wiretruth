@@ -14,7 +14,9 @@ chunk ends, or whether the connection closes without the final chunk.
 
 ## Decision
 
-A small HTTP server built on the Python standard library replays recorded responses on `127.0.0.1`. Each library
+A small HTTP server built on the Python standard library replays recorded responses on `127.0.0.1`. "Verbatim"
+means that the server sends exactly what the fixture holds, with no model of the API in between. What a fixture
+holds is described below. Each library
 is pointed at it through its documented base URL option, so the library runs its real HTTP client and parser.
 
 - Stream events are stored and sent exactly as the provider sent them, over HTTP/1.1 chunked transfer encoding,
@@ -26,9 +28,10 @@ is pointed at it through its documented base URL option, so the library runs its
 - When exact bytes or chunk boundaries matter (a scenario about string escapes or number formats, or a split inside
   a multi-byte character), a fixture gives the raw byte chunks instead, and it can end with an aborted connection
   instead of the final chunk.
-- The server logs every request it receives (with credentials removed) and whether it finished sending the
-  response. Checks use the requests to see what the library sent. Grading uses the second part to tell a library
-  that hangs from one that never got the response ([0004](0004-grades-and-surfaces.md)).
+- The server logs every request it receives, without the authorization headers, cookies and `key` query
+  parameters, and whether it finished sending the response. Checks use the requests to see what the library sent.
+  Grading uses the second part to tell a library that hangs from one that never got the response
+  ([0004](0004-grades-and-surfaces.md)).
 
 ## Consequences
 

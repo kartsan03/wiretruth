@@ -18,8 +18,8 @@ project avoids.
   (provider metadata or the raw payload) or `absent`.
 - A cell's grade comes from the first rule that applies:
   1. The shim's time limit ran out: HANG if the response had been served, otherwise HARNESS.
-  2. The process ended without an observation: CRASH if a signal killed it after the response had been served,
-     otherwise HARNESS.
+  2. The process ended without an observation: CRASH if a signal killed it after the library's request reached
+     the replay server, otherwise HARNESS.
   3. The observation is invalid, or the library called a different endpoint or stream mode than the fixture
      serves: HARNESS.
   4. The shim reports the call as unsupported, with a documentation link: UNSUPPORTED. A reasoning setting the
@@ -29,8 +29,10 @@ project avoids.
   6. A MUST requirement is CONTRADICTED: WRONG.
   7. A MUST requirement is NOT_OBSERVABLE: LOSSY.
   8. Otherwise: PASS.
-- "Served" means the replay server finished sending the fixture's response, including the deliberate early close of
-  an aborted-connection fixture. The server records this for every request.
+- "Served" means the replay server finished sending its response to the library's last request, including the
+  deliberate early close of an aborted-connection fixture. The server records this for every request.
+- The error category in an observation comes from the library's manifest. A builtin raised from a frame inside the
+  library's code is `internal`.
 - SHOULD requirements add notes, saying whether the requirement was NOT_OBSERVABLE or CONTRADICTED, and never change
   the grade. A value that is the subject of a scenario is a MUST there.
 - There is no overall score and no ranking.

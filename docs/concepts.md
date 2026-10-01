@@ -74,7 +74,10 @@ post-processes the library's output. It can be written in any language.
 
 **Observation.** The JSON a shim prints on stdout: what the library reported. That covers whether the call returned
 or raised, the finish reason, text, structured output, tool calls, usage and stream state. For each value, the
-observation also records where the library exposed it.
+observation also records where the library exposed it. When the library raised, the observation records the error's
+type, message and category (such as `truncation`, `parse`, `validation`, `network`, `api` or `internal`), and the
+file and line that raised it. The category comes from the library's manifest, which maps the library's error types
+to categories. A language builtin raised from a frame inside the library's code is `internal`.
 
 **Surface.** Where a value was found:
 
@@ -101,7 +104,7 @@ the grade, the status of every requirement, the full observation and the fixture
 | LOSSY | Doesn't contradict what happened, but you only find it in raw metadata, or not at all. |
 | WRONG | Reports something that contradicts what happened. |
 | CRASH | Fails with an internal error, such as a `KeyError` in its own parser. |
-| HANG | Doesn't return after receiving a response that ended right away. |
+| HANG | Doesn't return after the whole response was sent. |
 | UNSUPPORTED | The library doesn't support this provider or feature, according to its documentation. |
 | HARNESS | Our problem, not the library's. |
 
@@ -109,22 +112,30 @@ The grade comes from the first rule that applies:
 
 1. The shim's time limit ran out: HANG if the response had been served, otherwise HARNESS.
 2. The shim's process ended without an observation: CRASH if a signal killed it (a segfault, for example) after the
-   response had been served, otherwise HARNESS.
+   library's request reached the replay server, otherwise HARNESS.
 3. The observation is invalid, or the library called a different endpoint or stream mode than the fixture serves:
    HARNESS.
 4. The shim reports, with a documentation link, that the library can't express the call: UNSUPPORTED.
 5. The library raised an internal error: CRASH. An internal error is a language builtin such as `IndexError`,
    `KeyError` or `TypeError`, raised from a frame inside the library's code. JSON decode errors
    (`json.JSONDecodeError`, `SyntaxError` from `JSON.parse`) and schema validation errors don't count, even where
-   they subclass a builtin. They are parse or validation errors.
+   they subclass a builtin and even when the library fails on the provider's own body. They are parse or validation
+   errors: the library failed loudly, and the requirements decide the grade. A builtin that the library raises on
+   purpose to name the cause, such as `ValueError("output truncated")`, can be mapped to that cause in its manifest,
+   with a link to the line that raises it.
 6. A MUST requirement is CONTRADICTED: WRONG.
 7. A MUST requirement is NOT_OBSERVABLE: LOSSY.
 8. Otherwise: PASS.
 
-"Served" means the replay server finished sending the fixture's response, including the deliberate early close of a
-fixture that ends with an aborted connection. The server records this for every request, so a slow start-up is never
-blamed on the library. A shim catches every error the library raises and reports it in the observation, so a missing
-observation without a signal is the shim's fault.
+"Served" means the replay server finished sending its response to the last request the library made, including the
+deliberate early close of a fixture that ends with an aborted connection. A fixture with several exchanges, such as
+a rate-limit error and then the real response, answers them in order, and the last one repeats if the library asks
+again. The server records every request and whether its response was sent in full, so a slow start-up is never
+blamed on the library. The time limit leaves room for the retry delays that a scenario asks for.
+
+A shim catches every error the library raises and reports it in the observation, so a missing observation usually
+means a bug in the shim. The exception is a library that ends the process itself without a signal (`os._exit()`,
+`process.exit()`). That also grades HARNESS, and the shim's saved stderr shows what happened.
 
 A reasoning setting that the library can't send doesn't make a cell UNSUPPORTED. The replayed response is the same
 either way, so the shim leaves the setting out and adds a note ([decision 0006](adr/0006-default-library-config.md)).
@@ -242,7 +253,7 @@ NOT_OBSERVABLE: the call failed loudly, but the caller can't tell that raising t
 `finish.value="stop" (primary: result.finish_reason) but truth.finish="length"`.
 
 **Library D** raises `KeyError` from inside its own response parser. Grade: **CRASH**, whatever the requirements
-say, because the library failed on a valid provider response.
+say, because the library raised an internal error.
 
 ## What to read next
 
