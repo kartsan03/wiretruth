@@ -14,3 +14,7 @@ finding).
 ### Added
 - Project scaffolding: package skeleton, CLI entry point, CI for lint, types and tests.
 - Concepts guide (`docs/concepts.md`) and the first design decision records (`docs/adr/`).
+- JSON Schemas (Draft 2020-12) for every format: scenarios, fixtures, call specs, observations, shim manifests,
+  results, upstream tracking and bug classes, shipped in the package. Field reference: `docs/formats.md`.
+- `wiretruth lint` validates everything under `suite/` and `results/` and checks the files against each other.
+- The bug-class registry, `suite/bug-classes.json`, with seven classes.
