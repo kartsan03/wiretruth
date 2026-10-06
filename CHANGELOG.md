@@ -20,3 +20,7 @@ finding).
 - Fixture variants are dated (`<scenario>@<date>.json`): an older recording kept for reference, which no cell
   uses by default. A streamed, aborted or otherwise different form of a call is its own scenario.
 - The bug-class registry, `suite/bug-classes.json`, with seven classes.
+- `wiretruth serve <fixture>` replays one fixture on 127.0.0.1 for manual reproduction, until Ctrl-C. The replay
+  server sends stream events, NDJSON lines and raw chunks one HTTP chunk each, can drop the connection before the
+  final chunk, and logs every request without credentials, noting whether each response was sent in full.
+- Lint rejects an `abort` ending on a `json` or `text` body, and an empty `chunks_b64` chunk.
