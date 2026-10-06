@@ -36,10 +36,12 @@ def root(tmp_path: Path) -> Path:
     fixtures = tmp_path / "suite" / "fixtures" / "openai-chat"
     _write(fixtures / "truncation.text-stream.json", _sample("fixture/recorded-sse.json"))
     derived = _sample("fixture/derived-chunks-abort.json")
-    derived.update(id="openai-chat/truncation.text-stream@abort", scenario="truncation.text-stream")
+    derived.update(
+        id="openai-chat/truncation.text-stream@2026-10-01", scenario="truncation.text-stream"
+    )
     assert isinstance(derived["derived_from"], dict)
     derived["derived_from"]["fixture"] = "openai-chat/truncation.text-stream"
-    _write(fixtures / "truncation.text-stream@abort.json", derived)
+    _write(fixtures / "truncation.text-stream@2026-10-01.json", derived)
 
     results = tmp_path / "results"
     _write(results / "litellm" / "1.103.1.json", _sample("results/litellm-1.103.1.json"))
@@ -88,7 +90,7 @@ def test_scenario_cross_checks(root: Path) -> None:
     assert _lines(root) == [
         "suite/fixtures/openai-chat/truncation.text-stream.json: $.provider: "
         "'openai-chat' is not in the providers of 'truncation.text-stream'",
-        "suite/fixtures/openai-chat/truncation.text-stream@abort.json: $.provider: "
+        "suite/fixtures/openai-chat/truncation.text-stream@2026-10-01.json: $.provider: "
         "'openai-chat' is not in the providers of 'truncation.text-stream'",
         "suite/scenarios/truncation/text-stream.json: $.id: "
         "'truncation.text' doesn't match the file path: expected 'truncation.text-stream'",
@@ -101,8 +103,8 @@ def test_fixture_cross_checks(root: Path) -> None:
     fixtures = root / "suite" / "fixtures" / "openai-chat"
     (fixtures / "truncation.text-stream.json").rename(fixtures / "truncation.text.json")
     assert _lines(root) == [
-        "suite/fixtures/openai-chat/truncation.text-stream@abort.json: $.derived_from.fixture: "
-        "no fixture 'openai-chat/truncation.text-stream' in suite/fixtures",
+        "suite/fixtures/openai-chat/truncation.text-stream@2026-10-01.json: "
+        "$.derived_from.fixture: no fixture 'openai-chat/truncation.text-stream' in suite/fixtures",
         "suite/fixtures/openai-chat/truncation.text.json: $.id: "
         "'openai-chat/truncation.text-stream' doesn't match the file path: "
         "expected 'openai-chat/truncation.text'",

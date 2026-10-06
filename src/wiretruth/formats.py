@@ -285,7 +285,7 @@ def _check_fixture(doc: JsonObject) -> Findings:
     fixture_id = _str(doc, "id")
     expected = f"{_str(doc, 'provider')}/{_str(doc, 'scenario')}"
     if fixture_id.split("@", 1)[0] != expected:
-        yield "$.id", f"{fixture_id!r} must be {expected!r} or {expected + '@<variant>'!r}"
+        yield "$.id", f"{fixture_id!r} must be {expected!r} or {expected + '@<date>'!r}"
 
 
 def _check_scenario(doc: JsonObject) -> Findings:

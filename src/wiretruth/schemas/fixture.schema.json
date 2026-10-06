@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://kartsan03.github.io/wiretruth/schemas/fixture.schema.json",
   "title": "wiretruth fixture",
-  "description": "HTTP exchanges for one scenario and provider, where they came from, and the truth computed from them. Stored in suite/fixtures/<provider>/<scenario>[@<variant>].json.",
+  "description": "HTTP exchanges for one scenario and provider, where they came from, and the truth computed from them. Stored in suite/fixtures/<provider>/<scenario>[@<date>].json.",
   "type": "object",
   "additionalProperties": false,
   "required": [

@@ -166,7 +166,7 @@ def test_fixture_body_forms() -> None:
     assert retry.truth.error.status == 429
 
     chunks = load_fixture(SAMPLES / "valid" / "fixture" / "derived-chunks-abort.json")
-    assert chunks.id == "openai-chat/stream.utf8-split@abort"
+    assert chunks.id == "openai-chat/stream.utf8-split"
     first_chunk, second_chunk = (base64.b64decode(part) for part in chunks.exchanges[0].body.parts)
     assert first_chunk.endswith(b"\xd0")  # the chunk boundary splits "П" (D0 9F)
     assert (first_chunk + second_chunk).decode().endswith('"Привіт"}}]}\n\n')
