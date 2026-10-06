@@ -35,6 +35,8 @@ def root(tmp_path: Path) -> Path:
 
     fixtures = tmp_path / "suite" / "fixtures" / "openai-chat"
     _write(fixtures / "truncation.text-stream.json", _sample("fixture/recorded-sse.json"))
+    # Only the dated id matters here, not what a dated file would really hold: the derived
+    # sample gives the cross-checks a source fixture to look up.
     derived = _sample("fixture/derived-chunks-abort.json")
     derived.update(
         id="openai-chat/truncation.text-stream@2026-10-01", scenario="truncation.text-stream"

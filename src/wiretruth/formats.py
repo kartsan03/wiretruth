@@ -286,6 +286,9 @@ def _check_fixture(doc: JsonObject) -> Findings:
     expected = f"{_str(doc, 'provider')}/{_str(doc, 'scenario')}"
     if fixture_id.split("@", 1)[0] != expected:
         yield "$.id", f"{fixture_id!r} must be {expected!r} or {expected + '@<date>'!r}"
+    derived = _opt_object(doc, "derived_from")
+    if derived is not None and _str(derived, "fixture") == fixture_id:
+        yield "$.derived_from.fixture", "a fixture can't be derived from itself"
 
 
 def _check_scenario(doc: JsonObject) -> Findings:

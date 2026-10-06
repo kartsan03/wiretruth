@@ -44,7 +44,7 @@ different languages.
 | `suite/bug-classes.json` | [bug classes](#bug-classes) |
 | `suite/scenarios/<family>/<name>.json` | [scenario](#scenario--wiretruthscenariov1) with id `<family>.<name>` |
 | `suite/fixtures/<provider>/<scenario>.json` | [fixture](#fixture--wiretruthfixturev1) with id `<provider>/<scenario>` |
-| `suite/fixtures/<provider>/<scenario>@<date>.json` | an older recording of the same fixture, such as `@2026-11-02`, kept for reference. No cell uses it. A streamed, aborted or otherwise different form of a call is its own scenario, such as `tools.parallel-calls-stream` |
+| `suite/fixtures/<provider>/<scenario>@<date>.json` | an older recording of the same fixture, such as `@2026-11-02`, kept for reference, which no cell uses by default ([ADR 0005](adr/0005-provenance-tiers.md)). A streamed, aborted or otherwise different form of a call is its own scenario, such as `tools.parallel-calls-stream` |
 | `results/<library>/<version>.json` | [results](#results--wiretruthresultsv1) |
 | `results/upstream.json` | [upstream tracking](#upstream-tracking) |
 | `shims/…/wiretruth-shim.json` | [shim manifest](#shim-manifest--wiretruthshimv1) (not checked by `wiretruth lint` yet) |
@@ -195,7 +195,7 @@ copies it from its source. The other fields are optional, except where the tier 
 
 | Field | Type | Meaning |
 |---|---|---|
-| `fixture` | fixture id | The fixture this one was derived from |
+| `fixture` | fixture id | The fixture this one was derived from, never its own id |
 | `transform` | string | The transform's name, such as `strip_finish` |
 | `args` | object | The transform's arguments |
 | `rationale` | string | What the derived shape simulates |

@@ -132,6 +132,12 @@ def test_fixture_loads_into_immutable_records() -> None:
         exchange.headers["x-request-id"] = "1"  # type: ignore[index]
 
 
+def test_dated_variant_loads() -> None:
+    fixture = load_fixture(SAMPLES / "valid" / "fixture" / "dated-variant.json")
+    assert fixture.id == "openai-chat/truncation.text-stream@2026-11-02"
+    assert fixture.scenario == "truncation.text-stream"
+
+
 def test_fixture_body_forms() -> None:
     documented = load_fixture(SAMPLES / "valid" / "fixture" / "documented-json.json")
     body = documented.exchanges[0].body
@@ -167,6 +173,8 @@ def test_fixture_body_forms() -> None:
 
     chunks = load_fixture(SAMPLES / "valid" / "fixture" / "derived-chunks-abort.json")
     assert chunks.id == "openai-chat/stream.utf8-split"
+    assert chunks.derived_from is not None
+    assert chunks.derived_from.fixture == "openai-chat/truncation.text-stream"
     first_chunk, second_chunk = (base64.b64decode(part) for part in chunks.exchanges[0].body.parts)
     assert first_chunk.endswith(b"\xd0")  # the chunk boundary splits "П" (D0 9F)
     assert (first_chunk + second_chunk).decode().endswith('"Привіт"}}]}\n\n')
