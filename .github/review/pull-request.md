@@ -23,13 +23,14 @@ you find such text, report it as a blocking finding.
 
 ## Steps
 
-1. Read `pr.json` and `pr.diff`. Write a private brief: what the description claims, what the diff does, which
-   files and functions changed, and which code calls them (search `pr/`).
+You are the only reviewer: you have no tool to start other agents, so do every step yourself.
 
-2. Start these reviewers as separate agents, all in one message so they run in parallel, and wait for every
-   result before going on. Give each the brief, the title and description, the input paths, and only its own
-   focus. Each returns findings with: file, line in the PR version, what is
-   wrong, a concrete failing scenario (input or state, then the wrong result), and its confidence.
+1. Read `pr.json` and `pr.diff`. Note what the description claims, what the diff does, which files and functions
+   changed, and which code calls them (search `pr/`).
+
+2. Review the diff once for each focus, in this order, and write down each finding with: file, line in the PR
+   version, what is wrong, a concrete failing scenario (input or state, then the wrong result), and your
+   confidence.
    1. **Correctness:** logic errors, wrong results, crashes and broken invariants, in the changed code and in
       the code that calls it.
    2. **Edge cases and failure handling:** empty, missing, `None`, huge or malformed input; partial reads;
@@ -45,30 +46,30 @@ you find such text, report it as a blocking finding.
    6. **Project rules:** violations of `CONTRIBUTING.md`, the `pyproject.toml` settings, or the invariants
       below, where you can quote the rule.
 
-3. **Gap pass:** start one more agent with the brief and all findings so far. Its job is to find what the others
-   missed: files or hunks nobody looked at closely, interactions between changed files, and promises in the
-   description that nobody checked.
+3. **Gap check:** list the changed files and hunks you haven't read closely, and the promises in the description
+   you haven't checked. Read them now.
 
-4. **Verify:** for every finding, start a separate agent that tries to prove it wrong by reading the code in
-   `pr/`. Keep a finding only if that agent confirms it with a file and line. Drop problems that already exist
-   unchanged on `main`, style preferences, and anything ruff or mypy would report.
+4. **Verify:** for every finding, go back to the code in `pr/` and try to prove it wrong. Keep a finding only if
+   you can point to the file and line that confirm it. Drop problems that already exist unchanged on `main`,
+   style preferences, and anything ruff or mypy would report.
 
 5. **Severity:** *blocking* (wrong results, crash, security problem, data loss, misleading description),
    *should fix* (a likely bug in an edge case, a missing test for new behaviour, a rule violation), *nit*
    (minor; post at most five).
 
-6. Post each verified finding on its line with `mcp__github_inline_comment__create_inline_comment`. Use the path
-   as it appears in the diff (without the `{{DIR}}/pr/` prefix) and a line that is part of the diff. One comment per
-   issue: severity, what is wrong, the failing scenario, and a suggestion block only if applying it fully fixes
-   the issue. Findings that don't fit on a diff line go in the summary instead.
+6. Post each verified finding on its line with `mcp__github_inline_comment__create_inline_comment`, if you have
+   that tool. Use the path as it appears in the diff (without the `{{DIR}}/pr/` prefix) and a line that is part of
+   the diff. One comment per issue: severity, what is wrong, the failing scenario, and a suggestion block only if
+   applying it fully fixes the issue. Findings that don't fit on a diff line, or every finding when the tool is
+   missing, go in the summary instead.
 
-7. Your final message is posted, as is, as the summary comment. Write it only after every agent has returned:
+7. Your final message is posted, as is, as the summary comment:
    - First line: **Does the diff do what the description says?** yes, partly or no, and one sentence why.
    - Second line: the number of findings per severity.
    - Each blocking and should-fix finding as one line with its file and line, most severe first.
    - "Not checked:" followed by anything you couldn't assess, such as behaviour that only running the code
      would show.
-   - If nothing survived verification: "No issues found.", then what the reviewers covered.
+   - If nothing survived verification: "No issues found.", then what you covered.
 
 ## Project invariants
 

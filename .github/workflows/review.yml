@@ -1,8 +1,11 @@
 name: Review
 
-# The maintainer comments "/review" on a pull request or an issue, or "/review max" for maximum effort. On a
-# pull request from someone without write access, the comment must also name the head commit that was
-# checked, for example "/review 1a2b3c4". Every comment starts this workflow; the gate job ignores the rest.
+# The maintainer comments "/review" on a pull request or an issue. On a pull request, "/review" is one reviewer
+# agent that cannot start others. "/review max" is the full review at maximum effort: six reviewer agents, a gap
+# pass and a verifier per finding, which costs several times more; use it for workflow or security changes and
+# large or risky pull requests. On a pull request from someone without write access, the comment must also name
+# the head commit that was checked, for example "/review 1a2b3c4". Every comment starts this workflow; the gate
+# job ignores the rest.
 # The maintainer can also start it from the Actions tab or with
 # `gh workflow run review.yml [--ref <branch>] -f number=<n> [-f command="/review max"]`, which is how changes to
 # this workflow get tested on a branch before they are merged. Such a run takes the workflow, the review criteria and
@@ -171,11 +174,13 @@ jobs:
               --json title,body,author,baseRefName,headRefName,isCrossRepository,additions,deletions,commits \
               > "$REVIEW_DIR/pr.json"
             template=.github/review/pull-request.md
+            if [ "$EFFORT" = max ]; then template=.github/review/pull-request-max.md agents=true; fi
           else
             gh issue view "$NUMBER" --repo "$REPO" --json title,body,author,labels,milestone,comments \
               > "$REVIEW_DIR/issue.json"
             template=.github/review/issue.md
           fi
+          echo "agents=${agents:-false}" >> "$GITHUB_OUTPUT"
           delimiter="PROMPT_$(openssl rand -hex 16)"
           {
             echo "prompt<<$delimiter"
@@ -229,9 +234,9 @@ jobs:
             --effort ${{ env.EFFORT }}
             --max-turns ${{ env.KIND == 'pr' && 100 || 50 }}
             --add-dir ${{ env.REVIEW_DIR }}
-            --tools "Read,Grep,Glob,Agent,ToolSearch"
-            --allowedTools "Read,Grep,Glob,Agent,mcp__github_inline_comment__create_inline_comment"
-            --disallowedTools "Bash,Edit,Write,NotebookEdit,WebFetch,WebSearch"
+            --tools "${{ steps.prep.outputs.agents == 'true' && 'Read,Grep,Glob,Agent,ToolSearch' || 'Read,Grep,Glob,ToolSearch' }}"
+            --allowedTools "${{ steps.prep.outputs.agents == 'true' && 'Read,Grep,Glob,Agent,' || 'Read,Grep,Glob,' }}mcp__github_inline_comment__create_inline_comment"
+            --disallowedTools "${{ steps.prep.outputs.agents != 'true' && 'Agent,' || '' }}Bash,Edit,Write,NotebookEdit,WebFetch,WebSearch"
           settings: >-
             {"permissions": {"blockReadsOutsideWorkingDirectories": true,
             "deny": ["Read(//proc/**)", "Read(//home/runner/work/_temp/**)", "Read(**/.git/**)",
