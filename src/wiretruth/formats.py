@@ -127,24 +127,29 @@ def _bounded_int(text: str) -> int:
     return value
 
 
-def read_json(path: Path) -> JsonValue:
-    """Read a JSON file strictly.
+def parse_json(data: bytes) -> JsonValue:
+    """Parse JSON strictly.
 
     UTF-8 only; no duplicate keys; no NaN, Infinity or numbers too large for a double; no lone
-    surrogates in \\u escapes. Parsers in other languages disagree on all of these.
+    surrogates in \\u escapes. Parsers in other languages disagree on all of these. Raises
+    ValueError (JSON and Unicode errors are ValueErrors) or RecursionError.
     """
+    doc = json.loads(
+        data.decode("utf-8"),
+        object_pairs_hook=_object_without_duplicates,
+        parse_constant=_reject_constant,
+        parse_float=_finite_float,
+        parse_int=_bounded_int,
+    )
+    # Encoding fails on a lone surrogate, which only a \u escape can produce here.
+    json.dumps(doc, ensure_ascii=False).encode("utf-8")
+    return cast(JsonValue, doc)
+
+
+def read_json(path: Path) -> JsonValue:
+    """Read a JSON file strictly (see parse_json)."""
     try:
-        text = path.read_bytes().decode("utf-8")
-        doc = json.loads(
-            text,
-            object_pairs_hook=_object_without_duplicates,
-            parse_constant=_reject_constant,
-            parse_float=_finite_float,
-            parse_int=_bounded_int,
-        )
-        # Encoding fails on a lone surrogate, which only a \u escape can produce here.
-        json.dumps(doc, ensure_ascii=False).encode("utf-8")
-        return cast(JsonValue, doc)
+        return parse_json(path.read_bytes())
     except OSError as error:
         message = f"cannot read the file: {error.strerror}"
     except UnicodeDecodeError as error:
@@ -289,6 +294,18 @@ def _check_fixture(doc: JsonObject) -> Findings:
     derived = _opt_object(doc, "derived_from")
     if derived is not None and _str(derived, "fixture") == fixture_id:
         yield "$.derived_from.fixture", "a fixture can't be derived from itself"
+    # How the replay server sends each body form (docs/formats.md, Exchange).
+    for i, exchange in enumerate(_objects(doc, "exchanges")):
+        response = _object(exchange, "response")
+        ((kind, value),) = _object(response, "body").items()
+        if response.get("end") == "abort" and kind in ("json", "text"):
+            message = f"a {kind} body is sent whole, so 'abort' needs sse, ndjson or chunks_b64"
+            yield f"$.exchanges[{i}].response.end", message
+        if kind == "chunks_b64":
+            for j, chunk in enumerate(cast("list[str]", value)):
+                if not chunk:
+                    message = "an empty chunk would end the chunked body early"
+                    yield f"$.exchanges[{i}].response.body.chunks_b64[{j}]", message
 
 
 def _check_scenario(doc: JsonObject) -> Findings:
