@@ -222,6 +222,15 @@ All fields are required.
 | `{"chunks_b64": […]}` | one base64 string per chunk, for bodies whose exact chunk boundaries matter |
 | `{"text": …}` | a string |
 
+The replay server sends `json` and `text` bodies whole, with `Content-Length`. It sends the other forms with
+chunked transfer encoding: one chunk per event, per line (with its newline) or per stored chunk, each flushed on its
+own, with a short gap between chunks. So `abort` needs `sse`, `ndjson` or `chunks_b64`, and a `chunks_b64` chunk
+can't be empty, because an empty chunk ends a chunked body.
+
+Exchanges are answered in order. A request that matches the next exchange's method and path gets it. Once every
+exchange has been used, the last one that matches repeats, so retries stay visible. Any other request gets a 404
+that names the method and path.
+
 ### Truth
 
 | Field | Type | Meaning |
