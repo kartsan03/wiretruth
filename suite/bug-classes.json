@@ -1,0 +1,64 @@
+[
+  {
+    "id": "silent-truncation",
+    "title": "Truncation not reported as truncation",
+    "description": "The provider stopped at the output token limit, but the library reports a normal finish, a generic parse error, or a partial result as success.",
+    "effect": "Agents accept partial output or retry without raising the limit, and structured pipelines ingest incomplete records.",
+    "references": [
+      "https://github.com/TanStack/ai/issues/1426",
+      "https://github.com/TanStack/ai/pull/1548",
+      "https://github.com/BerriAI/litellm/issues/36881"
+    ]
+  },
+  {
+    "id": "finish-reason-mapping",
+    "title": "Finish reason mapped to the wrong value",
+    "description": "The library maps the provider's finish value to a different canonical value, drops it, or fails on a value it doesn't know.",
+    "effect": "Code that branches on the finish reason takes the wrong branch, for example treating a content filter or a new value as a normal stop.",
+    "references": [
+      "https://github.com/BerriAI/litellm/issues/21347",
+      "https://github.com/pydantic/pydantic-ai/issues/7816"
+    ]
+  },
+  {
+    "id": "usage-accounting",
+    "title": "Token usage misreported",
+    "description": "The library reports token counts that differ from the provider's: cached or reasoning tokens are dropped or double-counted, or streamed usage is lost.",
+    "effect": "Cost and quota tracking is off, most often on cached prompts and reasoning models.",
+    "references": ["https://github.com/BerriAI/litellm/issues/35127"]
+  },
+  {
+    "id": "stream-integrity",
+    "title": "Streamed content or completion state corrupted",
+    "description": "The library corrupts streamed text, for example at multi-byte character boundaries, or reports a stream that ended early as complete.",
+    "effect": "Corrupted or unfinished text is treated as the final answer.",
+    "references": ["https://github.com/pydantic/pydantic-ai/issues/6610"]
+  },
+  {
+    "id": "tool-call-fidelity",
+    "title": "Tool calls lost, merged or returned with broken arguments",
+    "description": "The library drops or merges tool calls, mixes up their ids, or returns a call as complete while its arguments are cut off or repaired.",
+    "effect": "Tools run with wrong or incomplete arguments, or don't run at all.",
+    "references": ["https://github.com/vercel/ai/issues/12052"]
+  },
+  {
+    "id": "error-classification",
+    "title": "Provider errors surfaced as the wrong kind of error, or not at all",
+    "description": "The library reports a provider error as a different kind of error, loses details such as the retry delay, or returns an error as a normal result.",
+    "effect": "Retries and backoff misbehave, and callers can't tell a rate limit from a bad request.",
+    "references": [
+      "https://github.com/BerriAI/litellm/issues/32086",
+      "https://github.com/BerriAI/litellm/issues/36655"
+    ]
+  },
+  {
+    "id": "request-fidelity",
+    "title": "The library sends something the caller didn't ask for",
+    "description": "The library adds, drops or renames request fields the caller didn't set, or sends a combination the provider rejects.",
+    "effect": "Calls fail on current models, or behave differently from what the caller configured.",
+    "references": [
+      "https://github.com/mozilla-ai/any-llm/pull/1389",
+      "https://github.com/mozilla-ai/any-llm/pull/1433"
+    ]
+  }
+]

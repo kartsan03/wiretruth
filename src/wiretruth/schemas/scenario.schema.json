@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kartsan03.github.io/wiretruth/schemas/scenario.schema.json",
+  "title": "wiretruth scenario",
+  "description": "One edge case: the provider-neutral call and the requirements a library must meet. Stored in suite/scenarios/<family>/<name>.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "id",
+    "title",
+    "bug_class",
+    "priority",
+    "summary",
+    "call",
+    "providers",
+    "requirements"
+  ],
+  "properties": {
+    "format": { "const": "wiretruth.scenario/v1" },
+    "id": { "$ref": "common.schema.json#/$defs/scenario_id" },
+    "title": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+    "bug_class": { "$ref": "common.schema.json#/$defs/slug" },
+    "priority": { "enum": ["P0", "P1", "P2"] },
+    "summary": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+    "call": {
+      "$ref": "call.schema.json#/$defs/call_fields",
+      "required": ["stream", "messages"],
+      "unevaluatedProperties": false
+    },
+    "providers": {
+      "description": "Where a fixture is expected.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "common.schema.json#/$defs/provider_id" }
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/requirement" }
+    },
+    "call_overrides": {
+      "description": "Call fields to replace for one provider. Each override needs a reason in grading_notes.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "common.schema.json#/$defs/provider_id" },
+      "additionalProperties": {
+        "$ref": "call.schema.json#/$defs/call_fields",
+        "minProperties": 1,
+        "unevaluatedProperties": false
+      }
+    },
+    "grading_notes": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+    "references": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/url" }
+    }
+  },
+  "dependentRequired": {
+    "call_overrides": ["grading_notes"]
+  },
+  "$defs": {
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level", "check", "text"],
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/slug" },
+        "level": { "enum": ["MUST", "SHOULD"] },
+        "check": {
+          "description": "The name of a check in checks.py.",
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "args": {
+          "description": "Arguments for the check. The check validates them.",
+          "type": "object"
+        },
+        "text": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+        "providers": {
+          "description": "Restricts the requirement to these providers.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "common.schema.json#/$defs/provider_id" }
+        }
+      }
+    }
+  }
+}

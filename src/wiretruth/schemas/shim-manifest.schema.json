@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kartsan03.github.io/wiretruth/schemas/shim-manifest.schema.json",
+  "title": "wiretruth shim manifest",
+  "description": "How to run one shim and how to read its library. Stored as wiretruth-shim.json next to the shim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "name",
+    "language",
+    "packages",
+    "primary_package",
+    "entry",
+    "providers",
+    "surfaces",
+    "finish_map",
+    "error_map",
+    "unsupported",
+    "config_notes",
+    "docs"
+  ],
+  "properties": {
+    "format": { "const": "wiretruth.shim/v1" },
+    "name": { "$ref": "common.schema.json#/$defs/slug" },
+    "language": { "$ref": "common.schema.json#/$defs/language" },
+    "packages": {
+      "description": "Exact versions, never ranges.",
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "pattern": "^[0-9A-Za-z][0-9A-Za-z.+-]*$" }
+    },
+    "primary_package": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+    "entry": {
+      "description": "argv, run in the shim's directory.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "common.schema.json#/$defs/nonempty_string" }
+    },
+    "env": {
+      "description": "Extra environment variables. WIRETRUTH_* names are reserved for the runner.",
+      "type": "object",
+      "propertyNames": { "pattern": "^(?!WIRETRUTH_)[A-Za-z_][A-Za-z0-9_]*$" },
+      "additionalProperties": { "type": "string" }
+    },
+    "providers": {
+      "description": "How the shim builds a client for each provider it supports.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "common.schema.json#/$defs/provider_id" },
+      "additionalProperties": { "$ref": "common.schema.json#/$defs/nonempty_string" }
+    },
+    "surfaces": {
+      "description": "Where the library exposes each fact.",
+      "type": "object",
+      "propertyNames": { "enum": ["finish", "text", "usage", "tool_calls", "structured", "stream"] },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "properties": {
+          "primary": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+          "raw": { "$ref": "common.schema.json#/$defs/nonempty_string" }
+        }
+      }
+    },
+    "finish_map": {
+      "description": "The library's finish values mapped to canonical ones.",
+      "type": "object",
+      "additionalProperties": { "$ref": "common.schema.json#/$defs/finish" }
+    },
+    "error_map": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "category"],
+        "properties": {
+          "type": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+          "category": { "$ref": "common.schema.json#/$defs/error_category" },
+          "message_regex": {
+            "description": "Maps a builtin the library raises on purpose. Needs a source link.",
+            "$ref": "common.schema.json#/$defs/nonempty_string"
+          },
+          "source": {
+            "description": "A link to the line that raises the error.",
+            "$ref": "common.schema.json#/$defs/url"
+          },
+          "note": { "type": "string" }
+        },
+        "dependentRequired": { "message_regex": ["source"] }
+      }
+    },
+    "unsupported": {
+      "description": "Scenarios the library can't express, with the documentation that says so.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scenario", "reason", "docs"],
+        "properties": {
+          "scenario": { "$ref": "common.schema.json#/$defs/scenario_id" },
+          "providers": {
+            "description": "Limits the entry to these providers. All providers when missing.",
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "$ref": "common.schema.json#/$defs/provider_id" }
+          },
+          "reason": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+          "docs": { "$ref": "common.schema.json#/$defs/url" }
+        }
+      }
+    },
+    "config_notes": {
+      "description": "Every deviation from the library's default configuration, with the reason.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "docs": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/url" }
+    }
+  }
+}

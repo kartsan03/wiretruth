@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kartsan03.github.io/wiretruth/schemas/fixture.schema.json",
+  "title": "wiretruth fixture",
+  "description": "HTTP exchanges for one scenario and provider, where they came from, and the truth computed from them. Stored in suite/fixtures/<provider>/<scenario>[@<variant>].json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "id",
+    "scenario",
+    "provider",
+    "tier",
+    "provenance",
+    "derived_from",
+    "exchanges",
+    "truth"
+  ],
+  "properties": {
+    "format": { "const": "wiretruth.fixture/v1" },
+    "id": { "$ref": "common.schema.json#/$defs/fixture_id" },
+    "scenario": { "$ref": "common.schema.json#/$defs/scenario_id" },
+    "provider": { "$ref": "common.schema.json#/$defs/provider_id" },
+    "tier": { "$ref": "common.schema.json#/$defs/tier" },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "derived_from": {
+      "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/derived_from" }]
+    },
+    "exchanges": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/exchange" }
+    },
+    "truth": { "$ref": "#/$defs/truth" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "tier": { "const": "recorded" } } },
+      "then": {
+        "properties": {
+          "provenance": { "required": ["recorded_at", "requested_model", "recorder", "raw_sha256"] },
+          "derived_from": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "tier": { "const": "documented" } } },
+      "then": {
+        "properties": {
+          "provenance": {
+            "required": ["source_url", "notes"],
+            "properties": { "notes": { "minLength": 1 } }
+          },
+          "derived_from": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "tier": { "const": "derived" } } },
+      "then": { "properties": { "derived_from": { "type": "object" } } }
+    }
+  ],
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "recorded_at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "requested_model": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+        "returned_model": { "type": ["string", "null"] },
+        "recorder": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+        "source_commit": {
+          "anyOf": [{ "type": "null" }, { "$ref": "common.schema.json#/$defs/git_sha" }]
+        },
+        "ci_run": {
+          "anyOf": [{ "type": "null" }, { "$ref": "common.schema.json#/$defs/url" }]
+        },
+        "raw_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "request": {
+          "description": "The native request body that was sent, without credentials.",
+          "type": "object"
+        },
+        "source_url": { "$ref": "common.schema.json#/$defs/url" },
+        "notes": { "type": "string" }
+      }
+    },
+    "derived_from": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fixture", "transform", "args", "rationale", "evidence_url"],
+      "properties": {
+        "fixture": { "$ref": "common.schema.json#/$defs/fixture_id" },
+        "transform": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "args": { "type": "object" },
+        "rationale": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+        "evidence_url": { "$ref": "common.schema.json#/$defs/url" }
+      }
+    },
+    "exchange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["match", "response"],
+      "properties": {
+        "match": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["method", "path"],
+          "properties": {
+            "method": { "type": "string", "pattern": "^[A-Z]+$" },
+            "path": {
+              "description": "The request path. '*' matches any run of characters.",
+              "type": "string",
+              "pattern": "^/[^\\s?#]*$"
+            }
+          }
+        },
+        "response": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "headers", "body"],
+          "properties": {
+            "status": { "type": "integer", "minimum": 100, "maximum": 599 },
+            "headers": {
+              "description": "Only allowlisted headers, with lowercase names.",
+              "type": "object",
+              "propertyNames": { "enum": ["content-type", "retry-after"] },
+              "additionalProperties": { "type": "string" }
+            },
+            "body": { "$ref": "#/$defs/body" },
+            "end": { "enum": ["clean", "abort"], "default": "clean" }
+          }
+        }
+      }
+    },
+    "body": {
+      "description": "Exactly one of the body forms.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "json": { "description": "Any JSON value, written with Content-Length." },
+        "sse": {
+          "description": "Server-sent events, each including its trailing blank line.",
+          "type": "array",
+          "items": { "type": "string", "pattern": "(\\n\\n|\\r\\n\\r\\n)$" }
+        },
+        "ndjson": {
+          "description": "NDJSON lines, without their newline.",
+          "type": "array",
+          "items": { "type": "string", "not": { "pattern": "[\\r\\n]" } }
+        },
+        "chunks_b64": {
+          "description": "Exact byte chunks, base64-encoded.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+          }
+        },
+        "text": { "type": "string" }
+      }
+    },
+    "truth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finish",
+        "raw_finish",
+        "text",
+        "tool_calls",
+        "structured",
+        "error",
+        "stream_completed",
+        "usage"
+      ],
+      "properties": {
+        "finish": { "$ref": "common.schema.json#/$defs/finish" },
+        "raw_finish": { "type": ["string", "null"] },
+        "text": { "type": ["string", "null"] },
+        "tool_calls": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/tool_call" }
+        },
+        "structured": { "description": "The parsed structured output, or null." },
+        "error": {
+          "anyOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["message"],
+              "properties": {
+                "status": { "type": ["integer", "null"] },
+                "type": { "type": ["string", "null"] },
+                "code": { "type": ["string", "null"] },
+                "message": { "type": "string" }
+              }
+            }
+          ]
+        },
+        "stream_completed": {
+          "description": "Whether the stream ended normally. Null for a non-streamed response.",
+          "type": ["boolean", "null"]
+        },
+        "usage": { "$ref": "#/$defs/usage" }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "cached_input", "output", "reasoning", "total", "alternatives", "raw"],
+      "properties": {
+        "input": { "$ref": "common.schema.json#/$defs/token_count" },
+        "cached_input": { "$ref": "common.schema.json#/$defs/token_count" },
+        "output": { "$ref": "common.schema.json#/$defs/token_count" },
+        "reasoning": { "$ref": "common.schema.json#/$defs/token_count" },
+        "total": { "$ref": "common.schema.json#/$defs/token_count" },
+        "alternatives": {
+          "description": "Other documented readings of a field, by name, e.g. {\"input\": {\"uncached_input\": 12}}.",
+          "type": "object",
+          "propertyNames": { "enum": ["input", "cached_input", "output", "reasoning", "total"] },
+          "additionalProperties": {
+            "type": "object",
+            "propertyNames": { "pattern": "^[a-z][a-z0-9_]*$" },
+            "additionalProperties": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "raw": {
+          "description": "The provider's own usage object, verbatim, or null if it sent none.",
+          "type": ["object", "null"]
+        }
+      }
+    }
+  }
+}

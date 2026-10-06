@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kartsan03.github.io/wiretruth/schemas/common.schema.json",
+  "title": "wiretruth shared vocabulary",
+  "description": "Definitions shared by the other wiretruth schemas. Not a document format on its own.",
+  "$defs": {
+    "provider_id": {
+      "description": "One wire API.",
+      "enum": [
+        "openai-chat",
+        "openai-responses",
+        "anthropic",
+        "gemini",
+        "gemini-interactions",
+        "ollama",
+        "ollama-openai"
+      ]
+    },
+    "scenario_id": {
+      "description": "<family>.<name>, lowercase, with '-' inside the name.",
+      "type": "string",
+      "pattern": "^(truncation|finish|usage|stream|tools|request|errors)\\.[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "fixture_id": {
+      "description": "<provider>/<scenario>, optionally followed by @<variant> (a date such as 2026-11-02, or a short name).",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*/[a-z]+\\.[a-z0-9]+(-[a-z0-9]+)*(@[a-z0-9]+(-[a-z0-9]+)*)?$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "tier": {
+      "enum": ["recorded", "documented", "derived"]
+    },
+    "finish": {
+      "description": "Canonical finish value.",
+      "enum": ["stop", "length", "tool_calls", "content_filter", "refusal", "error", "other", "none"]
+    },
+    "error_category": {
+      "enum": [
+        "rate_limit",
+        "context_length",
+        "truncation",
+        "content_filter",
+        "parse",
+        "validation",
+        "api",
+        "network",
+        "internal",
+        "other"
+      ]
+    },
+    "surface": {
+      "enum": ["primary", "raw", "absent"]
+    },
+    "language": {
+      "enum": ["python", "javascript"]
+    },
+    "token_count": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "tool_call": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "arguments_raw", "arguments_parsed_ok", "arguments"],
+      "properties": {
+        "id": { "type": ["string", "null"] },
+        "name": { "type": "string" },
+        "arguments_raw": { "type": ["string", "null"] },
+        "arguments_parsed_ok": { "type": "boolean" },
+        "arguments": { "description": "The parsed arguments, or null when they don't parse." }
+      }
+    },
+    "timestamp": {
+      "description": "UTC, RFC 3339, for example 2026-10-10T10:12:03Z.",
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "git_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$"
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^https://[^\\s]+$"
+    },
+    "nonempty_string": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

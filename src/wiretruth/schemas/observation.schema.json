@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kartsan03.github.io/wiretruth/schemas/observation.schema.json",
+  "title": "wiretruth observation",
+  "description": "What a library reported for one call. A shim prints exactly one observation to stdout.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "library",
+    "outcome",
+    "unsupported_reason",
+    "error",
+    "finish",
+    "text",
+    "structured",
+    "tool_calls",
+    "usage",
+    "stream",
+    "notes",
+    "elapsed_ms"
+  ],
+  "properties": {
+    "format": { "const": "wiretruth.observation/v1" },
+    "library": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "language", "api"],
+      "properties": {
+        "name": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+        "version": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+        "language": { "$ref": "common.schema.json#/$defs/language" },
+        "api": {
+          "description": "The library entry point the shim called, e.g. litellm.completion.",
+          "$ref": "common.schema.json#/$defs/nonempty_string"
+        }
+      }
+    },
+    "outcome": { "enum": ["returned", "raised", "unsupported"] },
+    "unsupported_reason": { "type": ["string", "null"] },
+    "error": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "message", "category", "retry_after", "stack_top"],
+          "properties": {
+            "type": {
+              "description": "The fully qualified error type.",
+              "$ref": "common.schema.json#/$defs/nonempty_string"
+            },
+            "message": { "type": "string", "maxLength": 500 },
+            "category": { "$ref": "common.schema.json#/$defs/error_category" },
+            "retry_after": { "type": ["number", "null"], "minimum": 0 },
+            "stack_top": {
+              "description": "file:line of the raising frame, relative to the library.",
+              "type": ["string", "null"]
+            }
+          }
+        }
+      ]
+    },
+    "finish": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "raw", "surface", "source"],
+          "properties": {
+            "value": {
+              "anyOf": [{ "type": "null" }, { "$ref": "common.schema.json#/$defs/finish" }]
+            },
+            "raw": { "type": ["string", "null"] },
+            "surface": { "$ref": "common.schema.json#/$defs/surface" },
+            "source": {
+              "description": "The attribute path that was read.",
+              "type": ["string", "null"]
+            }
+          },
+          "if": { "properties": { "surface": { "const": "absent" } } },
+          "then": { "properties": { "value": { "type": "null" } } }
+        }
+      ]
+    },
+    "text": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "surface"],
+          "properties": {
+            "value": { "type": ["string", "null"] },
+            "surface": { "$ref": "common.schema.json#/$defs/surface" }
+          }
+        }
+      ]
+    },
+    "structured": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempted", "returned_as_success", "value"],
+      "properties": {
+        "attempted": { "type": "boolean" },
+        "returned_as_success": {
+          "description": "The library handed back a parsed object with no error.",
+          "type": "boolean"
+        },
+        "value": { "description": "The object the library returned, or null." }
+      }
+    },
+    "tool_calls": {
+      "type": "array",
+      "items": { "$ref": "common.schema.json#/$defs/tool_call" }
+    },
+    "usage": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["input", "cached_input", "output", "reasoning", "total", "surface"],
+          "properties": {
+            "input": { "$ref": "common.schema.json#/$defs/token_count" },
+            "cached_input": { "$ref": "common.schema.json#/$defs/token_count" },
+            "output": { "$ref": "common.schema.json#/$defs/token_count" },
+            "reasoning": { "$ref": "common.schema.json#/$defs/token_count" },
+            "total": { "$ref": "common.schema.json#/$defs/token_count" },
+            "surface": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["input", "cached_input", "output", "reasoning", "total"],
+              "properties": {
+                "input": { "$ref": "common.schema.json#/$defs/surface" },
+                "cached_input": { "$ref": "common.schema.json#/$defs/surface" },
+                "output": { "$ref": "common.schema.json#/$defs/surface" },
+                "reasoning": { "$ref": "common.schema.json#/$defs/surface" },
+                "total": { "$ref": "common.schema.json#/$defs/surface" }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["used", "completed", "chunks_seen"],
+      "properties": {
+        "used": { "type": "boolean" },
+        "completed": {
+          "description": "The library's own signal that the stream ended normally, or null if it gives none.",
+          "type": ["boolean", "null"]
+        },
+        "chunks_seen": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "elapsed_ms": { "type": "number", "minimum": 0 }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome": { "const": "raised" } } },
+      "then": { "properties": { "error": { "type": "object" } } }
+    },
+    {
+      "if": { "properties": { "outcome": { "const": "unsupported" } } },
+      "then": { "properties": { "unsupported_reason": { "type": "string", "minLength": 1 } } },
+      "else": { "properties": { "unsupported_reason": { "type": "null" } } }
+    }
+  ]
+}
