@@ -28,7 +28,8 @@ wiretruth reads JSON strictly. Each of these is an error:
 
 - a file that isn't valid UTF-8;
 - the same key twice in one object;
-- `NaN`, `Infinity` or `-Infinity`;
+- `NaN`, `Infinity` or `-Infinity`, and numbers too large to represent, such as `1e400`;
+- a `\u` escape that is half of a surrogate pair;
 - nesting too deep to parse.
 
 Different JSON parsers handle these in different ways, so a file that contains them could mean different things in
@@ -303,7 +304,7 @@ What a library reported. A shim prints exactly one observation to stdout. Every 
 | `providers` | object | yes | Provider id → how the shim builds a client for it |
 | `surfaces` | object | yes | `finish`, `text`, `usage`, `tool_calls`, `structured` or `stream` → `{primary?, raw?}`: where the library exposes it |
 | `finish_map` | object | yes | Library finish value → finish value |
-| `error_map` | list | yes | `{type, category, note?}`, plus `message_regex` and `source` for a builtin error the library raises on purpose. `source` links to the raising line |
+| `error_map` | list | yes | `{type, category, note?}`, plus `message_regex` and `source` for a builtin error the library raises on purpose. `source` links to the raising line. Lint checks the regex syntax for Python shims only |
 | `unsupported` | list | yes | `{scenario, providers?, reason, docs}`: what the library can't express, with the docs that say so |
 | `config_notes` | list of strings | yes | Every change from the library's default configuration, and why ([ADR 0006](adr/0006-default-library-config.md)) |
 | `docs` | list of URLs | yes | |

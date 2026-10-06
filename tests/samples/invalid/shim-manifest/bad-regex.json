@@ -1,7 +1,7 @@
 {
   "format": "wiretruth.shim/v1",
   "name": "vercel-ai",
-  "language": "javascript",
+  "language": "python",
   "packages": {
     "ai": "7.0.124",
     "@ai-sdk/openai": "4.0.83",
@@ -10,8 +10,8 @@
   },
   "primary_package": "ai",
   "entry": [
-    "node",
-    "shim.mjs"
+    "python",
+    "shim.py"
   ],
   "env": {
     "NODE_OPTIONS": "--no-warnings"

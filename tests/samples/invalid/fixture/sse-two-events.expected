@@ -1,0 +1,1 @@
+$.exchanges[0].response.body.sse[2]: 'data: {"id":"chatcmpl-1","choices":[{"index":0,"delta":{},"finish_reason":"length"}]}\n\ndata: [DONE]\n\n' should not be valid under {'pattern': '(\\n\\n|\\r\\n\\r\\n)[\\s\\S]'}

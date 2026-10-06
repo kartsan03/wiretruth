@@ -35,7 +35,7 @@
   },
   "allOf": [
     {
-      "if": { "properties": { "tier": { "const": "recorded" } } },
+      "if": { "required": ["tier"], "properties": { "tier": { "const": "recorded" } } },
       "then": {
         "properties": {
           "provenance": { "required": ["recorded_at", "requested_model", "recorder", "raw_sha256"] },
@@ -44,7 +44,7 @@
       }
     },
     {
-      "if": { "properties": { "tier": { "const": "documented" } } },
+      "if": { "required": ["tier"], "properties": { "tier": { "const": "documented" } } },
       "then": {
         "properties": {
           "provenance": {
@@ -56,7 +56,7 @@
       }
     },
     {
-      "if": { "properties": { "tier": { "const": "derived" } } },
+      "if": { "required": ["tier"], "properties": { "tier": { "const": "derived" } } },
       "then": { "properties": { "derived_from": { "type": "object" } } }
     }
   ],
@@ -141,9 +141,13 @@
       "properties": {
         "json": { "description": "Any JSON value, written with Content-Length." },
         "sse": {
-          "description": "Server-sent events, each including its trailing blank line.",
+          "description": "Server-sent events, one per string, each ending with its blank line.",
           "type": "array",
-          "items": { "type": "string", "pattern": "(\\n\\n|\\r\\n\\r\\n)$" }
+          "items": {
+            "type": "string",
+            "pattern": "(\\n\\n|\\r\\n\\r\\n)$",
+            "not": { "pattern": "(\\n\\n|\\r\\n\\r\\n)[\\s\\S]" }
+          }
         },
         "ndjson": {
           "description": "NDJSON lines, without their newline.",

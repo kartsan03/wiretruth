@@ -82,6 +82,7 @@ def lint(root: Path) -> Report:
     registry = suite / "bug-classes.json"
     bug_classes: set[str] | None = None
     if not registry.is_file():
+        report.files += 1  # checked, and found missing
         report.problems.append(Problem(str(registry), "$", "the bug-class registry is missing"))
     # Keyed by the id the file path implies; None when the file itself is invalid.
     scenarios: dict[str, tuple[Path, Scenario | None]] = {}

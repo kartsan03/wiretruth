@@ -71,9 +71,13 @@ def test_missing_results_is_only_a_note(root: Path) -> None:
     assert report.notes == [f"{root / 'results'}: no such directory, skipped"]
 
 
-def test_missing_registry(root: Path) -> None:
+def test_missing_registry(root: Path, capsys: pytest.CaptureFixture[str]) -> None:
     (root / "suite" / "bug-classes.json").unlink()
     assert _lines(root) == ["suite/bug-classes.json: $: the bug-class registry is missing"]
+    shutil.rmtree(root / "suite")
+    (root / "suite").mkdir()
+    assert main(["lint", str(root)]) == 1
+    assert capsys.readouterr().out.splitlines()[-1] == "wiretruth lint: 1 error in 1 of 3 files"
 
 
 def test_scenario_cross_checks(root: Path) -> None:

@@ -214,7 +214,8 @@ def test_shim_manifest_records() -> None:
     assert manifest.entry == ("node", "shim.mjs")
     assert manifest.finish_map["tool-calls"] == "tool_calls"
     assert manifest.surfaces["finish"]["raw"] == "result.rawFinishReason"
-    assert manifest.error_map[2].message_regex == "^output truncated"
+    # A JavaScript named group: not valid Python, and only Python patterns are checked.
+    assert manifest.error_map[2].message_regex == r"^output truncated \((?<limit>\d+)\)"
     assert manifest.unsupported[0].providers == ("openai-chat",)
     minimal = load_shim_manifest(SAMPLES / "valid" / "shim-manifest" / "minimal.json")
     assert minimal.env == {}
@@ -286,3 +287,22 @@ def test_checks_run_only_after_the_schema_passes(tmp_path: Path) -> None:
     with pytest.raises(FormatError) as exc:
         load_shim_manifest(path)
     assert [problem.where for problem in exc.value.problems] == ["$.docs[0]"]
+
+
+def test_valid_strings_with_a_trailing_newline_are_rejected(tmp_path: Path) -> None:
+    doc = json.loads((SAMPLES / "valid" / "bug-classes" / "one-class.json").read_text())
+    doc[0]["id"] += "\n"
+    path = tmp_path / "bug-classes.json"
+    path.write_text(json.dumps(doc))
+    with pytest.raises(FormatError) as exc:
+        load_bug_classes(path)
+    assert [problem.where for problem in exc.value.problems] == ["$[0].id"]
+
+
+def test_integers_too_long_to_convert(tmp_path: Path) -> None:
+    path = tmp_path / "long.json"
+    path.write_text('{"n": ' + "1" * 5000 + "}")
+    with pytest.raises(FormatError) as exc:
+        read_json(path)
+    (problem,) = exc.value.problems
+    assert problem.message.startswith("invalid JSON: ")

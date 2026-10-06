@@ -1,0 +1,28 @@
+{
+  "format": "wiretruth.observation/v1",
+  "library": {
+    "name": "any-llm",
+    "version": "1.29.0",
+    "language": "python",
+    "api": "any_llm.completion"
+  },
+  "outcome": "unsupported",
+  "unsupported_reason": "nope",
+  "error": null,
+  "finish": null,
+  "text": null,
+  "structured": {
+    "attempted": false,
+    "returned_as_success": false,
+    "value": null
+  },
+  "tool_calls": [],
+  "usage": null,
+  "stream": {
+    "used": false,
+    "completed": null,
+    "chunks_seen": null
+  },
+  "notes": [],
+  "elapsed_ms": 0
+}

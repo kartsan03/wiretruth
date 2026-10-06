@@ -11,6 +11,7 @@ Every problem in a file is reported, one per line: ``<file>: <JSON path>: <messa
 from __future__ import annotations
 
 import json
+import math
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
@@ -20,8 +21,9 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Literal, TypeAlias, cast, get_args
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, validators
 from jsonschema.exceptions import ValidationError
+from jsonschema.protocols import Validator
 from referencing import Registry, Resource
 
 JsonValue: TypeAlias = "bool | int | float | str | list[JsonValue] | dict[str, JsonValue] | None"
@@ -109,28 +111,42 @@ def _reject_constant(name: str) -> JsonValue:
     raise _Rejected(f"{name} is not allowed")
 
 
+def _finite_float(text: str) -> float:
+    value = float(text)
+    if not math.isfinite(value):
+        raise _Rejected(f"{text} is out of range")
+    return value
+
+
 def read_json(path: Path) -> JsonValue:
-    """Read a JSON file strictly: UTF-8, no duplicate keys, no NaN or Infinity."""
+    """Read a JSON file strictly.
+
+    UTF-8 only; no duplicate keys; no NaN, Infinity or numbers that overflow to them; no lone
+    surrogates in \\u escapes. Parsers in other languages disagree on all of these.
+    """
     try:
         text = path.read_bytes().decode("utf-8")
-        return cast(
-            JsonValue,
-            json.loads(
-                text,
-                object_pairs_hook=_object_without_duplicates,
-                parse_constant=_reject_constant,
-            ),
+        doc = json.loads(
+            text,
+            object_pairs_hook=_object_without_duplicates,
+            parse_constant=_reject_constant,
+            parse_float=_finite_float,
         )
+        # Encoding fails on a lone surrogate, which only a \u escape can produce here.
+        json.dumps(doc, ensure_ascii=False).encode("utf-8")
+        return cast(JsonValue, doc)
     except OSError as error:
         message = f"cannot read the file: {error.strerror}"
     except UnicodeDecodeError as error:
         message = f"not valid UTF-8 (byte {error.start})"
+    except UnicodeEncodeError:
+        message = "invalid JSON: a \\u escape is a lone surrogate"
     except json.JSONDecodeError as error:
         message = f"invalid JSON: {error.msg} (line {error.lineno}, column {error.colno})"
-    except _Rejected as error:
-        message = f"invalid JSON: {error}"
     except RecursionError:
         message = "invalid JSON: nested too deeply"
+    except ValueError as error:  # _Rejected, or an integer too long to convert
+        message = f"invalid JSON: {error}"
     raise FormatError([Problem(str(path), "$", message)])
 
 
@@ -151,13 +167,39 @@ def load_schema(name: str) -> JsonObject:
 
 
 @cache
-def _validator(kind: Kind) -> Draft202012Validator:
+def _registry() -> Registry[bool | Mapping[str, object]]:
     # $ref resolves only between the bundled schemas: the registry has no retrieval function.
     schemas = [load_schema(name) for name in schema_names()]
-    registry: Registry[bool | Mapping[str, object]] = Registry().with_resources(
+    return Registry().with_resources(
         (cast(str, schema["$id"]), Resource.from_contents(schema)) for schema in schemas
     )
-    return Draft202012Validator(load_schema(f"{kind}.schema.json"), registry=registry)
+
+
+@cache
+def _end_anchored(pattern: str) -> re.Pattern[str]:
+    # Schema patterns are ECMA-262 regexes, where `$` matches only at the end of the input.
+    # Python's `$` also matches before a final newline, so "abc\n" would pass "^abc$".
+    # (A `$` inside a character class would break this; the bundled schemas have none.)
+    return re.compile(re.sub(r"(?<!\\)\$", r"\\Z", pattern))
+
+
+def _pattern(
+    validator: Validator, pattern: str, instance: object, schema: Mapping[str, object]
+) -> Iterator[ValidationError]:
+    if isinstance(instance, str) and not _end_anchored(pattern).search(instance):
+        yield ValidationError(f"{instance!r} does not match {pattern!r}")
+
+
+# The stubs leave extend() untyped; it returns a validator class like Draft202012Validator.
+_Validator = cast(
+    "type[Validator]",
+    validators.extend(Draft202012Validator, {"pattern": _pattern}),  # type: ignore[no-untyped-call]
+)
+
+
+@cache
+def _validator(kind: Kind) -> Validator:
+    return _Validator(load_schema(f"{kind}.schema.json"), registry=_registry())
 
 
 _NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
@@ -246,6 +288,9 @@ def _check_shim_manifest(doc: JsonObject) -> Findings:
     primary = _str(doc, "primary_package")
     if primary not in _object(doc, "packages"):
         yield "$.primary_package", f"{primary!r} is not in $.packages"
+    # Patterns run in the shim's language, and only Python's regex syntax can be checked here.
+    if doc["language"] != "python":
+        return
     for i, entry in enumerate(_objects(doc, "error_map")):
         pattern = _opt_str(entry, "message_regex")
         if pattern is None:

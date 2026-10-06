@@ -165,13 +165,27 @@
   },
   "allOf": [
     {
-      "if": { "properties": { "outcome": { "const": "raised" } } },
+      "if": { "required": ["outcome"], "properties": { "outcome": { "const": "raised" } } },
       "then": { "properties": { "error": { "type": "object" } } }
     },
     {
-      "if": { "properties": { "outcome": { "const": "unsupported" } } },
-      "then": { "properties": { "unsupported_reason": { "type": "string", "minLength": 1 } } },
-      "else": { "properties": { "unsupported_reason": { "type": "null" } } }
+      "if": { "required": ["outcome"], "properties": { "outcome": { "const": "unsupported" } } },
+      "then": {
+        "properties": {
+          "unsupported_reason": {
+            "description": "Why, with a link to the library's documentation.",
+            "type": "string",
+            "pattern": "https://[^\\s]+"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["outcome"],
+        "properties": { "outcome": { "enum": ["returned", "raised"] } }
+      },
+      "then": { "properties": { "unsupported_reason": { "type": "null" } } }
     }
   ]
 }
