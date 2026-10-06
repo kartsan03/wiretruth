@@ -1,0 +1,1 @@
+$.call_overrides.anthropic.tool_choice: 'any' is not one of ['auto', 'required', 'none']

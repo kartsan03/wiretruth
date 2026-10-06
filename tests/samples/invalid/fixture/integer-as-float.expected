@@ -1,0 +1,2 @@
+$.exchanges[0].response.status: 200.0 is not of type 'integer'
+$.truth.usage.output: 16.0 is not of type 'integer', 'null'

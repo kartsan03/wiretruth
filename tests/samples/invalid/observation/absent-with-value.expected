@@ -1,0 +1,2 @@
+$.finish.value: 'length' is not of type 'null'
+$.usage.surface.output: 'hidden' is not one of ['primary', 'raw', 'absent']

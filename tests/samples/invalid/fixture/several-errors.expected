@@ -1,0 +1,6 @@
+$.exchanges[0].response.status: 99 is less than the minimum of 100
+$.format: 'wiretruth.fixture/v1' was expected
+$.provenance.ci_run: 'http://example.org/run' does not match '^https://[^\\s]+$'
+$.tier: 'replayed' is not one of ['recorded', 'documented', 'derived']
+$.truth.finish: 'max_tokens' is not one of ['stop', 'length', 'tool_calls', 'content_filter', 'refusal', 'error', 'other', 'none']
+$.truth.usage: 'alternatives' is a required property

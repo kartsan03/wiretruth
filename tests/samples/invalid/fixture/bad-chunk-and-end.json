@@ -1,0 +1,61 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/stream.utf8-split@abort",
+  "scenario": "stream.utf8-split",
+  "provider": "openai-chat",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "gpt-6-luna",
+    "notes": "One event split inside the two bytes of 'П', then cut before the finish chunk."
+  },
+  "derived_from": {
+    "fixture": "openai-chat/stream.utf8-split",
+    "transform": "rechunk_inside_utf8",
+    "args": {
+      "split_at": [
+        50
+      ]
+    },
+    "rationale": "A network read can end inside a multi-byte character, and a stream can stop before its finish event; a client must buffer bytes before decoding and must not report the stream as complete.",
+    "evidence_url": "https://github.com/pydantic/pydantic-ai/issues/6610"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "chunks_b64": [
+            "ZGF0YTogeyJjaG9pY2VzIjpbeyJpbmRleCI6MCwiZGVsdGEiOnsiY29udGVudCI6ItA=",
+            "e30KCg"
+          ]
+        },
+        "end": "reset"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "none",
+    "raw_finish": null,
+    "text": "Привіт",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": false,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": null
+    }
+  }
+}

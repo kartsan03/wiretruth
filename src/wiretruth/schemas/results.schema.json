@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kartsan03.github.io/wiretruth/schemas/results.schema.json",
+  "title": "wiretruth results",
+  "description": "Every graded cell for one library version. Stored in results/<library>/<version>.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "suite_version", "library", "run", "cells"],
+  "properties": {
+    "format": { "const": "wiretruth.results/v1" },
+    "suite_version": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+    "library": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "language"],
+      "properties": {
+        "name": { "$ref": "common.schema.json#/$defs/slug" },
+        "version": { "type": "string", "pattern": "^[0-9A-Za-z][0-9A-Za-z.+-]*$" },
+        "language": { "$ref": "common.schema.json#/$defs/language" }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["at", "git_sha", "ci_run", "runner"],
+      "properties": {
+        "at": { "$ref": "common.schema.json#/$defs/timestamp" },
+        "git_sha": { "$ref": "common.schema.json#/$defs/git_sha" },
+        "ci_run": {
+          "anyOf": [{ "type": "null" }, { "$ref": "common.schema.json#/$defs/url" }]
+        },
+        "runner": { "$ref": "common.schema.json#/$defs/nonempty_string" }
+      }
+    },
+    "cells": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/cell" }
+    }
+  },
+  "$defs": {
+    "cell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenario",
+        "provider",
+        "fixture",
+        "fixture_tier",
+        "grade",
+        "requirements",
+        "notes",
+        "observation",
+        "request_count"
+      ],
+      "properties": {
+        "scenario": { "$ref": "common.schema.json#/$defs/scenario_id" },
+        "provider": { "$ref": "common.schema.json#/$defs/provider_id" },
+        "fixture": { "$ref": "common.schema.json#/$defs/fixture_id" },
+        "fixture_tier": { "$ref": "common.schema.json#/$defs/tier" },
+        "grade": { "enum": ["PASS", "LOSSY", "WRONG", "CRASH", "HANG", "UNSUPPORTED", "HARNESS"] },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "level", "status", "evidence"],
+            "properties": {
+              "id": { "$ref": "common.schema.json#/$defs/slug" },
+              "level": { "enum": ["MUST", "SHOULD"] },
+              "status": { "enum": ["SATISFIED", "CONTRADICTED", "NOT_OBSERVABLE"] },
+              "evidence": { "type": "string" }
+            }
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "observation": {
+          "description": "The full observation, or null when the shim produced none.",
+          "anyOf": [{ "type": "null" }, { "$ref": "observation.schema.json" }]
+        },
+        "request_count": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

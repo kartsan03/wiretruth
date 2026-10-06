@@ -1,0 +1,92 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "truncation.tool-call-args",
+  "title": "Tool call arguments cut off by the output token limit",
+  "bug_class": "tool-call-fidelity",
+  "priority": "P0",
+  "summary": "The model stops at the token limit while writing the arguments of a tool call.",
+  "call": {
+    "stream": false,
+    "max_output_tokens": 20,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Create an event for the Lviv coffee festival with 30 attendees named in Ukrainian."
+      }
+    ],
+    "tools": [
+      {
+        "name": "create_event",
+        "description": "Create a calendar event.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "attendees": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "title"
+          ]
+        }
+      }
+    ],
+    "tool_choice": "required",
+    "reasoning": {
+      "effort": "none"
+    },
+    "extra": {}
+  },
+  "providers": [
+    "openai-chat",
+    "anthropic"
+  ],
+  "requirements": [
+    {
+      "id": "no-complete-partial-call",
+      "level": "MUST",
+      "check": "no_complete_tool_call_from_partial_args",
+      "text": "A tool call with cut-off arguments is never returned as complete."
+    },
+    {
+      "id": "cause-is-truncation",
+      "level": "MUST",
+      "check": "truncation_is_signalled",
+      "text": "The caller can tell that the output stopped at the token limit."
+    },
+    {
+      "id": "forced-tool",
+      "level": "SHOULD",
+      "check": "request_field_equals",
+      "args": {
+        "path": "tool_choice",
+        "value": "required"
+      },
+      "text": "The library sends the tool choice the caller asked for.",
+      "providers": [
+        "gemini"
+      ]
+    }
+  ],
+  "call_overrides": {
+    "anthropic": {
+      "tool_choice": "auto",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Call create_event for the Lviv coffee festival."
+        }
+      ]
+    },
+    "ollama": {
+      "stream": true
+    }
+  },
+  "grading_notes": "Anthropic gets tool_choice auto, because forced tool choice returns 400 on current Claude models."
+}

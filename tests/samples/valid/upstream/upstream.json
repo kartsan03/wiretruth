@@ -1,0 +1,13 @@
+[
+  {
+    "library": "tanstack-ai",
+    "scenarios": ["truncation.structured-output"],
+    "providers": ["anthropic", "gemini"],
+    "issue": null,
+    "pr": "https://github.com/TanStack/ai/pull/1548",
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-09-28",
+    "notes": ""
+  }
+]

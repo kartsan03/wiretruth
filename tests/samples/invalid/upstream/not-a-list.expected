@@ -1,0 +1,1 @@
+$: {'library': 'tanstack-ai', 'scenarios': ['truncation.structured-output'], 'providers': ['anthropic', 'gemini'], 'issue': None, 'pr': 'https://github.com/TanStack/ai/pull/1548', 'status': 'reported', 'fixed_in': None, 'opened': '2026-09-28', 'notes': ''} is not of type 'array'

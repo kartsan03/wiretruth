@@ -1,0 +1,71 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/truncation.text-stream",
+  "scenario": "truncation.text-stream",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-10T10:12:03Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.1.0.dev0",
+    "source_commit": "513814c",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/1",
+    "raw_sha256": "9f2c4ab0d7e1f3a5c6b8d9e0f1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4",
+    "request": {
+      "model": "gpt-6-luna",
+      "stream": true,
+      "max_completion_tokens": 16,
+      "reasoning_effort": "none",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about the history of Kyiv, in English."
+        }
+      ]
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream; charset=utf-8"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-1\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-1\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"Kyiv, one of the oldest cities in Eastern Europe, was founded\"},\"finish_reason\":null}]}\n",
+            "data: {\"id\":\"chatcmpl-1\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"length\"}]}\n\n",
+            "data: [DONE]\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": "Kyiv, one of the oldest cities in Eastern Europe, was founded",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": null
+    }
+  }
+}

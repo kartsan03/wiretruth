@@ -1,0 +1,5 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/truncation.text"
+  "scenario": "truncation.text"
+}

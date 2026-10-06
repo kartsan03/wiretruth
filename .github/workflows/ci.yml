@@ -60,3 +60,28 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: uv sync --locked --extra dev
       - run: uv run pytest -q
+      # The oldest jsonschema that pyproject.toml allows.
+      - run: uv run --with "jsonschema==4.21.0" pytest -q
+
+  suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          version: "0.12.21"
+          enable-cache: true
+      # Lint with the built wheel rather than the source tree, and check that the wheel holds
+      # every schema, including those of formats the suite has no files of yet.
+      - run: uv build --wheel --out-dir dist
+      - run: uv venv .wheel-env
+      - run: uv pip install --python .wheel-env dist/*.whl
+      - name: Check that the wheel ships every schema
+        run: >-
+          .wheel-env/bin/python -c "from wiretruth.formats import KINDS, schema_names;
+          expected = {f'{kind}.schema.json' for kind in KINDS} | {'common.schema.json'};
+          assert set(schema_names()) == expected, sorted(expected ^ set(schema_names()))"
+      - run: .wheel-env/bin/wiretruth lint

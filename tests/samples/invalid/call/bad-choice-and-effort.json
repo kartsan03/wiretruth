@@ -1,0 +1,44 @@
+{
+  "format": "wiretruth.call/v1",
+  "scenario": "tools.parallel-calls",
+  "provider": "openai-chat",
+  "model": "gpt-6-luna",
+  "stream": true,
+  "messages": [
+    {
+      "role": "system",
+      "content": "Use the tools."
+    },
+    {
+      "role": "user",
+      "content": "What's the weather in Kyiv and in Lviv? Call the tool for both."
+    }
+  ],
+  "max_output_tokens": 200,
+  "stop": null,
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "Current weather for a city.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "city"
+        ]
+      }
+    }
+  ],
+  "tool_choice": "force",
+  "output_schema": null,
+  "reasoning": {
+    "effort": "huge"
+  },
+  "extra": {
+    "include_usage": true
+  }
+}

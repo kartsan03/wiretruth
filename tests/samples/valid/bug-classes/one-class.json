@@ -1,0 +1,9 @@
+[
+  {
+    "id": "silent-truncation",
+    "title": "Truncation not reported as truncation",
+    "description": "The library reports a normal finish when the provider stopped at the token limit.",
+    "effect": "Callers accept partial output.",
+    "references": []
+  }
+]

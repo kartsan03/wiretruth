@@ -1,0 +1,79 @@
+{
+  "format": "wiretruth.shim/v1",
+  "name": "vercel-ai",
+  "language": "javascript",
+  "packages": {
+    "ai": "7.0.124",
+    "@ai-sdk/openai": "4.0.83",
+    "@ai-sdk/anthropic": "4.0.70",
+    "@ai-sdk/google": "4.0.87"
+  },
+  "primary_package": "ai",
+  "entry": [
+    "node",
+    "shim.mjs"
+  ],
+  "env": {
+    "NODE_OPTIONS": "--no-warnings",
+    "WIRETRUTH_API_KEY": "x"
+  },
+  "providers": {
+    "openai-chat": "createOpenAI({ baseURL: WIRETRUTH_BASE_URL_OPENAI_CHAT }).chat(model)",
+    "anthropic": "createAnthropic({ baseURL: WIRETRUTH_BASE_URL_ANTHROPIC + '/v1' })(model)",
+    "gemini": "createGoogleGenerativeAI({ baseURL: WIRETRUTH_BASE_URL_GEMINI + '/v1beta' })(model)",
+    "openai": "createOpenAI()"
+  },
+  "surfaces": {
+    "finish": {
+      "primary": "result.finishReason",
+      "raw": "result.rawFinishReason"
+    },
+    "usage": {
+      "primary": "result.usage",
+      "raw": "result.providerMetadata"
+    },
+    "tool_calls": {
+      "primary": "result.toolCalls"
+    }
+  },
+  "finish_map": {
+    "stop": "stop",
+    "length": "length",
+    "tool-calls": "tool_calls",
+    "content-filter": "content_filter",
+    "error": "error",
+    "other": "other",
+    "unknown": "other"
+  },
+  "error_map": [
+    {
+      "type": "AI_APICallError",
+      "category": "api"
+    },
+    {
+      "type": "AI_NoObjectGeneratedError",
+      "category": "validation",
+      "note": "check .finishReason on the error for truncation"
+    },
+    {
+      "type": "Error",
+      "category": "truncation",
+      "message_regex": "^output truncated",
+      "source": "https://github.com/vercel/ai/blob/main/packages/ai/src/index.ts#L1"
+    }
+  ],
+  "unsupported": [
+    {
+      "scenario": "finish.stop-sequence",
+      "providers": [
+        "openai-chat"
+      ],
+      "reason": "The model rejects stop sequences.",
+      "docs": "https://ai-sdk.dev/docs/reference"
+    }
+  ],
+  "config_notes": [],
+  "docs": [
+    "https://ai-sdk.dev/docs/reference"
+  ]
+}

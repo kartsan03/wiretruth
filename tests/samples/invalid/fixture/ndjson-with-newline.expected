@@ -1,0 +1,1 @@
+$.exchanges[0].response.body.ndjson[0]: '{"model":"qwen3.5:0.8b","message":{"role":"assistant","content":"Київ"},"done":false}\n' should not be valid under {'pattern': '[\\r\\n]'}

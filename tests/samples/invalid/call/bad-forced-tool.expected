@@ -1,0 +1,3 @@
+$.tool_choice: Additional properties are not allowed ('tool' was unexpected)
+$.tool_choice: 'name' is a required property
+$.tools[0].name: 'get weather' does not match '^[A-Za-z_][A-Za-z0-9_-]*$'

@@ -1,0 +1,1 @@
+$.exchanges[0].response.body: {'json': {}, 'text': 'x'} has too many properties

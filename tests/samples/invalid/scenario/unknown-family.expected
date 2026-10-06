@@ -1,0 +1,1 @@
+$.id: 'latency.slow-start' does not match '^(truncation|finish|usage|stream|tools|request|errors)\\.[a-z0-9]+(-[a-z0-9]+)*$'

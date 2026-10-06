@@ -1,0 +1,2 @@
+$.env: 'WIRETRUTH_API_KEY' does not match '^(?!WIRETRUTH_)[A-Za-z_][A-Za-z0-9_]*$'
+$.providers: 'openai' is not one of ['openai-chat', 'openai-responses', 'anthropic', 'gemini', 'gemini-interactions', 'ollama', 'ollama-openai']

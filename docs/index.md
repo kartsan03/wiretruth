@@ -7,6 +7,11 @@ This is the map of wiretruth's documentation. Start with Concepts if you're new.
 - [Concepts](concepts.md): providers, scenarios, fixtures, truth, shims, observations, surfaces and grades, with one
   example followed from fixture to grade.
 
+## Reference
+
+- [File formats](formats.md): every field of scenarios, fixtures, call specs, observations, shim manifests, results,
+  upstream tracking and bug classes, and what `wiretruth lint` checks.
+
 ## Decisions
 
 Each decision record gives the context, the decision, its consequences and the alternatives that were rejected.
@@ -21,5 +26,5 @@ Each decision record gives the context, the decision, its consequences and the a
 
 ## Coming with the code
 
-Reference pages for the file formats, grading, recording and writing a shim are added in the same pull requests as
-the code they describe.
+Reference pages for grading, recording and writing a shim are added in the same pull requests as the code they
+describe.

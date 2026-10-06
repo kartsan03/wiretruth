@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kartsan03.github.io/wiretruth/schemas/upstream.schema.json",
+  "title": "wiretruth upstream tracking",
+  "description": "Findings reported to library maintainers, and what became of them. Stored in results/upstream.json.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "library",
+      "scenarios",
+      "providers",
+      "issue",
+      "pr",
+      "status",
+      "fixed_in",
+      "opened",
+      "notes"
+    ],
+    "properties": {
+      "library": { "$ref": "common.schema.json#/$defs/slug" },
+      "scenarios": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": { "$ref": "common.schema.json#/$defs/scenario_id" }
+      },
+      "providers": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": { "$ref": "common.schema.json#/$defs/provider_id" }
+      },
+      "issue": {
+        "anyOf": [{ "type": "null" }, { "$ref": "common.schema.json#/$defs/url" }]
+      },
+      "pr": {
+        "anyOf": [{ "type": "null" }, { "$ref": "common.schema.json#/$defs/url" }]
+      },
+      "status": {
+        "enum": [
+          "reported",
+          "confirmed",
+          "fix-merged",
+          "released",
+          "wontfix",
+          "disputed",
+          "documented-behavior"
+        ]
+      },
+      "fixed_in": {
+        "description": "The first library version with the fix.",
+        "type": ["string", "null"]
+      },
+      "opened": { "$ref": "common.schema.json#/$defs/date" },
+      "notes": { "type": "string" }
+    }
+  }
+}

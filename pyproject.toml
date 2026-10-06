@@ -5,7 +5,9 @@ description = "Replays real LLM provider responses through LLM SDKs and checks w
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
-dependencies = ["jsonschema>=4"]
+# 4.18 added the `referencing` registry used for $ref between the bundled schemas; the tests
+# pass from 4.21 on (CI runs them on 4.21.0), where some error messages changed wording.
+dependencies = ["jsonschema>=4.21"]
 keywords = ["llm", "sdk", "conformance", "test-suite", "openai", "anthropic", "gemini", "ollama", "testing"]
 classifiers = [
     "Development Status :: 3 - Alpha",

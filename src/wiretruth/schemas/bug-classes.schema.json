@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kartsan03.github.io/wiretruth/schemas/bug-classes.schema.json",
+  "title": "wiretruth bug classes",
+  "description": "The registry of bug classes that scenarios refer to. Stored in suite/bug-classes.json.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "title", "description", "effect", "references"],
+    "properties": {
+      "id": { "$ref": "common.schema.json#/$defs/slug" },
+      "title": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+      "description": {
+        "description": "What goes wrong in the library.",
+        "$ref": "common.schema.json#/$defs/nonempty_string"
+      },
+      "effect": {
+        "description": "What goes wrong for the people who use the library.",
+        "$ref": "common.schema.json#/$defs/nonempty_string"
+      },
+      "references": {
+        "type": "array",
+        "items": { "$ref": "common.schema.json#/$defs/url" }
+      }
+    }
+  }
+}

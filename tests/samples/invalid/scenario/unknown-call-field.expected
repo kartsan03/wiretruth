@@ -1,0 +1,2 @@
+$.call: Unevaluated properties are not allowed ('temperature' was unexpected)
+$.call.messages[0].role: 'tool' is not one of ['system', 'user', 'assistant']
