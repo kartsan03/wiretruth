@@ -38,7 +38,9 @@
       "if": { "required": ["tier"], "properties": { "tier": { "const": "recorded" } } },
       "then": {
         "properties": {
-          "provenance": { "required": ["recorded_at", "requested_model", "recorder", "raw_sha256"] },
+          "provenance": {
+            "required": ["recorded_at", "returned_model", "recorder", "raw_sha256"]
+          },
           "derived_from": { "type": "null" }
         }
       }
@@ -64,6 +66,7 @@
     "provenance": {
       "type": "object",
       "additionalProperties": false,
+      "required": ["requested_model"],
       "properties": {
         "recorded_at": { "$ref": "common.schema.json#/$defs/timestamp" },
         "requested_model": { "$ref": "common.schema.json#/$defs/nonempty_string" },

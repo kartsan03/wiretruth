@@ -22,6 +22,8 @@ Every object these formats define rejects unknown fields (`additionalProperties:
 fails validation instead of being ignored. Free-form JSON is not checked: output schemas, tool parameters, `extra`,
 recorded bodies, the recorded request, raw usage and check arguments.
 
+Integer fields take integers only: `200.0` is rejected even though JSON Schema would count it as an integer.
+
 ### Reading JSON
 
 wiretruth reads JSON strictly. Each of these is an error:
@@ -45,7 +47,7 @@ different languages.
 | `suite/fixtures/<provider>/<scenario>@<variant>.json` | a fixture variant, such as a re-recording (`@2026-11-02`) or a derived shape (`@abort`) |
 | `results/<library>/<version>.json` | [results](#results--wiretruthresultsv1) |
 | `results/upstream.json` | [upstream tracking](#upstream-tracking) |
-| `shims/…/wiretruth-shim.json` | [shim manifest](#shim-manifest--wiretruthshimv1) |
+| `shims/…/wiretruth-shim.json` | [shim manifest](#shim-manifest--wiretruthshimv1) (not checked by `wiretruth lint` yet) |
 
 Call specs and observations are messages between the runner and a shim, not files in the repository.
 
@@ -63,7 +65,7 @@ directory). Then it checks the files against each other:
 - each fixture's scenario exists and lists the fixture's provider;
 - each derived fixture's `derived_from.fixture` exists;
 - each results file's path matches its `library.name` and `library.version`;
-- no JSON file sits anywhere else.
+- no other JSON file sits under `suite/` or `results/`.
 
 It prints one line per problem, with every problem in a file, as `<file>: <JSON path>: <message>`:
 
@@ -77,7 +79,9 @@ suite/scenarios/truncation/text.json: $.requirements[0].level: 'MUSTT' is not on
 | 1 | At least one file has a problem. |
 | 2 | Lint can't run, for example because `suite/` is missing. |
 
-The fixture secret scan and the truth recomputation come with the recorder.
+The fixture secret scan and the truth recomputation, which [ADR 0005](adr/0005-provenance-tiers.md) and
+[Concepts](concepts.md) describe, come with the recorder
+([#5](https://github.com/kartsan03/wiretruth/issues/5)). No fixture is committed before then.
 
 ### Shared vocabulary
 
@@ -171,13 +175,14 @@ All fields are required.
 
 ### Provenance
 
-Every field is optional, except where the tier requires it.
+`requested_model` is required for every tier, because the call spec takes its model from here. A derived fixture
+copies it from its source. The other fields are optional, except where the tier requires them.
 
 | Field | Type | Required for | Meaning |
 |---|---|---|---|
 | `recorded_at` | timestamp | `recorded` | When the response was recorded |
-| `requested_model` | string | `recorded` | The model in the request |
-| `returned_model` | string or `null` | | The model the provider reported |
+| `requested_model` | string | every tier | The model in the request |
+| `returned_model` | string or `null` | `recorded` | The model the provider reported, or `null` if it reported none |
 | `recorder` | string | `recorded` | The recorder version, such as `wiretruth 0.1.0` |
 | `source_commit` | git SHA or `null` | | The commit the recorder ran from |
 | `ci_run` | URL or `null` | | The workflow run, when it was recorded in CI |
@@ -304,7 +309,7 @@ What a library reported. A shim prints exactly one observation to stdout. Every 
 | `providers` | object | yes | Provider id → how the shim builds a client for it |
 | `surfaces` | object | yes | `finish`, `text`, `usage`, `tool_calls`, `structured` or `stream` → `{primary?, raw?}`: where the library exposes it |
 | `finish_map` | object | yes | Library finish value → finish value |
-| `error_map` | list | yes | `{type, category, note?}`, plus `message_regex` and `source` for a builtin error the library raises on purpose. `source` links to the raising line. Lint checks the regex syntax for Python shims only |
+| `error_map` | list | yes | `{type, category, note?}`, plus `message_regex` and `source` for a builtin error the library raises on purpose. `source` links to the raising line. The regex syntax is checked for Python shims only |
 | `unsupported` | list | yes | `{scenario, providers?, reason, docs}`: what the library can't express, with the docs that say so |
 | `config_notes` | list of strings | yes | Every change from the library's default configuration, and why ([ADR 0006](adr/0006-default-library-config.md)) |
 | `docs` | list of URLs | yes | |

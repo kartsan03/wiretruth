@@ -1,0 +1,99 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/errors.rate-limit",
+  "scenario": "errors.rate-limit",
+  "provider": "gemini",
+  "tier": "derived",
+  "provenance": {},
+  "derived_from": {
+    "fixture": "gemini/truncation.text",
+    "transform": "prepend_http_error",
+    "args": {
+      "status": 429,
+      "headers": {
+        "retry-after": "1"
+      }
+    },
+    "rationale": "A rate limit before a successful response tests retry behavior.",
+    "evidence_url": "https://github.com/vercel/ai/issues/7247"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/*:generateContent"
+      },
+      "response": {
+        "status": 429,
+        "headers": {
+          "content-type": "text/plain",
+          "retry-after": "1"
+        },
+        "body": {
+          "text": "Resource has been exhausted"
+        }
+      }
+    },
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/*:generateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "candidates": [
+              {
+                "content": {
+                  "role": "model",
+                  "parts": [
+                    {
+                      "text": "Kyiv"
+                    }
+                  ]
+                },
+                "finishReason": "MAX_TOKENS"
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 12,
+              "candidatesTokenCount": 16,
+              "totalTokenCount": 28
+            }
+          }
+        }
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "MAX_TOKENS",
+    "text": "Kyiv",
+    "tool_calls": [],
+    "structured": null,
+    "error": {
+      "status": 429,
+      "type": null,
+      "code": null,
+      "message": "Resource has been exhausted"
+    },
+    "stream_completed": null,
+    "usage": {
+      "input": 12,
+      "cached_input": null,
+      "output": 16,
+      "reasoning": null,
+      "total": 28,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 12,
+        "candidatesTokenCount": 16,
+        "totalTokenCount": 28
+      }
+    }
+  }
+}

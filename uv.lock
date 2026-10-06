@@ -749,7 +749,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "jsonschema", specifier = ">=4.18" },
+    { name = "jsonschema", specifier = ">=4.21" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.11" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5" },

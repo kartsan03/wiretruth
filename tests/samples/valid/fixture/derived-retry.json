@@ -4,32 +4,68 @@
   "scenario": "errors.rate-limit",
   "provider": "gemini",
   "tier": "derived",
-  "provenance": {},
+  "provenance": {
+    "requested_model": "gemini-3.5-flash-lite"
+  },
   "derived_from": {
     "fixture": "gemini/truncation.text",
     "transform": "prepend_http_error",
-    "args": {"status": 429, "headers": {"retry-after": "1"}},
+    "args": {
+      "status": 429,
+      "headers": {
+        "retry-after": "1"
+      }
+    },
     "rationale": "A rate limit before a successful response tests retry behavior.",
     "evidence_url": "https://github.com/vercel/ai/issues/7247"
   },
   "exchanges": [
     {
-      "match": {"method": "POST", "path": "/v1beta/models/*:generateContent"},
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/*:generateContent"
+      },
       "response": {
         "status": 429,
-        "headers": {"content-type": "text/plain", "retry-after": "1"},
-        "body": {"text": "Resource has been exhausted"}
+        "headers": {
+          "content-type": "text/plain",
+          "retry-after": "1"
+        },
+        "body": {
+          "text": "Resource has been exhausted"
+        }
       }
     },
     {
-      "match": {"method": "POST", "path": "/v1beta/models/*:generateContent"},
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/*:generateContent"
+      },
       "response": {
         "status": 200,
-        "headers": {"content-type": "application/json"},
+        "headers": {
+          "content-type": "application/json"
+        },
         "body": {
           "json": {
-            "candidates": [{"content": {"role": "model", "parts": [{"text": "Kyiv"}]}, "finishReason": "MAX_TOKENS"}],
-            "usageMetadata": {"promptTokenCount": 12, "candidatesTokenCount": 16, "totalTokenCount": 28}
+            "candidates": [
+              {
+                "content": {
+                  "role": "model",
+                  "parts": [
+                    {
+                      "text": "Kyiv"
+                    }
+                  ]
+                },
+                "finishReason": "MAX_TOKENS"
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 12,
+              "candidatesTokenCount": 16,
+              "totalTokenCount": 28
+            }
           }
         }
       }
@@ -41,7 +77,12 @@
     "text": "Kyiv",
     "tool_calls": [],
     "structured": null,
-    "error": {"status": 429, "type": null, "code": null, "message": "Resource has been exhausted"},
+    "error": {
+      "status": 429,
+      "type": null,
+      "code": null,
+      "message": "Resource has been exhausted"
+    },
     "stream_completed": null,
     "usage": {
       "input": 12,
@@ -50,7 +91,11 @@
       "reasoning": null,
       "total": 28,
       "alternatives": {},
-      "raw": {"promptTokenCount": 12, "candidatesTokenCount": 16, "totalTokenCount": 28}
+      "raw": {
+        "promptTokenCount": 12,
+        "candidatesTokenCount": 16,
+        "totalTokenCount": 28
+      }
     }
   }
 }

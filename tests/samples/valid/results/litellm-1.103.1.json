@@ -54,35 +54,12 @@
           "returned_as_success": false,
           "value": null
         },
-        "tool_calls": [
-          {
-            "id": "call_1",
-            "name": "get_weather",
-            "arguments_raw": "{\"city\": \"Kyiv\"}",
-            "arguments_parsed_ok": true,
-            "arguments": {
-              "city": "Kyiv"
-            }
-          }
-        ],
-        "usage": {
-          "input": 21,
-          "cached_input": null,
-          "output": 16,
-          "reasoning": null,
-          "total": 37,
-          "surface": {
-            "input": "primary",
-            "cached_input": "absent",
-            "output": "primary",
-            "reasoning": "absent",
-            "total": "primary"
-          }
-        },
+        "tool_calls": [],
+        "usage": null,
         "stream": {
           "used": true,
           "completed": true,
-          "chunks_seen": 9
+          "chunks_seen": 4
         },
         "notes": [],
         "elapsed_ms": 42

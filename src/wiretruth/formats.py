@@ -118,10 +118,19 @@ def _finite_float(text: str) -> float:
     return value
 
 
+def _bounded_int(text: str) -> int:
+    value = int(text)
+    try:
+        float(value)
+    except OverflowError:
+        raise _Rejected(f"a {len(text)}-digit integer is out of range") from None
+    return value
+
+
 def read_json(path: Path) -> JsonValue:
     """Read a JSON file strictly.
 
-    UTF-8 only; no duplicate keys; no NaN, Infinity or numbers that overflow to them; no lone
+    UTF-8 only; no duplicate keys; no NaN, Infinity or numbers too large for a double; no lone
     surrogates in \\u escapes. Parsers in other languages disagree on all of these.
     """
     try:
@@ -131,6 +140,7 @@ def read_json(path: Path) -> JsonValue:
             object_pairs_hook=_object_without_duplicates,
             parse_constant=_reject_constant,
             parse_float=_finite_float,
+            parse_int=_bounded_int,
         )
         # Encoding fails on a lone surrogate, which only a \u escape can produce here.
         json.dumps(doc, ensure_ascii=False).encode("utf-8")
@@ -190,10 +200,20 @@ def _pattern(
         yield ValidationError(f"{instance!r} does not match {pattern!r}")
 
 
+def _is_integer(checker: object, instance: object) -> bool:
+    # JSON Schema counts 200.0 as an integer. The formats don't: a float in an integer field
+    # would reach typed int fields and, for example, an HTTP status line.
+    return isinstance(instance, int) and not isinstance(instance, bool)
+
+
 # The stubs leave extend() untyped; it returns a validator class like Draft202012Validator.
 _Validator = cast(
     "type[Validator]",
-    validators.extend(Draft202012Validator, {"pattern": _pattern}),  # type: ignore[no-untyped-call]
+    validators.extend(  # type: ignore[no-untyped-call]
+        Draft202012Validator,
+        {"pattern": _pattern},
+        type_checker=Draft202012Validator.TYPE_CHECKER.redefine("integer", _is_integer),
+    ),
 )
 
 
@@ -297,7 +317,7 @@ def _check_shim_manifest(doc: JsonObject) -> Findings:
             continue
         try:
             re.compile(pattern)
-        except re.error as error:
+        except (re.error, OverflowError, RecursionError) as error:
             yield f"$.error_map[{i}].message_regex", f"invalid regular expression: {error}"
 
 

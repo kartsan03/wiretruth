@@ -79,7 +79,7 @@
               "type": ["string", "null"]
             }
           },
-          "if": { "properties": { "surface": { "const": "absent" } } },
+          "if": { "required": ["surface"], "properties": { "surface": { "const": "absent" } } },
           "then": { "properties": { "value": { "type": "null" } } }
         }
       ]

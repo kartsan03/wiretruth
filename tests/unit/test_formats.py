@@ -1,9 +1,10 @@
+import base64
 import dataclasses
 import json
 from collections.abc import Callable
 from functools import partial
 from pathlib import Path
-from typing import get_args
+from typing import Any, get_args
 
 import pytest
 from jsonschema import Draft202012Validator
@@ -136,6 +137,17 @@ def test_fixture_body_forms() -> None:
     body = documented.exchanges[0].body
     assert body.kind == "json"
     assert isinstance(body.data, dict)
+    # Replay writes JSON bodies with their recorded key order (ADR 0001).
+    assert list(body.data) == [
+        "id",
+        "type",
+        "role",
+        "model",
+        "content",
+        "stop_reason",
+        "stop_sequence",
+        "usage",
+    ]
     assert body.parts == ()
     assert documented.truth.usage.alternatives == {"input": {"uncached_input": 24}}
 
@@ -155,8 +167,44 @@ def test_fixture_body_forms() -> None:
 
     chunks = load_fixture(SAMPLES / "valid" / "fixture" / "derived-chunks-abort.json")
     assert chunks.id == "openai-chat/stream.utf8-split@abort"
-    assert chunks.exchanges[0].body.parts == ("ZGF0YTog", "e30KCg==", "0Jw=")
+    first_chunk, second_chunk = (base64.b64decode(part) for part in chunks.exchanges[0].body.parts)
+    assert first_chunk.endswith(b"\xd0")  # the chunk boundary splits "П" (D0 9F)
+    assert (first_chunk + second_chunk).decode().endswith('"Привіт"}}]}\n\n')
     assert chunks.exchanges[0].end == "abort"
+    assert chunks.provenance.requested_model == "gpt-6-luna"
+
+    ndjson = load_fixture(SAMPLES / "valid" / "fixture" / "recorded-ndjson.json")
+    lines = ndjson.exchanges[0].body
+    assert (lines.kind, lines.data, len(lines.parts)) == ("ndjson", None, 2)
+    assert json.loads(lines.parts[1])["done_reason"] == "length"
+
+
+@pytest.mark.parametrize(
+    ("sample", "loader", "mapping"),
+    [
+        ("fixture/recorded-sse.json", load_fixture, lambda r: r.exchanges[0].headers),
+        ("fixture/documented-json.json", load_fixture, lambda r: r.truth.usage.alternatives),
+        (
+            "fixture/documented-json.json",
+            load_fixture,
+            lambda r: r.truth.usage.alternatives["input"],
+        ),
+        ("scenario/with-overrides.json", load_scenario, lambda r: r.call_overrides),
+        ("observation/returned.json", load_observation, lambda r: r.usage.surface),
+        ("shim-manifest/vercel-ai.json", load_shim_manifest, lambda r: r.packages),
+        ("shim-manifest/vercel-ai.json", load_shim_manifest, lambda r: r.providers),
+        ("shim-manifest/vercel-ai.json", load_shim_manifest, lambda r: r.env),
+        ("shim-manifest/vercel-ai.json", load_shim_manifest, lambda r: r.surfaces),
+        ("shim-manifest/vercel-ai.json", load_shim_manifest, lambda r: r.surfaces["finish"]),
+        ("shim-manifest/vercel-ai.json", load_shim_manifest, lambda r: r.finish_map),
+    ],
+)
+def test_typed_mappings_are_read_only(
+    sample: str, loader: Callable[[Path], object], mapping: Callable[[Any], object]
+) -> None:
+    target = mapping(loader(SAMPLES / "valid" / sample))
+    with pytest.raises(TypeError):
+        target["new"] = "value"  # type: ignore[index]
 
 
 def test_scenario_applies_call_overrides_per_provider() -> None:
@@ -197,13 +245,31 @@ def test_observation_records() -> None:
     raised = load_observation(SAMPLES / "valid" / "observation" / "raised.json")
     assert raised.outcome == "raised"
     assert raised.error is not None
-    assert (raised.error.category, raised.error.retry_after) == ("rate_limit", 1.5)
+    assert (raised.error.type, raised.error.category, raised.error.retry_after) == (
+        "AI_APICallError",
+        "rate_limit",
+        1.5,
+    )
+    assert raised.error.stack_top == "dist/index.mjs:812"
     assert raised.finish is not None
-    assert raised.finish.surface == "absent"
+    assert (raised.finish.value, raised.finish.surface) == (None, "absent")
     assert raised.usage is None
+    assert raised.stream.completed is None
+    assert raised.notes == ("reasoning effort 'none' can't be sent; ran without it",)
+
+    unsupported = load_observation(SAMPLES / "valid" / "observation" / "unsupported.json")
+    assert unsupported.unsupported_reason is not None
+    assert "https://" in unsupported.unsupported_reason
 
     returned = load_observation(SAMPLES / "valid" / "observation" / "returned.json")
     assert returned.elapsed_ms == 42.0
+    assert returned.finish is not None
+    assert (returned.finish.value, returned.finish.raw, returned.finish.source) == (
+        "length",
+        "length",
+        "choices[0].finish_reason",
+    )
+    assert (returned.stream.used, returned.stream.completed) == (True, True)
     assert returned.usage is not None
     assert returned.usage.surface["cached_input"] == "absent"
     assert returned.tool_calls[0].arguments == {"city": "Kyiv"}
@@ -217,6 +283,10 @@ def test_shim_manifest_records() -> None:
     # A JavaScript named group: not valid Python, and only Python patterns are checked.
     assert manifest.error_map[2].message_regex == r"^output truncated \((?<limit>\d+)\)"
     assert manifest.unsupported[0].providers == ("openai-chat",)
+    assert manifest.error_map[2].source is not None
+    assert (manifest.error_map[2].category, manifest.error_map[0].source) == ("truncation", None)
+    assert manifest.env == {"NODE_OPTIONS": "--no-warnings"}
+    assert manifest.config_notes == ()
     minimal = load_shim_manifest(SAMPLES / "valid" / "shim-manifest" / "minimal.json")
     assert minimal.env == {}
 
