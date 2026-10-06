@@ -50,12 +50,23 @@ BASE_PATHS: Mapping[str, str] = {
     "ollama-openai": "/v1",
 }
 
-# Left out of the request log, so credentials never reach results or terminal output. Names are
-# compared in lowercase.
+# Left out of the request log, so credentials and account identifiers never reach results or
+# terminal output. Names are compared in lowercase.
 REDACTED_HEADERS = frozenset(
-    {"authorization", "proxy-authorization", "x-api-key", "x-goog-api-key", "api-key", "cookie"}
+    {
+        "authorization",
+        "proxy-authorization",
+        "x-api-key",
+        "x-goog-api-key",
+        "api-key",
+        "x-auth-token",
+        "cookie",
+        "openai-organization",
+        "openai-project",
+        "x-goog-user-project",
+    }
 )
-REDACTED_QUERY = frozenset({"key", "api_key", "api-key", "access_token"})
+REDACTED_QUERY = frozenset({"key", "api_key", "api-key", "apikey", "access_token", "token"})
 
 MAX_BODY_BYTES = 16 * 1024 * 1024
 # How long stopping waits for responses still being written before it closes their connections.
@@ -131,6 +142,8 @@ class ReplayServer:
     """
 
     def __init__(self, fixture: Fixture, *, port: int = 0, event_gap_ms: int = 5) -> None:
+        if event_gap_ms < 0:
+            raise ValueError(f"event_gap_ms must be 0 or more, not {event_gap_ms}")
         # formats.load_fixture rejects these too; this catches fixtures built in code.
         for i, exchange in enumerate(fixture.exchanges):
             kind = exchange.body.kind

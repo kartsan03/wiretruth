@@ -260,14 +260,19 @@ def test_the_request_log_leaves_out_credentials() -> None:
         b"X-Api-Key: secret\r\n"
         b"x-goog-api-key: secret\r\n"
         b"api-key: secret\r\n"
+        b"X-Auth-Token: secret\r\n"
         b"Cookie: session=secret\r\n"
+        b"OpenAI-Organization: org-secret\r\n"
+        b"OpenAI-Project: proj_secret\r\n"
+        b"x-goog-user-project: secret\r\n"
         b"X-Stainless-Lang: python\r\n"
         b"X-Repeated: a\r\n"
         b"X-Repeated: b\r\n"
     )
     path = "/v1beta/models/m:generateContent"
     request = _request(
-        f"{path}?key=secret&Key=secret&api_key=secret&access_token=secret&alt=sse&alt=json&empty=",
+        f"{path}?key=secret&Key=secret&api_key=secret&apikey=secret&access_token=secret&token=secret"
+        "&alt=sse&alt=json&empty=",
         extra=credentials,
     )
     with ReplayServer(_sample("derived-retry")) as server, _raw(server, request) as reader:
@@ -380,6 +385,11 @@ def test_a_request_cut_off_inside_its_body_is_not_logged() -> None:
 def test_a_fixture_built_in_code_is_checked_too(exchange: Exchange, message: str) -> None:
     with pytest.raises(ValueError, match=f"exchange 0: {message}"):
         ReplayServer(_fixture(exchange))
+
+
+def test_a_negative_event_gap_is_rejected() -> None:
+    with pytest.raises(ValueError, match="event_gap_ms must be 0 or more, not -1"):
+        ReplayServer(_sample("recorded-sse"), event_gap_ms=-1)
 
 
 def test_the_request_log_is_a_snapshot() -> None:
