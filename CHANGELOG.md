@@ -17,4 +17,6 @@ finding).
 - JSON Schemas (Draft 2020-12) for every format: scenarios, fixtures, call specs, observations, shim manifests,
   results, upstream tracking and bug classes, shipped in the package. Field reference: `docs/formats.md`.
 - `wiretruth lint` validates everything under `suite/` and `results/` and checks the files against each other.
+- Fixture variants are dated (`<scenario>@<date>.json`): an older recording kept for reference, which no cell
+  uses. A streamed, aborted or otherwise different form of a call is its own scenario.
 - The bug-class registry, `suite/bug-classes.json`, with seven classes.

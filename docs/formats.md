@@ -44,7 +44,7 @@ different languages.
 | `suite/bug-classes.json` | [bug classes](#bug-classes) |
 | `suite/scenarios/<family>/<name>.json` | [scenario](#scenario--wiretruthscenariov1) with id `<family>.<name>` |
 | `suite/fixtures/<provider>/<scenario>.json` | [fixture](#fixture--wiretruthfixturev1) with id `<provider>/<scenario>` |
-| `suite/fixtures/<provider>/<scenario>@<variant>.json` | a fixture variant, such as a re-recording (`@2026-11-02`) or a derived shape (`@abort`) |
+| `suite/fixtures/<provider>/<scenario>@<date>.json` | an older recording of the same fixture, such as `@2026-11-02`, kept for reference. No cell uses it. A streamed, aborted or otherwise different form of a call is its own scenario, such as `tools.parallel-calls-stream` |
 | `results/<library>/<version>.json` | [results](#results--wiretruthresultsv1) |
 | `results/upstream.json` | [upstream tracking](#upstream-tracking) |
 | `shims/…/wiretruth-shim.json` | [shim manifest](#shim-manifest--wiretruthshimv1) (not checked by `wiretruth lint` yet) |
@@ -162,7 +162,7 @@ The HTTP exchanges for one scenario and provider, where they came from, and the 
 | Field | Type | Meaning |
 |---|---|---|
 | `format` | `"wiretruth.fixture/v1"` | |
-| `id` | string | `<provider>/<scenario>`, optionally followed by `@<variant>` |
+| `id` | string | `<provider>/<scenario>`, optionally followed by `@<date>` |
 | `scenario` | scenario id | |
 | `provider` | provider id | |
 | `tier` | fixture tier | Where the bytes came from ([ADR 0005](adr/0005-provenance-tiers.md)) |
