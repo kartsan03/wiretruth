@@ -1,6 +1,6 @@
 {
   "format": "wiretruth.fixture/v1",
-  "id": "openai-chat/stream.utf8-split@abort",
+  "id": "openai-chat/stream.utf8-split",
   "scenario": "stream.utf8-split",
   "provider": "openai-chat",
   "tier": "derived",
@@ -9,7 +9,7 @@
     "notes": "One event split inside the two bytes of 'П', then cut before the finish chunk."
   },
   "derived_from": {
-    "fixture": "openai-chat/stream.utf8-split",
+    "fixture": "openai-chat/truncation.text-stream",
     "transform": "rechunk_inside_utf8",
     "args": {
       "split_at": [
