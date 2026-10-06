@@ -1,0 +1,2 @@
+$.reasoning.effort: 'huge' is not one of ['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max']
+$.tool_choice: 'force' is not one of ['auto', 'required', 'none']

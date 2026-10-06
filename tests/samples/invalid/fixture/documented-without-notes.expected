@@ -1,0 +1,2 @@
+$.derived_from: {'fixture': 'anthropic/truncation.text', 'transform': 'strip_finish', 'args': {}, 'rationale': 'x', 'evidence_url': 'https://example.org'} is not of type 'null'
+$.provenance.notes: '' should be non-empty

@@ -1,0 +1,1 @@
+$.exchanges[0].response.body.sse[1]: 'data: {"id":"chatcmpl-1","choices":[{"index":0,"delta":{"content":"Kyiv, one of the oldest cities in Eastern Europe, was founded"},"finish_reason":null}]}\n' does not match '(\\n\\n|\\r\\n\\r\\n)$'

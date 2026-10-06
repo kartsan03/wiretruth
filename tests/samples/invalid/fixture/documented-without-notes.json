@@ -1,0 +1,87 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "anthropic/truncation.text",
+  "scenario": "truncation.text",
+  "provider": "anthropic",
+  "tier": "documented",
+  "provenance": {
+    "requested_model": "claude-sonnet-5-5",
+    "source_url": "https://docs.claude.com/en/api/messages",
+    "notes": ""
+  },
+  "derived_from": {
+    "fixture": "anthropic/truncation.text",
+    "transform": "strip_finish",
+    "args": {},
+    "rationale": "x",
+    "evidence_url": "https://example.org"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/messages"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "msg_01",
+            "type": "message",
+            "role": "assistant",
+            "model": "claude-sonnet-5-5",
+            "content": [
+              {
+                "type": "thinking",
+                "thinking": "",
+                "signature": "sig"
+              },
+              {
+                "type": "text",
+                "text": "Kyiv grew from a trading settlement on the Dnipro"
+              }
+            ],
+            "stop_reason": "max_tokens",
+            "stop_sequence": null,
+            "usage": {
+              "input_tokens": 24,
+              "cache_read_input_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "output_tokens": 16
+            }
+          }
+        }
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "max_tokens",
+    "text": "Kyiv grew from a trading settlement on the Dnipro",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 24,
+      "cached_input": 0,
+      "output": 16,
+      "reasoning": null,
+      "total": 40,
+      "alternatives": {
+        "input": {
+          "uncached_input": 24
+        }
+      },
+      "raw": {
+        "input_tokens": 24,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "output_tokens": 16
+      }
+    }
+  }
+}

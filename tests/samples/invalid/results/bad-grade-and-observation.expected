@@ -1,0 +1,2 @@
+$.cells[0].grade: 'FAIL' is not one of ['PASS', 'LOSSY', 'WRONG', 'CRASH', 'HANG', 'UNSUPPORTED', 'HARNESS']
+$.cells[0].observation.outcome: 'ok' is not one of ['returned', 'raised', 'unsupported']

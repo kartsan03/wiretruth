@@ -1,0 +1,21 @@
+{
+  "format": "wiretruth.observation/v1",
+  "library": {"name": "vercel-ai", "version": "7.0.124", "language": "javascript", "api": "generateText"},
+  "outcome": "raised",
+  "unsupported_reason": null,
+  "error": {
+    "type": "AI_APICallError",
+    "message": "Too Many Requests",
+    "category": "rate_limit",
+    "retry_after": 1.5,
+    "stack_top": "dist/index.mjs:812"
+  },
+  "finish": {"value": null, "raw": null, "surface": "absent", "source": null},
+  "text": null,
+  "structured": {"attempted": false, "returned_as_success": false, "value": null},
+  "tool_calls": [],
+  "usage": null,
+  "stream": {"used": false, "completed": null, "chunks_seen": null},
+  "notes": ["reasoning effort 'none' can't be sent; ran without it"],
+  "elapsed_ms": 12.5
+}

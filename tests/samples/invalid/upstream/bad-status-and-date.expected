@@ -1,0 +1,2 @@
+$[0].opened: '28.09.2026' does not match '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+$[0].status: 'fixed' is not one of ['reported', 'confirmed', 'fix-merged', 'released', 'wontfix', 'disputed', 'documented-behavior']

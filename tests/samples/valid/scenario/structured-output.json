@@ -1,0 +1,41 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "truncation.structured-output",
+  "title": "Structured output cut off by the output token limit",
+  "bug_class": "silent-truncation",
+  "priority": "P0",
+  "summary": "The model stops at the token limit halfway through a JSON object that should match a schema.",
+  "call": {
+    "stream": false,
+    "max_output_tokens": 24,
+    "messages": [{"role": "user", "content": "List ten large Ukrainian cities with their oblast."}],
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "cities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {"name": {"type": "string"}, "oblast": {"type": "string"}},
+            "required": ["name", "oblast"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["cities"],
+      "additionalProperties": false
+    },
+    "reasoning": {"effort": "none"}
+  },
+  "providers": ["openai-chat", "openai-responses", "ollama", "gemini", "anthropic"],
+  "requirements": [
+    {"id": "no-partial-success", "level": "MUST", "check": "no_success_structured_value",
+     "text": "A partial object is never returned as a successful result."},
+    {"id": "cause-is-truncation", "level": "MUST", "check": "truncation_is_signalled",
+     "text": "The caller can tell that the output stopped at the token limit."},
+    {"id": "usage-reported", "level": "SHOULD", "check": "usage_matches_truth", "args": {"fields": ["input", "output"]},
+     "text": "Token usage is reported, and matches the provider's counts, even though the result is unusable."}
+  ],
+  "grading_notes": "A generic JSON parse or validation error without a truncation signal grades as LOSSY.",
+  "references": ["https://github.com/TanStack/ai/issues/1426", "https://github.com/TanStack/ai/pull/1548"]
+}

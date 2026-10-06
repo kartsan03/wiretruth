@@ -1,0 +1,1 @@
+$.exchanges[0].response.headers: 'x-request-id' is not one of ['content-type', 'retry-after']

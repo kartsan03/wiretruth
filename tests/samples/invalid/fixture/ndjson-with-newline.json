@@ -1,0 +1,58 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama/truncation.text-stream",
+  "scenario": "truncation.text-stream",
+  "provider": "ollama",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-19T08:00:00.250Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": null,
+    "ci_run": null,
+    "raw_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/api/chat"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/x-ndjson"
+        },
+        "body": {
+          "ndjson": [
+            "{\"model\":\"qwen3.5:0.8b\",\"message\":{\"role\":\"assistant\",\"content\":\"Київ\"},\"done\":false}\n",
+            "{\"model\":\"qwen3.5:0.8b\",\"message\":{\"role\":\"assistant\",\"content\":\"\"},\"done\":true,\"done_reason\":\"length\",\"prompt_eval_count\":20,\"eval_count\":16}"
+          ]
+        }
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": "Київ",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 20,
+      "cached_input": null,
+      "output": 16,
+      "reasoning": null,
+      "total": 36,
+      "alternatives": {},
+      "raw": {
+        "prompt_eval_count": 20,
+        "eval_count": 16
+      }
+    }
+  }
+}

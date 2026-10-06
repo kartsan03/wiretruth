@@ -1,0 +1,2 @@
+$.requirements[2].providers[0]: 'gemini' is not in $.providers
+$.call_overrides.ollama: 'ollama' is not in $.providers

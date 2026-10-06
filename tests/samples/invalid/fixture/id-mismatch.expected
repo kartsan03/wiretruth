@@ -1,0 +1,1 @@
+$.id: 'openai-chat/truncation.text' must be 'openai-chat/truncation.text-stream' or 'openai-chat/truncation.text-stream@<variant>'

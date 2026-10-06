@@ -1,0 +1,106 @@
+{
+  "format": "wiretruth.results/v1",
+  "suite_version": "0.3.0",
+  "library": {
+    "name": "litellm",
+    "version": "1.103.1",
+    "language": "python"
+  },
+  "run": {
+    "at": "2026-10-26T09:00:00Z",
+    "git_sha": "513814c",
+    "ci_run": null,
+    "runner": "wiretruth 0.3.0"
+  },
+  "cells": [
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/truncation.text-stream",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason)"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "litellm",
+          "version": "1.103.1",
+          "language": "python",
+          "api": "litellm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Kyiv, one of the oldest cities in Eastern Europe, was founded",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [
+          {
+            "id": "call_1",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\": \"Kyiv\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "Kyiv"
+            }
+          }
+        ],
+        "usage": {
+          "input": 21,
+          "cached_input": null,
+          "output": 16,
+          "reasoning": null,
+          "total": 37,
+          "surface": {
+            "input": "primary",
+            "cached_input": "absent",
+            "output": "primary",
+            "reasoning": "absent",
+            "total": "primary"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": true,
+          "chunks_seen": 9
+        },
+        "notes": [],
+        "elapsed_ms": 42
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.text",
+      "provider": "gemini",
+      "fixture": "gemini/truncation.text",
+      "fixture_tier": "recorded",
+      "grade": "HANG",
+      "requirements": [],
+      "notes": [
+        "no observation within 20 s"
+      ],
+      "observation": null,
+      "request_count": 1
+    }
+  ]
+}

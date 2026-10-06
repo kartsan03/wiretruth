@@ -1,0 +1,15 @@
+{
+  "format": "wiretruth.call/v1",
+  "scenario": "finish.stop-sequence",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "stream": false,
+  "messages": [{"role": "user", "content": "Count from 1 to 10, then write END, then count to 20."}],
+  "max_output_tokens": null,
+  "stop": ["END"],
+  "tools": [{"name": "noop", "description": "", "parameters": {"type": "object"}}],
+  "tool_choice": {"name": "noop"},
+  "output_schema": null,
+  "reasoning": null,
+  "extra": {}
+}
