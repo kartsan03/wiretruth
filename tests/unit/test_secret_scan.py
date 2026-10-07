@@ -485,3 +485,16 @@ def test_lint_survives_deep_json_in_a_string(root: Path) -> None:
     doc["provenance"]["notes"] = "[" * 1100 + "]" * 1100
     path.write_text(json.dumps(doc, indent=2))
     assert lint(root).problems == []
+
+
+def test_lint_prints_a_finding_under_a_lone_surrogate_key(
+    root: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    # The file is valid UTF-8; only the JSON inside the notes decodes to a lone surrogate.
+    path = _fixture_path(root)
+    doc = json.loads(path.read_text())
+    doc["provenance"]["notes"] = '{"\\ud800": {"headers": {"cookie": "c"}}}'
+    path.write_text(json.dumps(doc, indent=2))
+    assert main(["lint", str(root)]) == 1
+    where = '$.provenance.notes, in its JSON at $["\\ud800"].headers.cookie'
+    assert f"{path}: {where}: the cookie header carries credentials" in capsys.readouterr().out

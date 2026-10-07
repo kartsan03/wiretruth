@@ -173,6 +173,7 @@ def _json(text: str) -> JsonValue | None:
 
 
 def _where(path: list[str | int]) -> str:
-    """The JSON path, unless one of its keys is what the text scan looks for."""
-    where = json_path(path)
+    """The JSON path, unless one of its keys is what the text scan looks for. JSON inside a string
+    can decode to a lone surrogate, which UTF-8 can't print, so it's written as its escape."""
+    where = json_path(path).encode("utf-8", "backslashreplace").decode("utf-8")
     return "a path the secret scan flags (not shown)" if scan_text(where) else where
