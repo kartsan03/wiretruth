@@ -1,0 +1,33 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "truncation.text",
+  "title": "Text cut off by the output token limit",
+  "bug_class": "silent-truncation",
+  "priority": "P0",
+  "summary": "The model stops at the output token limit in the middle of a plain-text answer.",
+  "call": {
+    "stream": false,
+    "max_output_tokens": 16,
+    "messages": [
+      {"role": "user", "content": "Write a 200-word paragraph about the history of Kyiv, in English."}
+    ],
+    "reasoning": {"effort": "none"}
+  },
+  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini", "anthropic"],
+  "requirements": [
+    {
+      "id": "cause-is-truncation",
+      "level": "MUST",
+      "check": "truncation_is_signalled",
+      "text": "The caller can tell that the output stopped at the token limit."
+    },
+    {
+      "id": "usage-reported",
+      "level": "SHOULD",
+      "check": "usage_matches_truth",
+      "args": {"fields": ["input", "output"]},
+      "text": "Token usage is reported, and matches the provider's counts."
+    }
+  ],
+  "grading_notes": "A finish reason of length satisfies the first requirement, and so does a dedicated truncation error, which some libraries raise instead of returning the partial text. Effort none keeps the 16-token limit from being spent on reasoning."
+}

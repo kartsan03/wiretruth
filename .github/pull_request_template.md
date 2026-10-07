@@ -30,6 +30,6 @@ none
 
 - [ ] Tests added or updated
 - [ ] `uv run ruff check . && uv run ruff format --check . && uv run mypy src && uv run pytest -q` pass
-- [ ] `uv run wiretruth lint` passes
+- [ ] `uv run wiretruth lint` passes (suite data, secrets, truth)
 - [ ] `CHANGELOG.md` updated under `Unreleased` (if user-facing)
 - [ ] Docs updated (if behavior or formats changed)

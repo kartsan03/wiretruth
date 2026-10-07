@@ -1,0 +1,141 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/finish.stop-structured",
+  "scenario": "finish.stop-structured",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-07T09:51:40Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.1.0.dev0",
+    "source_commit": null,
+    "ci_run": null,
+    "raw_sha256": "f6944de53fab746f8135c01601d5ce0205659cb518a3766fac7ad4246f4903e5",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Name one large Ukrainian city and its oblast, in Ukrainian."
+        }
+      ],
+      "max_completion_tokens": 200,
+      "response_format": {
+        "type": "json_schema",
+        "json_schema": {
+          "name": "output",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "oblast": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "oblast"
+            ],
+            "additionalProperties": false
+          },
+          "strict": true
+        }
+      },
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "chatcmpl-EWIbGR8Pj1at5gx085w6JBLWxkFlF",
+            "object": "chat.completion",
+            "created": 1791366702,
+            "model": "gpt-6-luna",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"name\":\"Київ\",\"oblast\":\"Київська область\"}",
+                  "refusal": null,
+                  "annotations": []
+                },
+                "finish_reason": "stop"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 50,
+              "completion_tokens": 21,
+              "total_tokens": 71,
+              "prompt_tokens_details": {
+                "cached_tokens": 0,
+                "cache_write_tokens": 0,
+                "audio_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0,
+                "audio_tokens": 0,
+                "accepted_prediction_tokens": 0,
+                "rejected_prediction_tokens": 0
+              }
+            },
+            "service_tier": "default",
+            "system_fingerprint": null
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "{\"name\":\"Київ\",\"oblast\":\"Київська область\"}",
+    "tool_calls": [],
+    "structured": {
+      "name": "Київ",
+      "oblast": "Київська область"
+    },
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 50,
+      "cached_input": 0,
+      "output": 21,
+      "reasoning": 0,
+      "total": 71,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 50,
+        "completion_tokens": 21,
+        "total_tokens": 71,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      }
+    }
+  }
+}

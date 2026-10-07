@@ -35,6 +35,7 @@ from typing import cast
 from urllib.parse import parse_qsl
 
 from wiretruth.formats import Body, Exchange, Fixture, JsonValue, parse_json
+from wiretruth.secret_scan import SECRET_HEADERS
 
 HOST = "127.0.0.1"
 HEALTH_PATH = "/__wiretruth/health"
@@ -52,20 +53,7 @@ BASE_PATHS: Mapping[str, str] = {
 
 # Left out of the request log, so credentials and account identifiers never reach results or
 # terminal output. Names are compared in lowercase.
-REDACTED_HEADERS = frozenset(
-    {
-        "authorization",
-        "proxy-authorization",
-        "x-api-key",
-        "x-goog-api-key",
-        "api-key",
-        "x-auth-token",
-        "cookie",
-        "openai-organization",
-        "openai-project",
-        "x-goog-user-project",
-    }
-)
+REDACTED_HEADERS = SECRET_HEADERS
 REDACTED_QUERY = frozenset({"key", "api_key", "api-key", "apikey", "access_token", "token"})
 
 MAX_BODY_BYTES = 16 * 1024 * 1024

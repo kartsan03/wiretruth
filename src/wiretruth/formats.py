@@ -683,7 +683,8 @@ def _build_tool_call(obj: JsonObject) -> ToolCall:
     )
 
 
-def _build_exchange(obj: JsonObject) -> Exchange:
+def build_exchange(obj: JsonObject) -> Exchange:
+    """An exchange from its validated JSON form."""
     match = _object(obj, "match")
     response = _object(obj, "response")
     ((kind, value),) = _object(response, "body").items()
@@ -767,7 +768,7 @@ def load_fixture(path: Path | str) -> Fixture:
             rationale=_str(derived, "rationale"),
             evidence_url=_str(derived, "evidence_url"),
         ),
-        exchanges=tuple(_build_exchange(exchange) for exchange in _objects(doc, "exchanges")),
+        exchanges=tuple(build_exchange(exchange) for exchange in _objects(doc, "exchanges")),
         truth=_build_truth(_object(doc, "truth")),
     )
 

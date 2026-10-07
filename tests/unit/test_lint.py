@@ -1,5 +1,6 @@
 import json
 import shutil
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -199,3 +200,88 @@ def test_cli_lints_the_current_directory_by_default(
     monkeypatch.chdir(root)
     assert main(["lint"]) == 0
     assert capsys.readouterr().out == "wiretruth lint: 6 files, no errors\n"
+
+
+def _rewrite(path: Path, change: Callable[[JsonObject], None]) -> None:
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    change(doc)
+    _write(path, doc)
+
+
+def test_a_truth_that_doesnt_match_the_exchanges(root: Path) -> None:
+    def edit(doc: JsonObject) -> None:
+        truth = doc["truth"]
+        assert isinstance(truth, dict) and isinstance(truth["usage"], dict)
+        truth["finish"] = "stop"
+        truth["usage"]["output"] = 16
+        truth["text"] = "x" * 100
+
+    path = "suite/fixtures/openai-chat/truncation.text-stream.json"
+    _rewrite(root / path, edit)
+    text = json.dumps("Kyiv, one of the oldest cities in Eastern Europe, was founded")
+    assert _lines(root) == [
+        f'{path}: $.truth.finish: doesn\'t match the exchanges, which give "length"',
+        f"{path}: $.truth.text: doesn't match the exchanges, which give {text}",
+        f"{path}: $.truth.usage.output: doesn't match the exchanges, which give null",
+    ]
+
+
+def test_a_truth_compared_whole_when_its_shape_differs(root: Path) -> None:
+    def edit(doc: JsonObject) -> None:
+        truth = doc["truth"]
+        assert isinstance(truth, dict)
+        truth["error"] = {"message": "boom"}
+
+    path = "suite/fixtures/openai-chat/truncation.text-stream.json"
+    _rewrite(root / path, edit)
+    assert _lines(root) == [f"{path}: $.truth.error: doesn't match the exchanges, which give null"]
+
+
+def test_exchanges_the_extractor_cant_read(root: Path) -> None:
+    def edit(doc: JsonObject) -> None:
+        doc["exchanges"][0]["response"]["body"] = {"sse": ["data: {oops\n\n"]}  # type: ignore[index]
+
+    path = "suite/fixtures/openai-chat/truncation.text-stream.json"
+    _rewrite(root / path, edit)
+    (line,) = _lines(root)
+    assert line.startswith(
+        f"{path}: $.exchanges: the openai-chat truth extractor can't read them: event 0: the data "
+        "is not JSON"
+    )
+
+
+def test_providers_without_an_extractor_are_noted(root: Path) -> None:
+    scenario_path = root / "suite" / "scenarios" / "truncation" / "text-stream.json"
+    _rewrite(scenario_path, lambda doc: doc.update(providers=["openai-chat", "gemini"]))
+    fixture = _sample("fixture/recorded-sse.json")
+    fixture.update(id="gemini/truncation.text-stream", provider="gemini")
+    _write(root / "suite" / "fixtures" / "gemini" / "truncation.text-stream.json", fixture)
+    report = lint(root)
+    assert report.problems == []
+    assert report.notes == ["truth not recomputed for gemini: no truth extractor yet"]
+
+
+def test_a_truth_difference_under_a_key_with_a_colon(root: Path) -> None:
+    def edit(doc: JsonObject) -> None:
+        exchanges = doc["exchanges"]
+        assert isinstance(exchanges, list)
+        events = exchanges[0]["response"]["body"]["sse"]  # type: ignore[index, call-overload]
+        usage = {"prompt_tokens": 1, "completion_tokens": 2, "total_tokens": 3, "a: b": 1}
+        events.insert(-1, f"data: {json.dumps({'choices': [], 'usage': usage})}\n\n")
+        truth = doc["truth"]
+        assert isinstance(truth, dict)
+        truth["usage"] = {
+            "input": 1,
+            "cached_input": None,
+            "output": 2,
+            "reasoning": None,
+            "total": 3,
+            "alternatives": {},
+            "raw": {**usage, "a: b": 2},
+        }
+
+    path = "suite/fixtures/openai-chat/truncation.text-stream.json"
+    _rewrite(root / path, edit)
+    assert _lines(root) == [
+        f'{path}: $.truth.usage.raw["a: b"]: doesn\'t match the exchanges, which give 1'
+    ]

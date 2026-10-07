@@ -1,0 +1,144 @@
+name: record
+
+# Records provider responses into fixtures and pushes them to a record/<provider>-<run id> branch.
+# Open the pull request from that branch yourself (docs/recording.md): one created with
+# GITHUB_TOKEN wouldn't run CI.
+#
+# Two jobs, so no step holds both credentials: `record` has the API key and a read-only token;
+# `push` has a token that can push, and only the fixtures `record` handed over. The key is a secret
+# of the `recording` environment, which only `main` may use, so it never runs with a branch's code.
+
+on:
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: The wire API to record
+        type: choice
+        options: [openai-chat]
+        required: true
+      scenarios:
+        description: A scenario id, or a glob such as truncation.*
+        type: string
+        required: true
+      model:
+        description: The model to request (empty for the provider's current one)
+        type: string
+        required: false
+      replace:
+        description: Overwrite existing fixtures instead of keeping them as dated variants
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: recording
+    outputs:
+      changed: ${{ steps.changes.outputs.changed }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        with:
+          version: "0.12.21"
+          enable-cache: false # nothing cached by other runs reaches the step that holds the key
+      - run: uv sync --locked
+
+      # A scenario that fails doesn't stop the others; the step still fails, and the fixtures that
+      # were written go on to lint and the push.
+      - name: Record
+        shell: bash
+        env:
+          PROVIDER: ${{ inputs.provider }}
+          SCENARIOS: ${{ inputs.scenarios }}
+          MODEL: ${{ inputs.model }}
+          REPLACE: ${{ inputs.replace }}
+          OPENAI_API_KEY: ${{ inputs.provider == 'openai-chat' && secrets.OPENAI_API_KEY || '' }}
+        run: |
+          args=(--provider "$PROVIDER" --scenario "$SCENARIOS")
+          if [ -n "$MODEL" ]; then args+=(--model "$MODEL"); fi
+          if [ "$REPLACE" = "true" ]; then args+=(--replace); fi
+          uv run --no-sync wiretruth record "${args[@]}" 2>&1 | tee record.log
+
+      - name: Lint the suite
+        id: lint
+        if: ${{ !cancelled() }}
+        run: uv run --no-sync wiretruth lint
+
+      - name: Look for new or changed fixtures
+        id: changes
+        if: ${{ !cancelled() && steps.lint.outcome == 'success' }}
+        run: |
+          if [ -n "$(git status --porcelain -- suite/fixtures)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Hand the fixtures to the push job
+        if: ${{ !cancelled() && steps.changes.outputs.changed == 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fixtures-${{ github.run_attempt }}
+          path: suite/fixtures/
+          if-no-files-found: error
+          retention-days: 3
+
+      - name: Summary
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          {
+            echo "## Recorded"
+            echo
+            echo '```text'
+            cat record.log 2>/dev/null || echo "(no output)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  push:
+    needs: record
+    if: ${{ !cancelled() && needs.record.outputs.changed == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # pushes the record/* branch
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: fixtures-${{ github.run_attempt }}
+          path: suite/fixtures/
+      - name: Push the branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PROVIDER: ${{ inputs.provider }}
+          SCENARIOS: ${{ inputs.scenarios }}
+        run: |
+          git add -- suite/fixtures
+          # A re-run gets its own branch: the attempt number keeps it from colliding.
+          branch="record/${PROVIDER}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898273+github-actions[bot]@users.noreply.github.com" \
+              commit --quiet --message "feat(suite): record ${SCENARIOS} for ${PROVIDER}"
+          git push --quiet "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+              "HEAD:refs/heads/${branch}"
+          {
+            echo "Pushed \`${branch}\`:"
+            echo
+            echo '```text'
+            git show --stat --format= HEAD
+            echo '```'
+            echo
+            echo "Check each fixture's truth against the wire, then open the pull request:"
+            echo
+            echo '```bash'
+            echo "gh pr create --head ${branch} --fill"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
