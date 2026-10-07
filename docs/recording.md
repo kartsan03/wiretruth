@@ -49,7 +49,10 @@ When fixtures were derived from the one that moves, the recorder names them: der
 Recording in CI is the default for anything that lands on `main`: the fixture links to the run, and the run's log
 is public.
 
-1. A maintainer stores the key once: `gh secret set OPENAI_API_KEY` (it prompts for the value).
+1. A maintainer stores the key once, as a secret of the `recording` environment:
+   `gh secret set OPENAI_API_KEY --env recording` (it prompts for the value). Only `main` may use that
+   environment, so the key never runs with code from another branch. Scenarios are merged before they are
+   recorded.
 2. Run the **record** workflow from the Actions tab, or from the command line:
 
    ```bash
@@ -58,21 +61,23 @@ is public.
 
    `model` is optional. Leave it empty to use the provider's current model. `replace` (default `false`) passes
    `--replace`.
-3. The workflow records, runs `wiretruth lint`, and pushes a branch named `record/<provider>-<run id>` with one
-   commit by `github-actions[bot]`. Its summary lists each fixture with its status, finish and token counts. If
-   some scenarios fail, the run fails, but the fixtures that were written still pass through lint and get pushed.
+3. The workflow records, runs `wiretruth lint`, and pushes a branch named `record/<provider>-<run id>-<attempt>`
+   with one commit by `github-actions[bot]`. Its summary lists each fixture with its status, finish and token
+   counts. If some scenarios fail, the run fails, but the fixtures that were written still pass through lint and
+   get pushed.
 4. Read each fixture's truth against its exchanges. Then open the pull request from the branch:
 
    ```bash
-   gh pr create --head record/openai-chat-<run id> --fill
+   gh pr create --head record/openai-chat-<run id>-<attempt> --fill
    ```
 
    The workflow doesn't open it for you, because a pull request opened with the workflow's own token wouldn't run
    CI.
 
-Only people with write access can start the workflow. It runs two jobs, so no step holds both credentials. The
-`record` job gets the key, in its recording step only, and a read-only repository token. The `push` job gets a token
-that can push, and only the fixtures the first job handed over, after lint passed.
+Only people with write access can start the workflow, and the key reaches only runs from `main`. The workflow runs
+two jobs, so no step holds both credentials. The `record` job gets the key, in its recording step only, and a
+read-only repository token. The `push` job gets a token that can push, and only the fixtures the first job handed
+over, after lint passed.
 
 ## Record locally
 

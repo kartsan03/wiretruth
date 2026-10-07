@@ -5,7 +5,8 @@ name: record
 # GITHUB_TOKEN wouldn't run CI.
 #
 # Two jobs, so no step holds both credentials: `record` has the API key and a read-only token;
-# `push` has a token that can push, and only the fixtures `record` handed over.
+# `push` has a token that can push, and only the fixtures `record` handed over. The key is a secret
+# of the `recording` environment, which only `main` may use, so it never runs with a branch's code.
 
 on:
   workflow_dispatch:
@@ -35,6 +36,7 @@ jobs:
   record:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    environment: recording
     outputs:
       changed: ${{ steps.changes.outputs.changed }}
     steps:
@@ -80,7 +82,7 @@ jobs:
         if: ${{ !cancelled() && steps.changes.outputs.changed == 'true' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: fixtures
+          name: fixtures-${{ github.run_attempt }}
           path: suite/fixtures/
           if-no-files-found: error
           retention-days: 3
@@ -110,7 +112,7 @@ jobs:
           persist-credentials: false
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          name: fixtures
+          name: fixtures-${{ github.run_attempt }}
           path: suite/fixtures/
       - name: Push the branch
         shell: bash
@@ -120,7 +122,8 @@ jobs:
           SCENARIOS: ${{ inputs.scenarios }}
         run: |
           git add -- suite/fixtures
-          branch="record/${PROVIDER}-${GITHUB_RUN_ID}"
+          # A re-run gets its own branch: the attempt number keeps it from colliding.
+          branch="record/${PROVIDER}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           git -c user.name="github-actions[bot]" \
               -c user.email="41898273+github-actions[bot]@users.noreply.github.com" \
               commit --quiet --message "feat(suite): record ${SCENARIOS} for ${PROVIDER}"
