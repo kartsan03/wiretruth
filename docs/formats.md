@@ -65,7 +65,11 @@ directory). Then it checks the files against each other:
 - each fixture's scenario exists and lists the fixture's provider;
 - each derived fixture's `derived_from.fixture` exists;
 - each results file's path matches its `library.name` and `library.version`;
-- no other JSON file sits under `suite/` or `results/`.
+- no other JSON file sits under `suite/` or `results/`;
+- each fixture's `truth` matches the truth its provider module computes from its exchanges (today for
+  `openai-chat`; lint notes the providers it can't check yet);
+- no file under `suite/` or `results/`, JSON or not, contains anything that looks like a key, a token, an
+  organization or project id, or a credential header ([the secret scan](recording.md#the-secret-scan)).
 
 It prints one line per problem, with every problem in a file, as `<file>: <JSON path>: <message>`:
 
@@ -79,9 +83,8 @@ suite/scenarios/truncation/text.json: $.requirements[0].level: 'MUSTT' is not on
 | 1 | At least one file has a problem. |
 | 2 | Lint can't run, for example because `suite/` is missing. |
 
-The fixture secret scan and the truth recomputation, which [ADR 0005](adr/0005-provenance-tiers.md) and
-[Concepts](concepts.md) describe, come with the recorder
-([#5](https://github.com/kartsan03/wiretruth/issues/5)). No fixture is committed before then.
+A truth difference is reported per field, such as `$.truth.usage.output`, with the value the exchanges give.
+[Recording](recording.md#how-the-truth-is-read) explains how each provider's truth is read.
 
 ### Shared vocabulary
 

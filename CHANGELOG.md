@@ -24,3 +24,12 @@ finding).
   server sends stream events, NDJSON lines and raw chunks one HTTP chunk each, can drop the connection before the
   final chunk, and logs every request without credentials, noting whether each response was sent in full.
 - Lint rejects an `abort` ending on a `json` or `text` body, and an empty `chunks_b64` chunk.
+- `wiretruth record` records `openai-chat` responses into fixtures over plain HTTP, with no SDK in between. It
+  keeps only the `content-type` and `retry-after` headers, stores the request, the models and a hash of the raw
+  body, and computes the truth right away. A new recording becomes the fixture the cell uses; the one it replaces
+  is kept as a dated variant. `--dry-run` prints the exact request with the key masked. A manually started
+  `record` workflow records in CI and pushes a `record/*` branch.
+- `wiretruth lint` recomputes each `openai-chat` fixture's truth from its exchanges, and scans every file under
+  `suite/` and `results/` for keys, tokens, organization and project ids, and credential headers. The recorder runs
+  the same scan before it writes.
+- The first scenario, `truncation.text`: plain text cut off by the output token limit.
