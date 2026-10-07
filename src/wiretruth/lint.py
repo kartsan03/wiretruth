@@ -7,10 +7,15 @@ Each file's kind comes from where it lives:
     suite/fixtures/<provider>/<id>.json          fixture
     results/upstream.json                        upstream
     results/<library>/<version>.json             results
+
+Every file also goes through the secret scan, and every fixture's truth is recomputed from its
+exchanges by its provider module, when that provider has one yet.
 """
 
 from __future__ import annotations
 
+import base64
+import json
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from functools import partial
@@ -21,14 +26,19 @@ from wiretruth.formats import (
     Fixture,
     FormatError,
     JsonObject,
+    JsonValue,
     Kind,
     Problem,
     Scenario,
+    json_path,
     load_bug_classes,
     load_document,
     load_fixture,
     load_scenario,
+    parse_json,
 )
+from wiretruth.providers import PROVIDERS
+from wiretruth.secret_scan import scan_headers, scan_text
 
 T = TypeVar("T")
 
@@ -67,15 +77,99 @@ def _load(loader: Callable[[Path], T], path: Path, report: Report) -> T | None:
         return None
 
 
+_SECRET_ADVICE = "remove it, and revoke the credential if it is real"
+_SHOWN = 80
+
+
+def _scan_secrets(path: Path, report: Report) -> JsonValue:
+    """Secret-scan one file: its text and, for JSON, its headers objects and decoded chunks_b64
+    bodies. Returns the parsed JSON, or None."""
+    try:
+        data = path.read_bytes()
+    except OSError as error:
+        if path.suffix != ".json":  # the loader reports a JSON file
+            message = f"cannot read the file: {error.strerror}"
+            report.problems.append(Problem(str(path), "$", message))
+        return None
+    for finding in scan_text(data.decode("utf-8", "replace")):
+        report.problems.append(
+            Problem(str(path), finding.where, f"{finding.what}; {_SECRET_ADVICE}")
+        )
+    if path.suffix != ".json":
+        return None
+    try:
+        doc = parse_json(data)
+    except (ValueError, RecursionError):
+        return None  # the loader reports it
+    for finding in scan_headers(doc):
+        report.problems.append(
+            Problem(str(path), finding.where, f"{finding.what}; {_SECRET_ADVICE}")
+        )
+    exchanges = doc.get("exchanges") if isinstance(doc, dict) else None
+    for i, exchange in enumerate(exchanges if isinstance(exchanges, list) else []):
+        response = exchange.get("response") if isinstance(exchange, dict) else None
+        body = response.get("body") if isinstance(response, dict) else None
+        parts = body.get("chunks_b64") if isinstance(body, dict) else None
+        if not isinstance(parts, list):
+            continue
+        try:
+            text = b"".join(base64.b64decode(cast(str, part), validate=True) for part in parts)
+        except (TypeError, ValueError):
+            continue  # a chunk the schema rejects
+        where = json_path(["exchanges", i, "response", "body", "chunks_b64"])
+        for finding in scan_text(text.decode("utf-8", "replace")):
+            message = f"{finding.what} (decoded, {finding.where}); {_SECRET_ADVICE}"
+            report.problems.append(Problem(str(path), where, message))
+    return doc
+
+
+def _shown(value: JsonValue) -> str:
+    text = json.dumps(value, ensure_ascii=False)
+    return text if len(text) <= _SHOWN else text[: _SHOWN - 1] + "…"
+
+
+def _canonical(value: JsonValue) -> str:
+    return json.dumps(value, sort_keys=True)
+
+
+def _truth_differences(
+    stored: JsonValue, computed: JsonValue, where: list[str | int]
+) -> list[tuple[str, str]]:
+    """(JSON path, message), one per differing field, going into objects with the same keys."""
+    if isinstance(stored, dict) and isinstance(computed, dict) and stored.keys() == computed.keys():
+        return [
+            found
+            for key in computed
+            for found in _truth_differences(stored[key], computed[key], [*where, key])
+        ]
+    if _canonical(stored) == _canonical(computed):
+        return []
+    return [(json_path(where), f"doesn't match the exchanges, which give {_shown(computed)}")]
+
+
+def _check_truth(path: Path, fixture: Fixture, doc: JsonValue, report: Report) -> None:
+    provider = PROVIDERS[fixture.provider]
+    try:
+        computed = provider.extract_truth(fixture.exchanges, fixture.provenance.request)
+    except ValueError as error:
+        message = f"the {fixture.provider} truth extractor can't read them: {error}"
+        report.problems.append(Problem(str(path), "$.exchanges", message))
+        return
+    stored = cast(JsonObject, doc)["truth"]  # the fixture loaded, so the document is valid
+    for where, message in _truth_differences(stored, computed, ["truth"]):
+        report.problems.append(Problem(str(path), where, message))
+
+
 def lint(root: Path) -> Report:
     suite = root / "suite"
     if not suite.is_dir():
         raise SetupError(f"{suite}: no such directory")
     report = Report()
-    paths = sorted(path for path in suite.rglob("*.json") if path.is_file())
+    # Every file gets the secret scan; the JSON files are also checked as suite data.
+    paths = sorted(path for path in suite.rglob("*") if path.is_file())
     results = root / "results"
     if results.is_dir():
-        paths += sorted(path for path in results.rglob("*.json") if path.is_file())
+        paths += sorted(path for path in results.rglob("*") if path.is_file())
     else:
         report.notes.append(f"{results}: no such directory, skipped")
 
@@ -86,11 +180,14 @@ def lint(root: Path) -> Report:
         report.problems.append(Problem(str(registry), "$", "the bug-class registry is missing"))
     # Keyed by the id the file path implies; None when the file itself is invalid.
     scenarios: dict[str, tuple[Path, Scenario | None]] = {}
-    fixtures: dict[str, tuple[Path, Fixture | None]] = {}
+    fixtures: dict[str, tuple[Path, Fixture | None, JsonValue]] = {}
     results_files: list[tuple[Path, JsonObject]] = []
 
     for path in paths:
         report.files += 1
+        doc = _scan_secrets(path, report)
+        if path.suffix != ".json":
+            continue
         parts = path.relative_to(root).parts
         kind = _kind(parts)
         if kind is None:
@@ -103,11 +200,12 @@ def lint(root: Path) -> Report:
         elif kind == "scenario":
             scenarios[f"{parts[2]}.{path.stem}"] = (path, _load(load_scenario, path, report))
         elif kind == "fixture":
-            fixtures[f"{parts[2]}/{path.stem}"] = (path, _load(load_fixture, path, report))
+            fixture = _load(load_fixture, path, report)
+            fixtures[f"{parts[2]}/{path.stem}"] = (path, fixture, doc)
         else:
-            doc = _load(partial(load_document, kind), path, report)
-            if kind == "results" and doc is not None:
-                results_files.append((path, cast(JsonObject, doc)))
+            loaded_doc = _load(partial(load_document, kind), path, report)
+            if kind == "results" and loaded_doc is not None:
+                results_files.append((path, cast(JsonObject, loaded_doc)))
 
     def problem(path: Path, where: str, message: str) -> None:
         report.problems.append(Problem(str(path), where, message))
@@ -122,7 +220,8 @@ def lint(root: Path) -> Report:
         if bug_classes is not None and scenario.bug_class not in bug_classes:
             problem(path, "$.bug_class", f"{scenario.bug_class!r} is not a bug class in {registry}")
 
-    for expected, (path, fixture) in fixtures.items():
+    unchecked: set[str] = set()
+    for expected, (path, fixture, fixture_doc) in fixtures.items():
         if fixture is None:
             continue
         if fixture.id != expected:
@@ -141,6 +240,13 @@ def lint(root: Path) -> Report:
         if fixture.derived_from is not None and fixture.derived_from.fixture not in fixtures:
             message = f"no fixture {fixture.derived_from.fixture!r} in {suite / 'fixtures'}"
             problem(path, "$.derived_from.fixture", message)
+        if fixture.provider in PROVIDERS:
+            _check_truth(path, fixture, fixture_doc, report)
+        else:
+            unchecked.add(fixture.provider)
+    if unchecked:
+        names = ", ".join(sorted(unchecked))
+        report.notes.append(f"truth not recomputed for {names}: no truth extractor yet")
 
     for path, doc in results_files:
         library = cast(JsonObject, doc["library"])
