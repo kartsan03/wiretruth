@@ -33,3 +33,5 @@ finding).
   `suite/` and `results/` for keys, tokens, organization and project ids, and credential headers. The recorder runs
   the same scan before it writes.
 - The first scenario, `truncation.text`: plain text cut off by the output token limit.
+- Two more truncation scenarios: `truncation.text-stream`, the same text streamed, and
+  `truncation.structured-output`, a JSON object for a strict schema cut off halfway.
