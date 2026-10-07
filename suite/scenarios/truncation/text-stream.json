@@ -1,0 +1,33 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "truncation.text-stream",
+  "title": "Streamed text cut off by the output token limit",
+  "bug_class": "silent-truncation",
+  "priority": "P0",
+  "summary": "The model stops at the output token limit in the middle of a streamed plain-text answer.",
+  "call": {
+    "stream": true,
+    "max_output_tokens": 16,
+    "messages": [
+      {"role": "user", "content": "Write a 200-word paragraph about the history of Kyiv, in English."}
+    ],
+    "reasoning": {"effort": "none"}
+  },
+  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini", "anthropic"],
+  "requirements": [
+    {
+      "id": "cause-is-truncation",
+      "level": "MUST",
+      "check": "truncation_is_signalled",
+      "text": "The caller can tell that the stream stopped at the token limit."
+    },
+    {
+      "id": "usage-reported",
+      "level": "SHOULD",
+      "check": "usage_matches_truth",
+      "args": {"fields": ["output"]},
+      "text": "Output token usage is reported, and matches the provider's count."
+    }
+  ],
+  "grading_notes": "The finish comes in the last event before the stream ends, so a library that only passes the text on can't satisfy the first requirement; a finish reason of length or a dedicated truncation error does. openai-chat sends no usage in this stream, because the call doesn't set stream_options.include_usage; truncation.text-stream-usage is that form. Effort none keeps the 16-token limit from being spent on reasoning."
+}
