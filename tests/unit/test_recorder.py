@@ -433,6 +433,89 @@ def test_the_exact_key_is_caught_whatever_it_looks_like(root: Path, scenario: Sc
     assert key not in str(caught.value)
 
 
+def _events_with(field: str) -> tuple[str, ...]:
+    """EVENTS, with ``field`` (JSON members and a comma) added to the first event's data."""
+    return (EVENTS[0].replace('{"id"', "{" + field + '"id"', 1), *EVENTS[1:])
+
+
+@pytest.mark.parametrize("keep_bytes", [False, True])
+@pytest.mark.parametrize(
+    ("key", "found"),
+    [
+        (KEY, "raw body line 1: looks like an sk- API key, JSON-escaped"),
+        ("plain0key0with0no0known0prefix", "raw body: the API key itself"),
+    ],
+    ids=["pattern", "exact"],
+)
+def test_an_escaped_key_in_a_field_no_truth_reads_is_caught(
+    root: Path, scenario: Scenario, keep_bytes: bool, key: str, found: str
+) -> None:
+    escaped = "\\u00" + format(ord(key[0]), "x") + key[1:]
+    server = _fake_openai(_exchange("sse", _events_with(f'"obfuscation":"{escaped}",')))
+    with server, pytest.raises(RecordError) as caught:
+        record_scenario(
+            openai_chat,
+            scenario,
+            model="m",
+            key=key,
+            root=root,
+            base_url=server.base_urls()["openai-chat"],
+            env={},
+            keep_bytes=keep_bytes,
+        )
+    assert found in str(caught.value)
+    assert key[1:] not in str(caught.value)
+    assert not (root / "suite" / "fixtures").exists()
+
+
+def test_a_credential_header_inside_an_event_is_caught(root: Path, scenario: Scenario) -> None:
+    server = _fake_openai(_exchange("sse", _events_with('"headers":{"x-api-key":"k"},')))
+    with server, pytest.raises(RecordError) as caught:
+        _record(server, root, scenario, keep_bytes=True)
+    assert (
+        'raw body $, in its JSON at $.headers["x-api-key"]: the x-api-key header carries '
+        "credentials" in str(caught.value)
+    )
+
+
+def test_no_finding_quotes_a_key_in_its_path(root: Path, scenario: Scenario) -> None:
+    # An object key with the API key in it, which no pattern sees after the x.
+    server = _fake_openai(_exchange("sse", _events_with(f'"x{KEY}":{{"headers":{{"cookie":1}}}},')))
+    with server, pytest.raises(RecordError) as caught:
+        _record(server, root, scenario)
+    assert KEY not in str(caught.value)
+    assert "raw body: a finding whose path holds the API key (not shown)" in str(caught.value)
+
+
+@pytest.mark.parametrize("duplicate", [SECRET, KEY], ids=["pattern", "exact"])
+def test_no_error_quotes_a_key_from_the_response(
+    root: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    duplicate: str,
+) -> None:
+    monkeypatch.chdir(root)
+    monkeypatch.setenv("OPENAI_API_KEY", KEY)
+    events = _events_with(f'"{duplicate}":1,"{duplicate}":2,')  # the extractor can't read it
+    with _fake_openai(_exchange("sse", events)) as server:
+        monkeypatch.setattr(openai_chat, "API_BASE", server.base_urls()["openai-chat"])
+        assert main(["record", "--provider", "openai-chat", "--scenario", "*"]) == 2
+    out, err = capsys.readouterr()
+    assert duplicate[8:] not in out + err
+    assert "the secret scan stopped the recording, nothing was written" in err
+
+
+def test_a_status_line_that_isnt_http_is_not_quoted(root: Path, scenario: Scenario) -> None:
+    response = f"SSH-2.0 {SECRET}\r\n\r\n".encode()
+    with _raw_server(response) as base_url, pytest.raises(RecordError) as caught:
+        record_scenario(
+            openai_chat, scenario, model="m", key=KEY, root=root, base_url=base_url, env={}
+        )
+    message = "failed: the response doesn't start as HTTP/1.x (BadStatusLine)"
+    assert str(caught.value).endswith(message)
+    assert SECRET[8:] not in str(caught.value)
+
+
 def _write_fixture(path: Path, **changes: object) -> None:
     doc = json.loads((SAMPLES / "fixture" / "recorded-sse.json").read_text(encoding="utf-8"))
     doc.update(changes)
@@ -841,7 +924,7 @@ def test_the_record_command_reports_an_invalid_fixture(
     assert "$.truth" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("failing", ["write_text", "replace"])
+@pytest.mark.parametrize("failing", ["write_text", "partial write_text", "replace"])
 def test_a_rotation_that_fails_halfway_leaves_the_old_fixture(
     root: Path, scenario: Scenario, monkeypatch: pytest.MonkeyPatch, failing: str
 ) -> None:
@@ -849,16 +932,19 @@ def test_a_rotation_that_fails_halfway_leaves_the_old_fixture(
     primary = folder / "truncation.text.json"
     _write_fixture(primary, id="openai-chat/truncation.text", scenario="truncation.text")
     old_text = primary.read_text(encoding="utf-8")
-    original = getattr(Path, failing)
+    method = failing.split()[-1]
+    original = getattr(Path, method)
 
     def fail_late(self: Path, *args: object, **kwargs: object) -> object:
         # The new fixture's temporary file is written; the step after it fails.
-        if failing == "replace" or "@" in self.name:
+        if method == "replace" or "@" in self.name:
+            if failing.startswith("partial"):  # the disk fills up after the file is created
+                original(self, "{", encoding="utf-8")
             raise OSError(28, "No space left on device")
         return original(self, *args, **kwargs)
 
     with _fake_openai(_exchange("json", COMPLETION)) as server:
-        monkeypatch.setattr(Path, failing, fail_late)
+        monkeypatch.setattr(Path, method, fail_late)
         with pytest.raises(OSError, match="No space left on device"):
             _record(server, root, scenario)
     monkeypatch.undo()
