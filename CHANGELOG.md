@@ -36,3 +36,5 @@ finding).
 - The first scenario, `truncation.text`: plain text cut off by the output token limit.
 - Two more truncation scenarios: `truncation.text-stream`, the same text streamed, and
   `truncation.structured-output`, a JSON object for a strict schema cut off halfway.
+- The first recorded fixtures: the three truncation scenarios on `openai-chat`, recorded in CI against
+  `gpt-6-luna`.
