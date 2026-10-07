@@ -9,7 +9,9 @@ Each file's kind comes from where it lives:
     results/<library>/<version>.json             results
 
 Every file also goes through the secret scan, and every fixture's truth is recomputed from its
-exchanges by its provider module, when that provider has one yet.
+exchanges by its provider module, when that provider has one yet. No problem lint reports repeats
+what the scan flags: a parser, schema or extractor message can quote the file, so such a message is
+withheld, and the scan's own finding points to the line.
 """
 
 from __future__ import annotations
@@ -17,7 +19,7 @@ from __future__ import annotations
 import base64
 import json
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from functools import partial
 from pathlib import Path
 from typing import TypeVar, cast
@@ -117,7 +119,8 @@ def _scan_secrets(path: Path, report: Report) -> JsonValue:
         except (TypeError, ValueError):
             continue  # a chunk the schema rejects
         where = json_path(["exchanges", i, "response", "body", "chunks_b64"])
-        for finding in scan_text(text.decode("utf-8", "replace")):
+        decoded = text.decode("utf-8", "replace")
+        for finding in [*scan_text(decoded), *scan_headers(decoded)]:
             message = f"{finding.what} (decoded, {finding.where}); {_SECRET_ADVICE}"
             report.problems.append(Problem(str(path), where, message))
     return doc
@@ -128,6 +131,17 @@ def _shown(value: JsonValue) -> str:
     if scan_text(text):  # the scan reports it too; lint output never repeats a secret
         return "a value the secret scan flags (not shown)"
     return text if len(text) <= _SHOWN else text[: _SHOWN - 1] + "…"
+
+
+def _quiet(problem: Problem) -> Problem:
+    """``problem``, with its path or message withheld where it repeats what the scan flags."""
+    if scan_text(problem.where):
+        problem = replace(problem, where="a path the secret scan flags (not shown)")
+    if scan_text(problem.message):
+        problem = replace(
+            problem, message="a message that quotes what the secret scan flags (not shown)"
+        )
+    return problem
 
 
 def _canonical(value: JsonValue) -> str:
@@ -257,5 +271,5 @@ def lint(root: Path) -> Report:
                 message = f"{library[key]!r} doesn't match the file path: expected {expected!r}"
                 problem(path, f"$.library.{key}", message)
 
-    report.problems.sort(key=lambda found: found.file)
+    report.problems = sorted(map(_quiet, report.problems), key=lambda found: found.file)
     return report

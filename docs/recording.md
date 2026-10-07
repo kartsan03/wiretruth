@@ -143,9 +143,9 @@ recorder prints why on stderr, keeps every fixture that was written, and exits w
 
 ## The secret scan
 
-The recorder scans each fixture, and the raw response body, before it writes anything. `wiretruth lint` runs the
-same scan on every file under `suite/` and `results/`, JSON or not, including the decoded bytes of `chunks_b64`
-bodies, and CI runs lint on every pull request.
+The recorder scans the raw response body before anything parses it, and each fixture before it writes it.
+`wiretruth lint` runs the same scan on every file under `suite/` and `results/`, JSON or not, including the decoded
+bytes of `chunks_b64` bodies, and CI runs lint on every pull request.
 
 It reports:
 
@@ -158,9 +158,19 @@ It reports:
   `headers` object. The replay server leaves the same headers out of its request log.
 
 The prefixes count only at the start of a word, so text such as `desk-based-research-notes` passes. A JSON escape
-such as `\n` or `\u00a0` also starts a word, so `"Key:\nsk-…"` is caught. A finding
-names the pattern and the line, never the matched text, so the scan's own output can't leak a key. If it reports
-a real key, remove the file and revoke the key.
+such as `\n` or `\u00a0` also starts a word, so `"Key:\nsk-…"` is caught.
+
+A key can also hide behind JSON escapes: `\u0073k-…` is `sk-…` to any JSON parser. So the scan reads each text
+again with its escapes decoded, one layer at a time, up to 16 layers. A stream event stored in a fixture is JSON
+inside a JSON string, two layers. A finding that only a decoded layer shows says `JSON-escaped`, and escapes
+nested deeper than 16 layers are a finding of their own. The header check also reads the JSON inside strings, up
+to 16 levels: a whole string, or a line of one such as an event's `data:`.
+
+A finding names the pattern and the line, never the matched text, so the scan's own output can't leak a key. Lint
+and the recorder don't repeat a flagged value elsewhere either. A parser, schema or truth message that would quote
+it, or a JSON path through a key that looks like one, is printed as `… (not shown)`; the scan's finding gives the
+line. An HTTP error never quotes the response's status line. If the scan reports a real key, remove the file and
+revoke the key.
 
 ## How the truth is read
 

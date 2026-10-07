@@ -10,8 +10,9 @@ No SDK sits between the provider and the fixture. The provider module builds the
   stored), the models, the recorder version, the commit and the CI run;
 - the truth, computed by the provider module.
 
-The API key is read from the environment and goes only into the request's headers. Before a
-fixture is written, the secret scan checks it and the raw body; a finding stops the recording.
+The API key is read from the environment and goes only into the request's headers. The secret
+scan checks the raw body before anything parses it, and the fixture before it is written; a finding
+stops the recording. No error the recorder raises repeats what the response said.
 """
 
 from __future__ import annotations
@@ -42,7 +43,7 @@ from wiretruth.formats import (
     validate,
 )
 from wiretruth.providers import Provider, RawRequest, json_object, json_str
-from wiretruth.secret_scan import scan_headers, scan_text
+from wiretruth.secret_scan import layers, scan_headers, scan_text
 
 STORED_HEADERS = ("content-type", "retry-after")
 TIMEOUT_SECONDS = 120.0
@@ -162,11 +163,19 @@ def _send(provider: Provider, request: RawRequest, base_url: str, key: str) -> _
     )
     connection = connection_class(target.host, target.port, timeout=TIMEOUT_SECONDS)
     try:
+        failed = f"{request.method} {target.url} failed"
         try:
             connection.request(request.method, target.path, body=body, headers=headers)
-            response = connection.getresponse()
         except (OSError, http.client.HTTPException) as error:
-            raise RecordError(f"{request.method} {target.url} failed: {error}") from None
+            raise RecordError(f"{failed}: {error}") from None
+        try:
+            response = connection.getresponse()
+        except OSError as error:
+            raise RecordError(f"{failed}: {error}") from None
+        except http.client.HTTPException as error:  # its text can quote the response, so not shown
+            raise RecordError(
+                f"{failed}: the response isn't valid HTTP ({type(error).__name__})"
+            ) from None
         stored = {
             name: value
             for name in STORED_HEADERS
@@ -183,7 +192,8 @@ def _send(provider: Provider, request: RawRequest, base_url: str, key: str) -> _
         except (OSError, http.client.IncompleteRead):
             end = "abort"
         except http.client.HTTPException as error:  # chunk framing http.client can't read
-            raise RecordError(f"{target.url}: the response body is malformed: {error!r}") from None
+            message = f"{target.url}: the response body is malformed ({type(error).__name__})"
+            raise RecordError(message) from None
         if response.length:  # a Content-Length body that stopped short
             end = "abort"
         return _Response(response.status, stored, pieces, end)
@@ -323,19 +333,44 @@ def _write(path: Path, text: str, previous: tuple[Path, JsonObject] | None) -> N
     """Write the new fixture and, if there is one, the dated old one: both or neither."""
     path.parent.mkdir(parents=True, exist_ok=True)
     new = path.with_name(f".{path.name}.new")
-    written: list[Path] = []
+    started: list[Path] = []  # before each write, since a failed write can leave part of a file
     try:
+        started.append(new)
         new.write_text(text, encoding="utf-8")
-        written.append(new)
         if previous is not None:
             dated, old = previous
+            started.append(dated)
             dated.write_text(_dump(old), encoding="utf-8")
-            written.append(dated)
         new.replace(path)
     except OSError:
-        for leftover in written:
+        for leftover in started:
             leftover.unlink(missing_ok=True)
         raise
+
+
+def _holds(text: str, key: str) -> bool:
+    return any(key in layer for layer in layers(text))
+
+
+def _secrets(where: str, text: str, doc: JsonValue, key: str) -> list[str]:
+    """What the secret scan finds in ``text`` (and ``doc``, its parsed form), and the key itself,
+    escaped or not."""
+    found = [
+        *([f"{where}: the API key itself"] if _holds(text, key) else []),
+        *(f"{where} {finding}" for finding in scan_text(text)),
+        *(f"{where} {finding}" for finding in scan_headers(doc)),
+    ]
+    # A header finding's path can run through an object key that holds the API key.
+    hidden = f"{where}: a finding whose path holds the API key (not shown)"
+    return [hidden if _holds(line, key) else line for line in found]
+
+
+def _stop_on(findings: list[str]) -> None:
+    if findings:
+        raise RecordError(
+            "the secret scan stopped the recording, nothing was written:\n  "
+            + "\n  ".join(findings)
+        )
 
 
 def record_scenario(
@@ -358,6 +393,8 @@ def record_scenario(
     recorded_at = datetime.now(UTC)
     response = _send(provider, request, base_url, key)
     raw = b"".join(response.pieces)
+    raw_text = raw.decode("utf-8", "replace")
+    _stop_on(_secrets("raw body", raw_text, raw_text, key))  # before a parser error can quote it
     body, warnings = _body(response, keep_bytes)
     if response.end == "abort":
         warnings.append("the connection closed before the response ended: stored as end: abort")
@@ -397,17 +434,7 @@ def record_scenario(
         "truth": truth,
     }
     text = _dump(fixture)
-    findings = [
-        *(["the API key itself"] if key in text or key.encode() in raw else []),
-        *(f"fixture {finding}" for finding in scan_text(text)),
-        *(f"raw body {finding}" for finding in scan_text(raw.decode("utf-8", "replace"))),
-        *(f"fixture {finding}" for finding in scan_headers(fixture)),
-    ]
-    if findings:
-        raise RecordError(
-            "the secret scan stopped the recording, nothing was written:\n  "
-            + "\n  ".join(findings)
-        )
+    _stop_on(_secrets("fixture", text, fixture, key))
     problems = validate("fixture", fixture, str(path))
     if problems:  # a recorder bug: the fixture it built is invalid
         raise FormatError(problems)
