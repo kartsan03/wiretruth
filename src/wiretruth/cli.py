@@ -5,6 +5,7 @@ Exit codes: 0 ok, 1 check failure (invalid suite data, grade mismatch), 2 usage 
 
 import argparse
 import contextlib
+import os
 import signal
 import sys
 import time
@@ -14,6 +15,16 @@ from pathlib import Path
 from wiretruth import __version__
 from wiretruth.formats import FormatError, load_fixture
 from wiretruth.lint import SetupError, lint
+from wiretruth.providers import PROVIDERS
+from wiretruth.recorder import (
+    RecordError,
+    api_key,
+    describe_request,
+    destination,
+    find_scenarios,
+    record_scenario,
+    summary,
+)
 from wiretruth.replay import HOST, ReplayServer
 
 EXIT_CHECK = 1
@@ -55,6 +66,34 @@ def build_parser() -> argparse.ArgumentParser:
             )
             subparser.add_argument(
                 "--port", type=int, default=0, help=f"port on {HOST} (default: a free one)"
+            )
+        elif name == "record":
+            subparser.add_argument(
+                "--provider", required=True, choices=sorted(PROVIDERS), help="the wire API"
+            )
+            subparser.add_argument(
+                "--scenario",
+                required=True,
+                help="a scenario id, or a glob such as 'truncation.*' "
+                "(read from suite/scenarios/ in the current directory)",
+            )
+            subparser.add_argument(
+                "--model", help="the model to request (default: the provider's current one)"
+            )
+            subparser.add_argument(
+                "--dry-run",
+                action="store_true",
+                help="print each request, with the key masked, and send nothing",
+            )
+            subparser.add_argument(
+                "--replace",
+                action="store_true",
+                help="overwrite an existing fixture instead of keeping it as a dated variant",
+            )
+            subparser.add_argument(
+                "--keep-bytes",
+                action="store_true",
+                help="store the body as the byte chunks read, instead of events or JSON",
             )
     return parser
 
@@ -127,6 +166,60 @@ def run_serve(target: str, port: int) -> int:
     return 0
 
 
+def run_record(args: argparse.Namespace) -> int:
+    provider = PROVIDERS[args.provider]
+    model = args.model or provider.DEFAULT_MODEL
+    root = Path()
+    # Everything that can fail before a request is checked first, for every scenario, so a
+    # mistake in the last one doesn't come after paying for the others.
+    try:
+        scenarios, skipped = find_scenarios(root, args.scenario, provider.ID)
+        for scenario_id in skipped:
+            print(f"wiretruth record: skipped {scenario_id}: it doesn't list {provider.ID}")
+        requests = [provider.build_request(s.call_for(provider.ID), model) for s in scenarios]
+        if args.dry_run:
+            for scenario, request in zip(scenarios, requests, strict=True):
+                print(f"# {scenario.id}")
+                print(describe_request(provider, request, provider.API_BASE))
+            return 0
+        key = api_key(provider, os.environ)
+        for scenario in scenarios:
+            destination(root, provider.ID, scenario.id, replace=args.replace)
+    except FormatError as error:
+        print(error, file=sys.stderr)
+        return EXIT_CHECK
+    except (RecordError, ValueError) as error:
+        print(f"wiretruth record: {error}", file=sys.stderr)
+        return EXIT_USAGE
+    # A scenario that fails doesn't stop the others: each recording that works is kept.
+    code = 0
+    for scenario in scenarios:
+        try:
+            recording = record_scenario(
+                provider,
+                scenario,
+                model=model,
+                key=key,
+                root=root,
+                base_url=provider.API_BASE,
+                env=os.environ,
+                replace=args.replace,
+                keep_bytes=args.keep_bytes,
+            )
+        except FormatError as error:
+            print(error, file=sys.stderr, flush=True)
+            code = EXIT_CHECK
+            continue
+        except (RecordError, ValueError, OSError) as error:
+            print(f"wiretruth record: {scenario.id}: {error}", file=sys.stderr, flush=True)
+            code = code or EXIT_USAGE
+            continue
+        print(f"wrote {summary(recording)}", flush=True)
+        for warning in recording.warnings:
+            print(f"  warning: {warning}", flush=True)
+    return code
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -137,5 +230,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_lint(Path(args.path))
     if args.command == "serve":
         return run_serve(args.fixture, args.port)
+    if args.command == "record":
+        return run_record(args)
     print(f"wiretruth {args.command}: not implemented yet", file=sys.stderr)
     return EXIT_USAGE
