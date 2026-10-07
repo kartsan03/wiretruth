@@ -1,0 +1,98 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/request.tools-with-reasoning-chat",
+  "scenario": "request.tools-with-reasoning-chat",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-07T09:51:44Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": null,
+    "recorder": "wiretruth 0.1.0.dev0",
+    "source_commit": null,
+    "ci_run": null,
+    "raw_sha256": "3e37e511a5e60e4440cf5655a0ec83d466e85c244430cdd48def62123772e777",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What's the weather in Kyiv?"
+        }
+      ],
+      "max_completion_tokens": 200,
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "description": "Current weather for one city.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 400,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "error": {
+              "message": "Function tools with reasoning_effort are not supported for gpt-6-luna in /v1/chat/completions. To use function tools, use /v1/responses or set reasoning_effort to 'none'.",
+              "type": "invalid_request_error",
+              "param": "reasoning_effort",
+              "code": null
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "error",
+    "raw_finish": null,
+    "text": null,
+    "tool_calls": [],
+    "structured": null,
+    "error": {
+      "status": 400,
+      "type": "invalid_request_error",
+      "code": null,
+      "message": "Function tools with reasoning_effort are not supported for gpt-6-luna in /v1/chat/completions. To use function tools, use /v1/responses or set reasoning_effort to 'none'."
+    },
+    "stream_completed": null,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": null
+    }
+  }
+}

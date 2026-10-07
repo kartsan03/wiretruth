@@ -1,0 +1,102 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/truncation.text-stream-usage",
+  "scenario": "truncation.text-stream-usage",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-07T09:51:50Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.1.0.dev0",
+    "source_commit": null,
+    "ci_run": null,
+    "raw_sha256": "9c753c6e1e603385e464a52cb0e584912e64df9a12369a0b385c8d00b0678812",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about the history of Kyiv, in English."
+        }
+      ],
+      "stream": true,
+      "stream_options": {
+        "include_usage": true
+      },
+      "max_completion_tokens": 16,
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream; charset=utf-8"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"refusal\":null},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"Ky\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"iv\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"t\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" the\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"ExyPDA05wCkbsE\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" capital\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"6OecMvxS26\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" of\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"bxMRxryEOeDuq5D\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" Ukraine\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"rNn2oG1CIp\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"k\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" is\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"bQDaCcGkIe8W8UZ\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" one\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"dVSzCMXS7BXnVD\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" of\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"37T7qtRe96yUKb2\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" Europe\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"LSUjYkIbvNO\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"’s\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"length\"}],\"usage\":null,\"obfuscation\":\"rg1ICUNyWy\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EWIbPDv99zL4xjCGknWlwY4g4z3WQ\",\"object\":\"chat.completion.chunk\",\"created\":1791366711,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[],\"usage\":{\"prompt_tokens\":21,\"completion_tokens\":16,\"total_tokens\":37,\"prompt_tokens_details\":{\"cached_tokens\":0,\"cache_write_tokens\":0,\"audio_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0,\"audio_tokens\":0,\"accepted_prediction_tokens\":0,\"rejected_prediction_tokens\":0}},\"obfuscation\":\"rVkuYmpYET\"}\n\n",
+            "data: [DONE]\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": "Kyiv, the capital of Ukraine, is one of Europe’s",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 21,
+      "cached_input": 0,
+      "output": 16,
+      "reasoning": 0,
+      "total": 37,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 21,
+        "completion_tokens": 16,
+        "total_tokens": 37,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      }
+    }
+  }
+}

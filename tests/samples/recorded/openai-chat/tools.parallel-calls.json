@@ -1,0 +1,174 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/tools.parallel-calls",
+  "scenario": "tools.parallel-calls",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-07T09:51:46Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.1.0.dev0",
+    "source_commit": null,
+    "ci_run": null,
+    "raw_sha256": "851b67d1029f4630d4b75d3565542349d83d8ba9e6f15b4ddf8dec9ec6a23ad6",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What's the weather in Kyiv and in Lviv? Call the tool once for each city."
+        }
+      ],
+      "max_completion_tokens": 200,
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "description": "Current weather for one city.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "required",
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "chatcmpl-EWIbLlhIyDRd63w4p0IcvfbVV8Dxh",
+            "object": "chat.completion",
+            "created": 1791366707,
+            "model": "gpt-6-luna",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": null,
+                  "tool_calls": [
+                    {
+                      "id": "call_eLZuPLkttB37dRc8mqlD78rI",
+                      "type": "function",
+                      "function": {
+                        "name": "get_weather",
+                        "arguments": "{\"city\": \"Kyiv\"}"
+                      }
+                    },
+                    {
+                      "id": "call_bpbrMLgYJuF3FRQHR0GT0zRr",
+                      "type": "function",
+                      "function": {
+                        "name": "get_weather",
+                        "arguments": "{\"city\": \"Lviv\"}"
+                      }
+                    }
+                  ],
+                  "refusal": null,
+                  "annotations": []
+                },
+                "finish_reason": "tool_calls"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 142,
+              "completion_tokens": 49,
+              "total_tokens": 191,
+              "prompt_tokens_details": {
+                "cached_tokens": 0,
+                "cache_write_tokens": 0,
+                "audio_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0,
+                "audio_tokens": 0,
+                "accepted_prediction_tokens": 0,
+                "rejected_prediction_tokens": 0
+              }
+            },
+            "service_tier": "default",
+            "system_fingerprint": null
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "tool_calls",
+    "raw_finish": "tool_calls",
+    "text": null,
+    "tool_calls": [
+      {
+        "id": "call_eLZuPLkttB37dRc8mqlD78rI",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\": \"Kyiv\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "Kyiv"
+        }
+      },
+      {
+        "id": "call_bpbrMLgYJuF3FRQHR0GT0zRr",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\": \"Lviv\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "Lviv"
+        }
+      }
+    ],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 142,
+      "cached_input": 0,
+      "output": 49,
+      "reasoning": 0,
+      "total": 191,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 142,
+        "completion_tokens": 49,
+        "total_tokens": 191,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      }
+    }
+  }
+}

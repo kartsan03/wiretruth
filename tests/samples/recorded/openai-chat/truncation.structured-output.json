@@ -1,0 +1,150 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/truncation.structured-output",
+  "scenario": "truncation.structured-output",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-07T09:51:49Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.1.0.dev0",
+    "source_commit": null,
+    "ci_run": null,
+    "raw_sha256": "a051b82ad67d8918ccdcb83ddfcc15cf5d1edf515885ce13a429286e6469920c",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "List ten large Ukrainian cities with their oblast. Назви міст пиши українською."
+        }
+      ],
+      "max_completion_tokens": 24,
+      "response_format": {
+        "type": "json_schema",
+        "json_schema": {
+          "name": "output",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "cities": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "oblast": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "oblast"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "cities"
+            ],
+            "additionalProperties": false
+          },
+          "strict": true
+        }
+      },
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "chatcmpl-EWIbNyGDJ2FucD8cHnf6DOf6jpow4",
+            "object": "chat.completion",
+            "created": 1791366709,
+            "model": "gpt-6-luna",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "{\"cities\":[{\"name\":\"Київ\",\"oblast\":\"місто зі спеціальним",
+                  "refusal": null,
+                  "annotations": []
+                },
+                "finish_reason": "length"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 71,
+              "completion_tokens": 24,
+              "total_tokens": 95,
+              "prompt_tokens_details": {
+                "cached_tokens": 0,
+                "cache_write_tokens": 0,
+                "audio_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0,
+                "audio_tokens": 0,
+                "accepted_prediction_tokens": 0,
+                "rejected_prediction_tokens": 0
+              }
+            },
+            "service_tier": "default",
+            "system_fingerprint": null
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": "{\"cities\":[{\"name\":\"Київ\",\"oblast\":\"місто зі спеціальним",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 71,
+      "cached_input": 0,
+      "output": 24,
+      "reasoning": 0,
+      "total": 95,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 71,
+        "completion_tokens": 24,
+        "total_tokens": 95,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      }
+    }
+  }
+}
