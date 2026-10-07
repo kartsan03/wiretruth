@@ -505,13 +505,37 @@ def test_no_error_quotes_a_key_from_the_response(
     assert "the secret scan stopped the recording, nothing was written" in err
 
 
+def test_a_request_that_cant_be_sent_keeps_its_reason(root: Path, scenario: Scenario) -> None:
+    with pytest.raises(RecordError, match=r"failed: URL can't contain control characters"):
+        record_scenario(
+            openai_chat,
+            scenario,
+            model="m",
+            key=KEY,
+            root=root,
+            base_url="http://127.0.0.1:9/a b/v1",
+            env={},
+        )
+
+
+def test_a_server_that_closes_without_an_answer(root: Path, scenario: Scenario) -> None:
+    # RemoteDisconnected is an OSError and an HTTPException; its message is fixed text.
+    with (
+        _raw_server(b"") as base_url,
+        pytest.raises(RecordError, match=r"failed: Remote end closed connection without response$"),
+    ):
+        record_scenario(
+            openai_chat, scenario, model="m", key=KEY, root=root, base_url=base_url, env={}
+        )
+
+
 def test_a_status_line_that_isnt_http_is_not_quoted(root: Path, scenario: Scenario) -> None:
     response = f"SSH-2.0 {SECRET}\r\n\r\n".encode()
     with _raw_server(response) as base_url, pytest.raises(RecordError) as caught:
         record_scenario(
             openai_chat, scenario, model="m", key=KEY, root=root, base_url=base_url, env={}
         )
-    message = "failed: the response doesn't start as HTTP/1.x (BadStatusLine)"
+    message = "failed: the response isn't valid HTTP (BadStatusLine)"
     assert str(caught.value).endswith(message)
     assert SECRET[8:] not in str(caught.value)
 
@@ -843,7 +867,7 @@ def test_a_malformed_chunked_body(root: Path, scenario: Scenario) -> None:
     )
     with (
         _raw_server(response) as base_url,
-        pytest.raises(RecordError, match="the response body is malformed"),
+        pytest.raises(RecordError, match=r"the response body is malformed \(LineTooLong\)$"),
     ):
         record_scenario(
             openai_chat, scenario, model="m", key=KEY, root=root, base_url=base_url, env={}

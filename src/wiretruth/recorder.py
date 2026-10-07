@@ -163,14 +163,19 @@ def _send(provider: Provider, request: RawRequest, base_url: str, key: str) -> _
     )
     connection = connection_class(target.host, target.port, timeout=TIMEOUT_SECONDS)
     try:
+        failed = f"{request.method} {target.url} failed"
         try:
             connection.request(request.method, target.path, body=body, headers=headers)
+        except (OSError, http.client.HTTPException) as error:
+            raise RecordError(f"{failed}: {error}") from None
+        try:
             response = connection.getresponse()
         except OSError as error:
-            raise RecordError(f"{request.method} {target.url} failed: {error}") from None
-        except http.client.HTTPException as error:  # its text quotes the response, so not shown
-            message = f"the response doesn't start as HTTP/1.x ({type(error).__name__})"
-            raise RecordError(f"{request.method} {target.url} failed: {message}") from None
+            raise RecordError(f"{failed}: {error}") from None
+        except http.client.HTTPException as error:  # its text can quote the response, so not shown
+            raise RecordError(
+                f"{failed}: the response isn't valid HTTP ({type(error).__name__})"
+            ) from None
         stored = {
             name: value
             for name in STORED_HEADERS
@@ -187,7 +192,8 @@ def _send(provider: Provider, request: RawRequest, base_url: str, key: str) -> _
         except (OSError, http.client.IncompleteRead):
             end = "abort"
         except http.client.HTTPException as error:  # chunk framing http.client can't read
-            raise RecordError(f"{target.url}: the response body is malformed: {error!r}") from None
+            message = f"{target.url}: the response body is malformed ({type(error).__name__})"
+            raise RecordError(message) from None
         if response.length:  # a Content-Length body that stopped short
             end = "abort"
         return _Response(response.status, stored, pieces, end)
