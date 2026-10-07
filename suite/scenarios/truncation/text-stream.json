@@ -29,5 +29,5 @@
       "text": "Output token usage is reported, and matches the provider's count."
     }
   ],
-  "grading_notes": "The finish comes in the last event before the stream ends, so a library that only passes the text on can't satisfy the first requirement; a finish reason of length or a dedicated truncation error does. openai-chat sends no usage in this stream, because the call doesn't set stream_options.include_usage; truncation.text-stream-usage is that form. Effort none keeps the 16-token limit from being spent on reasoning."
+  "grading_notes": "The finish comes in the last event before the stream ends, so a library that only passes the text on can't satisfy the first requirement; a finish reason of length or a dedicated truncation error does. openai-chat sends no usage in this stream, because the call doesn't set stream_options.include_usage, so its truth has no usage for the second requirement to compare; the form with include_usage is planned as a scenario of its own, truncation.text-stream-usage. Effort none keeps the 16-token limit from being spent on reasoning."
 }
