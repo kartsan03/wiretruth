@@ -319,6 +319,25 @@ def _dump(doc: JsonObject) -> str:
     return json.dumps(doc, ensure_ascii=False, indent=2) + "\n"
 
 
+def _write(path: Path, text: str, previous: tuple[Path, JsonObject] | None) -> None:
+    """Write the new fixture and, if there is one, the dated old one: both or neither."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    new = path.with_name(f".{path.name}.new")
+    written: list[Path] = []
+    try:
+        new.write_text(text, encoding="utf-8")
+        written.append(new)
+        if previous is not None:
+            dated, old = previous
+            dated.write_text(_dump(old), encoding="utf-8")
+            written.append(dated)
+        new.replace(path)
+    except OSError:
+        for leftover in written:
+            leftover.unlink(missing_ok=True)
+        raise
+
+
 def record_scenario(
     provider: Provider,
     scenario: Scenario,
@@ -392,11 +411,7 @@ def record_scenario(
     problems = validate("fixture", fixture, str(path))
     if problems:  # a recorder bug: the fixture it built is invalid
         raise FormatError(problems)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    if target.previous is not None:
-        dated, old = target.previous
-        dated.write_text(_dump(old), encoding="utf-8")
-    path.write_text(text, encoding="utf-8")
+    _write(path, text, target.previous)
     return Recording(path, fixture, (*warnings, *target.warnings))
 
 

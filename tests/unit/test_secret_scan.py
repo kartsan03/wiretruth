@@ -233,3 +233,19 @@ def _readable(path: Path) -> bool:
     except OSError:
         return False
     return True
+
+
+def test_a_truth_difference_never_shows_a_secret(root: Path) -> None:
+    path = _fixture_path(root)
+    doc = json.loads(path.read_text())
+    event = doc["exchanges"][0]["response"]["body"]["sse"][1]
+    doc["exchanges"][0]["response"]["body"]["sse"][1] = event.replace(
+        "was founded", f"key sk-{ALNUM}"
+    )
+    path.write_text(json.dumps(doc, indent=2))
+    report = lint(root)
+    assert all(ALNUM not in str(problem) for problem in report.problems)
+    assert (
+        "$.truth.text",
+        "doesn't match the exchanges, which give a value the secret scan flags (not shown)",
+    ) in [(problem.where, problem.message) for problem in report.problems]

@@ -170,10 +170,7 @@ def test_a_stream_is_recorded_event_by_event(
     head, _, body = described.partition("\n\n")
     assert json.loads(body) == logged.json_body
     expected = dict(line.split(": ", 1) for line in head.splitlines()[1:])
-    assert {name.lower(): value for name, value in expected.items()} == {
-        **{name.lower(): value for name, value in expected.items()},
-        "authorization": f"Bearer {KEY}",
-    } | {"authorization": "Bearer ***"}
+    assert expected["Authorization"] == "Bearer ***"
     assert logged.headers["authorization"] == f"Bearer {KEY}"
     assert {name: logged.headers[name] for name in logged.headers if name != "authorization"} == {
         name.lower(): value for name, value in expected.items() if name != "Authorization"
@@ -842,3 +839,28 @@ def test_the_record_command_reports_an_invalid_fixture(
         monkeypatch.setattr(openai_chat, "API_BASE", server.base_urls()["openai-chat"])
         assert main(["record", "--provider", "openai-chat", "--scenario", "truncation.text"]) == 1
     assert "$.truth" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("failing", ["write_text", "replace"])
+def test_a_rotation_that_fails_halfway_leaves_the_old_fixture(
+    root: Path, scenario: Scenario, monkeypatch: pytest.MonkeyPatch, failing: str
+) -> None:
+    folder = root / "suite" / "fixtures" / "openai-chat"
+    primary = folder / "truncation.text.json"
+    _write_fixture(primary, id="openai-chat/truncation.text", scenario="truncation.text")
+    old_text = primary.read_text(encoding="utf-8")
+    original = getattr(Path, failing)
+
+    def fail_late(self: Path, *args: object, **kwargs: object) -> object:
+        # The new fixture's temporary file is written; the step after it fails.
+        if failing == "replace" or "@" in self.name:
+            raise OSError(28, "No space left on device")
+        return original(self, *args, **kwargs)
+
+    with _fake_openai(_exchange("json", COMPLETION)) as server:
+        monkeypatch.setattr(Path, failing, fail_late)
+        with pytest.raises(OSError, match="No space left on device"):
+            _record(server, root, scenario)
+    monkeypatch.undo()
+    assert sorted(path.name for path in folder.iterdir()) == ["truncation.text.json"]
+    assert primary.read_text(encoding="utf-8") == old_text

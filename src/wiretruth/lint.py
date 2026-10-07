@@ -125,6 +125,8 @@ def _scan_secrets(path: Path, report: Report) -> JsonValue:
 
 def _shown(value: JsonValue) -> str:
     text = json.dumps(value, ensure_ascii=False)
+    if scan_text(text):  # the scan reports it too; lint output never repeats a secret
+        return "a value the secret scan flags (not shown)"
     return text if len(text) <= _SHOWN else text[: _SHOWN - 1] + "…"
 
 
