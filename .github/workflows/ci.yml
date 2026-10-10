@@ -74,9 +74,10 @@ jobs:
           enable-cache: true
           python-version: ${{ matrix.python-version }}
       - run: uv sync --locked --extra dev
-      # wiretruth.replay keeps 100% branch coverage. --cov-fail-under checks the total of every --cov
-      # module, so a second module needs its own run to be gated on its own.
+      # wiretruth.replay and wiretruth.grading keep 100% branch coverage. --cov-fail-under checks the
+      # total of every --cov module, so each module needs its own run to be gated on its own.
       - run: uv run pytest -q --cov=wiretruth.replay --cov-branch --cov-fail-under=100
+      - run: uv run pytest -q --cov=wiretruth.grading --cov-branch --cov-fail-under=100
       # The oldest jsonschema that pyproject.toml allows.
       - run: uv run --with "jsonschema==4.21.0" pytest -q
 
