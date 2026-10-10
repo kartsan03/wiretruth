@@ -13,7 +13,14 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from wiretruth import __version__
-from wiretruth.envs import RunError, find_library, list_envs, prune_envs, resolve_interpreter
+from wiretruth.envs import (
+    RunError,
+    find_library,
+    installed_packages,
+    list_envs,
+    prune_envs,
+    resolve_interpreter,
+)
 from wiretruth.formats import FormatError, load_fixture, load_shim_manifest
 from wiretruth.lint import SetupError, lint
 from wiretruth.providers import PROVIDERS
@@ -30,6 +37,7 @@ from wiretruth.replay import HOST, ReplayServer
 from wiretruth.results import (
     collect_results,
     load_results_grades,
+    package_changes,
     results_path,
     summary_lines,
     write_results,
@@ -297,6 +305,7 @@ def run_shim(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return EXIT_USAGE
+    saved = None
     try:
         expected = None if args.check_grades is None else load_expected_grades(args.check_grades)
         shim_dir = find_library(Path(), args.lib) if args.lib is not None else args.shim
@@ -311,15 +320,16 @@ def run_shim(args: argparse.Namespace) -> int:
             if not path.is_file():
                 raise RunError(f"{path}: no such results file; write it with --write-results")
             try:
-                name, saved_version, expected = load_results_grades(path)
+                saved = load_results_grades(path)
             except FormatError as error:
                 print(error, file=sys.stderr)
                 return EXIT_CHECK
-            if (name, saved_version) != (manifest.name, version):
+            if (saved.name, saved.version) != (manifest.name, version):
                 raise RunError(
-                    f"{path}: results are for {name} {saved_version}; "
+                    f"{path}: results are for {saved.name} {saved.version}; "
                     f"expected {manifest.name} {version}"
                 )
+            expected = saved.grades
         report = run_suite(
             Path(),
             shim_dir,
@@ -333,6 +343,14 @@ def run_shim(args: argparse.Namespace) -> int:
     for line in summary_lines(report, manifest):
         print(line)
     if args.write_results:
+        harness = sum(cell.grade.grade == "HARNESS" for cell in report.cells)
+        if harness:
+            print(
+                f"wiretruth run: --write-results: {_plural(harness, 'HARNESS cell')}; "
+                "fix the shim or the harness first",
+                file=sys.stderr,
+            )
+            return EXIT_CHECK
         try:
             path = write_results(Path(), collect_results(Path(), report, manifest))
         except FormatError as error:
@@ -342,6 +360,16 @@ def run_shim(args: argparse.Namespace) -> int:
             print(f"wiretruth run: {error}", file=sys.stderr)
             return EXIT_USAGE
         print(f"wrote {path}")
+    if saved is not None:
+        try:
+            interpreter = resolve_interpreter(Path(), manifest)
+            if interpreter is not None:
+                changes = package_changes(saved.packages, installed_packages(interpreter))
+                if changes:
+                    print(f"packages differ from {path}: {', '.join(changes)}")
+        except (RunError, OSError) as error:
+            print(f"wiretruth run: {error}", file=sys.stderr)
+            return EXIT_USAGE
     if expected is not None:
         differences = compare_grades(report.cells, expected)
         for difference in differences:

@@ -13,9 +13,11 @@ finding).
 
 ### Added
 - `wiretruth run --lib NAME --write-results` writes `results/<library>/<version>.json`: each cell's grade,
-  requirement evidence and observation, and every package installed in the library's environment.
+  requirement evidence and observation, and every package installed in the library's environment. It requires
+  a checkout clean outside `results/` and refuses HARNESS cells.
   `--check-against [FILE]` exits 1 if a grade or requirement status differs from a results file, by default the one
-  for the library's version. The conformance workflow checks each library against its committed results.
+  for the library's version; package drift is a note. The conformance workflow checks each library against its
+  committed results.
 - `wiretruth run` prints a table of grades, scenarios by providers, then each cell's notes and a count per grade.
 - `results/upstream.json` tracks findings reported to library maintainers. It's empty so far.
 - A publish workflow builds the package on a version tag and publishes it to PyPI with trusted publishing.

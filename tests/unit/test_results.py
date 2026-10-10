@@ -3,7 +3,7 @@ import subprocess
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 
 import pytest
 
@@ -11,6 +11,7 @@ from wiretruth import __version__, cli, results
 from wiretruth.envs import RunError
 from wiretruth.formats import (
     FormatError,
+    Problem,
     load_observation,
     load_shim_manifest,
     observation_document,
@@ -20,6 +21,7 @@ from wiretruth.grading import CellGrade, RequirementResult
 from wiretruth.results import (
     collect_results,
     load_results_grades,
+    package_changes,
     results_document,
     results_path,
     summary_lines,
@@ -134,18 +136,19 @@ def test_results_path_is_shared_by_writer_and_reader(tmp_path, document, report)
     assert write_results(tmp_path, document) == path
     assert path.read_bytes() == (json.dumps(document, indent=2, ensure_ascii=False) + "\n").encode()
     assert "Crème brûlée" in path.read_text(encoding="utf-8")
-    name, version, grades = load_results_grades(path)
-    assert (name, version) == ("sample", "1.2.3")
-    assert grades == {
+    saved = load_results_grades(path)
+    assert (saved.name, saved.version) == ("sample", "1.2.3")
+    assert saved.packages == document["run"]["packages"]
+    assert saved.grades == {
         (cell.scenario, cell.provider): ExpectedGrade(
             "PASS", {"finish-length": "SATISFIED", "usage": "NOT_OBSERVABLE"}
         )
         for cell in report.cells
     }
-    assert compare_grades(report.cells, grades) == ()
+    assert compare_grades(report.cells, saved.grades) == ()
     document["cells"][0]["grade"] = "WRONG"
     assert write_results(tmp_path, document) == path
-    assert load_results_grades(path)[2][("truncation.text", "openai-chat")].grade == "WRONG"
+    assert load_results_grades(path).grades[("truncation.text", "openai-chat")].grade == "WRONG"
 
 
 @pytest.mark.parametrize("packages", [None, [], {"sample": ""}, {"sample": 1}])
@@ -170,8 +173,11 @@ def test_results_reader_validates_before_extracting_grades(text, tmp_path):
 def test_results_reader_rejects_duplicate_cells(document, tmp_path):
     document["cells"].append(document["cells"][0])
     path = write_results(tmp_path, document)
-    with pytest.raises(RunError, match=r"cells\[2\]: duplicate cell truncation\.text openai-chat"):
+    with pytest.raises(FormatError) as error:
         load_results_grades(path)
+    assert error.value.problems == (
+        Problem(str(path), "$.cells[2]", "duplicate cell truncation.text openai-chat"),
+    )
 
 
 @pytest.mark.parametrize(
@@ -180,7 +186,12 @@ def test_results_reader_rejects_duplicate_cells(document, tmp_path):
 def test_collect_results_captures_checkout_time_ci_and_packages(
     missing, tmp_path, report, manifest, monkeypatch
 ):
-    run = MagicMock(return_value=subprocess.CompletedProcess([], 0, SHA + "\n", ""))
+    run = MagicMock(
+        side_effect=[
+            subprocess.CompletedProcess([], 0, SHA + "\n", ""),
+            subprocess.CompletedProcess([], 0, "", ""),
+        ]
+    )
     resolve = MagicMock(return_value="/env/bin/python")
     freeze = MagicMock(return_value={"sample-sdk": "1.2.3", "dependency": "2.0"})
     monkeypatch.setattr(results.subprocess, "run", run)
@@ -203,25 +214,110 @@ def test_collect_results_captures_checkout_time_ci_and_packages(
     )
     assert document["run"]["git_sha"] == SHA
     assert document["run"]["packages"] == freeze.return_value
-    run.assert_called_once_with(
-        ["git", "rev-parse", "HEAD"], cwd=tmp_path, capture_output=True, text=True, check=False
-    )
+    assert run.call_args_list == [
+        call(
+            ["git", "rev-parse", "HEAD"], cwd=tmp_path, capture_output=True, text=True, check=False
+        ),
+        call(
+            ["git", "status", "--porcelain", "--", ".", ":(exclude)results"],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+            check=False,
+        ),
+    ]
     resolve.assert_called_once_with(tmp_path, manifest)
     freeze.assert_called_once_with("/env/bin/python")
 
 
-@pytest.mark.parametrize("problem", ["exit", "missing-git", "javascript"])
+@pytest.mark.parametrize(
+    "problem", ["exit", "missing-git", "status-exit", "status-oserror", "javascript"]
+)
 def test_collect_results_setup_errors(problem, tmp_path, report, manifest, monkeypatch):
     run = MagicMock(return_value=subprocess.CompletedProcess([], 128, "", "not a checkout"))
     if problem == "missing-git":
         run.side_effect = FileNotFoundError("git")
-    elif problem == "javascript":
-        run.return_value = subprocess.CompletedProcess([], 0, SHA, "")
-        manifest = replace(manifest, language="javascript")
+    elif problem in {"status-exit", "status-oserror", "javascript"}:
+        status = subprocess.CompletedProcess([], 0, "", "")
+        if problem == "status-exit":
+            status = subprocess.CompletedProcess([], 128, "", "not a checkout")
+        elif problem == "status-oserror":
+            status = OSError("cannot execute git")
+        else:
+            manifest = replace(manifest, language="javascript")
+        run.side_effect = [subprocess.CompletedProcess([], 0, SHA, ""), status]
     monkeypatch.setattr(results.subprocess, "run", run)
     match = "Python shim environment" if problem == "javascript" else "needs a git checkout"
     with pytest.raises(RunError, match=match):
         collect_results(tmp_path, report, manifest)
+
+
+@pytest.mark.parametrize("changed", [None, "notes.txt", "results/sample/1.2.3.json"])
+def test_collect_results_requires_clean_checkout_except_results(
+    changed, tmp_path, report, manifest, monkeypatch
+):
+    subprocess.run(["git", "init", "--quiet", str(tmp_path)], check=True)
+    if changed is not None:
+        path = tmp_path / changed
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("changed")
+    git = results._git
+    # The temporary checkout has no commits; use real Git for the status and path exclusion.
+    monkeypatch.setattr(
+        results,
+        "_git",
+        lambda root, *args: SHA if args == ("rev-parse", "HEAD") else git(root, *args),
+    )
+    resolve = MagicMock(return_value="/env/bin/python")
+    freeze = MagicMock(return_value={"sample-sdk": "1.2.3"})
+    monkeypatch.setattr(results, "resolve_interpreter", resolve)
+    monkeypatch.setattr(results, "installed_packages", freeze)
+    if changed == "notes.txt":
+        with pytest.raises(RunError) as error:
+            collect_results(tmp_path, report, manifest)
+        assert str(error.value) == (
+            "--write-results needs a clean checkout outside results/; commit or stash: notes.txt"
+        )
+        resolve.assert_not_called()
+        freeze.assert_not_called()
+    else:
+        assert collect_results(tmp_path, report, manifest)["run"]["git_sha"] == SHA
+        freeze.assert_called_once_with("/env/bin/python")
+
+
+def test_collect_results_names_first_dirty_path(tmp_path, report, manifest, monkeypatch):
+    run = MagicMock(
+        side_effect=[
+            subprocess.CompletedProcess([], 0, SHA, ""),
+            subprocess.CompletedProcess([], 0, " M src/changed file.py\n?? notes.txt\n", ""),
+        ]
+    )
+    monkeypatch.setattr(results.subprocess, "run", run)
+    with pytest.raises(RunError) as error:
+        collect_results(tmp_path, report, manifest)
+    assert str(error.value) == (
+        "--write-results needs a clean checkout outside results/; "
+        "commit or stash: src/changed file.py"
+    )
+
+
+@pytest.mark.parametrize(
+    "saved,current,expected",
+    [
+        ({"pydantic": "2.14.0"}, {"pydantic": "2.15.0"}, ("pydantic 2.14.0 → 2.15.0",)),
+        ({}, {"newpkg": "1.0"}, ("+newpkg 1.0",)),
+        ({"oldpkg": "2.0"}, {}, ("-oldpkg 2.0",)),
+        ({"same": "1.0"}, {"same": "1.0"}, ()),
+        ({}, {}, ()),
+        (
+            {"pydantic": "2.14.0", "oldpkg": "2.0", "same": "1.0"},
+            {"pydantic": "2.15.0", "same": "1.0", "newpkg": "1.0"},
+            ("+newpkg 1.0", "-oldpkg 2.0", "pydantic 2.14.0 → 2.15.0"),
+        ),
+    ],
+)
+def test_package_changes_are_sorted_notes(saved, current, expected):
+    assert package_changes(saved, current) == expected
 
 
 def test_summary_sorts_rows_and_columns_keeps_blank_cells_and_note_order(cell, manifest):
@@ -302,6 +398,12 @@ def run_cli(tmp_path, manifest, report, monkeypatch):
     (shim / "wiretruth-shim.json").write_text(json.dumps(document))
     run = MagicMock(return_value=report)
     monkeypatch.setattr(cli, "run_suite", run)
+    monkeypatch.setattr(cli, "resolve_interpreter", MagicMock(return_value="/env/bin/python"))
+    monkeypatch.setattr(
+        cli,
+        "installed_packages",
+        MagicMock(return_value={**manifest.packages, "transitive": "3.0"}),
+    )
     return run
 
 
@@ -374,9 +476,7 @@ def test_check_against_invalid_results_fail_before_running(
     elif problem == "duplicate":
         document["cells"].append(document["cells"][0])
     path.write_text("invalid" if problem == "json" else json.dumps(document))
-    assert cli.main(["run", "--lib", "sample", "--check-against", str(path)]) == (
-        2 if problem == "duplicate" else 1
-    )
+    assert cli.main(["run", "--lib", "sample", "--check-against", str(path)]) == 1
     captured = capsys.readouterr()
     assert str(path) in captured.err and captured.out == ""
     run_cli.assert_not_called()
@@ -410,10 +510,60 @@ def test_check_against_uses_existing_comparer_and_prints_differences_last(
     expected_lines = summary_lines(
         report, load_shim_manifest("shims/python/sample/wiretruth-shim.json")
     )
-    differences = compare_grades(report.cells, load_results_grades(path)[2])
+    differences = compare_grades(report.cells, load_results_grades(path).grades)
     captured = capsys.readouterr()
     assert captured.err == ""
     assert captured.out.splitlines() == [*expected_lines, *differences]
+
+
+@pytest.mark.parametrize("different_grade", [False, True])
+def test_check_against_package_drift_is_a_note_before_grade_differences(
+    different_grade, run_cli, document, tmp_path, capsys
+):
+    if different_grade:
+        document["cells"][0]["grade"] = "WRONG"
+    path = write_results(tmp_path, document)
+    cli.installed_packages.return_value = {
+        "sample-sdk": "1.2.3",
+        "transitive": "4.0",
+        "newpkg": "1.0",
+    }
+    assert cli.main(["run", "--lib", "sample", "--check-against", str(path)]) == int(
+        different_grade
+    )
+    lines = capsys.readouterr().out.splitlines()
+    index = lines.index("stderr: .wiretruth/runs/stamp")
+    assert lines[index + 1 :] == [
+        f"packages differ from {path}: -dependency 2.0, +newpkg 1.0, transitive 3.0 → 4.0",
+        *compare_grades(run_cli.return_value.cells, load_results_grades(path).grades),
+    ]
+    cli.resolve_interpreter.assert_called_once()
+    cli.installed_packages.assert_called_once_with("/env/bin/python")
+
+
+@pytest.mark.parametrize("interpreter", ["/env/bin/python", None])
+def test_check_against_skips_package_note_for_matching_packages_or_no_interpreter(
+    interpreter, run_cli, document, tmp_path, capsys
+):
+    path = write_results(tmp_path, document)
+    cli.resolve_interpreter.return_value = interpreter
+    assert cli.main(["run", "--lib", "sample", "--check-against", str(path)]) == 0
+    captured = capsys.readouterr()
+    assert captured.err == "" and "packages differ" not in captured.out
+    if interpreter is None:
+        cli.installed_packages.assert_not_called()
+    else:
+        cli.installed_packages.assert_called_once_with(interpreter)
+
+
+def test_check_against_freeze_failure_exits_two(run_cli, document, tmp_path, capsys):
+    path = write_results(tmp_path, document)
+    cli.installed_packages.side_effect = RunError("uv pip freeze exited with code 7")
+    assert cli.main(["run", "--lib", "sample", "--check-against", str(path)]) == 2
+    captured = capsys.readouterr()
+    assert captured.err == "wiretruth run: uv pip freeze exited with code 7\n"
+    assert "stderr: .wiretruth/runs/stamp" in captured.out
+    assert "packages differ" not in captured.out
 
 
 def test_write_results_cli_writes_file_after_summary(
@@ -430,6 +580,33 @@ def test_write_results_cli_writes_file_after_summary(
     ]
     collect.assert_called_once()
     assert collect.call_args.args[:2] == (Path(), run_cli.return_value)
+
+
+@pytest.mark.parametrize("count", [1, 2])
+def test_write_results_refuses_harness_cells_without_overwriting(
+    count, run_cli, report, document, tmp_path, monkeypatch, capsys
+):
+    path = write_results(tmp_path, document)
+    before = path.read_bytes()
+    cells = tuple(
+        replace(cell, grade=replace(cell.grade, grade="HARNESS")) if index < count else cell
+        for index, cell in enumerate(report.cells)
+    )
+    run_cli.return_value = replace(report, cells=cells)
+    collect = MagicMock()
+    write = MagicMock()
+    monkeypatch.setattr(cli, "collect_results", collect)
+    monkeypatch.setattr(cli, "write_results", write)
+    assert cli.main(["run", "--lib", "sample", "--write-results"]) == 1
+    captured = capsys.readouterr()
+    assert captured.err == (
+        f"wiretruth run: --write-results: {count} HARNESS cell{'' if count == 1 else 's'}; "
+        "fix the shim or the harness first\n"
+    )
+    assert "wrote " not in captured.out
+    collect.assert_not_called()
+    write.assert_not_called()
+    assert path.read_bytes() == before
 
 
 @pytest.mark.parametrize("problem", ["git", "freeze", "invalid", "io"])

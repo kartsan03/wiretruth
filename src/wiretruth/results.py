@@ -7,7 +7,7 @@ from collections import Counter
 from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import cast
+from typing import NamedTuple, cast
 
 from wiretruth import __version__
 from wiretruth.checks import Status
@@ -15,6 +15,7 @@ from wiretruth.envs import RunError, installed_packages, resolve_interpreter
 from wiretruth.formats import (
     FormatError,
     JsonObject,
+    Problem,
     ShimManifest,
     load_document,
     observation_document,
@@ -76,16 +77,27 @@ def results_document(
     }
 
 
-def collect_results(root: Path, report: RunReport, manifest: ShimManifest) -> JsonObject:
-    """Gather the checkout, CI and environment metadata for a results file."""
+def _git(root: Path, *args: str) -> str:
     try:
         result = subprocess.run(
-            ["git", "rev-parse", "HEAD"], cwd=root, capture_output=True, text=True, check=False
+            ["git", *args], cwd=root, capture_output=True, text=True, check=False
         )
     except OSError as error:
         raise RunError("--write-results needs a git checkout") from error
     if result.returncode:
         raise RunError("--write-results needs a git checkout")
+    return result.stdout
+
+
+def collect_results(root: Path, report: RunReport, manifest: ShimManifest) -> JsonObject:
+    """Gather the checkout, CI and environment metadata for a results file."""
+    git_sha = _git(root, "rev-parse", "HEAD").strip()
+    status = _git(root, "status", "--porcelain", "--", ".", ":(exclude)results")
+    if status:
+        raise RunError(
+            "--write-results needs a clean checkout outside results/; commit or stash: "
+            f"{status.splitlines()[0][3:]}"
+        )
     server, repository, run_id = (
         os.environ.get(name) for name in ("GITHUB_SERVER_URL", "GITHUB_REPOSITORY", "GITHUB_RUN_ID")
     )
@@ -101,7 +113,7 @@ def collect_results(root: Path, report: RunReport, manifest: ShimManifest) -> Js
         report,
         manifest,
         at=datetime.now(UTC),
-        git_sha=result.stdout.strip(),
+        git_sha=git_sha,
         ci_run=ci_run,
         packages=installed_packages(interpreter),
     )
@@ -122,22 +134,49 @@ def write_results(root: Path, document: JsonObject) -> Path:
     return path
 
 
-def load_results_grades(path: Path) -> tuple[str, str, dict[tuple[str, str], ExpectedGrade]]:
+class SavedResults(NamedTuple):
+    name: str
+    version: str
+    packages: Mapping[str, str]
+    grades: dict[tuple[str, str], ExpectedGrade]
+
+
+def load_results_grades(path: Path) -> SavedResults:
     """Read library identity and expected grades from a validated results file."""
     document = cast(JsonObject, load_document("results", path))
     library = cast(JsonObject, document["library"])
+    run = cast(JsonObject, document["run"])
     expected = {}
     for index, cell in enumerate(cast(list[JsonObject], document["cells"])):
         scenario, provider = cast(str, cell["scenario"]), cast(str, cell["provider"])
         key = (scenario, provider)
         if key in expected:
-            raise RunError(f"{path}: cells[{index}]: duplicate cell {scenario} {provider}")
+            raise FormatError(
+                [Problem(str(path), f"$.cells[{index}]", f"duplicate cell {scenario} {provider}")]
+            )
         requirements = cast(list[JsonObject], cell["requirements"])
         expected[key] = ExpectedGrade(
             cast(Grade, cell["grade"]),
             {cast(str, item["id"]): cast(Status, item["status"]) for item in requirements},
         )
-    return cast(str, library["name"]), cast(str, library["version"]), expected
+    return SavedResults(
+        cast(str, library["name"]),
+        cast(str, library["version"]),
+        cast(dict[str, str], run["packages"]),
+        expected,
+    )
+
+
+def package_changes(saved: Mapping[str, str], current: Mapping[str, str]) -> tuple[str, ...]:
+    changes = []
+    for name in sorted(saved.keys() | current.keys()):
+        if name not in saved:
+            changes.append(f"+{name} {current[name]}")
+        elif name not in current:
+            changes.append(f"-{name} {saved[name]}")
+        elif saved[name] != current[name]:
+            changes.append(f"{name} {saved[name]} → {current[name]}")
+    return tuple(changes)
 
 
 def summary_lines(report: RunReport, manifest: ShimManifest) -> tuple[str, ...]:

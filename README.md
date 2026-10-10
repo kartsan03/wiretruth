@@ -63,9 +63,8 @@ How grades are computed: [docs/grading.md](docs/grading.md).
 You need Python 3.11 or newer and [uv](https://docs.astral.sh/uv/), which builds each library's own environment.
 
 ```bash
-uv tool install wiretruth        # or: pipx install wiretruth
 git clone https://github.com/kartsan03/wiretruth && cd wiretruth
-wiretruth run --lib any-llm
+uv run wiretruth run --lib any-llm
 ```
 
 ```text
@@ -79,8 +78,9 @@ stderr: .wiretruth/runs/20261010T193444.312067Z
 ```
 
 No API keys are needed. Everything runs against recorded responses on `127.0.0.1`. The first run downloads any-llm
-into `.wiretruth/envs/`; later runs work offline. `wiretruth run --shim shims/reference` runs the built-in
-reference client, which must pass every cell.
+into `.wiretruth/envs/`; later runs work offline. `uv run wiretruth run --shim shims/reference` runs the
+built-in reference client, which must pass every cell. The scenarios, fixtures and shims live in this repository,
+so wiretruth runs from a clone.
 
 ## Add your library
 

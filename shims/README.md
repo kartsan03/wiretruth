@@ -16,8 +16,9 @@ the manifest's package pins. The built-in reference and liar shims keep the runn
 `--lib NAME` selects `shims/*/NAME/`; use either `--lib` or `--shim`.
 
 `--write-results` runs every cell and writes `results/<name>/<version>.json`, including the resolved packages;
-it requires `--lib` and a git checkout. `--check-against [FILE]` runs every cell and exits 1 if a grade or
-requirement status differs, using that library version's results file by default.
+it requires `--lib` and a checkout clean outside `results/`, and refuses runs with HARNESS cells.
+`--check-against [FILE]` runs every cell and exits 1 if a grade or requirement status differs, using that
+library version's results file by default; package drift is reported as a note without changing the exit code.
 
 `wiretruth envs` lists current and stale environments. `--prune` removes stale ones; `--build NAME` builds or
 reuses an environment and prints its interpreter path. Build before running without network access. Builds
