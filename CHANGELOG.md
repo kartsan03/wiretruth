@@ -12,6 +12,8 @@ finding).
 ## [Unreleased]
 
 ### Added
+- Requirement checks and pure cell grading, with evidence for each requirement and the detailed rules in
+  `docs/grading.md`.
 - Project scaffolding: package skeleton, CLI entry point, CI for lint, types and tests.
 - Concepts guide (`docs/concepts.md`) and the first design decision records (`docs/adr/`).
 - JSON Schemas (Draft 2020-12) for every format: scenarios, fixtures, call specs, observations, shim manifests,
