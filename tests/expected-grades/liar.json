@@ -1,0 +1,26 @@
+{
+  "cells": [
+    {
+      "scenario": "truncation.structured-output",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "no-partial-success": "CONTRADICTED",
+        "cause-is-truncation": "CONTRADICTED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.text",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {"cause-is-truncation": "CONTRADICTED", "usage-reported": "NOT_OBSERVABLE"}
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {"cause-is-truncation": "CONTRADICTED", "usage-reported": "SATISFIED"}
+    }
+  ]
+}

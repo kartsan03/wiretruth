@@ -12,6 +12,12 @@ finding).
 ## [Unreleased]
 
 ### Added
+- `wiretruth run --shim PATH` grades a shim on every cell that has a fixture: one replay server and one shim
+  process per cell, in parallel, with a 20 s timeout. It prints each cell's grade and notes, and keeps each cell's
+  stderr under `.wiretruth/runs/`. The shim gets a fixed environment, so local API keys, base URLs and proxy
+  settings never reach it. `--check-grades FILE` exits 1 if any grade or requirement status differs from the file.
+- Two built-in shims test the suite in CI: `shims/reference`, a plain HTTP client that must pass every
+  requirement, and `shims/liar`, which misreports on purpose and must match its expected grades.
 - Requirement checks and pure cell grading, with evidence for each requirement and the detailed rules in
   `docs/grading.md`.
 - Project scaffolding: package skeleton, CLI entry point, CI for lint, types and tests.
