@@ -17,6 +17,8 @@ from pathlib import Path
 from typing import cast, get_args
 
 from wiretruth.checks import Status
+from wiretruth.envs import RunError as RunError
+from wiretruth.envs import resolve_interpreter
 from wiretruth.formats import (
     CallSpec,
     Fixture,
@@ -47,10 +49,6 @@ GLYPHS: Mapping[Grade, str] = {
     "UNSUPPORTED": "\u2013",
     "HARNESS": "?",
 }
-
-
-class RunError(ValueError):
-    """The run cannot start because its inputs or environment are unusable."""
 
 
 @dataclass(frozen=True)
@@ -184,10 +182,11 @@ def run_cell(
     stderr_dir: Path,
     reserved_port: int,
     timeout: float = 20,
+    interpreter: str | None = None,
 ) -> CellResult:
     argv = list(manifest.entry)
     if manifest.language == "python" and argv[0] == "python":
-        argv[0] = sys.executable
+        argv[0] = interpreter or sys.executable
     spec = cell.call_spec
     stdin = json.dumps(call_spec_document(spec), ensure_ascii=False).encode("utf-8")
     timed_out = False
@@ -257,6 +256,7 @@ def run_suite(
     shim_dir = shim_dir.resolve()
     manifest = load_shim_manifest(shim_dir / "wiretruth-shim.json")
     cells = find_cells(root, pattern, provider)
+    interpreter = resolve_interpreter(root, manifest)
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S.%fZ")
     stderr_dir = root / ".wiretruth" / "runs" / stamp
     stderr_dir.mkdir(parents=True)
@@ -269,6 +269,7 @@ def run_suite(
                 stderr_dir=stderr_dir,
                 reserved_port=reserved_port,
                 timeout=timeout,
+                interpreter=interpreter,
             ),
             cells,
         )

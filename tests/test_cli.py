@@ -45,7 +45,9 @@ def test_no_command_prints_help_and_exits_2(capsys: pytest.CaptureFixture[str]) 
     assert "usage: wiretruth" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize("command", sorted(set(COMMANDS) - {"lint", "serve", "record", "run"}))
+@pytest.mark.parametrize(
+    "command", sorted(set(COMMANDS) - {"lint", "serve", "record", "run", "envs"})
+)
 def test_commands_are_not_implemented_yet(command: str, capsys: pytest.CaptureFixture[str]) -> None:
     assert main([command]) == 2
     assert "not implemented yet" in capsys.readouterr().err

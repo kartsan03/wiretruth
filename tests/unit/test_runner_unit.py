@@ -416,6 +416,45 @@ def test_parallel_cells_hold_closed_port_and_results_stay_in_cell_order(tmp_path
     assert not active
 
 
+@pytest.mark.parametrize("library", [False, True])
+def test_interpreter_is_resolved_once_before_workers(library, tmp_path, monkeypatch):
+    manifest = load_shim_manifest(SHIM / "wiretruth-shim.json")
+    if library:
+        manifest = replace(manifest, primary_package="sample", packages={"sample": "1.0"})
+    interpreter = "/env/bin/python" if library else sys.executable
+
+    def resolve(root, selected):
+        assert threading.current_thread() is threading.main_thread()
+        assert root == tmp_path and selected is manifest
+        return interpreter
+
+    @contextmanager
+    def reserve():
+        resolver.assert_called_once()
+        yield 4322
+
+    resolver = MagicMock(side_effect=resolve)
+    server = MagicMock()
+    server.__enter__.return_value = server
+    server.url = "http://127.0.0.1:4321"
+    server.request_log = [REQUEST]
+    process = MagicMock()
+    process.__enter__.return_value = process
+    process.communicate.return_value = STDOUT, b""
+    process.returncode = 0
+    popen = MagicMock(return_value=process)
+    monkeypatch.setattr(runner, "load_shim_manifest", lambda path: manifest)
+    monkeypatch.setattr(runner, "resolve_interpreter", resolver)
+    monkeypatch.setattr(runner, "closed_port", reserve)
+    monkeypatch.setattr(runner, "ReplayServer", lambda fixture: server)
+    monkeypatch.setattr(runner.subprocess, "Popen", popen)
+    shutil.copytree(REPO / "suite", tmp_path / "suite")
+    report = run_suite(tmp_path, SHIM, jobs=2)
+    assert len(report.cells) == popen.call_count == 3
+    assert all(call.args[0] == [interpreter, "shim.py"] for call in popen.call_args_list)
+    resolver.assert_called_once_with(tmp_path, manifest)
+
+
 def make_result(scenario="truncation.text", grade="PASS", statuses=None):
     if statuses is None:
         statuses = {"cause-is-truncation": "SATISFIED"}
