@@ -34,9 +34,10 @@ jobs:
           enable-cache: true
       - run: uv sync --locked
       - run: uv run wiretruth envs --build "${{ matrix.shim }}"
-      # Replay needs only loopback; blocking other networking prevents live provider requests.
-      # The runner, replay server and shim share this network namespace.
-      # Until results/ exists, the expected grades live next to the self-tests' files.
+      # The install above needs the network; the run doesn't. Replay needs only loopback, and blocking
+      # other networking prevents live provider requests. The runner, replay server and shim share this
+      # network namespace. The sysctl allows the namespace on Ubuntu 24.04 and changes only this
+      # throwaway runner. Until results/ exists, the expected grades sit next to the self-tests' files.
       - run: |
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
           unshare -rn sh -c 'ip link set lo up && exec .venv/bin/wiretruth run --lib "$1" \
