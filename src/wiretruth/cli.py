@@ -82,7 +82,8 @@ def build_parser() -> argparse.ArgumentParser:
                 "--check-grades",
                 type=Path,
                 metavar="FILE",
-                help="exit 1 if a grade or requirement status differs from this file",
+                help="exit 1 if a grade or requirement status differs from this file "
+                "(runs every cell)",
             )
         elif name == "serve":
             subparser.add_argument(
@@ -247,6 +248,13 @@ def run_record(args: argparse.Namespace) -> int:
 
 
 def run_shim(args: argparse.Namespace) -> int:
+    if args.check_grades is not None and (args.scenario != "*" or args.provider is not None):
+        # The file lists every cell, so a filtered run would report the rest as missing.
+        print(
+            "wiretruth run: --check-grades runs every cell; drop --scenario and --provider",
+            file=sys.stderr,
+        )
+        return EXIT_USAGE
     try:
         expected = None if args.check_grades is None else load_expected_grades(args.check_grades)
         report = run_suite(

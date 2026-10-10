@@ -28,6 +28,6 @@ provider URLs, proxies and SDK settings are not inherited.
 `reference` uses raw HTTP and the provider truth extractor as an ideal client. `liar` shares its wire reader and
 deliberately hides truncation, drops usage, reports partial structured output as success, swallows provider
 errors and removes raw values. Their expected grades and every evaluated requirement status are checked in CI;
-`--check-grades` exits 1 for any difference. Setup errors exit 2; a run without a comparison exits 0.
+`--check-grades` runs every cell and exits 1 for any difference. Setup errors exit 2; a run without a comparison exits 0.
 
 The [format reference](../docs/formats.md) defines the call spec, observation and manifest fields.

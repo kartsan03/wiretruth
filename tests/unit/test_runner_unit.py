@@ -527,7 +527,15 @@ def test_expected_grades_duplicate_and_unreadable_files(tmp_path):
 
 @pytest.mark.parametrize(
     "problem",
-    ["missing-manifest", "bad-manifest", "no-cell", "missing-expected", "bad-expected", "jobs"],
+    [
+        "missing-manifest",
+        "bad-manifest",
+        "no-cell",
+        "missing-expected",
+        "bad-expected",
+        "jobs",
+        "filtered-check",
+    ],
 )
 def test_run_cli_setup_errors_exit_two(problem, tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
@@ -544,6 +552,9 @@ def test_run_cli_setup_errors_exit_two(problem, tmp_path, monkeypatch, capsys):
         if problem == "bad-expected":
             path.write_text("{}")
         args += ["--check-grades", str(path)]
+    elif problem == "filtered-check":
+        expected = REPO / "tests" / "expected-grades" / "reference.json"
+        args += ["--scenario", "truncation.text", "--check-grades", str(expected)]
     else:
         args += ["--jobs", "0"]
     assert main(args) == 2
