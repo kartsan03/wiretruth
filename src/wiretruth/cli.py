@@ -13,7 +13,14 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from wiretruth import __version__
-from wiretruth.envs import RunError, find_library, list_envs, prune_envs, resolve_interpreter
+from wiretruth.envs import (
+    RunError,
+    find_library,
+    installed_packages,
+    list_envs,
+    prune_envs,
+    resolve_interpreter,
+)
 from wiretruth.formats import FormatError, load_fixture, load_shim_manifest
 from wiretruth.lint import SetupError, lint
 from wiretruth.providers import PROVIDERS
@@ -27,7 +34,15 @@ from wiretruth.recorder import (
     summary,
 )
 from wiretruth.replay import HOST, ReplayServer
-from wiretruth.runner import DEFAULT_JOBS, GLYPHS, compare_grades, load_expected_grades, run_suite
+from wiretruth.results import (
+    collect_results,
+    load_results_grades,
+    package_changes,
+    results_path,
+    summary_lines,
+    write_results,
+)
+from wiretruth.runner import DEFAULT_JOBS, compare_grades, load_expected_grades, run_suite
 
 EXIT_CHECK = 1
 EXIT_USAGE = 2
@@ -79,7 +94,22 @@ def build_parser() -> argparse.ArgumentParser:
                 default=DEFAULT_JOBS,
                 help=f"cells to run at once (default: {DEFAULT_JOBS})",
             )
-            subparser.add_argument(
+            results = subparser.add_mutually_exclusive_group()
+            results.add_argument(
+                "--write-results",
+                action="store_true",
+                help="write results/NAME/VERSION.json for a library shim (runs every cell)",
+            )
+            results.add_argument(
+                "--check-against",
+                type=Path,
+                nargs="?",
+                const=True,
+                metavar="FILE",
+                help="exit 1 if a grade or requirement status differs from this results file "
+                "(default: results/NAME/VERSION.json; runs every cell)",
+            )
+            results.add_argument(
                 "--check-grades",
                 type=Path,
                 metavar="FILE",
@@ -256,31 +286,90 @@ def run_record(args: argparse.Namespace) -> int:
 
 
 def run_shim(args: argparse.Namespace) -> int:
-    if args.check_grades is not None and (args.scenario != "*" or args.provider is not None):
+    used = {
+        "--write-results": args.write_results,
+        "--check-against": args.check_against is not None,
+        "--check-grades": args.check_grades is not None,
+    }
+    flag = next((name for name, on in used.items() if on), None)
+    if flag is not None and (args.scenario != "*" or args.provider is not None):
         # The file lists every cell, so a filtered run would report the rest as missing.
         print(
-            "wiretruth run: --check-grades runs every cell; drop --scenario and --provider",
+            f"wiretruth run: {flag} runs every cell; drop --scenario and --provider",
             file=sys.stderr,
         )
         return EXIT_USAGE
+    if args.write_results and args.lib is None:
+        print(
+            "wiretruth run: --write-results needs --lib; results files are for library shims",
+            file=sys.stderr,
+        )
+        return EXIT_USAGE
+    saved = None
     try:
         expected = None if args.check_grades is None else load_expected_grades(args.check_grades)
         shim_dir = find_library(Path(), args.lib) if args.lib is not None else args.shim
+        manifest = load_shim_manifest(shim_dir / "wiretruth-shim.json")
+        version = manifest.packages[manifest.primary_package]
+        if args.check_against is not None:
+            path = (
+                results_path(Path(), manifest.name, version)
+                if args.check_against is True
+                else args.check_against
+            )
+            if not path.is_file():
+                raise RunError(f"{path}: no such results file; write it with --write-results")
+            try:
+                saved = load_results_grades(path)
+            except FormatError as error:
+                print(error, file=sys.stderr)
+                return EXIT_CHECK
+            if (saved.name, saved.version) != (manifest.name, version):
+                raise RunError(
+                    f"{path}: results are for {saved.name} {saved.version}; "
+                    f"expected {manifest.name} {version}"
+                )
+            expected = saved.grades
         report = run_suite(
-            Path(), shim_dir, pattern=args.scenario, provider=args.provider, jobs=args.jobs
+            Path(),
+            shim_dir,
+            pattern=args.scenario,
+            provider=args.provider,
+            jobs=args.jobs,
         )
     except (ValueError, RecordError, OSError) as error:
         print(f"wiretruth run: {error}", file=sys.stderr)
         return EXIT_USAGE
-    for cell in report.cells:
-        grade = cell.grade.grade
-        print(f"{GLYPHS[grade]} {grade} {cell.scenario} {cell.provider}")
-        for note in cell.notes:
-            print(f"  {note}")
-        if cell.observation is not None:  # e.g. a setting the library couldn't send (ADR 0006)
-            for note in cell.observation.notes:
-                print(f"  shim: {note}")
-    print(f"stderr: {report.stderr_dir}")
+    for line in summary_lines(report, manifest):
+        print(line)
+    if args.write_results:
+        harness = sum(cell.grade.grade == "HARNESS" for cell in report.cells)
+        if harness:
+            print(
+                f"wiretruth run: --write-results: {_plural(harness, 'HARNESS cell')}; "
+                "fix the shim or the harness first",
+                file=sys.stderr,
+            )
+            return EXIT_CHECK
+        try:
+            path = write_results(Path(), collect_results(Path(), report, manifest))
+        except FormatError as error:
+            print(error, file=sys.stderr)
+            return EXIT_CHECK
+        except (RunError, OSError) as error:
+            print(f"wiretruth run: {error}", file=sys.stderr)
+            return EXIT_USAGE
+        print(f"wrote {path}")
+    if saved is not None:
+        try:
+            interpreter = resolve_interpreter(Path(), manifest)
+            if interpreter is not None:
+                changes = package_changes(saved.packages, installed_packages(interpreter))
+                if changes:
+                    print(f"packages differ from {path}: {', '.join(changes)}")
+        except (RunError, OSError) as error:
+            print(f"wiretruth run: {error}", file=sys.stderr)
+            return EXIT_USAGE
     if expected is not None:
         differences = compare_grades(report.cells, expected)
         for difference in differences:

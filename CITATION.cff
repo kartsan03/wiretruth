@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use wiretruth or its results, please cite it as below."
+title: "wiretruth: replaying real LLM provider responses through LLM SDKs"
+abstract: >-
+  An offline conformance suite that replays recorded LLM provider HTTP responses through LLM SDKs
+  and grades whether each SDK reports what actually happened: truncation, finish reasons, usage,
+  stream integrity, tool calls, errors and request fidelity.
+type: software
+authors:
+  - alias: kartsan03
+repository-code: "https://github.com/kartsan03/wiretruth"
+license: MIT
+keywords:
+  - llm
+  - sdk
+  - conformance
+  - test-suite
+  - openai
+  - anthropic
+  - gemini
+  - ollama

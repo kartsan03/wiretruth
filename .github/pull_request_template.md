@@ -33,3 +33,4 @@ none
 - [ ] `uv run wiretruth lint` passes (suite data, secrets, truth)
 - [ ] `CHANGELOG.md` updated under `Unreleased` (if user-facing)
 - [ ] Docs updated (if behavior or formats changed)
+- [ ] New WRONG / CRASH / HANG cells have an upstream issue linked in `results/upstream.json`

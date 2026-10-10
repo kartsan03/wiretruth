@@ -12,6 +12,15 @@ finding).
 ## [Unreleased]
 
 ### Added
+- `wiretruth run --lib NAME --write-results` writes `results/<library>/<version>.json`: each cell's grade,
+  requirement evidence and observation, and every package installed in the library's environment. It requires
+  a checkout clean outside `results/` and refuses HARNESS cells.
+  `--check-against [FILE]` exits 1 if a grade or requirement status differs from a results file, by default the one
+  for the library's version; package drift is a note. The conformance workflow checks each library against its
+  committed results.
+- `wiretruth run` prints a table of grades, scenarios by providers, then each cell's notes and a count per grade.
+- `results/upstream.json` tracks findings reported to library maintainers. It's empty so far.
+- A publish workflow builds the package on a version tag and publishes it to PyPI with trusted publishing.
 - `wiretruth run --lib NAME` runs the library shim in `shims/*/NAME/` in its own virtual environment, built with
   uv from the manifest's exact pins and cached under `.wiretruth/envs/py/`. `wiretruth envs` lists the cached
   environments, `--build NAME` builds one ahead of an offline run, and `--prune` removes every environment that
@@ -54,3 +63,7 @@ finding).
   `truncation.structured-output`, a JSON object for a strict schema cut off halfway.
 - The first recorded fixtures: the three truncation scenarios on `openai-chat`, recorded in CI against
   `gpt-6-luna`.
+
+### Results
+- any-llm 1.33.0, the first library results: PASS on all three truncation scenarios on `openai-chat`
+  ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)).

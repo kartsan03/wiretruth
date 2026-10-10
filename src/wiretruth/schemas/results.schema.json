@@ -22,14 +22,18 @@
     "run": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["at", "git_sha", "ci_run", "runner"],
+      "required": ["at", "git_sha", "ci_run", "runner", "packages"],
       "properties": {
         "at": { "$ref": "common.schema.json#/$defs/timestamp" },
         "git_sha": { "$ref": "common.schema.json#/$defs/git_sha" },
         "ci_run": {
           "anyOf": [{ "type": "null" }, { "$ref": "common.schema.json#/$defs/url" }]
         },
-        "runner": { "$ref": "common.schema.json#/$defs/nonempty_string" }
+        "runner": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+        "packages": {
+          "type": "object",
+          "additionalProperties": { "$ref": "common.schema.json#/$defs/nonempty_string" }
+        }
       }
     },
     "cells": {

@@ -6,12 +6,19 @@ A shim calls one library and reports what it exposes. Run it from a repository c
 wiretruth run --shim shims/reference
 wiretruth run --shim shims/liar --check-grades tests/expected-grades/liar.json
 wiretruth run --lib any-llm
+wiretruth run --lib any-llm --write-results
+wiretruth run --lib any-llm --check-against
 ```
 
 The runner reads `wiretruth-shim.json` in the shim directory and starts its `entry` argv there. A Python entry
 starting with `python` uses a cached venv under `.wiretruth/envs/py/<name>-<version>/`, installed with uv from
 the manifest's package pins. The built-in reference and liar shims keep the runner's interpreter.
 `--lib NAME` selects `shims/*/NAME/`; use either `--lib` or `--shim`.
+
+`--write-results` runs every cell and writes `results/<name>/<version>.json`, including the resolved packages;
+it requires `--lib` and a checkout clean outside `results/`, and refuses runs with HARNESS cells.
+`--check-against [FILE]` runs every cell and exits 1 if a grade or requirement status differs, using that
+library version's results file by default; package drift is reported as a note without changing the exit code.
 
 `wiretruth envs` lists current and stale environments. `--prune` removes stale ones; `--build NAME` builds or
 reuses an environment and prints its interpreter path. Build before running without network access. Builds
