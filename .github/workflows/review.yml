@@ -4,8 +4,9 @@ name: Review
 # agent that cannot start others. "/review max" is the full review at maximum effort: six reviewer agents, a gap
 # pass and a verifier per finding, which costs several times more; use it for workflow or security changes and
 # large or risky pull requests. On a pull request from someone without write access, the comment must also name
-# the head commit that was checked, for example "/review 1a2b3c4". Every comment starts this workflow; the gate
-# job ignores the rest.
+# the full 40-character SHA of the head commit that was checked; the gate's reply prints the command to paste. A
+# short prefix isn't accepted, because a commit pushed after the comment can be crafted to share it. Every comment
+# starts this workflow; the gate job ignores the rest.
 # The maintainer can also start it from the Actions tab or with
 # `gh workflow run review.yml [--ref <branch>] -f number=<n> [-f command="/review max"]`, which is how changes to
 # this workflow get tested on a branch before they are merged. Such a run takes the workflow, the review criteria and
@@ -76,7 +77,7 @@ jobs:
           say() { gh api "repos/$REPO/issues/$NUMBER/comments" -f body="$1" > /dev/null; }
           stop() { echo "ok=false" >> "$GITHUB_OUTPUT"; exit 0; }
           command=$(printf '%s' "$BODY" | tr -d '\r' | sed -e 's/[[:space:]]*$//')
-          [[ "$command" =~ ^/review(\ max)?(\ ([0-9a-f]{7,40}))?$ ]] || stop
+          [[ "$command" =~ ^/review(\ max)?(\ ([0-9a-f]{40}))?$ ]] || stop
           effort=high
           [ -n "${BASH_REMATCH[1]}" ] && effort=max
           vetted=${BASH_REMATCH[3]}
@@ -93,11 +94,11 @@ jobs:
             permission=$(gh api "repos/$REPO/collaborators/$author/permission" --jq .permission 2> /dev/null || echo none)
             case "$permission" in write | admin) ;; *) outside=true ;; esac
             if [ "$outside" = true ] && [ -z "$vetted" ]; then
-              say "This pull request comes from an outside contributor. After checking the diff, comment \`/review ${head:0:7}\` (or \`/review max ${head:0:7}\`) to review exactly that commit."
+              say "This pull request comes from an outside contributor. After checking the diff, comment \`/review $head\` (or \`/review max $head\`) to review exactly that commit."
               stop
             fi
-            if [ -n "$vetted" ] && [[ "$head" != "$vetted"* ]]; then
-              say "The pull request's head is now ${head:0:7}, not $vetted. Check the new commits, then comment \`/review ${head:0:7}\`."
+            if [ -n "$vetted" ] && [ "$head" != "$vetted" ]; then
+              say "The pull request's head is now ${head:0:7}, not ${vetted:0:7}. Check the new commits, then comment \`/review $head\`."
               stop
             fi
           fi
