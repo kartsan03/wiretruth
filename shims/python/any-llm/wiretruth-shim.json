@@ -1,0 +1,45 @@
+{
+  "format": "wiretruth.shim/v1",
+  "name": "any-llm",
+  "language": "python",
+  "packages": {"any-llm-sdk": "1.33.0", "openai": "3.28.0"},
+  "primary_package": "any-llm-sdk",
+  "entry": ["python", "shim.py"],
+  "providers": {
+    "openai-chat": "any_llm.completion(model=model, provider='openai', api_base=WIRETRUTH_BASE_URL_OPENAI_CHAT, api_key=WIRETRUTH_API_KEY)"
+  },
+  "surfaces": {
+    "finish": {"primary": "choices[0].finish_reason; error.completion.choices[0].finish_reason on finish-reason errors. No separate raw finish."},
+    "text": {"primary": "choices[0].message.content; streaming choices[0].delta.content; error.completion.choices[0].message.content"},
+    "usage": {"primary": "usage.prompt_tokens, completion_tokens, total_tokens, prompt_tokens_details.cached_tokens, completion_tokens_details.reasoning_tokens; also error.completion.usage on finish-reason errors"},
+    "structured": {"primary": "response_format is a Pydantic model built from the input schema; choices[0].message.parsed is the parsed output"},
+    "stream": {"primary": "ChatCompletionChunk iterator ending without error; last finish reason and last usage-bearing chunk"}
+  },
+  "finish_map": {
+    "stop": "stop", "length": "length", "tool_calls": "tool_calls",
+    "function_call": "tool_calls", "content_filter": "content_filter"
+  },
+  "error_map": [
+    {"type": "openai.LengthFinishReasonError", "category": "truncation"},
+    {"type": "any_llm.exceptions.LengthFinishReasonError", "category": "truncation"},
+    {"type": "openai.ContentFilterFinishReasonError", "category": "content_filter"},
+    {"type": "any_llm.exceptions.ContentFilterFinishReasonError", "category": "content_filter"},
+    {"type": "openai.RateLimitError", "category": "rate_limit"},
+    {"type": "any_llm.exceptions.RateLimitError", "category": "rate_limit"},
+    {"type": "any_llm.exceptions.ContextLengthExceededError", "category": "context_length"},
+    {"type": "any_llm.exceptions.ContentFilterError", "category": "content_filter"},
+    {"type": "openai.APIConnectionError", "category": "network"},
+    {"type": "httpx2.TransportError", "category": "network"},
+    {"type": "openai.APIResponseValidationError", "category": "validation"},
+    {"type": "pydantic_core._pydantic_core.ValidationError", "category": "validation"},
+    {"type": "json.decoder.JSONDecodeError", "category": "parse"},
+    {"type": "openai.APIError", "category": "api"},
+    {"type": "any_llm.exceptions.AnyLLMError", "category": "api"}
+  ],
+  "unsupported": [],
+  "config_notes": [],
+  "docs": [
+    "https://docs.mozilla.ai/api-reference/completion",
+    "https://docs.mozilla.ai/api-reference/exceptions"
+  ]
+}
