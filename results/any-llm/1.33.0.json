@@ -1,0 +1,273 @@
+{
+  "format": "wiretruth.results/v1",
+  "suite_version": "0.1.0.dev0",
+  "library": {
+    "name": "any-llm",
+    "version": "1.33.0",
+    "language": "python"
+  },
+  "run": {
+    "at": "2026-10-10T19:34:44Z",
+    "git_sha": "f7033ff04e327841c0bb2cfac3e1a5d574ad443f",
+    "ci_run": null,
+    "runner": "wiretruth 0.1.0.dev0",
+    "packages": {
+      "annotated-types": "0.8.0",
+      "anthropic": "0.125.0",
+      "any-llm-sdk": "1.33.0",
+      "anyio": "4.15.1",
+      "certifi": "2026.7.22",
+      "distro": "1.9.0",
+      "docstring-parser": "0.18.0",
+      "h11": "0.16.0",
+      "httpcore": "1.0.9",
+      "httpcore2": "2.13.1",
+      "httpx": "0.28.1",
+      "httpx2": "2.13.1",
+      "idna": "3.20",
+      "jiter": "0.17.0",
+      "markdown-it-py": "4.2.0",
+      "mdurl": "0.1.2",
+      "openai": "3.28.0",
+      "openresponses-types": "2.4.0",
+      "pydantic": "2.14.0",
+      "pydantic-core": "2.50.0",
+      "pygments": "2.21.0",
+      "rich": "15.0.0",
+      "sniffio": "1.3.1",
+      "truststore": "0.10.4",
+      "typing-extensions": "4.16.0",
+      "typing-inspection": "0.4.4"
+    }
+  },
+  "cells": [
+    {
+      "scenario": "truncation.structured-output",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/truncation.structured-output",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "no-partial-success",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "structured.attempted=true; structured.returned_as_success=false"
+        },
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: error.completion.choices[0].finish_reason); truth.finish=\"length\"; error.category=\"truncation\"; structured.returned_as_success=false"
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.input=71 (primary); truth.usage.input=71; usage.output=24 (primary); truth.usage.output=24"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "raised",
+        "unsupported_reason": null,
+        "error": {
+          "type": "openai.LengthFinishReasonError",
+          "message": "Could not parse response content as the length limit was reached - CompletionUsage(completion_tokens=24, prompt_tokens=71, total_tokens=95, completion_tokens_details=CompletionTokensDetails(accepted_prediction_tokens=0, audio_tokens=0, reasoning_tokens=0, rejected_prediction_tokens=0, text_tokens=None), prompt_tokens_details=PromptTokensDetails(audio_tokens=0, cache_write_tokens=0, cached_tokens=0, image_tokens=None, text_tokens=None))",
+          "category": "truncation",
+          "retry_after": null,
+          "stack_top": "openai/lib/_parsing/_completions.py:110"
+        },
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "error.completion.choices[0].finish_reason"
+        },
+        "text": {
+          "value": "{\"cities\":[{\"name\":\"Київ\",\"oblast\":\"Київська область\"},{\"",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": true,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 71,
+          "cached_input": 0,
+          "output": 24,
+          "reasoning": 0,
+          "total": 95,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 149.84996803104877
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.text",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/truncation.text",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.input=21 (primary); truth.usage.input=21; usage.output=16 (primary); truth.usage.output=16"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Kyiv, the capital of Ukraine, has a history stretching back",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 21,
+          "cached_input": 0,
+          "output": 16,
+          "reasoning": 0,
+          "total": 37,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 144.79298307560384
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/truncation.text-stream",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.output=null (absent); truth.usage.output=null; wire carried no output; library reported none"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Kyiv, the capital of Ukraine, has a history spanning more",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": true,
+          "chunks_seen": 15
+        },
+        "notes": [],
+        "elapsed_ms": 166.104000993073
+      },
+      "request_count": 1
+    }
+  ]
+}
