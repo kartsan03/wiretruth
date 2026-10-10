@@ -13,7 +13,8 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from wiretruth import __version__
-from wiretruth.formats import FormatError, load_fixture
+from wiretruth.envs import RunError, find_library, list_envs, prune_envs, resolve_interpreter
+from wiretruth.formats import FormatError, load_fixture, load_shim_manifest
 from wiretruth.lint import SetupError, lint
 from wiretruth.providers import PROVIDERS
 from wiretruth.recorder import (
@@ -39,7 +40,7 @@ COMMANDS = {
     "lint": "validate suite data and results",
     "catalog": "generate the scenario catalog",
     "site": "build the static results site",
-    "envs": "list or prune per-library environments",
+    "envs": "list, build or prune per-library environments",
 }
 
 
@@ -60,9 +61,9 @@ def build_parser() -> argparse.ArgumentParser:
                 help="repository root that holds suite/ and results/ (default: current directory)",
             )
         elif name == "run":
-            subparser.add_argument(
-                "--shim", required=True, type=Path, help="a shim directory with wiretruth-shim.json"
-            )
+            shim = subparser.add_mutually_exclusive_group(required=True)
+            shim.add_argument("--shim", type=Path, help="a shim directory with wiretruth-shim.json")
+            shim.add_argument("--lib", metavar="NAME", help="a library shim under shims/*/NAME/")
             subparser.add_argument(
                 "--scenario",
                 default="*",
@@ -84,6 +85,13 @@ def build_parser() -> argparse.ArgumentParser:
                 metavar="FILE",
                 help="exit 1 if a grade or requirement status differs from this file "
                 "(runs every cell)",
+            )
+        elif name == "envs":
+            action = subparser.add_mutually_exclusive_group()
+            action.add_argument("--list", action="store_true", help="list environments (default)")
+            action.add_argument("--prune", action="store_true", help="remove stale environments")
+            action.add_argument(
+                "--build", metavar="NAME", help="build or reuse a library environment"
             )
         elif name == "serve":
             subparser.add_argument(
@@ -257,8 +265,9 @@ def run_shim(args: argparse.Namespace) -> int:
         return EXIT_USAGE
     try:
         expected = None if args.check_grades is None else load_expected_grades(args.check_grades)
+        shim_dir = find_library(Path(), args.lib) if args.lib is not None else args.shim
         report = run_suite(
-            Path(), args.shim, pattern=args.scenario, provider=args.provider, jobs=args.jobs
+            Path(), shim_dir, pattern=args.scenario, provider=args.provider, jobs=args.jobs
         )
     except (ValueError, RecordError, OSError) as error:
         print(f"wiretruth run: {error}", file=sys.stderr)
@@ -281,6 +290,27 @@ def run_shim(args: argparse.Namespace) -> int:
     return 0
 
 
+def run_envs(args: argparse.Namespace) -> int:
+    try:
+        if args.build is not None:
+            shim_dir = find_library(Path(), args.build)
+            manifest = load_shim_manifest(shim_dir / "wiretruth-shim.json")
+            interpreter = resolve_interpreter(Path(), manifest)
+            if interpreter is None:
+                raise RunError("only Python library environments can be built")
+            print(interpreter)
+        elif args.prune:
+            for path in prune_envs(Path()):
+                print(f"removed {path}")
+        else:
+            for path, current in list_envs(Path()):
+                print(f"{'current' if current else 'stale'} {path}")
+    except (ValueError, OSError) as error:
+        print(f"wiretruth envs: {error}", file=sys.stderr)
+        return EXIT_USAGE
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -295,5 +325,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_record(args)
     if args.command == "run":
         return run_shim(args)
+    if args.command == "envs":
+        return run_envs(args)
     print(f"wiretruth {args.command}: not implemented yet", file=sys.stderr)
     return EXIT_USAGE
