@@ -7,8 +7,8 @@
     "language": "python"
   },
   "run": {
-    "at": "2026-10-10T19:34:44Z",
-    "git_sha": "f7033ff04e327841c0bb2cfac3e1a5d574ad443f",
+    "at": "2026-10-10T19:50:45Z",
+    "git_sha": "a4862d233229672593599a10cdebbe5932d08d8d",
     "ci_run": null,
     "runner": "wiretruth 0.1.0.dev0",
     "packages": {
@@ -121,7 +121,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 149.84996803104877
+        "elapsed_ms": 151.0503520257771
       },
       "request_count": 1
     },
@@ -193,7 +193,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 144.79298307560384
+        "elapsed_ms": 148.70311506092548
       },
       "request_count": 1
     },
@@ -265,7 +265,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 166.104000993073
+        "elapsed_ms": 168.01597201265395
       },
       "request_count": 1
     }
