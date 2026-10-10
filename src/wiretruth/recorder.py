@@ -68,15 +68,21 @@ class Recording:
 # --- Choosing scenarios ---------------------------------------------------------------------------
 
 
-def find_scenarios(root: Path, pattern: str, provider: str) -> tuple[list[Scenario], list[str]]:
-    """The scenarios whose id matches ``pattern`` and that list ``provider``, and the ids of those
-    that match but don't list it. Raises FormatError for an invalid scenario file, and RecordError
-    when nothing is left to record."""
+def find_scenarios(
+    root: Path, pattern: str, provider: str | None = None
+) -> tuple[list[Scenario], list[str]]:
+    """Scenarios matching ``pattern``, optionally limited to those listing ``provider``.
+
+    Also returns ids skipped by the provider filter. Raises FormatError for an invalid scenario
+    file, and RecordError when nothing is left.
+    """
     folder = root / "suite" / "scenarios"
     scenarios = [load_scenario(path) for path in sorted(folder.glob("*/*.json"))]
     matching = [scenario for scenario in scenarios if fnmatchcase(scenario.id, pattern)]
     if not matching:
         raise RecordError(f"no scenario in {folder} matches {pattern!r}")
+    if provider is None:
+        return matching, []
     chosen = [scenario for scenario in matching if provider in scenario.providers]
     skipped = [scenario.id for scenario in matching if provider not in scenario.providers]
     if not chosen:
@@ -147,14 +153,15 @@ def api_key(provider: Provider, env: Mapping[str, str]) -> str:
 
 
 @dataclass(frozen=True)
-class _Response:
+class Response:
     status: int
     headers: dict[str, str]
     pieces: list[bytes]
     end: str
 
 
-def _send(provider: Provider, request: RawRequest, base_url: str, key: str) -> _Response:
+def send(provider: Provider, request: RawRequest, base_url: str, key: str) -> Response:
+    """Send one raw HTTP request and collect the response, including an aborted body."""
     target = _target(base_url, request)
     body = _encode(request.body)
     headers = _headers(provider, request, target, key, len(body))
@@ -196,7 +203,7 @@ def _send(provider: Provider, request: RawRequest, base_url: str, key: str) -> _
             raise RecordError(message) from None
         if response.length:  # a Content-Length body that stopped short
             end = "abort"
-        return _Response(response.status, stored, pieces, end)
+        return Response(response.status, stored, pieces, end)
     finally:
         connection.close()
 
@@ -214,7 +221,8 @@ def _sse_events(text: str) -> list[str] | None:
     return events if position == len(text) else None
 
 
-def _body(response: _Response, keep_bytes: bool) -> tuple[JsonObject, list[str]]:
+def response_body(response: Response, keep_bytes: bool) -> tuple[JsonObject, list[str]]:
+    """Store a response as JSON, events, text or the byte chunks read."""
     raw = b"".join(response.pieces)
     as_read: JsonObject = {
         "chunks_b64": [base64.b64encode(piece).decode() for piece in response.pieces]
@@ -240,6 +248,21 @@ def _body(response: _Response, keep_bytes: bool) -> tuple[JsonObject, list[str]]
         except (ValueError, RecursionError):
             return {"text": text}, ["the JSON body doesn't parse strictly: stored as text"]
     return {"text": text}, []
+
+
+def exchange_document(
+    request: RawRequest, base_url: str, response: Response, body: JsonObject
+) -> JsonObject:
+    """The fixture exchange for a response and its stored body."""
+    return {
+        "match": {"method": request.method, "path": _target(base_url, request).path},
+        "response": {
+            "status": response.status,
+            "headers": dict(response.headers),
+            "body": body,
+            "end": response.end,
+        },
+    }
 
 
 def _source_commit(root: Path) -> str | None:
@@ -391,22 +414,14 @@ def record_scenario(
         root, provider.ID, scenario.id, replace=replace
     )  # before paying for a call
     recorded_at = datetime.now(UTC)
-    response = _send(provider, request, base_url, key)
+    response = send(provider, request, base_url, key)
     raw = b"".join(response.pieces)
     raw_text = raw.decode("utf-8", "replace")
     _stop_on(_secrets("raw body", raw_text, raw_text, key))  # before a parser error can quote it
-    body, warnings = _body(response, keep_bytes)
+    body, warnings = response_body(response, keep_bytes)
     if response.end == "abort":
         warnings.append("the connection closed before the response ended: stored as end: abort")
-    exchange: JsonObject = {
-        "match": {"method": request.method, "path": _target(base_url, request).path},
-        "response": {
-            "status": response.status,
-            "headers": dict(response.headers),
-            "body": body,
-            "end": response.end,
-        },
-    }
+    exchange = exchange_document(request, base_url, response, body)
     try:
         truth = provider.extract_truth([build_exchange(exchange)], request.body)
     except ValueError as error:
