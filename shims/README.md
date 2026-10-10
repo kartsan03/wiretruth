@@ -5,13 +5,21 @@ A shim calls one library and reports what it exposes. Run it from a repository c
 ```sh
 wiretruth run --shim shims/reference
 wiretruth run --shim shims/liar --check-grades tests/expected-grades/liar.json
+wiretruth run --lib any-llm
 ```
 
 The runner reads `wiretruth-shim.json` in the shim directory and starts its `entry` argv there. A Python entry
-starting with `python` uses the runner's interpreter. The shim reads one `wiretruth.call/v1` document from stdin,
-prints exactly one `wiretruth.observation/v1` document to stdout and exits 0, including when its library raises.
-Unexpected exceptions belong in the observation too. Logs go to stderr; the runner keeps them under
-`.wiretruth/runs/<UTC timestamp>/`, one file per cell.
+starting with `python` uses a cached venv under `.wiretruth/envs/py/<name>-<version>/`, installed with uv from
+the manifest's package pins. The built-in reference and liar shims keep the runner's interpreter.
+`--lib NAME` selects `shims/*/NAME/`; use either `--lib` or `--shim`.
+
+`wiretruth envs` lists current and stale environments. `--prune` removes stale ones; `--build NAME` builds or
+reuses an environment and prints its interpreter path. Build before running without network access. Builds
+are not locked, so don't build the same environment from two commands at once.
+
+The shim reads one `wiretruth.call/v1` document from stdin, prints exactly one `wiretruth.observation/v1` document
+to stdout and exits 0, including when its library raises. Unexpected exceptions belong in the observation too.
+Logs go to stderr; the runner keeps them under `.wiretruth/runs/<UTC timestamp>/`, one file per cell.
 
 A plain non-zero exit is a shim bug and grades HARNESS. A signal after a request reaches the replay server grades CRASH;
 before any request it grades HARNESS. The default timeout is 20 seconds. On timeout the runner kills the process

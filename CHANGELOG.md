@@ -12,6 +12,14 @@ finding).
 ## [Unreleased]
 
 ### Added
+- `wiretruth run --lib NAME` runs the library shim in `shims/*/NAME/` in its own virtual environment, built with
+  uv from the manifest's exact pins and cached under `.wiretruth/envs/py/`. `wiretruth envs` lists the cached
+  environments, `--build NAME` builds one ahead of an offline run, and `--prune` removes those that no manifest
+  pins any more.
+- The first library shim: any-llm 1.33.0 on `openai-chat`, plain and streamed, with structured output through a
+  Pydantic model, the form any-llm's docs show.
+- A conformance workflow runs each library shim against the suite with no network access except loopback,
+  checks its grades, and keeps each cell's stderr as an artifact.
 - `wiretruth run --shim PATH` grades a shim on every cell that has a fixture: one replay server and one shim
   process per cell, in parallel, with a 20 s timeout. It prints each cell's grade and notes, and keeps each cell's
   stderr under `.wiretruth/runs/`. The shim gets a fixed environment, so local API keys, base URLs and proxy
