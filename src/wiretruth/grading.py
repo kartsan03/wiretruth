@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from wiretruth.checks import CHECKS, Status
-from wiretruth.formats import Level, Observation, Scenario, Truth, UnsupportedEntry
+from wiretruth.formats import Level, Observation, Requirement, Scenario, Truth, UnsupportedEntry
 from wiretruth.replay import LoggedRequest
 
 Grade = Literal["PASS", "LOSSY", "WRONG", "CRASH", "HANG", "UNSUPPORTED", "HARNESS"]
@@ -62,18 +62,28 @@ class CellGrade:
     notes: tuple[str, ...]
 
 
+def _applicable(scenario: Scenario, provider: str) -> tuple[Requirement, ...]:
+    if provider not in scenario.providers:
+        raise ValueError(f"{scenario.id} doesn't list provider {provider!r}")
+    applicable = tuple(
+        requirement
+        for requirement in scenario.requirements
+        if provider
+        in (scenario.providers if requirement.providers is None else requirement.providers)
+    )
+    if not applicable:
+        raise ValueError(f"no requirement of {scenario.id} applies to {provider!r}")
+    return applicable
+
+
 def _requirements(
     obs: Observation,
     req_log: Sequence[LoggedRequest],
-    scenario: Scenario,
-    provider: str,
+    requirements: Sequence[Requirement],
     truth: Truth,
 ) -> tuple[RequirementResult, ...]:
     results = []
-    for requirement in scenario.requirements:
-        providers = scenario.providers if requirement.providers is None else requirement.providers
-        if provider not in providers:
-            continue
+    for requirement in requirements:
         try:
             check = CHECKS[requirement.check]
         except KeyError:
@@ -100,8 +110,10 @@ def grade_cell(
     Rules 1-4 evaluate no requirements and give the reason in a note. From rule 5 on, every
     requirement that applies to the provider is evaluated, so a CRASH cell still carries their
     statuses. SHOULD requirements that aren't SATISFIED add notes and never change the grade.
-    An unknown check or bad check args raise ValueError: a scenario bug, not a grade.
+    A provider the scenario doesn't list, a provider no requirement applies to, an unknown check
+    or bad check args raise ValueError: a runner or scenario bug, not a grade.
     """
+    applicable = _applicable(scenario, provider)
     received = bool(run.request_log)
     served = received and run.request_log[-1].response_complete
     if run.timed_out:
@@ -133,7 +145,7 @@ def grade_cell(
                 return CellGrade("UNSUPPORTED", 4, (), (f"{entry.reason} ({entry.docs})",))
         reason = f"unsupported, but the manifest doesn't list {scenario.id} on {provider}"
         return CellGrade("HARNESS", 4, (), (reason,))
-    requirements = _requirements(obs, run.request_log, scenario, provider, truth)
+    requirements = _requirements(obs, run.request_log, applicable, truth)
     notes = tuple(
         f"SHOULD {result.id}: {result.status}: {result.evidence}"
         for result in requirements

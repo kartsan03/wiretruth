@@ -41,8 +41,8 @@ with `ValueError`. That is a scenario bug, not a library grade.
 | `text_matches_truth` | Reported non-null text exactly equals truth text. | Reported text differs. | Text is raw-only, absent or null. |
 | `no_replacement_chars` | Reported non-null text contains no U+FFFD. | It contains U+FFFD. | Text is raw-only, absent or null. |
 | `no_success_structured_value` | Structured output was attempted and did not return as success. | It was attempted and returned as success. | Structured output was not attempted. |
-| `tool_calls_match_truth` | Same count, ordered ids, names and parsed arguments; two empty lists also match. A truth id of null accepts any id. | A known count, id, name or parsed-argument mismatch. | Expected calls are absent, or their arguments cannot be compared after matching count, ids and names. |
-| `no_complete_tool_call_from_partial_args` | No partial or repaired call is returned without an error; a raised outcome, an error object or a primary `error` finish satisfies. | A call is returned without an error with unparseable raw arguments, a false parsed flag, or partial arguments in the corresponding truth call. | — |
+| `tool_calls_match_truth` | Same count, ordered ids, names and parsed arguments; two empty lists also match. A truth id of null accepts any id. | A known count, id, name or parsed-argument mismatch, including no calls on a returned outcome without an error. | No calls on a raised outcome or next to an error object, or arguments that cannot be compared after matching count, ids and names. |
+| `no_complete_tool_call_from_partial_args` | No partial or repaired call is returned without an error; a raised outcome, an error object or a primary `error` finish satisfies. | A call is returned without an error with `arguments_parsed_ok: false`, or the corresponding truth call's arguments are partial (the library repaired them). | — |
 | `usage_matches_truth(fields)` | Every field matches truth or an alternative, including the null-truth rule. | Any reported field differs from every accepted value. | No contradiction, but at least one field is unavailable on primary; see null truth below. |
 | `usage_total_reconciles` | Reported total matches an accepted total, or primary components reconstruct one when no primary total is reported. Null truth uses the reports-none rule. | A reported total differs, or available primary components cannot reconstruct any accepted total. | Total cannot be compared and primary input/output are unavailable; raw-only null-truth total also stays unobservable. |
 | `outcome_is_error(categories?)` | Outcome is raised, with a listed category if a list was supplied. | Outcome is returned with no error signal. | Raised with another category, returned with an error signal, or unsupported. |
@@ -136,7 +136,8 @@ manifest does not list it. A manifest entry alone does not override a supported 
 
 Rules 1–4 return no requirement results and a note explaining why they applied. From rule 5 on, every applicable
 requirement is evaluated, even for CRASH. A requirement with no provider list applies to all providers in its
-scenario. Unknown checks and bad arguments propagate as `ValueError` when evaluated.
+scenario. A provider the scenario doesn't list, or one that no requirement applies to, raises `ValueError` before any
+rule, so no cell can PASS with nothing checked. Unknown checks and bad arguments raise `ValueError` when evaluated.
 
 ## Evidence and result cells
 

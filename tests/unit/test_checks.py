@@ -132,7 +132,7 @@ CASES = [
         {},
         "CONTRADICTED",
     ),
-    ("tool_calls_match_truth", replace(OBS, tool_calls=()), TRUTH, (), {}, "NOT_OBSERVABLE"),
+    ("tool_calls_match_truth", raised(tool_calls=()), TRUTH, (), {}, "NOT_OBSERVABLE"),
     ("no_complete_tool_call_from_partial_args", OBS, TRUTH, (), {}, "SATISFIED"),
     (
         "no_complete_tool_call_from_partial_args",
@@ -555,6 +555,13 @@ def test_tool_calls_accept_any_id_when_the_wire_has_none(observed_id: str | None
     assert CHECKS["tool_calls_match_truth"](obs, truth, (), {}).status == "CONTRADICTED"
 
 
+def test_no_calls_returned_against_expected_ones_contradicts() -> None:
+    obs = replace(OBS, tool_calls=())
+    assert CHECKS["tool_calls_match_truth"](obs, TRUTH, (), {}).status == "CONTRADICTED"
+    obs = replace(raised(), outcome="returned", tool_calls=())
+    assert CHECKS["tool_calls_match_truth"](obs, TRUTH, (), {}).status == "NOT_OBSERVABLE"
+
+
 def test_tool_calls_empty_truth_and_unavailable_arguments() -> None:
     empty = replace(TRUTH, tool_calls=())
     assert (
@@ -610,11 +617,11 @@ def test_primary_error_finish_signals_an_error_for_partial_calls(
     assert CHECKS["no_complete_tool_call_from_partial_args"](obs, TRUTH, (), {}).status == status
 
 
-def test_invalid_raw_args_override_parsed_flag_but_errors_satisfy() -> None:
-    obs = replace(OBS, tool_calls=(replace(CALL, arguments_raw='{"port":'),))
+@pytest.mark.parametrize("raw", ['{"port":"Brest","port":"Brest"}', '{"tide": 1e400}'])
+def test_partial_args_trust_the_parsed_flag_and_errors_satisfy(raw: str) -> None:
+    obs = replace(OBS, tool_calls=(replace(CALL, arguments_raw=raw),))
     assert (
-        CHECKS["no_complete_tool_call_from_partial_args"](obs, TRUTH, (), {}).status
-        == "CONTRADICTED"
+        CHECKS["no_complete_tool_call_from_partial_args"](obs, TRUTH, (), {}).status == "SATISFIED"
     )
     obs = raised(tool_calls=(PARTIAL,))
     assert (

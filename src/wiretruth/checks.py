@@ -21,7 +21,6 @@ from wiretruth.formats import (
     Observation,
     Surface,
     Truth,
-    parse_json,
 )
 from wiretruth.replay import LoggedRequest
 
@@ -229,13 +228,17 @@ def tool_calls_match_truth(
     """Compare calls in order by count, id, name and parsed arguments, ignoring raw formatting.
 
     A null truth id (the provider sends none) accepts any id the library generated. Two empty
-    lists satisfy. Missing expected calls are NOT_OBSERVABLE. Known mismatches
-    contradict; otherwise unavailable parsed arguments are NOT_OBSERVABLE.
+    lists satisfy. No calls against expected ones contradict on a returned outcome without an
+    error, and are NOT_OBSERVABLE otherwise. Known mismatches contradict; otherwise unavailable
+    parsed arguments are NOT_OBSERVABLE.
     """
     _keys(args)
-    evidence = f"tool_calls count={len(obs.tool_calls)}; truth count={len(truth.tool_calls)}"
-    if not obs.tool_calls:
-        return CheckResult("NOT_OBSERVABLE" if truth.tool_calls else "SATISFIED", evidence)
+    evidence = (
+        f"outcome={obs.outcome}; tool_calls count={len(obs.tool_calls)}; "
+        f"truth count={len(truth.tool_calls)}"
+    )
+    if not obs.tool_calls and truth.tool_calls and (obs.outcome != "returned" or obs.error):
+        return CheckResult("NOT_OBSERVABLE", evidence)
     if len(obs.tool_calls) != len(truth.tool_calls):
         return CheckResult("CONTRADICTED", evidence)
     results = []
@@ -264,8 +267,8 @@ def no_complete_tool_call_from_partial_args(
 
     A returned call is treated as complete. A raised outcome or an error signal (an error object
     or a primary ``error`` finish) satisfies first.
-    Match truth by id, falling back to position when no id matches. Unparseable raw arguments,
-    a false parsed flag, or partial truth arguments establish that a returned call is partial.
+    Match truth by id, falling back to position when no id matches. A false parsed flag (the
+    shim's reading of the raw arguments) or partial truth arguments make a returned call partial.
     """
     _keys(args)
     if obs.outcome == "raised" or obs.error is not None or _primary_finish(obs) == "error":
@@ -275,22 +278,13 @@ def no_complete_tool_call_from_partial_args(
             (item for item in truth.tool_calls if item.id is not None and item.id == call.id),
             truth.tool_calls[index] if index < len(truth.tool_calls) else None,
         )
-        raw_invalid = False
-        if call.arguments_raw is not None:
-            try:
-                parse_json(call.arguments_raw.encode())
-            except (ValueError, RecursionError):
-                raw_invalid = True
-        if (
-            raw_invalid
-            or not call.arguments_parsed_ok
-            or (expected is not None and not expected.arguments_parsed_ok)
+        if not call.arguments_parsed_ok or (
+            expected is not None and not expected.arguments_parsed_ok
         ):
             return CheckResult(
                 "CONTRADICTED",
                 f"tool_calls[{index}] id={_show(call.id)} returned without error; "
                 f"arguments_parsed_ok={_show(call.arguments_parsed_ok)}, "
-                f"raw arguments invalid={_show(raw_invalid)}, "
                 "truth.arguments_parsed_ok="
                 f"{_show(expected.arguments_parsed_ok if expected else None)}",
             )

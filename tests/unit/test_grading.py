@@ -268,7 +268,26 @@ def test_provider_filtering_skips_inapplicable_bad_checks() -> None:
 
 def test_none_requirement_providers_means_scenarios_providers() -> None:
     assert len(grade(provider="gemini").requirements) == 1
-    assert grade(provider="anthropic").requirements == ()
+
+
+@pytest.mark.parametrize(
+    "scenario,provider,message",
+    [
+        (SCENARIO, "anthropic", "doesn't list provider"),
+        (replace(SCENARIO, requirements=()), "openai-chat", "no requirement"),
+        (
+            replace(SCENARIO, requirements=(replace(REQUIREMENT, providers=("gemini",)),)),
+            "openai-chat",
+            "no requirement",
+        ),
+    ],
+)
+@pytest.mark.parametrize("run", [RUN, replace(RUN, timed_out=True)])
+def test_a_cell_with_nothing_to_check_is_a_value_error(
+    scenario: Scenario, provider: str, message: str, run: ShimRun
+) -> None:
+    with pytest.raises(ValueError, match=message):
+        grade(run, scenario=scenario, provider=provider)
 
 
 @pytest.mark.parametrize(
@@ -300,13 +319,12 @@ def test_early_rules_do_not_evaluate_requirements(run: ShimRun) -> None:
     assert result.requirements == ()
 
 
-def test_no_requirements_pass_and_inputs_stay_unchanged() -> None:
-    scenario = replace(SCENARIO, requirements=())
-    before = asdict(RUN), asdict(scenario), asdict(TRUTH)
-    result = grade(scenario=scenario)
-    assert (result.grade, result.rule, result.requirements) == ("PASS", 8, ())
-    assert before == (asdict(RUN), asdict(scenario), asdict(TRUTH))
-    assert result == grade(scenario=scenario)
+def test_inputs_stay_unchanged() -> None:
+    before = asdict(RUN), asdict(SCENARIO), asdict(TRUTH)
+    result = grade()
+    assert (result.grade, result.rule) == ("PASS", 8)
+    assert before == (asdict(RUN), asdict(SCENARIO), asdict(TRUTH))
+    assert result == grade()
 
 
 def test_requirement_results_map_to_results_schema() -> None:
