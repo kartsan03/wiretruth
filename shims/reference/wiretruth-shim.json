@@ -1,0 +1,27 @@
+{
+  "format": "wiretruth.shim/v1",
+  "name": "reference",
+  "language": "python",
+  "packages": {"wiretruth": "0.1.0.dev0"},
+  "primary_package": "wiretruth",
+  "entry": ["python", "shim.py"],
+  "providers": {
+    "openai-chat": "providers.openai_chat.build_request over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_CHAT"
+  },
+  "surfaces": {
+    "finish": {"primary": "truth.finish", "raw": "truth.raw_finish"},
+    "text": {"primary": "truth.text"},
+    "usage": {"primary": "truth.usage"},
+    "tool_calls": {"primary": "truth.tool_calls"},
+    "structured": {"primary": "truth.structured when a schema was requested and finish is stop"},
+    "stream": {"primary": "truth.stream_completed"}
+  },
+  "finish_map": {
+    "stop": "stop", "length": "length", "tool_calls": "tool_calls",
+    "function_call": "tool_calls", "content_filter": "content_filter"
+  },
+  "error_map": [],
+  "unsupported": [],
+  "config_notes": [],
+  "docs": ["https://github.com/kartsan03/wiretruth/blob/main/docs/grading.md"]
+}

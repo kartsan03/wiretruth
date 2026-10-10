@@ -499,7 +499,40 @@ def _build_call(obj: JsonObject) -> Call:
 
 
 def load_call_spec(path: Path | str) -> CallSpec:
-    doc = cast(JsonObject, load_document("call", path))
+    return call_spec_from_document(read_json(Path(path)), str(path))
+
+
+def call_spec_document(spec: CallSpec) -> JsonObject:
+    """The call/v1 document sent to a shim on stdin."""
+    call = spec.call
+    return {
+        "format": "wiretruth.call/v1",
+        "scenario": spec.scenario,
+        "provider": spec.provider,
+        "model": spec.model,
+        "stream": call.stream,
+        "messages": [{"role": item.role, "content": item.content} for item in call.messages],
+        "max_output_tokens": call.max_output_tokens,
+        "stop": None if call.stop is None else list(call.stop),
+        "tools": [
+            {"name": item.name, "description": item.description, "parameters": item.parameters}
+            for item in call.tools
+        ],
+        "tool_choice": {"name": call.tool_choice.name}
+        if isinstance(call.tool_choice, ForcedTool)
+        else call.tool_choice,
+        "output_schema": call.output_schema,
+        "reasoning": None if call.reasoning is None else {"effort": call.reasoning.effort},
+        "extra": call.extra,
+    }
+
+
+def call_spec_from_document(document: JsonValue, file: str = "<stdin>") -> CallSpec:
+    """Validate and load a parsed call/v1 document."""
+    problems = validate("call", document, file)
+    if problems:
+        raise FormatError(problems)
+    doc = cast(JsonObject, document)
     return CallSpec(
         scenario=_str(doc, "scenario"),
         provider=_str(doc, "provider"),
@@ -853,7 +886,15 @@ def _opt_float(obj: JsonObject, key: str) -> float | None:
 
 
 def load_observation(path: Path | str) -> Observation:
-    doc = cast(JsonObject, load_document("observation", path))
+    return observation_from_document(read_json(Path(path)), str(path))
+
+
+def observation_from_document(document: JsonValue, file: str = "<stdout>") -> Observation:
+    """Validate and load a parsed observation/v1 document."""
+    problems = validate("observation", document, file)
+    if problems:
+        raise FormatError(problems)
+    doc = cast(JsonObject, document)
     library = _object(doc, "library")
     error = _opt_object(doc, "error")
     finish = _opt_object(doc, "finish")

@@ -1,0 +1,26 @@
+{
+  "format": "wiretruth.shim/v1",
+  "name": "liar",
+  "language": "python",
+  "packages": {"wiretruth": "0.1.0.dev0"},
+  "primary_package": "wiretruth",
+  "entry": ["python", "shim.py"],
+  "providers": {
+    "openai-chat": "reference.observe over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_CHAT"
+  },
+  "surfaces": {
+    "finish": {"primary": "truth.finish with length and errors mapped to stop"},
+    "text": {"primary": "truth.text"},
+    "tool_calls": {"primary": "truth.tool_calls without raw arguments"},
+    "structured": {"primary": "partial text reported as successful structured output"},
+    "stream": {"primary": "truth.stream_completed"}
+  },
+  "finish_map": {
+    "stop": "stop", "length": "stop", "tool_calls": "tool_calls",
+    "function_call": "tool_calls", "content_filter": "content_filter", "error": "stop"
+  },
+  "error_map": [],
+  "unsupported": [],
+  "config_notes": [],
+  "docs": ["https://github.com/kartsan03/wiretruth/blob/main/docs/grading.md"]
+}

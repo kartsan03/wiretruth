@@ -26,6 +26,7 @@ from wiretruth.recorder import (
     summary,
 )
 from wiretruth.replay import HOST, ReplayServer
+from wiretruth.runner import DEFAULT_JOBS, GLYPHS, compare_grades, load_expected_grades, run_suite
 
 EXIT_CHECK = 1
 EXIT_USAGE = 2
@@ -57,6 +58,32 @@ def build_parser() -> argparse.ArgumentParser:
                 nargs="?",
                 default=".",
                 help="repository root that holds suite/ and results/ (default: current directory)",
+            )
+        elif name == "run":
+            subparser.add_argument(
+                "--shim", required=True, type=Path, help="a shim directory with wiretruth-shim.json"
+            )
+            subparser.add_argument(
+                "--scenario",
+                default="*",
+                help="a scenario id, or a glob such as 'truncation.*' (default: every scenario; "
+                "read from suite/ in the current directory)",
+            )
+            subparser.add_argument(
+                "--provider", choices=sorted(PROVIDERS), help="only this wire API (default: all)"
+            )
+            subparser.add_argument(
+                "--jobs",
+                type=int,
+                default=DEFAULT_JOBS,
+                help=f"cells to run at once (default: {DEFAULT_JOBS})",
+            )
+            subparser.add_argument(
+                "--check-grades",
+                type=Path,
+                metavar="FILE",
+                help="exit 1 if a grade or requirement status differs from this file "
+                "(runs every cell)",
             )
         elif name == "serve":
             subparser.add_argument(
@@ -220,6 +247,40 @@ def run_record(args: argparse.Namespace) -> int:
     return code
 
 
+def run_shim(args: argparse.Namespace) -> int:
+    if args.check_grades is not None and (args.scenario != "*" or args.provider is not None):
+        # The file lists every cell, so a filtered run would report the rest as missing.
+        print(
+            "wiretruth run: --check-grades runs every cell; drop --scenario and --provider",
+            file=sys.stderr,
+        )
+        return EXIT_USAGE
+    try:
+        expected = None if args.check_grades is None else load_expected_grades(args.check_grades)
+        report = run_suite(
+            Path(), args.shim, pattern=args.scenario, provider=args.provider, jobs=args.jobs
+        )
+    except (ValueError, RecordError, OSError) as error:
+        print(f"wiretruth run: {error}", file=sys.stderr)
+        return EXIT_USAGE
+    for cell in report.cells:
+        grade = cell.grade.grade
+        print(f"{GLYPHS[grade]} {grade} {cell.scenario} {cell.provider}")
+        for note in cell.notes:
+            print(f"  {note}")
+        if cell.observation is not None:  # e.g. a setting the library couldn't send (ADR 0006)
+            for note in cell.observation.notes:
+                print(f"  shim: {note}")
+    print(f"stderr: {report.stderr_dir}")
+    if expected is not None:
+        differences = compare_grades(report.cells, expected)
+        for difference in differences:
+            print(difference)
+        if differences:
+            return EXIT_CHECK
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -232,5 +293,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_serve(args.fixture, args.port)
     if args.command == "record":
         return run_record(args)
+    if args.command == "run":
+        return run_shim(args)
     print(f"wiretruth {args.command}: not implemented yet", file=sys.stderr)
     return EXIT_USAGE

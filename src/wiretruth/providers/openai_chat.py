@@ -116,6 +116,10 @@ def auth_headers(key: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {key}"}
 
 
+def requested_stream(path: str, body: JsonValue) -> bool:
+    return isinstance(body, dict) and body.get("stream") is True
+
+
 def returned_model(exchange: Exchange) -> str | None:
     if not is_event_stream(exchange):
         return json_str(_payload(exchange)[0], "model")
