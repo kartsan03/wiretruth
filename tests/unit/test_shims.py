@@ -13,6 +13,7 @@ from wiretruth import __version__
 from wiretruth.formats import (
     call_spec_document,
     load_shim_manifest,
+    observation_document,
     observation_from_document,
     parse_json,
 )
@@ -67,6 +68,7 @@ def test_builtin_observations_match_hand_derived_expected_grades_without_sockets
             provider=cell.provider,
         )
         assert run.invalid is run.mismatch is None
+        assert observation_from_document(observation_document(run.observation)) == run.observation
         grade = grade_cell(
             run,
             scenario=cell.scenario,

@@ -10,7 +10,8 @@
     "at": "2026-10-26T09:00:00Z",
     "git_sha": "513814c",
     "ci_run": null,
-    "runner": "wiretruth 0.3.0"
+    "runner": "wiretruth 0.3.0",
+    "packages": { "litellm": "1.103.1" }
   },
   "cells": [
     {

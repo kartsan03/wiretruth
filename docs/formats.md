@@ -335,7 +335,7 @@ Every graded cell for one library version.
 | `format` | `"wiretruth.results/v1"` | |
 | `suite_version` | string | The wiretruth version that ran the suite |
 | `library` | `{name, version, language}` | |
-| `run` | `{at, git_sha, ci_run, runner}` | When and where the run happened; `ci_run` is a URL or `null` |
+| `run` | `{at, git_sha, ci_run, runner, packages}` | When and where the run happened; `ci_run` is a URL or `null`; `packages` maps every package installed in the shim's environment to its version |
 | `cells` | list of [cells](#cell) | |
 
 ### Cell

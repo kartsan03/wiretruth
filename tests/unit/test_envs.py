@@ -9,7 +9,15 @@ from unittest.mock import MagicMock
 import pytest
 
 from wiretruth import cli, envs
-from wiretruth.envs import RunError, find_library, list_envs, prune_envs, resolve_interpreter
+from wiretruth.envs import (
+    RunError,
+    find_library,
+    installed_packages,
+    list_envs,
+    parse_installed_packages,
+    prune_envs,
+    resolve_interpreter,
+)
 from wiretruth.formats import load_shim_manifest
 from wiretruth.runner import RunReport
 
@@ -131,6 +139,44 @@ def test_javascript_is_untouched(tmp_path, library, uv):
     assert resolve_interpreter(tmp_path, replace(library, language="javascript")) is None
     uv.assert_not_called()
     assert not (tmp_path / ".wiretruth").exists()
+
+
+def test_freeze_parser_keeps_resolved_names_and_versions():
+    assert parse_installed_packages("sample-sdk==1.2.3\ndependency==2.0rc1+local\n") == {
+        "sample-sdk": "1.2.3",
+        "dependency": "2.0rc1+local",
+    }
+    assert parse_installed_packages("") == {}
+
+
+@pytest.mark.parametrize("line", ["package", "package @ file:///tmp/pkg", "package==", "==1", "\n"])
+def test_freeze_parser_rejects_unpinned_lines(line):
+    with pytest.raises(RunError, match="expected name==version"):
+        parse_installed_packages(line)
+
+
+def test_installed_packages_freezes_the_selected_interpreter(monkeypatch):
+    run = MagicMock(return_value=subprocess.CompletedProcess([], 0, "sample-sdk==1.2.3\n", ""))
+    monkeypatch.setattr(envs.subprocess, "run", run)
+    assert installed_packages("/env/bin/python") == {"sample-sdk": "1.2.3"}
+    run.assert_called_once_with(
+        ["uv", "pip", "freeze", "--python", "/env/bin/python"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+@pytest.mark.parametrize("problem", ["exit", "missing-uv", "unpinned"])
+def test_installed_packages_failures_are_run_errors(problem, monkeypatch):
+    run = MagicMock(return_value=subprocess.CompletedProcess([], 7, "", "failure"))
+    if problem == "missing-uv":
+        run.side_effect = FileNotFoundError("uv is not on PATH")
+    elif problem == "unpinned":
+        run.return_value = subprocess.CompletedProcess([], 0, "unpinned", "")
+    monkeypatch.setattr(envs.subprocess, "run", run)
+    with pytest.raises(RunError, match="uv pip freeze"):
+        installed_packages("/env/bin/python")
 
 
 def test_list_and_prune_keep_only_matching_manifests(tmp_path, library, uv):

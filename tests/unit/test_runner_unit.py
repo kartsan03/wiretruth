@@ -12,7 +12,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from wiretruth import runner
+from wiretruth import __version__, runner
 from wiretruth.cli import build_parser, main
 from wiretruth.formats import (
     FormatError,
@@ -634,11 +634,16 @@ def test_run_cli_output_and_check_exit_codes(check, expected_code, tmp_path, mon
         args += ["--check-grades", str(path)]
     assert main(args) == expected_code
     lines = capsys.readouterr().out.splitlines()
-    assert lines[:5] == [
-        "✓ PASS truncation.text openai-chat",
+    assert lines[:10] == [
+        "scenario         openai-chat",
+        "truncation.text  ✓ PASS",
+        "",
+        "truncation.text openai-chat",
         "  first note",
         "  second note",
         "  shim: effort not sent",
+        "",
+        f"reference {__version__}: 1 cell, 1 PASS",
         f"stderr: {tmp_path}",
     ]
-    assert len(lines) == (6 if check == "different" else 5)
+    assert len(lines) == (11 if check == "different" else 10)

@@ -6,6 +6,7 @@ on:
       - "shims/**"
       - "suite/**"
       - "src/**"
+      - "results/**"
       - ".github/workflows/conformance.yml"
   workflow_dispatch:
 
@@ -37,11 +38,11 @@ jobs:
       # The install above needs the network; the run doesn't. Replay needs only loopback, and blocking
       # other networking prevents live provider requests. The runner, replay server and shim share this
       # network namespace. The sysctl allows the namespace on Ubuntu 24.04 and changes only this
-      # throwaway runner. Until results/ exists, the expected grades sit next to the self-tests' files.
+      # throwaway runner. Grades are compared with the committed results for this library version.
       - run: |
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
           unshare -rn sh -c 'ip link set lo up && exec .venv/bin/wiretruth run --lib "$1" \
-            --check-grades "tests/expected-grades/$1.json"' sh "${{ matrix.shim }}"
+            --check-against' sh "${{ matrix.shim }}"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with:

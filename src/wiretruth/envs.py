@@ -78,6 +78,27 @@ def resolve_interpreter(root: Path, manifest: ShimManifest) -> str | None:
     return interpreter
 
 
+def parse_installed_packages(output: str) -> dict[str, str]:
+    packages = {}
+    for line in output.splitlines():
+        name, separator, version = line.partition("==")
+        if not separator or not name.strip() or not version.strip():
+            raise RunError("uv pip freeze: expected name==version on every line")
+        packages[name.strip()] = version.strip()
+    return packages
+
+
+def installed_packages(interpreter: str) -> dict[str, str]:
+    command = ["uv", "pip", "freeze", "--python", interpreter]
+    try:
+        result = subprocess.run(command, capture_output=True, text=True, check=False)
+    except OSError as error:
+        raise RunError(f"uv pip freeze: {error}") from error
+    if result.returncode:
+        raise RunError(f"{' '.join(command)} exited with code {result.returncode}")
+    return parse_installed_packages(result.stdout)
+
+
 def list_envs(root: Path) -> tuple[tuple[Path, bool], ...]:
     """List cached directories and whether their installed pins match a current manifest."""
     manifests = [load_shim_manifest(path) for path in (root / "shims").rglob("wiretruth-shim.json")]

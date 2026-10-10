@@ -889,6 +889,73 @@ def load_observation(path: Path | str) -> Observation:
     return observation_from_document(read_json(Path(path)), str(path))
 
 
+def observation_document(obs: Observation) -> JsonObject:
+    """The full observation/v1 document reported by a shim."""
+    return {
+        "format": "wiretruth.observation/v1",
+        "library": {
+            "name": obs.library.name,
+            "version": obs.library.version,
+            "language": obs.library.language,
+            "api": obs.library.api,
+        },
+        "outcome": obs.outcome,
+        "unsupported_reason": obs.unsupported_reason,
+        "error": None
+        if obs.error is None
+        else {
+            "type": obs.error.type,
+            "message": obs.error.message,
+            "category": obs.error.category,
+            "retry_after": obs.error.retry_after,
+            "stack_top": obs.error.stack_top,
+        },
+        "finish": None
+        if obs.finish is None
+        else {
+            "value": obs.finish.value,
+            "raw": obs.finish.raw,
+            "surface": obs.finish.surface,
+            "source": obs.finish.source,
+        },
+        "text": None
+        if obs.text is None
+        else {"value": obs.text.value, "surface": obs.text.surface},
+        "structured": {
+            "attempted": obs.structured.attempted,
+            "returned_as_success": obs.structured.returned_as_success,
+            "value": obs.structured.value,
+        },
+        "tool_calls": [
+            {
+                "id": call.id,
+                "name": call.name,
+                "arguments_raw": call.arguments_raw,
+                "arguments_parsed_ok": call.arguments_parsed_ok,
+                "arguments": call.arguments,
+            }
+            for call in obs.tool_calls
+        ],
+        "usage": None
+        if obs.usage is None
+        else {
+            "input": obs.usage.input,
+            "cached_input": obs.usage.cached_input,
+            "output": obs.usage.output,
+            "reasoning": obs.usage.reasoning,
+            "total": obs.usage.total,
+            "surface": dict(obs.usage.surface),
+        },
+        "stream": {
+            "used": obs.stream.used,
+            "completed": obs.stream.completed,
+            "chunks_seen": obs.stream.chunks_seen,
+        },
+        "notes": list(obs.notes),
+        "elapsed_ms": obs.elapsed_ms,
+    }
+
+
 def observation_from_document(document: JsonValue, file: str = "<stdout>") -> Observation:
     """Validate and load a parsed observation/v1 document."""
     problems = validate("observation", document, file)
