@@ -257,6 +257,7 @@ say, because the library raised an internal error.
 
 ## What to read next
 
+- [Grading](grading.md), for every check, its evidence and the ordered rules for cell grades.
 - [The decision records](index.md#decisions), for why replay, shims, JSON data, grades, fixture tiers and default
   configuration work the way they do.
 - [The docs map](index.md).
