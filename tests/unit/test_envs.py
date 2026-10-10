@@ -56,14 +56,15 @@ def test_build_installs_all_pins_and_sends_uv_output_to_stderr(tmp_path, library
             "install",
             "--python",
             interpreter,
+            "--",
             "dependency[extra]==4.5.6",
             "sample-sdk==1.2.3",
         ],
     ]
-    assert json.loads((path / envs.MARKER).read_text()) == [
-        "dependency[extra]==4.5.6",
-        "sample-sdk==1.2.3",
-    ]
+    assert json.loads((path / envs.MARKER).read_text()) == {
+        "python": "3.12",
+        "packages": ["dependency[extra]==4.5.6", "sample-sdk==1.2.3"],
+    }
     captured = capsys.readouterr()
     assert captured.out == "" and captured.err == "uv output\nuv output\n"
 
@@ -75,8 +76,10 @@ def test_matching_env_is_reused_without_uv(tmp_path, library, uv, monkeypatch):
     assert uv.call_count == 2
 
 
-@pytest.mark.parametrize("change", ["missing-marker", "bad-marker", "missing-python", "pins"])
-def test_partial_or_changed_env_is_removed_and_rebuilt(change, tmp_path, library, uv):
+@pytest.mark.parametrize(
+    "change", ["missing-marker", "bad-marker", "missing-python", "pins", "python-version"]
+)
+def test_partial_or_changed_env_is_removed_and_rebuilt(change, tmp_path, library, uv, monkeypatch):
     interpreter = Path(resolve_interpreter(tmp_path, library))
     path = interpreter.parent.parent
     old = path / "old-install"
@@ -87,6 +90,8 @@ def test_partial_or_changed_env_is_removed_and_rebuilt(change, tmp_path, library
         (path / envs.MARKER).write_bytes(b"\xff")
     elif change == "missing-python":
         interpreter.unlink()
+    elif change == "python-version":
+        monkeypatch.setattr(envs, "PYTHON", "3.13")
     else:
         library = replace(library, packages={**library.packages, "dependency": "2.0"})
     assert resolve_interpreter(tmp_path, library) == str(interpreter)

@@ -10,6 +10,7 @@ from pathlib import Path
 from wiretruth.formats import ShimManifest, load_shim_manifest
 
 MARKER = "wiretruth-install.json"
+PYTHON = "3.12"
 
 
 class RunError(ValueError):
@@ -42,13 +43,13 @@ def _pins(manifest: ShimManifest) -> list[str]:
     return [f"{name}=={version}" for name, version in sorted(manifest.packages.items())]
 
 
+def _marker(manifest: ShimManifest) -> bytes:
+    return json.dumps({"python": PYTHON, "packages": _pins(manifest)}).encode()
+
+
 def _matches(path: Path, manifest: ShimManifest) -> bool:
     marker = path / MARKER
-    return (
-        _python(path).is_file()
-        and marker.is_file()
-        and marker.read_bytes() == json.dumps(_pins(manifest)).encode()
-    )
+    return _python(path).is_file() and marker.is_file() and marker.read_bytes() == _marker(manifest)
 
 
 def resolve_interpreter(root: Path, manifest: ShimManifest) -> str | None:
@@ -66,13 +67,14 @@ def resolve_interpreter(root: Path, manifest: ShimManifest) -> str | None:
         shutil.rmtree(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     for command in (
-        ["uv", "venv", "--python", "3.12", str(path)],
-        ["uv", "pip", "install", "--python", interpreter, *_pins(manifest)],
+        ["uv", "venv", "--python", PYTHON, str(path)],
+        # "--": a package name from the manifest can never become a uv option.
+        ["uv", "pip", "install", "--python", interpreter, "--", *_pins(manifest)],
     ):
         result = subprocess.run(command, stdout=sys.stderr, check=False)
         if result.returncode:
             raise RunError(f"{' '.join(command)} exited with code {result.returncode}")
-    (path / MARKER).write_bytes(json.dumps(_pins(manifest)).encode())
+    (path / MARKER).write_bytes(_marker(manifest))
     return interpreter
 
 
