@@ -6,7 +6,7 @@ happened.
 **Does your LLM SDK tell you the truth?**
 
 [![CI](https://github.com/kartsan03/wiretruth/actions/workflows/ci.yml/badge.svg)](https://github.com/kartsan03/wiretruth/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/wiretruth)](https://pypi.org/project/wiretruth/)
+[![PyPI](https://img.shields.io/pypi/v/wiretruth?label=PyPI)](https://pypi.org/project/wiretruth/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
 So far wiretruth tests one library, any-llm, on the OpenAI Chat Completions API with 12 scenarios. More providers
