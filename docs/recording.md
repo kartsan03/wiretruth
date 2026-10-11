@@ -12,9 +12,9 @@ fixture in `suite/fixtures/<provider>/<scenario>.json`.
 - **No SDK.** The provider module builds the native request, and Python's `http.client` sends it. No provider
   library sits between the API and the fixture, so a library bug can't leak into the recorded truth.
 - **The key stays in the request.** It is read from the provider's environment variable (`OPENAI_API_KEY` for
-  `openai-chat`) and sent only in a header. Request headers are never stored. A key with spaces or other characters
-  a header can't carry is rejected without being printed. If the key itself shows up in a response, nothing is
-  written.
+  both OpenAI providers) and sent only in a header. Request headers are never stored. A key with spaces or other
+  characters a header can't carry is rejected without being printed. If the key itself shows up in a response,
+  nothing is written.
 - **One call, the scenario's call.** The request is built from the scenario's `call` (with its `call_overrides` for
   the provider) and the provider's current model, or `--model`. The request doesn't set a temperature or a seed:
   the call format has no such fields, and the libraries under test don't send them either.
@@ -132,9 +132,9 @@ wiretruth record --provider PROVIDER --scenario PATTERNS [--model MODEL] [--dry-
 
 | Option | Meaning |
 |---|---|
-| `--provider` | The wire API. Today: `openai-chat` |
+| `--provider` | The wire API. Today: `openai-chat`, `openai-responses` |
 | `--scenario` | Comma-separated scenario ids or globs, such as `'tools.*,usage.*'`. Scenarios that don't list the provider are skipped, with a note |
-| `--model` | The model to request. Default: the provider's current model (`gpt-6-luna` for `openai-chat`) |
+| `--model` | The model to request. Default: the provider's current model (`gpt-6-luna` for both OpenAI providers) |
 | `--dry-run` | Print each request and send nothing |
 | `--replace` | Overwrite `<scenario>.json` instead of keeping it as a dated variant |
 | `--keep-bytes` | Store the body as the chunks read |
@@ -199,3 +199,22 @@ For `openai-chat`:
 
 Only the choice with `index` 0 counts. Stream events follow the HTML standard's event-stream rules. A response
 that isn't streamed and is cut off before its body parses delivered nothing, so its finish is `none`.
+
+For `openai-responses`:
+
+| Truth | Read from |
+|---|---|
+| `finish` | `error` for an error response, `response.failed` or an `error` event; `refusal` for a refusal content part or delta. Otherwise `incomplete` with `max_output_tokens` → `length`, with `content_filter` → `content_filter`, with any other or no reason → `other`. `completed` → `tool_calls` if output contains a `function_call`, otherwise `stop`. Other statuses → `other`; no status or no final stream event → `none` |
+| `raw_finish` | `incomplete_details.reason` when present, otherwise `status` |
+| `text` | The `output_text` parts of message items joined, or streamed `response.output_text.delta` pieces joined. `null` when none were sent; reasoning items contribute no text |
+| `tool_calls` | `function_call` items. The id is `call_id`, which the caller sends back with the tool result, not the item `id`. Streamed calls are put together by `output_index`, using `call_id` and `name` from `response.output_item.added` and joining argument deltas |
+| `structured` | The text parsed as JSON, with duplicate keys last-wins, only when `text.format.type` is `json_schema` or `json_object` and the finish is `stop` |
+| `stream_completed` | `true` when a final event (`response.completed`, `response.incomplete` or `response.failed`) arrived and the exchange ended cleanly; `false` otherwise. There is no `[DONE]` terminator. `null` for a response that wasn't streamed |
+| `usage` | `input_tokens` → `input`, `input_tokens_details.cached_tokens` → `cached_input`, `output_tokens` → `output`, `output_tokens_details.reasoning_tokens` → `reasoning`, `total_tokens` (or input + output) → `total`. `alternatives` is empty; `raw` keeps the usage object verbatim |
+| `error` | The error object's `message`, `type` and `code`. `status` is the HTTP status for an error response, and `null` for `response.failed`'s `response.error` or an in-band `error` event (top-level or nested error object) |
+
+In a stream, finish, status and usage come from the final event's `response` object; text and tool calls come
+from deltas. A stream that ends before a final event keeps its partial text and calls, with finish `none`.
+As with `openai-chat`, truth reads only the last exchange. A cut-off non-stream body that never parses has finish
+`none`; any other non-object body or non-JSON event data raises an error. Responses has no `stop` parameter,
+and `max_output_tokens` must be at least 16.
