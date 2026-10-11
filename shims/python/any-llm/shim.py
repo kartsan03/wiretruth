@@ -55,11 +55,12 @@ def observe(result, prefix="", streaming=False):
                         stored["arguments_raw"] or ""
                     ) + tool.function.arguments
             try:
-                arguments = json.loads(stored["arguments_raw"])
-                ok = isinstance(arguments, (dict, list))
+                arguments, ok = json.loads(stored["arguments_raw"]), True
+                # Values the observation can't carry (1e400, a lone surrogate) count as unparsed.
+                json.dumps(arguments, ensure_ascii=False, allow_nan=False).encode()
             except Exception:
                 arguments, ok = None, False
-            stored.update(arguments_parsed_ok=ok, arguments=arguments if ok else None)
+            stored.update(arguments_parsed_ok=ok, arguments=arguments)
         obs["tool_calls"] = [tool_calls[index] for index in sorted(tool_calls)]
         parsed = getattr(message, "parsed", None)
         if parsed is not None and obs["outcome"] == "returned":
