@@ -1,0 +1,240 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-responses/truncation.structured-output",
+  "scenario": "truncation.structured-output",
+  "provider": "openai-responses",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-11T21:13:34Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "bdbf10a",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38175457862",
+    "raw_sha256": "167586130d53fdeddd09894b988a94f76e474821dec01918d2b46818f545b285",
+    "request": {
+      "model": "gpt-6-luna",
+      "input": [
+        {
+          "role": "user",
+          "content": "List ten Greek islands and the sea each one lies in. Write the names in Greek."
+        }
+      ],
+      "max_output_tokens": 24,
+      "text": {
+        "format": {
+          "type": "json_schema",
+          "name": "output",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "islands": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "sea": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "sea"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "islands"
+            ],
+            "additionalProperties": false
+          },
+          "strict": true
+        }
+      },
+      "reasoning": {
+        "effort": "none"
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/responses"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "resp_04ca3cce672b80e9006acbfbfeef9c87d1b371f55d49b29248",
+            "object": "response",
+            "created_at": 1791753214,
+            "status": "incomplete",
+            "access_programs": null,
+            "background": false,
+            "billing": {
+              "payer": "developer"
+            },
+            "completed_at": null,
+            "error": null,
+            "frequency_penalty": 0.0,
+            "incomplete_details": {
+              "reason": "max_output_tokens"
+            },
+            "instructions": null,
+            "max_output_tokens": 24,
+            "max_tool_calls": null,
+            "model": "gpt-6-luna",
+            "moderation": null,
+            "output": [
+              {
+                "id": "msg_04ca3cce672b80e9006acbfbffd3a087d1882b5ea5d91c9c0b",
+                "type": "message",
+                "status": "incomplete",
+                "content": [
+                  {
+                    "type": "output_text",
+                    "annotations": [],
+                    "logprobs": [],
+                    "text": "{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ"
+                  }
+                ],
+                "phase": "final_answer",
+                "role": "assistant"
+              }
+            ],
+            "parallel_tool_calls": true,
+            "presence_penalty": 0.0,
+            "previous_response_id": null,
+            "prompt_cache_key": null,
+            "prompt_cache_retention": "24h",
+            "reasoning": {
+              "context": "all_turns",
+              "effort": "none",
+              "mode": "standard",
+              "summary": null
+            },
+            "safety_identifier": null,
+            "service_tier": "default",
+            "store": true,
+            "temperature": 1.0,
+            "text": {
+              "format": {
+                "type": "json_schema",
+                "description": null,
+                "name": "output",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "islands": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "sea": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "sea"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "islands"
+                  ],
+                  "additionalProperties": false
+                },
+                "strict": true
+              },
+              "verbosity": "medium"
+            },
+            "tool_choice": "auto",
+            "tool_usage": {
+              "image_gen": {
+                "input_tokens": 0,
+                "input_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "output_tokens": 0,
+                "output_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "total_tokens": 0
+              },
+              "web_search": {
+                "num_requests": 0
+              }
+            },
+            "tools": [],
+            "top_logprobs": 0,
+            "top_p": 0.98,
+            "truncation": "disabled",
+            "usage": {
+              "input_tokens": 68,
+              "input_tokens_details": {
+                "cache_write_tokens": 0,
+                "cached_tokens": 0
+              },
+              "output_tokens": 24,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 92
+            },
+            "user": null,
+            "metadata": {}
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "max_output_tokens",
+    "text": "{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 68,
+      "cached_input": 0,
+      "output": 24,
+      "reasoning": 0,
+      "total": 92,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 68,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 24,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 92
+      }
+    }
+  }
+}
