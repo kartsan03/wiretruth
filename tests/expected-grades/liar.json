@@ -1,6 +1,50 @@
 {
   "cells": [
     {
+      "scenario": "request.max-tokens-field",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "limit-field": "SATISFIED",
+        "no-legacy-limit": "SATISFIED",
+        "no-temperature": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "request.tools-with-reasoning-chat",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "error-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "calls-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "calls-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
       "scenario": "truncation.structured-output",
       "provider": "openai-chat",
       "grade": "WRONG",
@@ -29,6 +73,42 @@
         "cause-is-truncation": "CONTRADICTED",
         "text-reported": "SATISFIED",
         "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.text-stream-usage",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.tool-call-args",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "no-complete-partial-call": "CONTRADICTED",
+        "cause-is-truncation": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "truncation.tool-call-args-stream",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "no-complete-partial-call": "CONTRADICTED",
+        "cause-is-truncation": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "provider": "openai-chat",
+      "grade": "LOSSY",
+      "requirements": {
+        "usage-reported": "NOT_OBSERVABLE"
       }
     }
   ]

@@ -1,6 +1,50 @@
 {
   "cells": [
     {
+      "scenario": "request.max-tokens-field",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "limit-field": "SATISFIED",
+        "no-legacy-limit": "SATISFIED",
+        "no-temperature": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "request.tools-with-reasoning-chat",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "error-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "calls-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "calls-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
       "scenario": "truncation.structured-output",
       "provider": "openai-chat",
       "grade": "PASS",
@@ -28,6 +72,42 @@
       "requirements": {
         "cause-is-truncation": "SATISFIED",
         "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.text-stream-usage",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.tool-call-args",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "no-complete-partial-call": "SATISFIED",
+        "cause-is-truncation": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.tool-call-args-stream",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "no-complete-partial-call": "SATISFIED",
+        "cause-is-truncation": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
         "usage-reported": "SATISFIED"
       }
     }
