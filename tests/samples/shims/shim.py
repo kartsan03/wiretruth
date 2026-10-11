@@ -32,15 +32,21 @@ if mode == "hang-before":
 if mode == "crash-before":
     crash()
 
+refused = None
 if mode not in {"unsupported", "internal"}:
-    url = urlsplit(os.environ["WIRETRUTH_BASE_URL_OPENAI_CHAT"])
+    # Another provider's base URL points at a port that refuses connections.
+    name = "OPENAI_RESPONSES" if mode == "wrong-base-url" else "OPENAI_CHAT"
+    url = urlsplit(os.environ[f"WIRETRUTH_BASE_URL_{name}"])
     connection = http.client.HTTPConnection(url.hostname, url.port, timeout=5)
     path = "/wrong" if mode == "wrong-path" else url.path + "/chat/completions"
     stream = not call["stream"] if mode == "wrong-stream" else call["stream"]
-    connection.request(
-        "POST", path, json.dumps({"stream": stream}), {"Content-Type": "application/json"}
-    )
-    connection.getresponse().read()
+    try:
+        connection.request(
+            "POST", path, json.dumps({"stream": stream}), {"Content-Type": "application/json"}
+        )
+        connection.getresponse().read()
+    except ConnectionRefusedError as error:
+        refused = error
     connection.close()
 
 if mode == "hang-child":
@@ -82,6 +88,16 @@ elif mode == "internal":
         "retry_after": None,
         "stack_top": "sample.py:1",
     }
+elif refused is not None:
+    obs["outcome"] = "raised"
+    obs["error"] = {
+        "type": "builtins.ConnectionRefusedError",
+        "message": str(refused),
+        "category": "network",
+        "retry_after": None,
+        "stack_top": None,
+    }
+    obs["finish"] = None
 elif mode == "absent":
     obs["finish"] = None
 elif mode == "wrong":

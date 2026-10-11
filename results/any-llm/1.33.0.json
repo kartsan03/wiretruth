@@ -7,8 +7,8 @@
     "language": "python"
   },
   "run": {
-    "at": "2026-10-10T19:50:45Z",
-    "git_sha": "a4862d233229672593599a10cdebbe5932d08d8d",
+    "at": "2026-10-11T10:06:33Z",
+    "git_sha": "22140e70c785725c7388d1bd01a2ec3b1760c37b",
     "ci_run": null,
     "runner": "wiretruth 0.1.0.dev0",
     "packages": {
@@ -59,6 +59,12 @@
           "level": "MUST",
           "status": "SATISFIED",
           "evidence": "finish.value=\"length\" (primary: error.completion.choices[0].finish_reason); truth.finish=\"length\"; error.category=\"truncation\"; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"{\\\"cities\\\":[{\\\"name\\\":\\\"Київ\\\",\\\"oblast\\\":\\\"Київська область\\\"},{\\\"\" (primary); truth.text=\"{\\\"cities\\\":[{\\\"name\\\":\\\"Київ\\\",\\\"oblast\\\":\\\"Київська область\\\"},{\\\"\""
         },
         {
           "id": "usage-reported",
@@ -121,7 +127,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 151.0503520257771
+        "elapsed_ms": 347.07816410809755
       },
       "request_count": 1
     },
@@ -137,6 +143,12 @@
           "level": "MUST",
           "status": "SATISFIED",
           "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Kyiv, the capital of Ukraine, has a history stretching back\" (primary); truth.text=\"Kyiv, the capital of Ukraine, has a history stretching back\""
         },
         {
           "id": "usage-reported",
@@ -193,7 +205,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 148.70311506092548
+        "elapsed_ms": 348.64535299129784
       },
       "request_count": 1
     },
@@ -209,6 +221,12 @@
           "level": "MUST",
           "status": "SATISFIED",
           "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Kyiv, the capital of Ukraine, has a history spanning more\" (primary); truth.text=\"Kyiv, the capital of Ukraine, has a history spanning more\""
         },
         {
           "id": "usage-reported",
@@ -265,7 +283,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 168.01597201265395
+        "elapsed_ms": 160.55899602361023
       },
       "request_count": 1
     }

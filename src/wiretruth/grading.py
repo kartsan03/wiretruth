@@ -16,8 +16,9 @@ RULES = (
     "The shim's time limit ran out: HANG if the response had been served, otherwise HARNESS.",
     "The shim's process ended without an observation: CRASH if a signal killed it (a segfault, "
     "for example) after the library's request reached the replay server, otherwise HARNESS.",
-    "The observation is invalid, or the library called a different endpoint or stream mode "
-    "than the fixture serves: HARNESS.",
+    "The observation is invalid, the library called a different endpoint or stream mode than "
+    "the fixture serves, or it returned or raised without a request reaching the replay server: "
+    "HARNESS.",
     "The shim reports, with a documentation link, that the library can't express the call: "
     "UNSUPPORTED.",
     "The library raised an internal error: CRASH.",
@@ -109,7 +110,8 @@ def grade_cell(
 
     Rules 1-4 evaluate no requirements and give the reason in a note. From rule 5 on, every
     requirement that applies to the provider is evaluated, so a CRASH cell still carries their
-    statuses. SHOULD requirements that aren't SATISFIED add notes and never change the grade.
+    statuses. Every requirement that isn't SATISFIED adds a note, so the reason for a grade is
+    visible; SHOULD requirements never change the grade.
     A provider the scenario doesn't list, a provider no requirement applies to, an unknown check
     or bad check args raise ValueError: a runner or scenario bug, not a grade.
     """
@@ -147,9 +149,9 @@ def grade_cell(
         return CellGrade("HARNESS", 4, (), (reason,))
     requirements = _requirements(obs, run.request_log, applicable, truth)
     notes = tuple(
-        f"SHOULD {result.id}: {result.status}: {result.evidence}"
+        f"{result.level} {result.id}: {result.status}: {result.evidence}"
         for result in requirements
-        if result.level == "SHOULD" and result.status != "SATISFIED"
+        if result.status != "SATISFIED"
     )
     must = {result.status for result in requirements if result.level == "MUST"}
     if obs.outcome == "raised" and obs.error is not None and obs.error.category == "internal":

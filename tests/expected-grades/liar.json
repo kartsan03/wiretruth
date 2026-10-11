@@ -7,6 +7,7 @@
       "requirements": {
         "no-partial-success": "CONTRADICTED",
         "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
         "usage-reported": "NOT_OBSERVABLE"
       }
     },
@@ -14,13 +15,21 @@
       "scenario": "truncation.text",
       "provider": "openai-chat",
       "grade": "WRONG",
-      "requirements": {"cause-is-truncation": "CONTRADICTED", "usage-reported": "NOT_OBSERVABLE"}
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
     },
     {
       "scenario": "truncation.text-stream",
       "provider": "openai-chat",
       "grade": "WRONG",
-      "requirements": {"cause-is-truncation": "CONTRADICTED", "usage-reported": "SATISFIED"}
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
     }
   ]
 }

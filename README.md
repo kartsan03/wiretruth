@@ -48,7 +48,7 @@ The scenarios are in [`suite/scenarios/`](suite/scenarios/), and the bug classes
 
 | | Grade | Meaning |
 |---|---|---|
-| ✓ | PASS | Reports what happened. |
+| ✓ | PASS | Reports what happened: meets every MUST requirement of the scenario. |
 | ~ | LOSSY | Doesn't contradict what happened, but the fact is only in raw metadata, or missing. |
 | ✗ | WRONG | Reports something that contradicts what happened. |
 | ! | CRASH | Fails with an internal error, such as a `KeyError` in its own parser. |
@@ -56,7 +56,9 @@ The scenarios are in [`suite/scenarios/`](suite/scenarios/), and the bug classes
 | – | UNSUPPORTED | The library doesn't support this provider or feature (documented). |
 | ? | HARNESS | A problem on our side, not the library's. |
 
-How grades are computed: [docs/grading.md](docs/grading.md).
+Each scenario lists its requirements. MUST requirements set the grade. SHOULD requirements, such as the exact
+partial text in the truncation scenarios, add a note when they aren't met. How grades are computed:
+[docs/grading.md](docs/grading.md).
 
 ## Quickstart
 

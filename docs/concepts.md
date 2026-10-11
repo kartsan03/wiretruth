@@ -100,7 +100,7 @@ the grade, the status of every requirement, the full observation and the fixture
 
 | Grade | Meaning |
 |---|---|
-| PASS | Reports what happened. |
+| PASS | Reports what happened: meets every MUST requirement of the scenario. |
 | LOSSY | Doesn't contradict what happened, but you only find it in raw metadata, or not at all. |
 | WRONG | Reports something that contradicts what happened. |
 | CRASH | Fails with an internal error, such as a `KeyError` in its own parser. |
@@ -113,8 +113,8 @@ The grade comes from the first rule that applies:
 1. The shim's time limit ran out: HANG if the response had been served, otherwise HARNESS.
 2. The shim's process ended without an observation: CRASH if a signal killed it (a segfault, for example) after the
    library's request reached the replay server, otherwise HARNESS.
-3. The observation is invalid, or the library called a different endpoint or stream mode than the fixture serves:
-   HARNESS.
+3. The observation is invalid, the library called a different endpoint or stream mode than the fixture serves, or
+   it returned or raised without a request reaching the replay server: HARNESS.
 4. The shim reports, with a documentation link, that the library can't express the call: UNSUPPORTED.
 5. The library raised an internal error: CRASH. An internal error is a language builtin such as `IndexError`,
    `KeyError` or `TypeError`, raised from a frame inside the library's code. JSON decode errors
@@ -140,9 +140,10 @@ means a bug in the shim. The exception is a library that ends the process itself
 A reasoning setting that the library can't send doesn't make a cell UNSUPPORTED. The replayed response is the same
 either way, so the shim leaves the setting out and adds a note ([decision 0006](adr/0006-default-library-config.md)).
 
-SHOULD requirements never change the grade. When one is NOT_OBSERVABLE or CONTRADICTED, the cell gets a note that
-says which. A value that is the subject of a scenario is a MUST there: token counts, for example, are MUST
-requirements in the `usage.*` scenarios.
+SHOULD requirements never change the grade. When one is NOT_OBSERVABLE or CONTRADICTED, the cell gets a note that says
+which. A MUST requirement that isn't satisfied gets the same kind of note, so a WRONG or LOSSY cell shows why. A value
+that is the subject of a scenario is a MUST there: token counts, for example, are MUST requirements in the `usage.*`
+scenarios.
 
 ## A worked example: structured output cut off by the token limit
 
@@ -250,7 +251,7 @@ NOT_OBSERVABLE: the call failed loudly, but the caller can't tell that raising t
 `no-partial-success` is CONTRADICTED: one incomplete record came back as if it were the whole answer.
 `cause-is-truncation` is CONTRADICTED too, because the main result says the model stopped normally. Grade:
 **WRONG**. Each check leaves an evidence string that says what it saw, for example
-`finish.value="stop" (primary: result.finish_reason) but truth.finish="length"`.
+`finish.value="stop" (primary: result.finish_reason); truth.finish="length"`.
 
 **Library D** raises `KeyError` from inside its own response parser. Grade: **CRASH**, whatever the requirements
 say, because the library raised an internal error.

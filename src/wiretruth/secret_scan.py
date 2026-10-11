@@ -158,7 +158,18 @@ def _embedded(text: str) -> list[JsonValue]:
     whole = _json(text)
     if whole is not None:
         return [whole]
-    return [doc for line in text.splitlines() if (doc := _json(line)) is not None]
+    lines = text.splitlines()
+    docs: list[JsonValue] = [doc for line in lines if (doc := _json(line)) is not None]
+    # A stream event can split its JSON over several data lines, which join with newlines.
+    data: list[str] = []
+    for line in [*lines, ""]:
+        if line.startswith("data:"):
+            data.append(line.removeprefix("data:").removeprefix(" "))
+        elif not line:
+            if len(data) > 1 and (doc := _json("\n".join(data))) is not None:
+                docs.append(doc)
+            data = []
+    return docs
 
 
 def _json(text: str) -> JsonValue | None:

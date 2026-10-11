@@ -11,9 +11,9 @@ body:
   - type: input
     id: cell
     attributes:
-      label: Cell link
-      description: The link to the cell page on the matrix.
-      placeholder: https://kartsan03.github.io/wiretruth/cells/<library>/<scenario>/<provider>.html
+      label: Cell
+      description: The library and version, the scenario and the provider, with a link to the results file.
+      placeholder: "any-llm 1.33.0 · truncation.text · openai-chat · results/any-llm/1.33.0.json"
     validations:
       required: true
   - type: dropdown

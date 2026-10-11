@@ -12,10 +12,10 @@ from pathlib import Path
 import pytest
 
 from wiretruth import __version__
-from wiretruth.cli import COMMANDS, main
+from wiretruth.cli import main
 
 SAMPLES = Path(__file__).resolve().parent / "samples"
-EXPECTED_COMMANDS = ["run", "serve", "record", "derive", "lint", "catalog", "site", "envs"]
+EXPECTED_COMMANDS = ["run", "serve", "record", "lint", "envs"]
 
 
 def test_help_lists_every_command(capsys: pytest.CaptureFixture[str]) -> None:
@@ -43,14 +43,6 @@ def test_unknown_command_exits_2() -> None:
 def test_no_command_prints_help_and_exits_2(capsys: pytest.CaptureFixture[str]) -> None:
     assert main([]) == 2
     assert "usage: wiretruth" in capsys.readouterr().err
-
-
-@pytest.mark.parametrize(
-    "command", sorted(set(COMMANDS) - {"lint", "serve", "record", "run", "envs"})
-)
-def test_commands_are_not_implemented_yet(command: str, capsys: pytest.CaptureFixture[str]) -> None:
-    assert main([command]) == 2
-    assert "not implemented yet" in capsys.readouterr().err
 
 
 def test_module_entry_point() -> None:

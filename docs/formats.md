@@ -348,7 +348,7 @@ Every graded cell for one library version.
 | `fixture_tier` | fixture tier | |
 | `grade` | `PASS`, `LOSSY`, `WRONG`, `CRASH`, `HANG`, `UNSUPPORTED` or `HARNESS` | |
 | `requirements` | list of `{id, level, status, evidence}` | `status` is `SATISFIED`, `CONTRADICTED` or `NOT_OBSERVABLE` |
-| `notes` | list of strings | |
+| `notes` | list of strings | Why a rule from 1 to 5 applied, and one note per requirement that isn't `SATISFIED` ([Grading](grading.md#evidence-and-result-cells)) |
 | `observation` | [observation](#observation--wiretruthobservationv1) or `null` | `null` when the shim produced none |
 | `request_count` | integer | Requests the replay server received |
 

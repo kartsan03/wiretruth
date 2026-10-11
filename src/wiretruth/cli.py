@@ -51,10 +51,7 @@ COMMANDS = {
     "run": "run shims against replayed fixtures and grade the results",
     "serve": "serve one fixture on 127.0.0.1 for manual reproduction",
     "record": "record provider responses into fixtures (needs API keys)",
-    "derive": "derive a fixture from another one with a fault-injection transform",
     "lint": "validate suite data and results",
-    "catalog": "generate the scenario catalog",
-    "site": "build the static results site",
     "envs": "list, build or prune per-library environments",
 }
 

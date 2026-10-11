@@ -19,6 +19,7 @@ finding).
   for the library's version; package drift is a note. The conformance workflow checks each library against its
   committed results.
 - `wiretruth run` prints a table of grades, scenarios by providers, then each cell's notes and a count per grade.
+  Every requirement that isn't satisfied adds a note with its evidence, so a WRONG or LOSSY cell says why.
 - `results/upstream.json` tracks findings reported to library maintainers. It's empty so far.
 - A publish workflow builds the package on a version tag and publishes it to PyPI with trusted publishing.
 - `wiretruth run --lib NAME` runs the library shim in `shims/*/NAME/` in its own virtual environment, built with
@@ -33,6 +34,9 @@ finding).
   process per cell, in parallel, with a 20 s timeout. It prints each cell's grade and notes, and keeps each cell's
   stderr under `.wiretruth/runs/`. The shim gets a fixed environment, so local API keys, base URLs and proxy
   settings never reach it. `--check-grades FILE` exits 1 if any grade or requirement status differs from the file.
+  A library that returns or raises without its request reaching the replay server, through a wrong base URL for
+  example, grades HARNESS, not as a finding about the library; a `validation` or `internal` error raised before
+  the request is still graded.
 - Two built-in shims test the suite in CI: `shims/reference`, a plain HTTP client that must pass every
   requirement, and `shims/liar`, which misreports on purpose and must match its expected grades.
 - Requirement checks and pure cell grading, with evidence for each requirement and the detailed rules in
@@ -56,11 +60,14 @@ finding).
   `record` workflow records in CI and pushes a `record/*` branch.
 - `wiretruth lint` recomputes each `openai-chat` fixture's truth from its exchanges, and scans every file under
   `suite/` and `results/` for keys, tokens, organization and project ids, and credential headers, including those
-  behind JSON escapes or in the JSON of a stream event. The recorder runs the same scan on the raw body before it
-  parses it, and on the fixture before it writes. Neither prints a flagged value in any other message.
+  behind JSON escapes or in the JSON of a stream event, also one split over several `data:` lines. The recorder runs
+  the same scan on the raw body before it parses it, and on the fixture before it writes. Neither prints a flagged
+  value in any other message.
 - The first scenario, `truncation.text`: plain text cut off by the output token limit.
 - Two more truncation scenarios: `truncation.text-stream`, the same text streamed, and
   `truncation.structured-output`, a JSON object for a strict schema cut off halfway.
+- Each truncation scenario has a SHOULD requirement that the partial text is reported exactly as the provider sent
+  it.
 - The first recorded fixtures: the three truncation scenarios on `openai-chat`, recorded in CI against
   `gpt-6-luna`.
 
