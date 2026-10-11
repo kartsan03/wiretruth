@@ -79,7 +79,7 @@ def find_scenarios(
     folder = root / "suite" / "scenarios"
     scenarios = [load_scenario(path) for path in sorted(folder.glob("*/*.json"))]
     matched_ids = set()
-    for part in pattern.split(","):
+    for part in (part.strip() for part in pattern.split(",")):
         matches = {scenario.id for scenario in scenarios if fnmatchcase(scenario.id, part)}
         if not matches:
             raise RecordError(f"no scenario in {folder} matches {part!r}")

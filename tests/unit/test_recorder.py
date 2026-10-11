@@ -744,7 +744,7 @@ def test_find_scenarios_unions_patterns_in_sorted_order(root: Path) -> None:
     other = json.loads((folder / "text.json").read_text())
     other.update(id="truncation.text-stream", providers=["gemini"])
     (folder / "text-stream.json").write_text(json.dumps(other))
-    pattern = "truncation.text,truncation.text*,truncation.text-stream"
+    pattern = "truncation.text, truncation.text*,truncation.text-stream "
     chosen, skipped = find_scenarios(root, pattern)
     assert [scenario.id for scenario in chosen] == ["truncation.text-stream", "truncation.text"]
     assert skipped == []
