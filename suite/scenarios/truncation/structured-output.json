@@ -47,6 +47,12 @@
       "text": "The caller can tell that the output stopped at the token limit."
     },
     {
+      "id": "text-reported",
+      "level": "SHOULD",
+      "check": "text_matches_truth",
+      "text": "The partial JSON text is available exactly as the provider sent it."
+    },
+    {
       "id": "usage-reported",
       "level": "SHOULD",
       "check": "usage_matches_truth",
@@ -54,7 +60,7 @@
       "text": "Token usage is reported, and matches the provider's counts, even though the result is unusable."
     }
   ],
-  "grading_notes": "A partial object returned as a success fails the first requirement. A generic JSON parse or schema validation error without a truncation signal fails only the second: the call fails loudly, but the caller can't tell that a higher limit would fix it. The city names are asked for in Ukrainian, so the cut-off JSON holds multi-byte text. Effort none keeps the 24-token limit from being spent on reasoning.",
+  "grading_notes": "A partial object returned as a success fails the first requirement. A generic JSON parse or schema validation error without a truncation signal fails only the second: the call fails loudly, but the caller can't tell that a higher limit would fix it. A library that raises without the partial text gets a note for the text requirement, a SHOULD. The city names are asked for in Ukrainian, so the cut-off JSON holds multi-byte text. Effort none keeps the 24-token limit from being spent on reasoning.",
   "references": [
     "https://github.com/TanStack/ai/issues/1426",
     "https://github.com/TanStack/ai/pull/1427",

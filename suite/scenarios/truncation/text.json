@@ -22,6 +22,12 @@
       "text": "The caller can tell that the output stopped at the token limit."
     },
     {
+      "id": "text-reported",
+      "level": "SHOULD",
+      "check": "text_matches_truth",
+      "text": "The partial text is reported exactly as the provider sent it."
+    },
+    {
       "id": "usage-reported",
       "level": "SHOULD",
       "check": "usage_matches_truth",
@@ -29,5 +35,5 @@
       "text": "Token usage is reported, and matches the provider's counts."
     }
   ],
-  "grading_notes": "A finish reason of length satisfies the first requirement, and so does a dedicated truncation error, which some libraries raise instead of returning the partial text. Effort none keeps the 16-token limit from being spent on reasoning."
+  "grading_notes": "A finish reason of length satisfies the first requirement, and so does a dedicated truncation error, which some libraries raise instead of returning the partial text. Such a library gets a note for the text requirement, a SHOULD, and keeps its grade. Effort none keeps the 16-token limit from being spent on reasoning."
 }

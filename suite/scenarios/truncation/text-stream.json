@@ -22,6 +22,12 @@
       "text": "The caller can tell that the stream stopped at the token limit."
     },
     {
+      "id": "text-reported",
+      "level": "SHOULD",
+      "check": "text_matches_truth",
+      "text": "The streamed text is reported exactly as the provider sent it."
+    },
+    {
       "id": "usage-reported",
       "level": "SHOULD",
       "check": "usage_matches_truth",

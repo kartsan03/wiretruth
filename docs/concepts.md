@@ -100,7 +100,7 @@ the grade, the status of every requirement, the full observation and the fixture
 
 | Grade | Meaning |
 |---|---|
-| PASS | Reports what happened. |
+| PASS | Reports what happened: meets every MUST requirement of the scenario. |
 | LOSSY | Doesn't contradict what happened, but you only find it in raw metadata, or not at all. |
 | WRONG | Reports something that contradicts what happened. |
 | CRASH | Fails with an internal error, such as a `KeyError` in its own parser. |
