@@ -27,6 +27,14 @@
       }
     },
     {
+      "scenario": "tools.parallel-calls",
+      "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "calls-reported": "CONTRADICTED"
+      }
+    },
+    {
       "scenario": "tools.parallel-calls-stream",
       "provider": "openai-chat",
       "grade": "WRONG",
@@ -35,8 +43,26 @@
       }
     },
     {
+      "scenario": "tools.parallel-calls-stream",
+      "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "calls-reported": "CONTRADICTED"
+      }
+    },
+    {
       "scenario": "truncation.reasoning-only",
       "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "provider": "openai-responses",
       "grade": "WRONG",
       "requirements": {
         "cause-is-truncation": "CONTRADICTED",
@@ -56,8 +82,29 @@
       }
     },
     {
+      "scenario": "truncation.structured-output",
+      "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "no-partial-success": "CONTRADICTED",
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
       "scenario": "truncation.text",
       "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.text",
+      "provider": "openai-responses",
       "grade": "WRONG",
       "requirements": {
         "cause-is-truncation": "CONTRADICTED",
@@ -73,6 +120,16 @@
         "cause-is-truncation": "CONTRADICTED",
         "text-reported": "SATISFIED",
         "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
       }
     },
     {
@@ -95,8 +152,26 @@
       }
     },
     {
+      "scenario": "truncation.tool-call-args",
+      "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "no-complete-partial-call": "CONTRADICTED",
+        "cause-is-truncation": "CONTRADICTED"
+      }
+    },
+    {
       "scenario": "truncation.tool-call-args-stream",
       "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "no-complete-partial-call": "CONTRADICTED",
+        "cause-is-truncation": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "truncation.tool-call-args-stream",
+      "provider": "openai-responses",
       "grade": "WRONG",
       "requirements": {
         "no-complete-partial-call": "CONTRADICTED",

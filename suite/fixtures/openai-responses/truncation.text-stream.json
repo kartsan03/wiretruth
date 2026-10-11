@@ -1,0 +1,101 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-responses/truncation.text-stream",
+  "scenario": "truncation.text-stream",
+  "provider": "openai-responses",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-11T21:13:36Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "bdbf10a",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38175457862",
+    "raw_sha256": "27720bff247c07ef38ebc1aab87ddfacc2d189c1b37ead493bd9f78804e36908",
+    "request": {
+      "model": "gpt-6-luna",
+      "input": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+        }
+      ],
+      "stream": true,
+      "max_output_tokens": 16,
+      "reasoning": {
+        "effort": "none"
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/responses"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream; charset=utf-8"
+        },
+        "body": {
+          "sse": [
+            "event: response.created\ndata: {\"type\":\"response.created\",\"response\":{\"id\":\"resp_025c23fff6653590006acbfc0086cc87d18124e70e8d3ff838\",\"object\":\"response\",\"created_at\":1791753216,\"status\":\"in_progress\",\"access_programs\":null,\"background\":false,\"completed_at\":null,\"error\":null,\"frequency_penalty\":0.0,\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":16,\"max_tool_calls\":null,\"model\":\"gpt-6-luna\",\"moderation\":null,\"output\":[],\"parallel_tool_calls\":true,\"presence_penalty\":0.0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"prompt_cache_retention\":\"24h\",\"reasoning\":{\"context\":\"all_turns\",\"effort\":\"none\",\"mode\":\"standard\",\"summary\":null},\"safety_identifier\":null,\"service_tier\":\"auto\",\"store\":true,\"temperature\":1.0,\"text\":{\"format\":{\"type\":\"text\"},\"verbosity\":\"medium\"},\"tool_choice\":\"auto\",\"tool_usage\":{\"image_gen\":{\"input_tokens\":0,\"input_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"output_tokens\":0,\"output_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"total_tokens\":0},\"web_search\":{\"num_requests\":0}},\"tools\":[],\"top_logprobs\":0,\"top_p\":0.98,\"truncation\":\"disabled\",\"usage\":null,\"user\":null,\"metadata\":{}},\"sequence_number\":0}\n\n",
+            "event: response.in_progress\ndata: {\"type\":\"response.in_progress\",\"response\":{\"id\":\"resp_025c23fff6653590006acbfc0086cc87d18124e70e8d3ff838\",\"object\":\"response\",\"created_at\":1791753216,\"status\":\"in_progress\",\"access_programs\":null,\"background\":false,\"completed_at\":null,\"error\":null,\"frequency_penalty\":0.0,\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":16,\"max_tool_calls\":null,\"model\":\"gpt-6-luna\",\"moderation\":null,\"output\":[],\"parallel_tool_calls\":true,\"presence_penalty\":0.0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"prompt_cache_retention\":\"24h\",\"reasoning\":{\"context\":\"all_turns\",\"effort\":\"none\",\"mode\":\"standard\",\"summary\":null},\"safety_identifier\":null,\"service_tier\":\"auto\",\"store\":true,\"temperature\":1.0,\"text\":{\"format\":{\"type\":\"text\"},\"verbosity\":\"medium\"},\"tool_choice\":\"auto\",\"tool_usage\":{\"image_gen\":{\"input_tokens\":0,\"input_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"output_tokens\":0,\"output_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"total_tokens\":0},\"web_search\":{\"num_requests\":0}},\"tools\":[],\"top_logprobs\":0,\"top_p\":0.98,\"truncation\":\"disabled\",\"usage\":null,\"user\":null,\"metadata\":{}},\"sequence_number\":1}\n\n",
+            "event: response.output_item.added\ndata: {\"type\":\"response.output_item.added\",\"item\":{\"id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"type\":\"message\",\"status\":\"in_progress\",\"content\":[],\"phase\":\"final_answer\",\"role\":\"assistant\"},\"output_index\":0,\"sequence_number\":2}\n\n",
+            "event: response.content_part.added\ndata: {\"type\":\"response.content_part.added\",\"content_index\":0,\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"output_index\":0,\"part\":{\"type\":\"output_text\",\"annotations\":[],\"logprobs\":[],\"text\":\"\"},\"sequence_number\":3}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\"Oct\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"JJEbJBKhHOigL\",\"output_index\":0,\"sequence_number\":4}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\"op\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"rCPO5tGFW8ghsz\",\"output_index\":0,\"sequence_number\":5}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\"uses\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"byausMiYWM8M\",\"output_index\":0,\"sequence_number\":6}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\" change\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"lE22JEr0R\",\"output_index\":0,\"sequence_number\":7}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\" colour\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"82gNqgbaN\",\"output_index\":0,\"sequence_number\":8}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\" to\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"h8MCvrajNun4W\",\"output_index\":0,\"sequence_number\":9}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\" hide\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"abxffHHSLGD\",\"output_index\":0,\"sequence_number\":10}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\" from\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"xE6TGqqC4ob\",\"output_index\":0,\"sequence_number\":11}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\" predators\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"DzBp28\",\"output_index\":0,\"sequence_number\":12}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\" using\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"VKy59kwIDy\",\"output_index\":0,\"sequence_number\":13}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\" specialised\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"8sgf\",\"output_index\":0,\"sequence_number\":14}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\" skin\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"5oQRUnZyiDK\",\"output_index\":0,\"sequence_number\":15}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\" cells\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"Q7EI4ex8iw\",\"output_index\":0,\"sequence_number\":16}\n\n",
+            "event: response.output_text.done\ndata: {\"type\":\"response.output_text.done\",\"content_index\":0,\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"output_index\":0,\"sequence_number\":17,\"text\":\"Octopuses change colour to hide from predators using specialised skin cells\"}\n\n",
+            "event: response.content_part.done\ndata: {\"type\":\"response.content_part.done\",\"content_index\":0,\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"output_index\":0,\"part\":{\"type\":\"output_text\",\"annotations\":[],\"logprobs\":[],\"text\":\"Octopuses change colour to hide from predators using specialised skin cells\"},\"sequence_number\":18}\n\n",
+            "event: response.output_item.done\ndata: {\"type\":\"response.output_item.done\",\"item\":{\"id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"type\":\"message\",\"status\":\"incomplete\",\"content\":[{\"type\":\"output_text\",\"annotations\":[],\"logprobs\":[],\"text\":\"Octopuses change colour to hide from predators using specialised skin cells\"}],\"phase\":\"final_answer\",\"role\":\"assistant\"},\"output_index\":0,\"sequence_number\":19}\n\n",
+            "event: response.incomplete\ndata: {\"type\":\"response.incomplete\",\"response\":{\"id\":\"resp_025c23fff6653590006acbfc0086cc87d18124e70e8d3ff838\",\"object\":\"response\",\"created_at\":1791753216,\"status\":\"incomplete\",\"access_programs\":null,\"background\":false,\"completed_at\":null,\"error\":null,\"frequency_penalty\":0.0,\"incomplete_details\":{\"reason\":\"max_output_tokens\"},\"instructions\":null,\"max_output_tokens\":16,\"max_tool_calls\":null,\"model\":\"gpt-6-luna\",\"moderation\":null,\"output\":[{\"id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"type\":\"message\",\"status\":\"incomplete\",\"content\":[{\"type\":\"output_text\",\"annotations\":[],\"logprobs\":[],\"text\":\"Octopuses change colour to hide from predators using specialised skin cells\"}],\"phase\":\"final_answer\",\"role\":\"assistant\"}],\"parallel_tool_calls\":true,\"presence_penalty\":0.0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"prompt_cache_retention\":\"24h\",\"reasoning\":{\"context\":\"all_turns\",\"effort\":\"none\",\"mode\":\"standard\",\"summary\":null},\"safety_identifier\":null,\"service_tier\":\"default\",\"store\":true,\"temperature\":1.0,\"text\":{\"format\":{\"type\":\"text\"},\"verbosity\":\"medium\"},\"tool_choice\":\"auto\",\"tool_usage\":{\"image_gen\":{\"input_tokens\":0,\"input_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"output_tokens\":0,\"output_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"total_tokens\":0},\"web_search\":{\"num_requests\":0}},\"tools\":[],\"top_logprobs\":0,\"top_p\":0.98,\"truncation\":\"disabled\",\"usage\":{\"input_tokens\":24,\"input_tokens_details\":{\"cache_write_tokens\":0,\"cached_tokens\":0},\"output_tokens\":16,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":40},\"user\":null,\"metadata\":{}},\"sequence_number\":20}\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "max_output_tokens",
+    "text": "Octopuses change colour to hide from predators using specialised skin cells",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 24,
+      "cached_input": 0,
+      "output": 16,
+      "reasoning": 0,
+      "total": 40,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 24,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 16,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 40
+      }
+    }
+  }
+}

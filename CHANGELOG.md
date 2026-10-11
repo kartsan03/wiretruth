@@ -15,6 +15,9 @@ finding).
 - `openai-responses` supports recording, truth extraction, lint and replay. The any-llm shim maps it through
   `any_llm.responses`. The truncated tool-argument scenarios (plain and streamed), reasoning-only truncation
   and parallel tool-call scenarios (plain and streamed) now list the provider.
+- `openai-responses` fixtures for eight scenarios, recorded in CI against `gpt-6-luna`: text, streamed text and
+  structured output cut by the token limit, cut tool-call arguments (plain and streamed), reasoning-only
+  truncation, and parallel tool calls (plain and streamed).
 - Nine `openai-chat` scenarios for truncated tool arguments, streamed usage, reasoning-only truncation,
   parallel tool calls, token-limit request fields and tools with default reasoning, with fixtures recorded in CI
   against `gpt-6-luna`.
@@ -40,8 +43,10 @@ finding).
   text use the last value for each duplicate key, as clients do, while retaining strict number and Unicode checks.
 
 ### Results
-- any-llm 1.33.0: PASS on all 12 `openai-chat` scenarios
-  ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)).
+- any-llm 1.33.0: PASS on all 12 `openai-chat` scenarios and on 7 of 8 `openai-responses` scenarios
+  ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)). LOSSY on `truncation.structured-output` over
+  `openai-responses`: structured output raises a pydantic `ValidationError` on the cut-off JSON, with no sign that
+  the token limit was hit, and without the partial text or usage.
 
 ## [0.1.0] - 2026-10-11
 

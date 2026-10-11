@@ -1,0 +1,138 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-responses/truncation.tool-call-args-stream",
+  "scenario": "truncation.tool-call-args-stream",
+  "provider": "openai-responses",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-11T21:13:41Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "bdbf10a",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38175457862",
+    "raw_sha256": "58c1cbcddc5f96475240bc79fb9acf59f6ce74f636c917a072a8b2f986226503",
+    "request": {
+      "model": "gpt-6-luna",
+      "input": [
+        {
+          "role": "user",
+          "content": "Create an event for a weekend pottery workshop in Málaga on 2026-11-14 with 30 attendees. Invent their full names, mixing Spanish, Greek and Japanese names written in their own scripts."
+        }
+      ],
+      "stream": true,
+      "max_output_tokens": 20,
+      "tools": [
+        {
+          "type": "function",
+          "name": "create_event",
+          "description": "Create a calendar event.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string",
+                "description": "YYYY-MM-DD"
+              },
+              "city": {
+                "type": "string"
+              },
+              "attendees": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "title",
+              "date",
+              "city",
+              "attendees"
+            ],
+            "additionalProperties": false
+          }
+        }
+      ],
+      "tool_choice": "required",
+      "reasoning": {
+        "effort": "none"
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/responses"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream; charset=utf-8"
+        },
+        "body": {
+          "sse": [
+            "event: response.created\ndata: {\"type\":\"response.created\",\"response\":{\"id\":\"resp_0f94ad531e05a9b5006acbfc0552a887d1bc1a7a17e28a6ef8\",\"object\":\"response\",\"created_at\":1791753221,\"status\":\"in_progress\",\"access_programs\":null,\"background\":false,\"completed_at\":null,\"error\":null,\"frequency_penalty\":0.0,\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":20,\"max_tool_calls\":null,\"model\":\"gpt-6-luna\",\"moderation\":null,\"output\":[],\"parallel_tool_calls\":true,\"presence_penalty\":0.0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"prompt_cache_retention\":\"24h\",\"reasoning\":{\"context\":\"all_turns\",\"effort\":\"none\",\"mode\":\"standard\",\"summary\":null},\"safety_identifier\":null,\"service_tier\":\"auto\",\"store\":true,\"temperature\":1.0,\"text\":{\"format\":{\"type\":\"text\"},\"verbosity\":\"medium\"},\"tool_choice\":\"required\",\"tool_usage\":{\"image_gen\":{\"input_tokens\":0,\"input_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"output_tokens\":0,\"output_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"total_tokens\":0},\"web_search\":{\"num_requests\":0}},\"tools\":[{\"type\":\"function\",\"description\":\"Create a calendar event.\",\"name\":\"create_event\",\"output_schema\":null,\"parameters\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"},\"date\":{\"type\":\"string\",\"description\":\"YYYY-MM-DD\"},\"city\":{\"type\":\"string\"},\"attendees\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}},\"required\":[\"title\",\"date\",\"city\",\"attendees\"],\"additionalProperties\":false},\"strict\":true}],\"top_logprobs\":0,\"top_p\":0.98,\"truncation\":\"disabled\",\"usage\":null,\"user\":null,\"metadata\":{}},\"sequence_number\":0}\n\n",
+            "event: response.in_progress\ndata: {\"type\":\"response.in_progress\",\"response\":{\"id\":\"resp_0f94ad531e05a9b5006acbfc0552a887d1bc1a7a17e28a6ef8\",\"object\":\"response\",\"created_at\":1791753221,\"status\":\"in_progress\",\"access_programs\":null,\"background\":false,\"completed_at\":null,\"error\":null,\"frequency_penalty\":0.0,\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":20,\"max_tool_calls\":null,\"model\":\"gpt-6-luna\",\"moderation\":null,\"output\":[],\"parallel_tool_calls\":true,\"presence_penalty\":0.0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"prompt_cache_retention\":\"24h\",\"reasoning\":{\"context\":\"all_turns\",\"effort\":\"none\",\"mode\":\"standard\",\"summary\":null},\"safety_identifier\":null,\"service_tier\":\"auto\",\"store\":true,\"temperature\":1.0,\"text\":{\"format\":{\"type\":\"text\"},\"verbosity\":\"medium\"},\"tool_choice\":\"required\",\"tool_usage\":{\"image_gen\":{\"input_tokens\":0,\"input_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"output_tokens\":0,\"output_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"total_tokens\":0},\"web_search\":{\"num_requests\":0}},\"tools\":[{\"type\":\"function\",\"description\":\"Create a calendar event.\",\"name\":\"create_event\",\"output_schema\":null,\"parameters\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"},\"date\":{\"type\":\"string\",\"description\":\"YYYY-MM-DD\"},\"city\":{\"type\":\"string\"},\"attendees\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}},\"required\":[\"title\",\"date\",\"city\",\"attendees\"],\"additionalProperties\":false},\"strict\":true}],\"top_logprobs\":0,\"top_p\":0.98,\"truncation\":\"disabled\",\"usage\":null,\"user\":null,\"metadata\":{}},\"sequence_number\":1}\n\n",
+            "event: response.output_item.added\ndata: {\"type\":\"response.output_item.added\",\"item\":{\"id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"type\":\"function_call\",\"status\":\"in_progress\",\"arguments\":\"\",\"call_id\":\"call_t7e3IgxCdjXlMbNHlOwncu0f\",\"name\":\"create_event\"},\"output_index\":0,\"sequence_number\":2}\n\n",
+            "event: response.function_call_arguments.delta\ndata: {\"type\":\"response.function_call_arguments.delta\",\"delta\":\"{\\\"\",\"item_id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"obfuscation\":\"mF7zLxjMgZ2UrJ\",\"output_index\":0,\"sequence_number\":3}\n\n",
+            "event: response.function_call_arguments.delta\ndata: {\"type\":\"response.function_call_arguments.delta\",\"delta\":\"title\",\"item_id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"obfuscation\":\"nhATtcGaku5\",\"output_index\":0,\"sequence_number\":4}\n\n",
+            "event: response.function_call_arguments.delta\ndata: {\"type\":\"response.function_call_arguments.delta\",\"delta\":\"\\\":\\\"\",\"item_id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"obfuscation\":\"3RsJm5VvtGrcT\",\"output_index\":0,\"sequence_number\":5}\n\n",
+            "event: response.function_call_arguments.delta\ndata: {\"type\":\"response.function_call_arguments.delta\",\"delta\":\"Weekend\",\"item_id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"obfuscation\":\"HfQBM2nb7\",\"output_index\":0,\"sequence_number\":6}\n\n",
+            "event: response.function_call_arguments.delta\ndata: {\"type\":\"response.function_call_arguments.delta\",\"delta\":\" Pot\",\"item_id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"obfuscation\":\"vQWyaXuAbQrt\",\"output_index\":0,\"sequence_number\":7}\n\n",
+            "event: response.function_call_arguments.delta\ndata: {\"type\":\"response.function_call_arguments.delta\",\"delta\":\"tery\",\"item_id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"obfuscation\":\"DBsq51gd6TkJ\",\"output_index\":0,\"sequence_number\":8}\n\n",
+            "event: response.function_call_arguments.delta\ndata: {\"type\":\"response.function_call_arguments.delta\",\"delta\":\" Workshop\",\"item_id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"obfuscation\":\"V07Ih0q\",\"output_index\":0,\"sequence_number\":9}\n\n",
+            "event: response.function_call_arguments.delta\ndata: {\"type\":\"response.function_call_arguments.delta\",\"delta\":\"\\\",\\\"\",\"item_id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"obfuscation\":\"9GeuTYnt4PSbC\",\"output_index\":0,\"sequence_number\":10}\n\n",
+            "event: response.function_call_arguments.done\ndata: {\"type\":\"response.function_call_arguments.done\",\"arguments\":\"{\\\"title\\\":\\\"Weekend Pottery Workshop\\\",\\\"\",\"item_id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"output_index\":0,\"sequence_number\":11}\n\n",
+            "event: response.output_item.done\ndata: {\"type\":\"response.output_item.done\",\"item\":{\"id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"type\":\"function_call\",\"status\":\"incomplete\",\"arguments\":\"{\\\"title\\\":\\\"Weekend Pottery Workshop\\\",\\\"\",\"call_id\":\"call_t7e3IgxCdjXlMbNHlOwncu0f\",\"name\":\"create_event\"},\"output_index\":0,\"sequence_number\":12}\n\n",
+            "event: response.incomplete\ndata: {\"type\":\"response.incomplete\",\"response\":{\"id\":\"resp_0f94ad531e05a9b5006acbfc0552a887d1bc1a7a17e28a6ef8\",\"object\":\"response\",\"created_at\":1791753221,\"status\":\"incomplete\",\"access_programs\":null,\"background\":false,\"completed_at\":null,\"error\":null,\"frequency_penalty\":0.0,\"incomplete_details\":{\"reason\":\"max_output_tokens\"},\"instructions\":null,\"max_output_tokens\":20,\"max_tool_calls\":null,\"model\":\"gpt-6-luna\",\"moderation\":null,\"output\":[{\"id\":\"fc_0f94ad531e05a9b5006acbfc05e44487d18438296bb239e452\",\"type\":\"function_call\",\"status\":\"incomplete\",\"arguments\":\"{\\\"title\\\":\\\"Weekend Pottery Workshop\\\",\\\"\",\"call_id\":\"call_t7e3IgxCdjXlMbNHlOwncu0f\",\"name\":\"create_event\"}],\"parallel_tool_calls\":true,\"presence_penalty\":0.0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"prompt_cache_retention\":\"24h\",\"reasoning\":{\"context\":\"all_turns\",\"effort\":\"none\",\"mode\":\"standard\",\"summary\":null},\"safety_identifier\":null,\"service_tier\":\"default\",\"store\":true,\"temperature\":1.0,\"text\":{\"format\":{\"type\":\"text\"},\"verbosity\":\"medium\"},\"tool_choice\":\"required\",\"tool_usage\":{\"image_gen\":{\"input_tokens\":0,\"input_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"output_tokens\":0,\"output_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"total_tokens\":0},\"web_search\":{\"num_requests\":0}},\"tools\":[{\"type\":\"function\",\"description\":\"Create a calendar event.\",\"name\":\"create_event\",\"output_schema\":null,\"parameters\":{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"},\"date\":{\"type\":\"string\",\"description\":\"YYYY-MM-DD\"},\"city\":{\"type\":\"string\"},\"attendees\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}},\"required\":[\"title\",\"date\",\"city\",\"attendees\"],\"additionalProperties\":false},\"strict\":true}],\"top_logprobs\":0,\"top_p\":0.98,\"truncation\":\"disabled\",\"usage\":{\"input_tokens\":100,\"input_tokens_details\":{\"cache_write_tokens\":0,\"cached_tokens\":0},\"output_tokens\":20,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":120},\"user\":null,\"metadata\":{}},\"sequence_number\":13}\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "max_output_tokens",
+    "text": null,
+    "tool_calls": [
+      {
+        "id": "call_t7e3IgxCdjXlMbNHlOwncu0f",
+        "name": "create_event",
+        "arguments_raw": "{\"title\":\"Weekend Pottery Workshop\",\"",
+        "arguments_parsed_ok": false,
+        "arguments": null
+      }
+    ],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 100,
+      "cached_input": 0,
+      "output": 20,
+      "reasoning": 0,
+      "total": 120,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 100,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 120
+      }
+    }
+  }
+}

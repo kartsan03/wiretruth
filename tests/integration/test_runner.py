@@ -53,7 +53,9 @@ def test_grading_through_real_processes(tmp_path, mode, listed, grade, rule, req
     (shim / "wiretruth-shim.json").write_text(json.dumps(manifest))
     # Only the hanging modes need a short limit; the others get time for a slow interpreter start.
     timeout = 1 if mode.startswith("hang") else 10
-    report = run_suite(tmp_path, shim, pattern="truncation.text", jobs=1, timeout=timeout)
+    report = run_suite(
+        tmp_path, shim, pattern="truncation.text", provider="openai-chat", jobs=1, timeout=timeout
+    )
     (cell,) = report.cells
     assert (cell.grade.grade, cell.grade.rule, cell.request_count) == (grade, rule, requests)
     stderr = report.stderr_dir / "openai-chat.truncation.text.stderr"
