@@ -2,7 +2,7 @@
   "format": "wiretruth.shim/v1",
   "name": "liar",
   "language": "python",
-  "packages": {"wiretruth": "0.1.0"},
+  "packages": {"wiretruth": "0.2.0.dev0"},
   "primary_package": "wiretruth",
   "entry": ["python", "shim.py"],
   "providers": {
