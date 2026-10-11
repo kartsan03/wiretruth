@@ -739,6 +739,27 @@ def test_find_scenarios(root: Path) -> None:
         find_scenarios(root, "truncation.text-stream", "openai-chat")
 
 
+def test_find_scenarios_unions_patterns_in_sorted_order(root: Path) -> None:
+    folder = root / "suite" / "scenarios" / "truncation"
+    other = json.loads((folder / "text.json").read_text())
+    other.update(id="truncation.text-stream", providers=["gemini"])
+    (folder / "text-stream.json").write_text(json.dumps(other))
+    pattern = "truncation.text,truncation.text*,truncation.text-stream"
+    chosen, skipped = find_scenarios(root, pattern)
+    assert [scenario.id for scenario in chosen] == ["truncation.text-stream", "truncation.text"]
+    assert skipped == []
+    chosen, skipped = find_scenarios(root, pattern, "openai-chat")
+    assert [scenario.id for scenario in chosen] == ["truncation.text"]
+    assert skipped == ["truncation.text-stream"]
+
+
+@pytest.mark.parametrize("part", ["tools.*", "Truncation.text", ""])
+def test_find_scenarios_rejects_each_unmatched_part(root: Path, part: str) -> None:
+    with pytest.raises(RecordError) as caught:
+        find_scenarios(root, f"truncation.text,{part}", "openai-chat")
+    assert str(caught.value).endswith(f"matches {part!r}")
+
+
 def test_dry_run_prints_the_exact_request(
     root: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:

@@ -1,3 +1,4 @@
+import json
 from collections.abc import Sequence
 from dataclasses import replace
 from pathlib import Path
@@ -136,8 +137,8 @@ CASES = [
     ("no_complete_tool_call_from_partial_args", OBS, TRUTH, (), {}, "SATISFIED"),
     (
         "no_complete_tool_call_from_partial_args",
-        replace(OBS, tool_calls=(PARTIAL,)),
-        TRUTH,
+        OBS,
+        replace(TRUTH, tool_calls=(PARTIAL,)),
         (),
         {},
         "CONTRADICTED",
@@ -196,6 +197,14 @@ CASES = [
         OBS,
         TRUTH,
         (request({}),),
+        {"path": "stream", "value": True},
+        "CONTRADICTED",
+    ),
+    (
+        "request_field_equals",
+        OBS,
+        TRUTH,
+        (request(),),
         {"path": "stream", "value": True},
         "NOT_OBSERVABLE",
     ),
@@ -396,17 +405,35 @@ def test_text_compares_exact_unicode(text: str) -> None:
     assert CHECKS["no_replacement_chars"](obs, truth, (), {}).status == "SATISFIED"
 
 
-def test_text_does_not_normalize_unicode_or_treat_empty_as_null() -> None:
+def test_text_does_not_normalize_unicode_or_accept_empty_for_nonempty_truth() -> None:
     obs = replace(OBS, text=ObservedText("café", "primary"))
     assert (
         CHECKS["text_matches_truth"](obs, replace(TRUTH, text="cafe\u0301"), (), {}).status
         == "CONTRADICTED"
     )
     obs = replace(OBS, text=ObservedText("", "primary"))
-    assert (
-        CHECKS["text_matches_truth"](obs, replace(TRUTH, text=None), (), {}).status
-        == "CONTRADICTED"
+    assert CHECKS["text_matches_truth"](obs, TRUTH, (), {}).status == "CONTRADICTED"
+
+
+@pytest.mark.parametrize("truth_text", [None, ""])
+@pytest.mark.parametrize(
+    "text,status",
+    [
+        (None, "SATISFIED"),
+        (ObservedText(None, "absent"), "SATISFIED"),
+        (ObservedText(None, "primary"), "SATISFIED"),
+        (ObservedText("", "primary"), "SATISFIED"),
+        (ObservedText("Invented answer", "primary"), "CONTRADICTED"),
+        (ObservedText(None, "raw"), "NOT_OBSERVABLE"),
+        (ObservedText("", "raw"), "NOT_OBSERVABLE"),
+        (ObservedText("Invented answer", "raw"), "NOT_OBSERVABLE"),
+    ],
+)
+def test_text_reports_none_for_null_or_empty_truth(truth_text, text, status) -> None:
+    result = CHECKS["text_matches_truth"](
+        replace(OBS, text=text), replace(TRUTH, text=truth_text), (), {}
     )
+    assert result.status == status
 
 
 @pytest.mark.parametrize("field", FIELDS)
@@ -589,10 +616,26 @@ def test_tool_calls_compare_in_order_and_json_types() -> None:
 def test_repaired_tool_args_are_rejected_against_partial_truth(call: ToolCall) -> None:
     truth = replace(TRUTH, tool_calls=(PARTIAL,))
     obs = replace(OBS, tool_calls=(call,))
-    assert (
-        CHECKS["no_complete_tool_call_from_partial_args"](obs, truth, (), {}).status
-        == "CONTRADICTED"
+    result = CHECKS["no_complete_tool_call_from_partial_args"](obs, truth, (), {})
+    assert result.status == "CONTRADICTED"
+    assert "tool_calls[0]" in result.evidence
+    assert f"id={json.dumps(call.id)}" in result.evidence
+    assert "arguments_parsed_ok=true" in result.evidence
+    assert "truth.arguments_parsed_ok=false" in result.evidence
+
+
+@pytest.mark.parametrize("finish", ["length", "stop"])
+@pytest.mark.parametrize("truth_calls", [(PARTIAL,), (CALL,), ()])
+def test_unparsed_tool_args_are_visibly_partial(finish, truth_calls) -> None:
+    obs = replace(
+        OBS, tool_calls=(PARTIAL,), finish=ObservedFinish(finish, finish, "primary", "finish")
     )
+    truth = replace(TRUTH, tool_calls=truth_calls)
+    assert (
+        CHECKS["no_complete_tool_call_from_partial_args"](obs, truth, (), {}).status == "SATISFIED"
+    )
+    expected = "SATISFIED" if finish == "length" else "CONTRADICTED"
+    assert CHECKS["truncation_is_signalled"](obs, truth, (), {}).status == expected
 
 
 def test_repaired_tool_args_match_truth_by_id_before_position() -> None:
@@ -612,9 +655,19 @@ def test_primary_error_finish_signals_an_error_for_partial_calls(
     obs = replace(
         OBS,
         finish=ObservedFinish("error", "error", surface, "finish_reason"),
-        tool_calls=(PARTIAL,),
+        tool_calls=(CALL,),
     )
-    assert CHECKS["no_complete_tool_call_from_partial_args"](obs, TRUTH, (), {}).status == status
+    truth = replace(TRUTH, tool_calls=(PARTIAL,))
+    assert CHECKS["no_complete_tool_call_from_partial_args"](obs, truth, (), {}).status == status
+
+
+@pytest.mark.parametrize("outcome", ["raised", "returned"])
+def test_tool_args_error_object_satisfies_before_repaired_args(outcome) -> None:
+    obs = replace(raised(), outcome=outcome)
+    truth = replace(TRUTH, tool_calls=(PARTIAL,))
+    assert (
+        CHECKS["no_complete_tool_call_from_partial_args"](obs, truth, (), {}).status == "SATISFIED"
+    )
 
 
 @pytest.mark.parametrize("raw", ['{"port":"Brest","port":"Brest"}', '{"tide": 1e400}'])
@@ -660,10 +713,9 @@ def test_request_paths(body: JsonValue, path: str, value: JsonValue) -> None:
 )
 def test_missing_request_paths(body: JsonValue, path: str) -> None:
     log = (request(body),)
-    assert (
-        CHECKS["request_field_equals"](OBS, TRUTH, log, {"path": path, "value": None}).status
-        == "NOT_OBSERVABLE"
-    )
+    result = CHECKS["request_field_equals"](OBS, TRUTH, log, {"path": path, "value": None})
+    assert result.status == ("NOT_OBSERVABLE" if body is None else "CONTRADICTED")
+    assert f"request[0].json_body.{path}=absent" in result.evidence
     assert CHECKS["request_field_absent"](OBS, TRUTH, log, {"path": path}).status == "SATISFIED"
 
 
@@ -671,8 +723,12 @@ def test_missing_request_paths(body: JsonValue, path: str) -> None:
     "bodies,status",
     [
         ([{"stream": True}, {"stream": True}], "SATISFIED"),
-        ([{}, {"stream": True}], "NOT_OBSERVABLE"),
-        ([{"stream": True}, {}], "NOT_OBSERVABLE"),
+        ([{}, {"stream": True}], "CONTRADICTED"),
+        ([{"stream": True}, {}], "CONTRADICTED"),
+        ([None, {"stream": True}], "NOT_OBSERVABLE"),
+        ([{"stream": True}, None], "NOT_OBSERVABLE"),
+        ([None, {}], "CONTRADICTED"),
+        ([None, {"stream": False}], "CONTRADICTED"),
         ([{}, {"stream": False}], "CONTRADICTED"),
         ([{"stream": False}, {}], "CONTRADICTED"),
     ],

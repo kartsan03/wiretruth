@@ -723,3 +723,109 @@ def test_recorded_error() -> None:
         "to 'none'.",
     }
     assert usage["raw"] is None
+
+
+@pytest.mark.parametrize("first", ["km", "mi"])
+def test_streamed_duplicate_tool_arguments_extract_and_grade(first) -> None:
+    from dataclasses import replace
+
+    from wiretruth.formats import Requirement, _build_truth, load_observation
+    from wiretruth.grading import ShimRun, grade_cell
+    from wiretruth.replay import LoggedRequest
+
+    pieces = ['{"unit":"' + first + '",', '"unit":"km"}']
+    events = [
+        _chunk(
+            {
+                "tool_calls": [
+                    {
+                        "index": 0,
+                        "id": "call-1",
+                        "function": {"name": "convert_units", "arguments": pieces[0]},
+                    }
+                ]
+            }
+        ),
+        _chunk({"tool_calls": [{"index": 0, "function": {"arguments": pieces[1]}}]}),
+        _chunk(finish="tool_calls"),
+        DONE,
+    ]
+    truth = _build_truth(_truth(_stream(*events)))
+    (tool,) = truth.tool_calls
+    assert tool.arguments_raw == "".join(pieces)
+    assert tool.arguments_parsed_ok is True
+    assert tool.arguments == {"unit": "km"}
+    obs = load_observation(REPO / "tests/samples/valid/observation/returned.json")
+    obs = replace(obs, tool_calls=(replace(tool, arguments=json.loads(tool.arguments_raw)),))
+    checks = ("no_complete_tool_call_from_partial_args", "tool_calls_match_truth")
+    scenario = replace(
+        load_scenario(REPO / "suite/scenarios/truncation/text.json"),
+        requirements=tuple(
+            Requirement(f"check-{i}", "MUST", check, "Calls match the wire.", {}, None)
+            for i, check in enumerate(checks)
+        ),
+    )
+    log = [LoggedRequest("POST", PATH, {}, {}, {}, None, "", 0, True)]
+    grade = grade_cell(
+        ShimRun(False, None, obs, None, None, log),
+        scenario=scenario,
+        provider="openai-chat",
+        truth=truth,
+        unsupported=(),
+    )
+    assert grade.grade == "PASS"
+    assert [item.status for item in grade.requirements] == ["SATISFIED", "SATISFIED"]
+
+
+@pytest.mark.parametrize("stream", [False, True])
+def test_structured_text_duplicate_keys_use_last_value(stream) -> None:
+    raw = '{"unit":"mi","unit":"km"}'
+    exchange = (
+        _stream(_chunk({"content": raw}), _chunk(finish="stop"), DONE)
+        if stream
+        else _message({"content": raw})
+    )
+    assert _truth(exchange, JSON_REQUEST)["structured"] == {"unit": "km"}
+
+
+@pytest.mark.parametrize(
+    "id,stream,limit,effort,usage,tool,choice",
+    [
+        ("truncation.tool-call-args", False, 20, "none", False, "create_event", "required"),
+        ("truncation.tool-call-args-stream", True, 20, "none", False, "create_event", "required"),
+        ("truncation.text-stream-usage", True, 16, "none", True, None, None),
+        ("truncation.reasoning-only", False, 64, "medium", False, None, None),
+        ("usage.stream-final-chunk", True, 64, "none", True, None, None),
+        ("tools.parallel-calls", False, None, "none", False, "get_weather", "auto"),
+        ("tools.parallel-calls-stream", True, None, "none", False, "get_weather", "auto"),
+        ("request.max-tokens-field", False, 16, "none", False, None, None),
+        ("request.tools-with-reasoning-chat", False, None, None, False, "convert_units", "auto"),
+    ],
+)
+def test_new_chat_scenario_requests(id, stream, limit, effort, usage, tool, choice) -> None:
+    family, name = id.split(".")
+    scenario = load_scenario(REPO / "suite/scenarios" / family / f"{name}.json")
+    assert scenario.providers == ("openai-chat",)
+    body = build_request(scenario.call, "gpt-6-luna").body
+    assert body["model"] == "gpt-6-luna"
+    assert body.get("stream", False) is stream
+    assert body.get("max_completion_tokens") == limit
+    assert ("max_completion_tokens" in body) is (limit is not None)
+    assert "max_tokens" not in body and "temperature" not in body
+    assert body.get("reasoning_effort") == effort
+    assert ("reasoning_effort" in body) is (effort is not None)
+    assert body.get("stream_options") == ({"include_usage": True} if usage else None)
+    assert body.get("tool_choice") == choice
+    if tool is None:
+        assert "tools" not in body
+    else:
+        (function,) = body["tools"]
+        assert function["type"] == "function"
+        assert function["function"] == {
+            "name": tool,
+            "description": scenario.call.tools[0].description,
+            "parameters": scenario.call.tools[0].parameters,
+        }
+        parameters = function["function"]["parameters"]
+        assert parameters["required"] == list(parameters["properties"])
+        assert parameters["additionalProperties"] is False

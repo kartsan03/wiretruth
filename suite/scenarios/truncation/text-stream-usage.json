@@ -1,0 +1,40 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "truncation.text-stream-usage",
+  "title": "Streamed text cut off before a final usage chunk",
+  "bug_class": "silent-truncation",
+  "priority": "P0",
+  "summary": "The model stops a streamed answer at the token limit and reports usage in a separate final chunk.",
+  "call": {
+    "stream": true,
+    "max_output_tokens": 16,
+    "messages": [
+      {"role": "user", "content": "Describe a traditional Japanese breakfast in about 200 words, giving each dish its Japanese name (for example 味噌汁 or 焼き魚) and an English translation."}
+    ],
+    "reasoning": {"effort": "none"},
+    "extra": {"include_usage": true}
+  },
+  "providers": ["openai-chat"],
+  "requirements": [
+    {
+      "id": "cause-is-truncation",
+      "level": "MUST",
+      "check": "truncation_is_signalled",
+      "text": "The caller can tell that the output stopped at the token limit."
+    },
+    {
+      "id": "text-reported",
+      "level": "SHOULD",
+      "check": "text_matches_truth",
+      "text": "The text is reported exactly as the provider sent it."
+    },
+    {
+      "id": "usage-reported",
+      "level": "SHOULD",
+      "check": "usage_matches_truth",
+      "args": {"fields": ["input", "output"]},
+      "text": "Token usage is reported and matches the provider's counts."
+    }
+  ],
+  "grading_notes": "The finish chunk is no longer the last event: a usage-only chunk with choices: [] follows it. The library must retain the truncation signal while reading the usage. Effort none keeps the 16-token limit for answer text."
+}

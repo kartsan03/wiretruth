@@ -24,6 +24,7 @@ from functools import partial
 from pathlib import Path
 from typing import TypeVar, cast
 
+from wiretruth.checks import CHECKS
 from wiretruth.formats import (
     Fixture,
     FormatError,
@@ -235,6 +236,13 @@ def lint(root: Path) -> Report:
             )
         if bug_classes is not None and scenario.bug_class not in bug_classes:
             problem(path, "$.bug_class", f"{scenario.bug_class!r} is not a bug class in {registry}")
+        for index, requirement in enumerate(scenario.requirements):
+            if requirement.check not in CHECKS:
+                problem(
+                    path,
+                    f"$.requirements[{index}].check",
+                    f"requirement {requirement.id!r}: unknown check {requirement.check!r}",
+                )
 
     unchecked: set[str] = set()
     for expected, (path, fixture, fixture_doc) in fixtures.items():

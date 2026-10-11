@@ -384,3 +384,29 @@ def test_integers_too_long_to_convert(tmp_path: Path) -> None:
         read_json(path)
     (problem,) = exc.value.problems
     assert problem.message.startswith("invalid JSON: ")
+
+
+def test_parse_json_duplicate_keys_are_opt_in_and_last_wins() -> None:
+    raw = b'{"unit":"mi","unit":"km","nested":{"x":1,"x":2}}'
+    with pytest.raises(ValueError, match="duplicate key"):
+        formats.parse_json(raw)
+    assert formats.parse_json(raw, duplicates="last") == {"unit": "km", "nested": {"x": 2}}
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        b'{"x":NaN,"x":0}',
+        b'{"x":Infinity,"x":0}',
+        b'{"x":-Infinity,"x":0}',
+        b'{"x":1e400,"x":0}',
+        b'{"x":' + b"9" * 400 + b',"x":0}',
+        b'{"x":"\\ud800","x":0}',
+        b'{"\\ud800":0}',
+        b'{"x":"\xff"}',
+        b'{"x":',
+    ],
+)
+def test_parse_json_duplicate_mode_keeps_other_strict_checks(raw: bytes) -> None:
+    with pytest.raises(ValueError):
+        formats.parse_json(raw, duplicates="last")

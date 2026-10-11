@@ -233,3 +233,24 @@ def test_unexpected_shim_failures_are_valid_observations_and_exit_zero(name, inp
     assert result.returncode == 0 and result.stderr == b""
     obs = observation_from_document(parse_json(result.stdout))
     assert obs.outcome == "raised" and obs.error.category == "internal"
+
+
+def test_liar_repairs_partial_tool_arguments():
+    spec = find_cells(REPO, "truncation.text")[0].call_spec
+    truth = sample_truth()
+    truth["tool_calls"][0].update(arguments_raw='{"c":', arguments_parsed_ok=False, arguments=None)
+    doc = REFERENCE["observation_from_truth"](spec, truth)
+    liar = observation_from_document(LIAR["lie"](doc))
+    assert liar.tool_calls[0].arguments_parsed_ok is True
+    assert liar.tool_calls[0].arguments == {}
+    assert doc["tool_calls"][0]["arguments_parsed_ok"] is False
+
+
+def test_liar_drops_parallel_tool_calls():
+    spec = find_cells(REPO, "truncation.text")[0].call_spec
+    truth = sample_truth()
+    truth["tool_calls"].append({**truth["tool_calls"][0], "id": "call-2"})
+    doc = REFERENCE["observation_from_truth"](spec, truth)
+    liar = observation_from_document(LIAR["lie"](doc))
+    assert [call.id for call in liar.tool_calls] == ["call-1"]
+    assert len(doc["tool_calls"]) == 2

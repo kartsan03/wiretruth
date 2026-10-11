@@ -30,6 +30,9 @@ def lie(observation: JsonObject) -> JsonObject:
         structured["value"] = cast(JsonObject, obs["text"])["value"]
     for call in cast("list[JsonObject]", obs["tool_calls"]):
         call["arguments_raw"] = None
+        if not call["arguments_parsed_ok"]:
+            call.update(arguments_parsed_ok=True, arguments={})
+    obs["tool_calls"] = cast("list[JsonObject]", obs["tool_calls"])[:1]
     return obs
 
 

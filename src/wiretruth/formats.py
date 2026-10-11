@@ -127,16 +127,24 @@ def _bounded_int(text: str) -> int:
     return value
 
 
-def parse_json(data: bytes) -> JsonValue:
+def parse_json(data: bytes, *, duplicates: Literal["reject", "last"] = "reject") -> JsonValue:
     """Parse JSON strictly.
 
-    UTF-8 only; no duplicate keys; no NaN, Infinity or numbers too large for a double; no lone
-    surrogates in \\u escapes. Parsers in other languages disagree on all of these. Raises
+    UTF-8 only; duplicate keys rejected unless ``duplicates="last"``; no NaN, Infinity or numbers
+    too large for a double; no lone surrogates in \\u escapes. Raises
     ValueError (JSON and Unicode errors are ValueErrors) or RecursionError.
     """
+
+    def object_pairs(pairs: list[tuple[str, JsonValue]]) -> JsonObject:
+        if duplicates == "last":
+            # Check surrogates before duplicate keys can discard a value.
+            json.dumps(pairs, ensure_ascii=False).encode("utf-8")
+            return dict(pairs)
+        return _object_without_duplicates(pairs)
+
     doc = json.loads(
         data.decode("utf-8"),
-        object_pairs_hook=_object_without_duplicates,
+        object_pairs_hook=object_pairs,
         parse_constant=_reject_constant,
         parse_float=_finite_float,
         parse_int=_bounded_int,

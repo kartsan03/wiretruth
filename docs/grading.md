@@ -16,7 +16,8 @@ It returns a status and a short evidence string. It does not run a shim or read 
 | NOT_OBSERVABLE | The observation neither meets nor contradicts it. |
 
 Only **primary** values count when comparing finish, text or usage. A value on the **raw** or **absent** surface
-cannot satisfy or contradict a comparison. Null usage truth has an explicit absence rule, described below.
+cannot satisfy or contradict a comparison, except that absent text or usage can satisfy the reports-none
+rule when the wire carried no value, described below.
 A separate signal, such as a raised error, can satisfy a check without a primary value.
 
 Within a check, SATISFIED conditions take precedence over CONTRADICTED conditions. If neither applies, the status
@@ -38,16 +39,16 @@ with `ValueError`. That is a scenario bug, not a library grade.
 | `finish_is(value)` | Reported finish equals `value`, including on an error. | A different finish is reported. | Finish is raw-only, absent or null. |
 | `finish_is_not(value)` | The outcome is raised, or the reported finish is anything but `value`, including raw-only, absent or null. | The forbidden finish is reported without a raised outcome. | — |
 | `truncation_is_signalled` | Reported finish is `length`, or error category is `truncation`. | Without either satisfying signal, reported finish is `stop` or `tool_calls`, or structured output came back as success. | Neither condition applies, including raw-only truncation or a generic parse/validation error without a primary finish. |
-| `text_matches_truth` | Reported non-null text exactly equals truth text. | Reported text differs. | Text is raw-only, absent or null. |
+| `text_matches_truth` | Reported text exactly equals non-empty truth, or null/empty truth is matched by reporting no text. | Reported text differs from non-empty truth, or non-empty text is reported for null/empty truth. | Text is raw-only, or absent/null when truth is non-empty. |
 | `no_replacement_chars` | Reported non-null text contains no U+FFFD. | It contains U+FFFD. | Text is raw-only, absent or null. |
 | `no_success_structured_value` | Structured output was attempted and did not return as success. | It was attempted and returned as success. | Structured output was not attempted. |
 | `tool_calls_match_truth` | Same count, ordered ids, names and parsed arguments; two empty lists also match. A truth id of null accepts any id. | A known count, id, name or parsed-argument mismatch, including no calls on a returned outcome without an error. | No calls on a raised outcome or next to an error object, or arguments that cannot be compared after matching count, ids and names. |
-| `no_complete_tool_call_from_partial_args` | No partial or repaired call is returned without an error; a raised outcome, an error object or a primary `error` finish satisfies. | A call is returned without an error with `arguments_parsed_ok: false`, or the corresponding truth call's arguments are partial (the library repaired them). | — |
+| `no_complete_tool_call_from_partial_args` | A raised outcome, an error object or a primary `error` finish; otherwise no call reports parsed arguments against partial truth. Unparsed partial calls satisfy. | A call reports `arguments_parsed_ok: true` while its matched truth call has `arguments_parsed_ok: false`, without an error signal. | — |
 | `usage_matches_truth(fields)` | Every field matches truth or an alternative, including the null-truth rule. | Any reported field differs from every accepted value. | No contradiction, but at least one field is unavailable on primary; see null truth below. |
 | `usage_total_reconciles` | Reported total matches an accepted total, or primary components reconstruct one when no primary total is reported. Null truth uses the reports-none rule. | A reported total differs, or available primary components cannot reconstruct any accepted total. | Total cannot be compared and primary input/output are unavailable; raw-only null-truth total also stays unobservable. |
 | `outcome_is_error(categories?)` | Outcome is raised, with a listed category if a list was supplied. | Outcome is returned with no error signal. | Raised with another category, returned with an error signal, or unsupported. |
 | `stream_not_reported_complete` | Completion is false, or outcome is raised. | Completion is true without a raised outcome. | No completion signal and no raised outcome. |
-| `request_field_equals(path, value)` | Every request has the path with the expected JSON value. | Any request has a different value at that path. | No requests, or a missing path in any request with no contradictory value elsewhere. |
+| `request_field_equals(path, value)` | Every request has the path with the expected JSON value. | Any JSON request lacks the path or has a different value there. | No requests, or a non-JSON request with no contradiction elsewhere. |
 | `request_field_absent(path)` | Path absent from every request, including no requests. | Path present in any request, even with a null value. | — |
 | `request_count_at_most(n)` | Number of requests is at most `n`. | Number of requests exceeds `n`. | — |
 
@@ -64,16 +65,22 @@ returned outcome is NOT_OBSERVABLE: it reports an error, but did not raise one.
 
 Request paths are non-empty dotted paths without empty segments. For example, `stream_options.include_usage`
 looks up an object field, and `messages.0.content` indexes the first list item. ASCII digit-only segments index
-lists, including at the root; they do not look up numeric object keys. A non-JSON body has no paths.
+lists, including at the root; they do not look up numeric object keys. A non-JSON body has no paths and is
+NOT_OBSERVABLE for equality. A missing path in a JSON body contradicts equality, with `=absent` in the evidence.
 Request checks inspect every logged request, including retries and unmatched requests. Equality compares JSON
 values recursively: object key order is irrelevant, array order matters, and booleans differ from numbers.
 The `value` argument can be any JSON value, including null.
 
-Text comparison is exact, without Unicode normalization. Empty text is a value. Missing or null text stays
-NOT_OBSERVABLE even when truth text is null. Tool-call comparison ignores raw argument formatting and uses parsed
-JSON values. Some providers send no tool-call ids, so a null truth id accepts whatever id the library generated.
-For partial-argument detection, a call returned without an error counts as complete. Truth calls
-are matched by id first, then by position when no id matches.
+Text comparison is exact, without Unicode normalization. When truth text is null or empty, an absent surface
+or primary null/empty text satisfies: the library reported none. Primary non-empty text contradicts. Raw text
+stays NOT_OBSERVABLE. For non-empty truth, absent/null text is NOT_OBSERVABLE and a different primary value,
+including empty text, contradicts.
+
+Tool-call comparison ignores raw argument formatting and uses parsed JSON values. Some providers send no
+tool-call ids, so a null truth id accepts whatever id the library generated. For partial-argument detection,
+truth calls are matched by id first, then by position when no id matches. Returning unparsed partial arguments
+is honest; only presenting partial truth arguments as parsed contradicts. Whether the cut is signalled belongs
+to `truncation_is_signalled`, a separate MUST requirement in scenarios using this check.
 
 A primary `length` finish or a truncation error satisfies `truncation_is_signalled` even if a structured value
 also came back as success. `no_success_structured_value` judges that success separately. Similarly, a raised

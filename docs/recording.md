@@ -88,6 +88,14 @@ export OPENAI_API_KEY=...   # in your shell only; never in a file or a commit
 uv run wiretruth record --provider openai-chat --scenario truncation.text
 ```
 
+Both `wiretruth record --scenario` and `wiretruth run --scenario` accept comma-separated ids or globs.
+Matches are combined in sorted order, without duplicates. Each part must match at least one scenario, or the
+command fails naming that part. Quote globs so the shell leaves them alone. For example:
+
+```bash
+wiretruth record --provider openai-chat --scenario 'truncation.tool-call-args*,usage.stream-final-chunk'
+```
+
 A local recording has no `ci_run`. Prefer CI for fixtures you plan to merge.
 
 To see what would be sent without sending it, add `--dry-run`. It needs no key and prints the request exactly as
@@ -101,7 +109,7 @@ Host: api.openai.com
 Authorization: Bearer ***
 Content-Type: application/json
 Accept: application/json
-User-Agent: wiretruth/0.1.0
+User-Agent: wiretruth/0.2.0.dev0
 Accept-Encoding: identity
 Content-Length: 229
 
@@ -119,13 +127,13 @@ Content-Length: 229
 ```
 
 ```text
-wiretruth record --provider PROVIDER --scenario GLOB [--model MODEL] [--dry-run] [--replace] [--keep-bytes]
+wiretruth record --provider PROVIDER --scenario PATTERNS [--model MODEL] [--dry-run] [--replace] [--keep-bytes]
 ```
 
 | Option | Meaning |
 |---|---|
 | `--provider` | The wire API. Today: `openai-chat` |
-| `--scenario` | A scenario id, or a glob such as `'truncation.*'`. Scenarios that don't list the provider are skipped, with a note |
+| `--scenario` | Comma-separated scenario ids or globs, such as `'tools.*,usage.*'`. Scenarios that don't list the provider are skipped, with a note |
 | `--model` | The model to request. Default: the provider's current model (`gpt-6-luna` for `openai-chat`) |
 | `--dry-run` | Print each request and send nothing |
 | `--replace` | Overwrite `<scenario>.json` instead of keeping it as a dated variant |

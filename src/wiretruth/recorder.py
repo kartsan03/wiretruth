@@ -71,16 +71,20 @@ class Recording:
 def find_scenarios(
     root: Path, pattern: str, provider: str | None = None
 ) -> tuple[list[Scenario], list[str]]:
-    """Scenarios matching ``pattern``, optionally limited to those listing ``provider``.
+    """Union of comma-separated ids or globs, limited to those listing ``provider`` if given.
 
     Also returns ids skipped by the provider filter. Raises FormatError for an invalid scenario
-    file, and RecordError when nothing is left.
+    file, and RecordError when any pattern matches nothing or the provider filter leaves none.
     """
     folder = root / "suite" / "scenarios"
     scenarios = [load_scenario(path) for path in sorted(folder.glob("*/*.json"))]
-    matching = [scenario for scenario in scenarios if fnmatchcase(scenario.id, pattern)]
-    if not matching:
-        raise RecordError(f"no scenario in {folder} matches {pattern!r}")
+    matched_ids = set()
+    for part in pattern.split(","):
+        matches = {scenario.id for scenario in scenarios if fnmatchcase(scenario.id, part)}
+        if not matches:
+            raise RecordError(f"no scenario in {folder} matches {part!r}")
+        matched_ids.update(matches)
+    matching = [scenario for scenario in scenarios if scenario.id in matched_ids]
     if provider is None:
         return matching, []
     chosen = [scenario for scenario in matching if provider in scenario.providers]
