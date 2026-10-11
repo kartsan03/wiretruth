@@ -9,8 +9,8 @@ happened.
 [![PyPI](https://img.shields.io/pypi/v/wiretruth?label=PyPI)](https://pypi.org/project/wiretruth/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
-So far wiretruth tests one library, any-llm, on the OpenAI Chat Completions API with 12 scenarios. More providers
-and libraries follow, and a public results matrix arrives in v0.4. Until then, the grades are in
+So far wiretruth tests one library, any-llm, on two OpenAI APIs, Chat Completions and Responses: 12 scenarios, 20
+cells. More providers and libraries follow, and a public results matrix arrives in v0.4. Until then, the grades are in
 [`results/`](https://github.com/kartsan03/wiretruth/tree/main/results).
 
 ## Why
@@ -71,22 +71,27 @@ uv run wiretruth run --lib any-llm
 ```
 
 ```text
-scenario                           openai-chat
+scenario                           openai-chat  openai-responses
 request.max-tokens-field           ✓ PASS
 request.tools-with-reasoning-chat  ✓ PASS
-tools.parallel-calls               ✓ PASS
-tools.parallel-calls-stream        ✓ PASS
-truncation.reasoning-only          ✓ PASS
-truncation.structured-output       ✓ PASS
-truncation.text                    ✓ PASS
-truncation.text-stream             ✓ PASS
+tools.parallel-calls               ✓ PASS       ✓ PASS
+tools.parallel-calls-stream        ✓ PASS       ✓ PASS
+truncation.reasoning-only          ✓ PASS       ✓ PASS
+truncation.structured-output       ✓ PASS       ~ LOSSY
+truncation.text                    ✓ PASS       ✓ PASS
+truncation.text-stream             ✓ PASS       ✓ PASS
 truncation.text-stream-usage       ✓ PASS
-truncation.tool-call-args          ✓ PASS
-truncation.tool-call-args-stream   ✓ PASS
+truncation.tool-call-args          ✓ PASS       ✓ PASS
+truncation.tool-call-args-stream   ✓ PASS       ✓ PASS
 usage.stream-final-chunk           ✓ PASS
 
-any-llm 1.33.0: 12 cells, 12 PASS
-stderr: .wiretruth/runs/20261011T120546.713943Z
+truncation.structured-output openai-responses
+  MUST cause-is-truncation: NOT_OBSERVABLE: finish.value=null (absent); truth.finish="length"; error.category="validation"; structured.returned_as_success=false
+  SHOULD text-reported: NOT_OBSERVABLE: text.value=null (absent); truth.text="{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ"
+  SHOULD usage-reported: NOT_OBSERVABLE: usage.input=null (absent); truth.usage.input=68; usage.output=null (absent); truth.usage.output=24
+
+any-llm 1.33.0: 20 cells, 19 PASS, 1 LOSSY
+stderr: .wiretruth/runs/20261011T211554.905063Z
 ```
 
 No API keys are needed. Everything runs against recorded responses on `127.0.0.1`. The first run downloads any-llm
