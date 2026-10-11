@@ -1,0 +1,115 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/truncation.reasoning-only",
+  "scenario": "truncation.reasoning-only",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-11T12:00:57Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "abc285e",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38137650119",
+    "raw_sha256": "370fb685d7ab4c81c7a03ed08e0dbbd94baea6884b4c34d881801940b58099f2",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Find the smallest positive whole number that leaves a remainder of 1 when divided by 2, 3, 4, 5 or 6 and is divisible by 7. Check your answer before replying."
+        }
+      ],
+      "max_completion_tokens": 64,
+      "reasoning_effort": "medium"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "chatcmpl-EXmWY18aHzANfC6JTSbCvBtmeGdRS",
+            "object": "chat.completion",
+            "created": 1791720058,
+            "model": "gpt-6-luna",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "",
+                  "refusal": null,
+                  "annotations": []
+                },
+                "finish_reason": "length"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 49,
+              "completion_tokens": 64,
+              "total_tokens": 113,
+              "prompt_tokens_details": {
+                "cached_tokens": 0,
+                "cache_write_tokens": 0,
+                "audio_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 64,
+                "audio_tokens": 0,
+                "accepted_prediction_tokens": 0,
+                "rejected_prediction_tokens": 0
+              }
+            },
+            "service_tier": "default",
+            "system_fingerprint": null
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": "",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 49,
+      "cached_input": 0,
+      "output": 64,
+      "reasoning": 64,
+      "total": 113,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 49,
+        "completion_tokens": 64,
+        "total_tokens": 113,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 64,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      }
+    }
+  }
+}

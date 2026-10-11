@@ -244,9 +244,18 @@ def test_closed_port_binds_without_listening_and_stays_open(monkeypatch):
     factory.return_value.__exit__.assert_called_once()
 
 
+def copy_suite(root):
+    """The real suite with only its first three fixtures, so new recordings don't change it."""
+    shutil.copytree(REPO / "suite", root / "suite")
+    first = ("truncation.structured-output", "truncation.text", "truncation.text-stream")
+    for path in (root / "suite" / "fixtures").glob("*/*.json"):
+        if path.stem not in first:
+            path.unlink()
+
+
 @pytest.fixture
 def suite(tmp_path):
-    shutil.copytree(REPO / "suite", tmp_path / "suite")
+    copy_suite(tmp_path)
     return tmp_path
 
 
@@ -420,7 +429,7 @@ def test_parallel_cells_hold_closed_port_and_results_stay_in_cell_order(tmp_path
 
     monkeypatch.setattr(runner, "closed_port", reserve)
     monkeypatch.setattr(runner, "run_cell", execute)
-    shutil.copytree(REPO / "suite", tmp_path / "suite")
+    copy_suite(tmp_path)
     report = run_suite(tmp_path, SHIM, pattern="truncation.text*", jobs=2, timeout=1)
     assert [cell.scenario for cell in report.cells] == ["truncation.text", "truncation.text-stream"]
     assert report.stderr_dir.parent == tmp_path / ".wiretruth" / "runs"
@@ -460,7 +469,7 @@ def test_interpreter_is_resolved_once_before_workers(library, tmp_path, monkeypa
     monkeypatch.setattr(runner, "closed_port", reserve)
     monkeypatch.setattr(runner, "ReplayServer", lambda fixture: server)
     monkeypatch.setattr(runner.subprocess, "Popen", popen)
-    shutil.copytree(REPO / "suite", tmp_path / "suite")
+    copy_suite(tmp_path)
     report = run_suite(tmp_path, SHIM, jobs=2)
     assert len(report.cells) == popen.call_count == 3
     assert all(call.args[0] == [interpreter, "shim.py"] for call in popen.call_args_list)

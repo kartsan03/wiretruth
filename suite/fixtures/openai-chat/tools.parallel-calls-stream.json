@@ -1,0 +1,121 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/tools.parallel-calls-stream",
+  "scenario": "tools.parallel-calls-stream",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-11T12:00:53Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "abc285e",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38137650119",
+    "raw_sha256": "6ff6c3909a412bf38a99728d328e83783d198994d8d89e01b27e35ef4475c669",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What's the weather like right now in São Paulo and in Zürich? Call the tool once for each city."
+        }
+      ],
+      "stream": true,
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "description": "Get the current weather for a city.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "auto",
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream; charset=utf-8"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":null},\"finish_reason\":null}],\"obfuscation\":\"cooKSOZ9B4\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_MFkqX3JVUVFFqlvt9y4xbc9L\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"\"}}]},\"finish_reason\":null}],\"obfuscation\":\"FeUKaff3n\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"{\\\"ci\"}}]},\"finish_reason\":null}],\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"ty\\\": \"}}]},\"finish_reason\":null}],\"obfuscation\":\"BgjwVci3ZUaO3u7\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"\\\"São P\"}}]},\"finish_reason\":null}],\"obfuscation\":\"95wYCkwPlQVc0Q\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"aulo\"}}]},\"finish_reason\":null}],\"obfuscation\":\"1\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"\\\"}\"}}]},\"finish_reason\":null}],\"obfuscation\":\"g7\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":1,\"id\":\"call_4VWEeIK4DzOndQbCBnHA4YSy\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"\"}}]},\"finish_reason\":null}],\"obfuscation\":\"6YrL8Fchm\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":1,\"function\":{\"arguments\":\"{\\\"ci\"}}]},\"finish_reason\":null}],\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":1,\"function\":{\"arguments\":\"ty\\\": \"}}]},\"finish_reason\":null}],\"obfuscation\":\"XIB3rpI1NnUkSyN\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":1,\"function\":{\"arguments\":\"\\\"Züric\"}}]},\"finish_reason\":null}],\"obfuscation\":\"xnO8Xlmqom9NxG\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":1,\"function\":{\"arguments\":\"h\\\"}\"}}]},\"finish_reason\":null}],\"obfuscation\":\"7\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWUIVkhF062Qjo0JkNsasrVFuUv\",\"object\":\"chat.completion.chunk\",\"created\":1791720054,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"tool_calls\"}],\"obfuscation\":\"LYZ\"}\n\n",
+            "data: [DONE]\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "tool_calls",
+    "raw_finish": "tool_calls",
+    "text": null,
+    "tool_calls": [
+      {
+        "id": "call_MFkqX3JVUVFFqlvt9y4xbc9L",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\": \"São Paulo\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "São Paulo"
+        }
+      },
+      {
+        "id": "call_4VWEeIK4DzOndQbCBnHA4YSy",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\": \"Zürich\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "Zürich"
+        }
+      }
+    ],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": null
+    }
+  }
+}

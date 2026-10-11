@@ -1,0 +1,104 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/usage.stream-final-chunk",
+  "scenario": "usage.stream-final-chunk",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-11T12:01:06Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "abc285e",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38137650119",
+    "raw_sha256": "b8a2db28e83a41c8e11551be069ebe2be008257bf65540c34cce82d9d331034a",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "In one short sentence, explain why the sky looks blue."
+        }
+      ],
+      "stream": true,
+      "stream_options": {
+        "include_usage": true
+      },
+      "max_completion_tokens": 64,
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream; charset=utf-8"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"refusal\":null},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"The\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"MqxQzix54zjUt5m\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" sky\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"5UNXsxo8TRpOWJ\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" looks\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"UVow26sNxakb\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" blue\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"0IBjSoODjlpY8\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" because\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"e9GoRVLkHj\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" air\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"BwRjtQSv22WPRb\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" molecules\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"DmdlHx2N\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" scatter\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"AKTei2Cro4\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" blue\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"hHyv8p1fBAorh\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" sunlight\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"gsukIJgjS\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" more\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"x2ytye8tIphaq\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" than\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"MerePfTrWaegi\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" other\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"YPE8YFYgmedS\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" colors\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"aQ8EbDIjGmz\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\".\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"9\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}],\"usage\":null,\"obfuscation\":\"Ww7ZGNdBh2hO\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWh1DJ4f6S3LZ5ZgcBDE8dHwehg\",\"object\":\"chat.completion.chunk\",\"created\":1791720067,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[],\"usage\":{\"prompt_tokens\":18,\"completion_tokens\":18,\"total_tokens\":36,\"prompt_tokens_details\":{\"cached_tokens\":0,\"cache_write_tokens\":0,\"audio_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0,\"audio_tokens\":0,\"accepted_prediction_tokens\":0,\"rejected_prediction_tokens\":0}},\"obfuscation\":\"FZuLTa9ISM\"}\n\n",
+            "data: [DONE]\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "The sky looks blue because air molecules scatter blue sunlight more than other colors.",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 18,
+      "cached_input": 0,
+      "output": 18,
+      "reasoning": 0,
+      "total": 36,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 18,
+        "completion_tokens": 18,
+        "total_tokens": 36,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      }
+    }
+  }
+}

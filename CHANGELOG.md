@@ -13,8 +13,8 @@ finding).
 
 ### Added
 - Nine `openai-chat` scenarios for truncated tool arguments, streamed usage, reasoning-only truncation,
-  parallel tool calls, token-limit request fields and tools with default reasoning. Fixtures will be recorded
-  separately; scenarios without fixtures are skipped when running the suite.
+  parallel tool calls, token-limit request fields and tools with default reasoning, with fixtures recorded in CI
+  against `gpt-6-luna`.
 - `wiretruth record --scenario` and `wiretruth run --scenario` accept comma-separated ids or globs, combine
   matches without duplicates, and reject any part that matches nothing.
 - `wiretruth lint` reports unknown requirement check names, with the scenario path and requirement id.
@@ -32,6 +32,10 @@ finding).
 ### Fixed
 - Complete tool-call arguments with duplicate JSON keys no longer read as partial. Tool arguments and structured
   text use the last value for each duplicate key, as clients do, while retaining strict number and Unicode checks.
+
+### Results
+- any-llm 1.33.0: PASS on all 12 `openai-chat` scenarios
+  ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)).
 
 ## [0.1.0] - 2026-10-11
 

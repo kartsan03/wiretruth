@@ -1,0 +1,115 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/request.max-tokens-field",
+  "scenario": "request.max-tokens-field",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-11T12:00:49Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "abc285e",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38137650119",
+    "raw_sha256": "8b1a2a1566134702ca307f741f99dc306b4542f7f1daa54a9c100ce30137a39e",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Name three moons of Jupiter."
+        }
+      ],
+      "max_completion_tokens": 16,
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "chatcmpl-EXmWRUbnnv27jZGJrJnukzq7uKTpC",
+            "object": "chat.completion",
+            "created": 1791720051,
+            "model": "gpt-6-luna",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "Io, Europa, and Ganymede.",
+                  "refusal": null,
+                  "annotations": []
+                },
+                "finish_reason": "stop"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 12,
+              "completion_tokens": 12,
+              "total_tokens": 24,
+              "prompt_tokens_details": {
+                "cached_tokens": 0,
+                "cache_write_tokens": 0,
+                "audio_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0,
+                "audio_tokens": 0,
+                "accepted_prediction_tokens": 0,
+                "rejected_prediction_tokens": 0
+              }
+            },
+            "service_tier": "default",
+            "system_fingerprint": null
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "Io, Europa, and Ganymede.",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 12,
+      "cached_input": 0,
+      "output": 12,
+      "reasoning": 0,
+      "total": 24,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 12,
+        "completion_tokens": 12,
+        "total_tokens": 24,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      }
+    }
+  }
+}
