@@ -39,7 +39,7 @@ build-backend = "setuptools.build_meta"
 version = { attr = "wiretruth.__version__" }
 
 [tool.setuptools.package-data]
-wiretruth = ["schemas/*.json", "site/templates/*.html", "site/static/*"]
+wiretruth = ["schemas/*.json"]
 
 [tool.ruff]
 line-length = 100

@@ -250,7 +250,7 @@ NOT_OBSERVABLE: the call failed loudly, but the caller can't tell that raising t
 `no-partial-success` is CONTRADICTED: one incomplete record came back as if it were the whole answer.
 `cause-is-truncation` is CONTRADICTED too, because the main result says the model stopped normally. Grade:
 **WRONG**. Each check leaves an evidence string that says what it saw, for example
-`finish.value="stop" (primary: result.finish_reason) but truth.finish="length"`.
+`finish.value="stop" (primary: result.finish_reason); truth.finish="length"`.
 
 **Library D** raises `KeyError` from inside its own response parser. Grade: **CRASH**, whatever the requirements
 say, because the library raised an internal error.
