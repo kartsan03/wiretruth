@@ -146,8 +146,10 @@ rule, so no cell can PASS with nothing checked. Unknown checks and bad arguments
 
 ## Evidence and result cells
 
-SHOULD requirements never change the grade. A SHOULD that is NOT_OBSERVABLE or CONTRADICTED adds a note with its
-id, status and evidence, in this format: `SHOULD <id>: <status>: <evidence>`. A satisfied SHOULD adds no note.
+SHOULD requirements never change the grade. Every requirement that is NOT_OBSERVABLE or CONTRADICTED adds a note
+with its level, id, status and evidence, in this format: `<level> <id>: <status>: <evidence>`. The MUST notes say
+why a cell isn't PASS, and `wiretruth run` prints every note under the grade table. A satisfied requirement adds
+no note.
 The shim's own notes stay in the observation, which the results cell stores in full.
 
 `CellGrade.grade`, `CellGrade.requirements` and `CellGrade.notes` map to the corresponding results/v1 cell fields.

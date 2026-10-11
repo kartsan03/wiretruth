@@ -228,7 +228,7 @@ def test_should_status_notes_never_change_grade(status: str, requirement: Requir
     assert result.notes == expected
 
 
-def test_crash_carries_all_requirements_and_should_notes() -> None:
+def test_crash_carries_all_requirements_and_their_notes() -> None:
     obs = replace(INTERNAL, finish=WRONG.finish, notes=("Optional setting omitted",))
     result = grade(
         replace(RUN, observation=obs),
@@ -238,8 +238,19 @@ def test_crash_carries_all_requirements_and_should_notes() -> None:
     assert [item.status for item in result.requirements] == ["CONTRADICTED", "NOT_OBSERVABLE"]
     assert "IndexError" in result.notes[0]
     assert result.notes[1:] == (
+        f"MUST {REQUIREMENT.id}: CONTRADICTED: {result.requirements[0].evidence}",
         f"SHOULD usage-reported: NOT_OBSERVABLE: {result.requirements[1].evidence}",
     )
+
+
+@pytest.mark.parametrize(
+    "finish,grade_name,status",
+    [(WRONG.finish, "WRONG", "CONTRADICTED"), (None, "LOSSY", "NOT_OBSERVABLE")],
+)
+def test_must_notes_say_why_a_cell_is_not_pass(finish, grade_name, status) -> None:
+    result = grade(replace(RUN, observation=replace(OBS, finish=finish)))
+    assert result.grade == grade_name
+    assert result.notes == (f"MUST {REQUIREMENT.id}: {status}: {result.requirements[0].evidence}",)
 
 
 def test_internal_error_on_a_returned_outcome_is_graded_by_requirements() -> None:

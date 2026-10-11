@@ -19,6 +19,7 @@ finding).
   for the library's version; package drift is a note. The conformance workflow checks each library against its
   committed results.
 - `wiretruth run` prints a table of grades, scenarios by providers, then each cell's notes and a count per grade.
+  Every requirement that isn't satisfied adds a note with its evidence, so a WRONG or LOSSY cell says why.
 - `results/upstream.json` tracks findings reported to library maintainers. It's empty so far.
 - A publish workflow builds the package on a version tag and publishes it to PyPI with trusted publishing.
 - `wiretruth run --lib NAME` runs the library shim in `shims/*/NAME/` in its own virtual environment, built with
