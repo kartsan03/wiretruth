@@ -245,11 +245,11 @@ def test_closed_port_binds_without_listening_and_stays_open(monkeypatch):
 
 
 def copy_suite(root):
-    """The real suite with only its first three fixtures, so new recordings don't change it."""
+    """The real suite with only openai-chat's first three fixtures, unchanged by new recordings."""
     shutil.copytree(REPO / "suite", root / "suite")
     first = ("truncation.structured-output", "truncation.text", "truncation.text-stream")
     for path in (root / "suite" / "fixtures").glob("*/*.json"):
-        if path.stem not in first:
+        if path.parent.name != "openai-chat" or path.stem not in first:
             path.unlink()
 
 
