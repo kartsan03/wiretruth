@@ -39,6 +39,7 @@ from wiretruth.recorder import find_scenarios
 from wiretruth.replay import BASE_PATHS, HOST, LoggedRequest, ReplayServer
 
 DEFAULT_JOBS = min(4, os.cpu_count() or 1)
+LOCAL_ERRORS = ("validation", "internal")
 INHERITED_ENV = ("PATH", "HOME", "LANG", "LC_ALL", "LC_CTYPE", "TMPDIR", "TZ", "SYSTEMROOT")
 GLYPHS: Mapping[Grade, str] = {
     "PASS": "✓",
@@ -162,8 +163,14 @@ def process_to_run(
             mismatches.append(
                 f"request {index}: {request.path} requested stream={requested}, expected {stream}"
             )
-    if observation is not None and observation.outcome == "returned" and not request_log:
-        mismatches.append("returned a result without sending a request")
+    if observation is not None and not request_log:
+        # A library can refuse a call itself or crash while building it. Any other result or error
+        # without a request came from somewhere other than the replay server.
+        category = observation.error.category if observation.error else None
+        if observation.outcome == "returned":
+            mismatches.append("returned a result without sending a request")
+        elif observation.outcome == "raised" and category not in LOCAL_ERRORS:
+            mismatches.append(f"raised an error ({category}) without sending a request")
     return ShimRun(
         timed_out=timed_out,
         signal=-returncode if returncode < 0 else None,

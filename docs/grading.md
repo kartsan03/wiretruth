@@ -112,8 +112,8 @@ error definition and the reasons for this order are in [decision 0004](adr/0004-
 1. The shim's time limit ran out: HANG if the response had been served, otherwise HARNESS.
 2. The shim's process ended without an observation: CRASH if a signal killed it (a segfault, for example) after the
    library's request reached the replay server, otherwise HARNESS.
-3. The observation is invalid, or the library called a different endpoint or stream mode than the fixture serves:
-   HARNESS.
+3. The observation is invalid, the library called a different endpoint or stream mode than the fixture serves, or
+   it returned or raised without a request reaching the replay server: HARNESS.
 4. The shim reports, with a documentation link, that the library can't express the call: UNSUPPORTED.
 5. The library raised an internal error: CRASH.
 6. A MUST requirement is CONTRADICTED: WRONG.
@@ -127,6 +127,11 @@ is complete. A timeout before the response is served grades HARNESS.
 Invalid stdout is distinguished from no observation: it reaches rule 3, even if parsing produced no observation
 object. The runner also supplies endpoint or stream mismatches. The grader does not inspect processes, sockets
 or files.
+
+A library that returned, or raised, with no request in the replay log talked to something else: a wrong base
+URL, a closed port, or the real API. The cell can't say how the library reports this fixture, so it grades
+HARNESS. Two errors are exceptions, because a library raises them before it sends anything: `validation` (it
+refused the call) and `internal` (it crashed building the call). The later rules grade those.
 
 Rule 5 needs a raised outcome: an `internal` error object on a returned result is graded by the requirements.
 

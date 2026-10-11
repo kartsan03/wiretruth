@@ -23,6 +23,7 @@ REPO = Path(__file__).resolve().parents[2]
         ("junk", False, "HARNESS", 3, 1),
         ("wrong-path", False, "HARNESS", 3, 1),
         ("wrong-stream", False, "HARNESS", 3, 1),
+        ("wrong-base-url", False, "HARNESS", 3, 0),
         ("unsupported", True, "UNSUPPORTED", 4, 0),
         ("unsupported", False, "HARNESS", 4, 0),
         ("internal", False, "CRASH", 5, 0),
@@ -61,7 +62,7 @@ def test_grading_through_real_processes(tmp_path, mode, listed, grade, rule, req
         assert cell.observation is None
         assert cell.notes[-1] == "the shim exited with code 3"
         assert "sample stderr" in stderr.read_text()
-    if mode in {"wrong-path", "wrong-stream"}:
+    if mode in {"wrong-path", "wrong-stream", "wrong-base-url"}:
         assert any(note.startswith("mismatch:") for note in cell.notes)
     if mode.startswith("hang"):
         assert "waiting" in stderr.read_text()

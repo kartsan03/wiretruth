@@ -143,14 +143,25 @@ def test_unstreamed_request_against_streamed_call_is_a_mismatch():
     assert "expected True" in interpret(stream=True).mismatch
 
 
-@pytest.mark.parametrize("outcome", ["returned", "raised", "unsupported"])
-def test_only_returned_without_a_request_is_a_mismatch(outcome):
+@pytest.mark.parametrize(
+    "outcome,category,mismatch",
+    [
+        ("returned", None, "returned a result without sending a request"),
+        ("raised", "network", "raised an error (network) without sending a request"),
+        ("raised", "api", "raised an error (api) without sending a request"),
+        ("raised", "other", "raised an error (other) without sending a request"),
+        ("raised", "validation", None),
+        ("raised", "internal", None),
+        ("unsupported", None, None),
+    ],
+)
+def test_no_request_is_a_mismatch_unless_the_library_stopped_itself(outcome, category, mismatch):
     doc = {**OBSERVATION, "outcome": outcome}
     if outcome == "raised":
         doc["error"] = {
-            "type": "ConnectionError",
+            "type": "SomeError",
             "message": "No connection",
-            "category": "network",
+            "category": category,
             "retry_after": None,
             "stack_top": None,
         }
@@ -158,7 +169,8 @@ def test_only_returned_without_a_request_is_a_mismatch(outcome):
         doc["unsupported_reason"] = "No schema support: https://example.org/features"
     run = interpret(json.dumps(doc).encode(), request_log=())
     assert run.invalid is None
-    assert bool(run.mismatch) == (outcome == "returned")
+    assert run.mismatch == mismatch
+    assert interpret(json.dumps(doc).encode(), request_log=(REQUEST,)).mismatch is None
 
 
 @pytest.mark.parametrize(

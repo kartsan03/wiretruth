@@ -16,8 +16,9 @@ RULES = (
     "The shim's time limit ran out: HANG if the response had been served, otherwise HARNESS.",
     "The shim's process ended without an observation: CRASH if a signal killed it (a segfault, "
     "for example) after the library's request reached the replay server, otherwise HARNESS.",
-    "The observation is invalid, or the library called a different endpoint or stream mode "
-    "than the fixture serves: HARNESS.",
+    "The observation is invalid, the library called a different endpoint or stream mode than "
+    "the fixture serves, or it returned or raised without a request reaching the replay server: "
+    "HARNESS.",
     "The shim reports, with a documentation link, that the library can't express the call: "
     "UNSUPPORTED.",
     "The library raised an internal error: CRASH.",
