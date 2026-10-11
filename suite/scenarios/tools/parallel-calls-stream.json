@@ -25,7 +25,7 @@
     ],
     "tool_choice": "auto"
   },
-  "providers": ["openai-chat"],
+  "providers": ["openai-chat", "openai-responses"],
   "requirements": [
     {
       "id": "calls-reported",
@@ -34,5 +34,5 @@
       "text": "Both tool calls are reported with the ids, names and arguments the provider sent."
     }
   ],
-  "grading_notes": "Both calls must be reported with their ids, names and parsed arguments in order. The argument deltas of the two calls are told apart by index, so interleaved pieces must stay with their own call."
+  "grading_notes": "Both calls must be reported with their ids, names and parsed arguments in order. The argument deltas of the two calls are told apart by index (Chat Completions) or by output item (Responses), so interleaved pieces must stay with their own call."
 }

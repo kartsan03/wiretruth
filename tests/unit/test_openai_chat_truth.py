@@ -805,7 +805,7 @@ def test_structured_text_duplicate_keys_use_last_value(stream) -> None:
 def test_new_chat_scenario_requests(id, stream, limit, effort, usage, tool, choice) -> None:
     family, name = id.split(".")
     scenario = load_scenario(REPO / "suite/scenarios" / family / f"{name}.json")
-    assert scenario.providers == ("openai-chat",)
+    assert "openai-chat" in scenario.providers
     body = build_request(scenario.call, "gpt-6-luna").body
     assert body["model"] == "gpt-6-luna"
     assert body.get("stream", False) is stream

@@ -9,9 +9,16 @@
     "stream": false,
     "max_output_tokens": 16,
     "messages": [
-      {"role": "user", "content": "Write a 200-word paragraph about the history of Kyiv, in English."}
+      {"role": "user", "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."}
     ],
     "reasoning": {"effort": "none"}
+  },
+  "call_overrides": {
+    "openai-chat": {
+      "messages": [
+        {"role": "user", "content": "Write a 200-word paragraph about the history of Kyiv, in English."}
+      ]
+    }
   },
   "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini", "anthropic"],
   "requirements": [
@@ -35,5 +42,5 @@
       "text": "Token usage is reported, and matches the provider's counts."
     }
   ],
-  "grading_notes": "A finish reason of length satisfies the first requirement, and so does a dedicated truncation error, which some libraries raise instead of returning the partial text. Such a library gets a note for the text requirement, a SHOULD, and keeps its grade. Effort none keeps the 16-token limit from being spent on reasoning."
+  "grading_notes": "A finish reason of length satisfies the first requirement, and so does a dedicated truncation error, which some libraries raise instead of returning the partial text. Such a library gets a note for the text requirement, a SHOULD, and keeps its grade. Effort none keeps the 16-token limit from being spent on reasoning. The openai-chat fixture was recorded with an earlier prompt, which the override keeps; every other provider uses the current one."
 }
