@@ -125,9 +125,9 @@ def json_str(obj: JsonObject | None, key: str) -> str | None:
 
 
 def _registry() -> dict[str, Provider]:
-    from wiretruth.providers import openai_chat
+    from wiretruth.providers import openai_chat, openai_responses
 
-    return {openai_chat.ID: openai_chat}
+    return {openai_chat.ID: openai_chat, openai_responses.ID: openai_responses}
 
 
 PROVIDERS: Mapping[str, Provider] = _registry()

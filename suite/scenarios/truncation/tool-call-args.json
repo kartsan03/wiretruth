@@ -31,7 +31,7 @@
     ],
     "tool_choice": "required"
   },
-  "providers": ["openai-chat"],
+  "providers": ["openai-chat", "openai-responses"],
   "requirements": [
     {
       "id": "no-complete-partial-call",

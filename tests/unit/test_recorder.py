@@ -165,7 +165,7 @@ def test_a_stream_is_recorded_event_by_event(
     assert (fixture.truth.finish, fixture.truth.text) == ("length", "Київ")
     assert fixture.truth.stream_completed is True
     # What the server got is what --dry-run describes, with the key in place of ***.
-    request = openai_chat.build_request(scenario.call, "gpt-6-luna")
+    request = openai_chat.build_request(scenario.call_for(openai_chat.ID), "gpt-6-luna")
     described = describe_request(openai_chat, request, server.base_urls()["openai-chat"])
     head, _, body = described.partition("\n\n")
     assert json.loads(body) == logged.json_body
@@ -726,6 +726,7 @@ def test_a_key_a_header_cant_carry_is_never_printed(bad: str) -> None:
 
 def test_find_scenarios(root: Path) -> None:
     other = json.loads((root / "suite" / "scenarios" / "truncation" / "text.json").read_text())
+    other.pop("call_overrides", None)  # its override names openai-chat, no longer listed
     other.update(id="truncation.text-stream", providers=["gemini"])
     (root / "suite" / "scenarios" / "truncation" / "text-stream.json").write_text(json.dumps(other))
     chosen, skipped = find_scenarios(root, "truncation.*", "openai-chat")
@@ -742,6 +743,7 @@ def test_find_scenarios(root: Path) -> None:
 def test_find_scenarios_unions_patterns_in_sorted_order(root: Path) -> None:
     folder = root / "suite" / "scenarios" / "truncation"
     other = json.loads((folder / "text.json").read_text())
+    other.pop("call_overrides", None)  # its override names openai-chat, no longer listed
     other.update(id="truncation.text-stream", providers=["gemini"])
     (folder / "text-stream.json").write_text(json.dumps(other))
     pattern = "truncation.text, truncation.text*,truncation.text-stream "

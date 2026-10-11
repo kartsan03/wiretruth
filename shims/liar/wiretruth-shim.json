@@ -6,7 +6,8 @@
   "primary_package": "wiretruth",
   "entry": ["python", "shim.py"],
   "providers": {
-    "openai-chat": "reference.observe over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_CHAT"
+    "openai-chat": "reference.observe over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_CHAT",
+    "openai-responses": "reference.observe over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_RESPONSES"
   },
   "surfaces": {
     "finish": {"primary": "truth.finish with length and errors mapped to stop"},

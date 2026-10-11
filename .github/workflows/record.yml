@@ -14,7 +14,7 @@ on:
       provider:
         description: The wire API to record
         type: choice
-        options: [openai-chat]
+        options: [openai-chat, openai-responses]
         required: true
       scenarios:
         description: Comma-separated scenario ids or globs, such as tools.*,usage.*
@@ -58,7 +58,7 @@ jobs:
           SCENARIOS: ${{ inputs.scenarios }}
           MODEL: ${{ inputs.model }}
           REPLACE: ${{ inputs.replace }}
-          OPENAI_API_KEY: ${{ inputs.provider == 'openai-chat' && secrets.OPENAI_API_KEY || '' }}
+          OPENAI_API_KEY: ${{ (inputs.provider == 'openai-chat' || inputs.provider == 'openai-responses') && secrets.OPENAI_API_KEY || '' }}
         run: |
           args=(--provider "$PROVIDER" --scenario "$SCENARIOS")
           if [ -n "$MODEL" ]; then args+=(--model "$MODEL"); fi

@@ -6,19 +6,21 @@
   "primary_package": "any-llm-sdk",
   "entry": ["python", "shim.py"],
   "providers": {
-    "openai-chat": "any_llm.completion(model=model, provider='openai', api_base=WIRETRUTH_BASE_URL_OPENAI_CHAT, api_key=WIRETRUTH_API_KEY)"
+    "openai-chat": "any_llm.completion(model=model, provider='openai', api_base=WIRETRUTH_BASE_URL_OPENAI_CHAT, api_key=WIRETRUTH_API_KEY)",
+    "openai-responses": "any_llm.responses(model=model, provider='openai', api_base=WIRETRUTH_BASE_URL_OPENAI_RESPONSES, api_key=WIRETRUTH_API_KEY)"
   },
   "surfaces": {
-    "finish": {"primary": "choices[0].finish_reason; error.completion.choices[0].finish_reason on finish-reason errors. No separate raw finish."},
-    "text": {"primary": "choices[0].message.content; streaming choices[0].delta.content; error.completion.choices[0].message.content"},
-    "tool_calls": {"primary": "choices[0].message.tool_calls; streaming choices[0].delta.tool_calls joined by index; error.completion.choices[0].message.tool_calls; arguments read with json.loads"},
-    "usage": {"primary": "usage.prompt_tokens, completion_tokens, total_tokens, prompt_tokens_details.cached_tokens, completion_tokens_details.reasoning_tokens; also error.completion.usage on finish-reason errors"},
-    "structured": {"primary": "response_format is a Pydantic model built from the input schema; choices[0].message.parsed is the parsed output"},
-    "stream": {"primary": "ChatCompletionChunk iterator ending without error; last finish reason and last usage-bearing chunk"}
+    "finish": {"primary": "choices[0].finish_reason; error.completion.choices[0].finish_reason on finish-reason errors. Responses status / incomplete_details.reason; completed with function_call output means tool_calls; refusal parts mean refusal. No separate raw finish."},
+    "text": {"primary": "choices[0].message.content; streaming choices[0].delta.content; error.completion.choices[0].message.content; Responses output message output_text parts or response.output_text.delta"},
+    "tool_calls": {"primary": "choices[0].message.tool_calls; streaming choices[0].delta.tool_calls joined by index; error.completion.choices[0].message.tool_calls; Responses function_call items use call_id, name and arguments; streaming output_item.added and argument deltas joined by output_index; arguments read with json.loads"},
+    "usage": {"primary": "usage.prompt_tokens, completion_tokens, total_tokens, prompt_tokens_details.cached_tokens, completion_tokens_details.reasoning_tokens; also error.completion.usage on finish-reason errors; Responses usage.input_tokens, output_tokens, total_tokens, input_tokens_details.cached_tokens, output_tokens_details.reasoning_tokens"},
+    "structured": {"primary": "response_format is a Pydantic model built from the input schema; choices[0].message.parsed is the parsed output; Responses output_parsed from response_format is reported only on return"},
+    "stream": {"primary": "ChatCompletionChunk iterator ending without error; last finish reason and last usage-bearing chunk; Responses final event (response.completed, response.incomplete or response.failed) and no error"}
   },
   "finish_map": {
     "stop": "stop", "length": "length", "tool_calls": "tool_calls",
-    "function_call": "tool_calls", "content_filter": "content_filter"
+    "function_call": "tool_calls", "content_filter": "content_filter",
+    "completed": "stop", "max_output_tokens": "length", "failed": "error"
   },
   "error_map": [
     {"type": "openai.LengthFinishReasonError", "category": "truncation"},
@@ -38,9 +40,10 @@
     {"type": "any_llm.exceptions.AnyLLMError", "category": "api"}
   ],
   "unsupported": [],
-  "config_notes": [],
+  "config_notes": ["any-llm rejects a typed response_format with stream=True; structured Responses use the non-stream path."],
   "docs": [
     "https://docs.mozilla.ai/api-reference/completion",
-    "https://docs.mozilla.ai/api-reference/exceptions"
+    "https://docs.mozilla.ai/api-reference/exceptions",
+    "https://docs.mozilla.ai/api-reference/responses"
   ]
 }

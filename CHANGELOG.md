@@ -12,6 +12,9 @@ finding).
 ## [Unreleased]
 
 ### Added
+- `openai-responses` supports recording, truth extraction, lint and replay. The any-llm shim maps it through
+  `any_llm.responses`. The truncated tool-argument scenarios (plain and streamed), reasoning-only truncation
+  and parallel tool-call scenarios (plain and streamed) now list the provider.
 - Nine `openai-chat` scenarios for truncated tool arguments, streamed usage, reasoning-only truncation,
   parallel tool calls, token-limit request fields and tools with default reasoning, with fixtures recorded in CI
   against `gpt-6-luna`.
@@ -22,6 +25,9 @@ finding).
   error completions.
 
 ### Changed
+- The plain and streamed text truncation scenarios use an octopus prompt, and structured-output truncation
+  uses Greek islands. An openai-chat override keeps the earlier calls its fixtures were recorded with; every
+  other provider uses the current prompts.
 - `no_complete_tool_call_from_partial_args` accepts visibly partial, unparsed calls; reporting parsed arguments
   where the wire carried partial arguments still contradicts. Truncation signalling is checked separately.
 - `request_field_equals` contradicts a JSON request missing the required field, so omitted settings no longer

@@ -74,6 +74,122 @@ def observe(result, prefix="", streaming=False):
             obs["usage"]["surface"][name] = "primary" if value is not None else "absent"
 
 
+def responses_kwargs():
+    if call.get("stop") is not None:
+        sys.exit("any-llm: stop not mapped yet")
+    kwargs = {}
+    if call.get("tools"):
+        kwargs["tools"] = [{"type": "function", **tool} for tool in call["tools"]]
+    if (choice := call.get("tool_choice")) is not None:
+        kwargs["tool_choice"] = (
+            {"type": "function", **choice} if isinstance(choice, dict) else choice
+        )
+    if call.get("reasoning") is not None:
+        kwargs["reasoning"] = {"effort": call["reasoning"]["effort"]}
+    if schema is not None:
+        kwargs["response_format"] = schema_type(schema)
+    return kwargs
+
+
+def responses_tool(index, id=None, name=None, arguments=None):
+    stored = tool_calls.setdefault(index, dict(id=None, name="", arguments_raw=None))
+    stored["id"] = stored["id"] or id
+    stored["name"] = stored["name"] or name or ""
+    if arguments is not None:
+        stored["arguments_raw"] = (stored["arguments_raw"] or "") + arguments
+    try:
+        parsed, ok = json.loads(stored["arguments_raw"]), True
+        json.dumps(parsed, ensure_ascii=False, allow_nan=False).encode()
+    except Exception:
+        parsed, ok = None, False
+    stored.update(arguments_parsed_ok=ok, arguments=parsed)
+    obs["tool_calls"] = [tool_calls[index] for index in sorted(tool_calls)]
+
+
+def responses_error(error):
+    # The library returned or yielded this error instead of raising it: the outcome stays returned.
+    obs["structured"].update(returned_as_success=False, value=None)
+    obs["error"] = dict(
+        type=f"{type(error).__module__}.{type(error).__qualname__}",
+        message=getattr(error, "message", "")[:500],
+        category="api",
+        retry_after=None,
+        stack_top=None,
+    )
+    obs["stream"]["completed"] = False if call["stream"] else None
+
+
+def observe_responses(result, prefix="", streaming=False):
+    global responses_refusal
+    has_tool = False
+    for index, item in enumerate(result.output or []):
+        if item.type == "message":
+            for part in item.content:
+                if part.type == "refusal":
+                    responses_refusal = True
+                elif part.type == "output_text" and not streaming:
+                    text = obs["text"]
+                    text.update(value=(text["value"] or "") + part.text, surface="primary")
+        elif item.type == "function_call":
+            has_tool = True
+            if not streaming:
+                responses_tool(index, item.call_id, item.name, item.arguments)
+    reason = getattr(result.incomplete_details, "reason", None)
+    raw = reason if reason is not None else result.status
+    value = None
+    if result.status is not None:
+        value = "other"
+        if result.status == "incomplete" and raw in ("max_output_tokens", "content_filter"):
+            value = manifest["finish_map"].get(raw, "other")
+        if result.status == "completed":
+            value = "tool_calls" if has_tool else manifest["finish_map"]["completed"]
+        if responses_refusal:
+            value = "refusal"
+        if result.status == "failed" or result.error is not None:
+            value = "error"
+            responses_error(result.error or result)
+        obs["finish"].update(
+            value=value,
+            raw=raw,
+            surface="primary",
+            source=prefix + ("incomplete_details.reason" if reason is not None else "status"),
+        )
+    if result.usage is not None:
+        for name, path in usage_fields.items():
+            value = result.usage
+            for attr in path.split("."):
+                value = getattr(value, attr, None)
+            obs["usage"][name] = value
+            obs["usage"]["surface"][name] = "primary" if value is not None else "absent"
+    parsed = getattr(result, "output_parsed", None)
+    if parsed is not None and obs["outcome"] == "returned":
+        obs["structured"].update(returned_as_success=True, value=parsed.model_dump(mode="json"))
+
+
+def observe_responses_event(event):
+    global responses_refusal
+    kind = event.type
+    if kind in ("response.completed", "response.incomplete", "response.failed"):
+        observe_responses(event.response, kind + ".response.", streaming=True)
+        if kind == "response.failed" and obs["error"] is None:
+            responses_error(event.response)
+        obs["stream"]["completed"] = obs["error"] is None
+    elif kind == "error":
+        responses_error(getattr(event, "error", None) or event)
+    elif kind == "response.output_text.delta":
+        text = obs["text"]
+        text.update(value=(text["value"] or "") + event.delta, surface="primary")
+    elif kind == "response.refusal.delta" or (
+        kind == "response.content_part.added" and event.part.type == "refusal"
+    ):
+        responses_refusal = True
+        obs["finish"].update(value="refusal", raw=None, surface="primary", source=kind)
+    elif kind == "response.output_item.added" and event.item.type == "function_call":
+        responses_tool(event.output_index, event.item.call_id, event.item.name)
+    elif kind == "response.function_call_arguments.delta":
+        responses_tool(event.output_index, arguments=event.delta)
+
+
 def observe_error(error):
     obs["outcome"] = "raised"
     obs["structured"].update(returned_as_success=False, value=None)
@@ -104,8 +220,12 @@ class ObserverPolicy(asyncio.DefaultEventLoopPolicy):
 started = time.monotonic()
 call = json.load(sys.stdin)
 schema = call["output_schema"]
-if {call["provider"], os.environ["WIRETRUTH_PROVIDER"]} != {"openai-chat"}:
+if call["provider"] not in ("openai-chat", "openai-responses") or (
+    call["provider"] != os.environ["WIRETRUTH_PROVIDER"]
+):
     sys.exit("any-llm: provider not mapped yet")
+responses = call["provider"] == "openai-responses"
+responses_refusal = False
 manifest = json.loads(Path("wiretruth-shim.json").read_text())
 usage_fields = dict(
     input="prompt_tokens",
@@ -114,10 +234,21 @@ usage_fields = dict(
     cached_input="prompt_tokens_details.cached_tokens",
     reasoning="completion_tokens_details.reasoning_tokens",
 )
+if responses:
+    usage_fields = dict(
+        input="input_tokens",
+        output="output_tokens",
+        total="total_tokens",
+        cached_input="input_tokens_details.cached_tokens",
+        reasoning="output_tokens_details.reasoning_tokens",
+    )
 obs = {
     "format": "wiretruth.observation/v1",
     "library": dict(
-        name="any-llm", version=version("any-llm-sdk"), language="python", api="any_llm.completion"
+        name="any-llm",
+        version=version("any-llm-sdk"),
+        language="python",
+        api="any_llm.responses" if responses else "any_llm.completion",
     ),
     "outcome": "returned",
     **dict.fromkeys(("unsupported_reason", "error")),
@@ -146,28 +277,50 @@ if call.get("reasoning") is not None:
     kwargs["reasoning_effort"] = call["reasoning"]["effort"]
 if call.get("extra", {}).get("include_usage"):
     kwargs["stream_options"] = {"include_usage": True}
+if responses:
+    kwargs = responses_kwargs()
 threading.excepthook = lambda args: observe_error(args.exc_value)
 asyncio.set_event_loop_policy(ObserverPolicy())
 try:
     with redirect_stdout(sys.stderr):
-        # https://docs.mozilla.ai/api-reference/completion (Basic completion and Streaming)
-        result = any_llm.completion(
-            model=call["model"],
-            provider="openai",
-            messages=call["messages"],
-            api_base=os.environ["WIRETRUTH_BASE_URL_OPENAI_CHAT"],
-            api_key=os.environ["WIRETRUTH_API_KEY"],
-            max_tokens=call["max_output_tokens"],
-            stream=call["stream"],
-            **kwargs,
-        )
-        if call["stream"]:
-            for chunk in result:
-                obs["stream"]["chunks_seen"] += 1
-                observe(chunk, streaming=True)
-            obs["stream"]["completed"] = obs["error"] is None
+        if responses:
+            # https://docs.mozilla.ai/api-reference/responses
+            result = any_llm.responses(
+                model=call["model"],
+                provider="openai",
+                input_data=call["messages"],
+                api_base=os.environ["WIRETRUTH_BASE_URL_OPENAI_RESPONSES"],
+                api_key=os.environ["WIRETRUTH_API_KEY"],
+                max_output_tokens=call["max_output_tokens"],
+                stream=call["stream"],
+                **kwargs,
+            )
+            if call["stream"]:
+                obs["stream"]["completed"] = False
+                for event in result:
+                    obs["stream"]["chunks_seen"] += 1
+                    observe_responses_event(event)
+            else:
+                observe_responses(result)
         else:
-            observe(result)
+            # https://docs.mozilla.ai/api-reference/completion (Basic completion and Streaming)
+            result = any_llm.completion(
+                model=call["model"],
+                provider="openai",
+                messages=call["messages"],
+                api_base=os.environ["WIRETRUTH_BASE_URL_OPENAI_CHAT"],
+                api_key=os.environ["WIRETRUTH_API_KEY"],
+                max_tokens=call["max_output_tokens"],
+                stream=call["stream"],
+                **kwargs,
+            )
+            if call["stream"]:
+                for chunk in result:
+                    obs["stream"]["chunks_seen"] += 1
+                    observe(chunk, streaming=True)
+                obs["stream"]["completed"] = obs["error"] is None
+            else:
+                observe(result)
 except Exception as error:
     # https://docs.mozilla.ai/api-reference/exceptions (provider exceptions pass through by default)
     observe_error(error)

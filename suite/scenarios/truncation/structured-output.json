@@ -11,26 +11,52 @@
     "messages": [
       {
         "role": "user",
-        "content": "List ten large Ukrainian cities with their oblast. Назви міст пиши українською."
+        "content": "List ten Greek islands and the sea each one lies in. Write the names in Greek."
       }
     ],
     "output_schema": {
       "type": "object",
       "properties": {
-        "cities": {
+        "islands": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {"name": {"type": "string"}, "oblast": {"type": "string"}},
-            "required": ["name", "oblast"],
+            "properties": {"name": {"type": "string"}, "sea": {"type": "string"}},
+            "required": ["name", "sea"],
             "additionalProperties": false
           }
         }
       },
-      "required": ["cities"],
+      "required": ["islands"],
       "additionalProperties": false
     },
     "reasoning": {"effort": "none"}
+  },
+  "call_overrides": {
+    "openai-chat": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "List ten large Ukrainian cities with their oblast. Назви міст пиши українською."
+        }
+      ],
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "cities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {"name": {"type": "string"}, "oblast": {"type": "string"}},
+              "required": ["name", "oblast"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["cities"],
+        "additionalProperties": false
+      }
+    }
   },
   "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini", "anthropic"],
   "requirements": [
@@ -60,7 +86,7 @@
       "text": "Token usage is reported, and matches the provider's counts, even though the result is unusable."
     }
   ],
-  "grading_notes": "A partial object returned as a success fails the first requirement. A generic JSON parse or schema validation error without a truncation signal fails only the second: the call fails loudly, but the caller can't tell that a higher limit would fix it. A library that raises without the partial text gets a note for the text requirement, a SHOULD. The city names are asked for in Ukrainian, so the cut-off JSON holds multi-byte text. Effort none keeps the 24-token limit from being spent on reasoning.",
+  "grading_notes": "A partial object returned as a success fails the first requirement. A generic JSON parse or schema validation error without a truncation signal fails only the second: the call fails loudly, but the caller can't tell that a higher limit would fix it. A library that raises without the partial text gets a note for the text requirement, a SHOULD. The names are asked for in a non-Latin script (Greek in the current prompt), so the cut-off JSON holds multi-byte text. Effort none keeps the 24-token limit from being spent on reasoning. The openai-chat fixture was recorded with an earlier prompt, which the override keeps; every other provider uses the current one.",
   "references": [
     "https://github.com/TanStack/ai/issues/1426",
     "https://github.com/TanStack/ai/pull/1427",

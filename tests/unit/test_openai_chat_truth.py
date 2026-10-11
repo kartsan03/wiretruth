@@ -788,6 +788,15 @@ def test_structured_text_duplicate_keys_use_last_value(stream) -> None:
     assert _truth(exchange, JSON_REQUEST)["structured"] == {"unit": "km"}
 
 
+ALSO_RESPONSES = {
+    "truncation.tool-call-args",
+    "truncation.tool-call-args-stream",
+    "truncation.reasoning-only",
+    "tools.parallel-calls",
+    "tools.parallel-calls-stream",
+}
+
+
 @pytest.mark.parametrize(
     "id,stream,limit,effort,usage,tool,choice",
     [
@@ -805,7 +814,8 @@ def test_structured_text_duplicate_keys_use_last_value(stream) -> None:
 def test_new_chat_scenario_requests(id, stream, limit, effort, usage, tool, choice) -> None:
     family, name = id.split(".")
     scenario = load_scenario(REPO / "suite/scenarios" / family / f"{name}.json")
-    assert scenario.providers == ("openai-chat",)
+    also = ("openai-responses",) if id in ALSO_RESPONSES else ()
+    assert scenario.providers == ("openai-chat", *also)
     body = build_request(scenario.call, "gpt-6-luna").body
     assert body["model"] == "gpt-6-luna"
     assert body.get("stream", False) is stream

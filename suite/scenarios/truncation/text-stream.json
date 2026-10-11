@@ -9,9 +9,16 @@
     "stream": true,
     "max_output_tokens": 16,
     "messages": [
-      {"role": "user", "content": "Write a 200-word paragraph about the history of Kyiv, in English."}
+      {"role": "user", "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."}
     ],
     "reasoning": {"effort": "none"}
+  },
+  "call_overrides": {
+    "openai-chat": {
+      "messages": [
+        {"role": "user", "content": "Write a 200-word paragraph about the history of Kyiv, in English."}
+      ]
+    }
   },
   "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini", "anthropic"],
   "requirements": [
@@ -35,5 +42,5 @@
       "text": "Output token usage is reported, and matches the provider's count."
     }
   ],
-  "grading_notes": "The finish comes in the last event before the stream ends, so a library that only passes the text on can't satisfy the first requirement; a finish reason of length or a dedicated truncation error does. openai-chat sends no usage in this stream, because the call doesn't set stream_options.include_usage, so its truth has no usage for the second requirement to compare; the form with include_usage is planned as a scenario of its own, truncation.text-stream-usage. Effort none keeps the 16-token limit from being spent on reasoning."
+  "grading_notes": "The finish comes in the last event before the stream ends, so a library that only passes the text on can't satisfy the first requirement; a finish reason of length or a dedicated truncation error does. openai-chat sends no usage in this stream, because the call doesn't set stream_options.include_usage, so its truth has no usage for the second requirement to compare; the form with include_usage is planned as a scenario of its own, truncation.text-stream-usage. Effort none keeps the 16-token limit from being spent on reasoning. The openai-chat fixture was recorded with an earlier prompt, which the override keeps; every other provider uses the current one."
 }

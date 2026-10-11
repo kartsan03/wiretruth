@@ -25,7 +25,7 @@
     ],
     "tool_choice": "auto"
   },
-  "providers": ["openai-chat"],
+  "providers": ["openai-chat", "openai-responses"],
   "requirements": [
     {
       "id": "calls-reported",
