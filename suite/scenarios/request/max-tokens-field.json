@@ -1,0 +1,41 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "request.max-tokens-field",
+  "title": "Output limit uses the supported Chat Completions field",
+  "bug_class": "request-fidelity",
+  "priority": "P1",
+  "summary": "A short answer is requested with an output limit that must use max_completion_tokens.",
+  "call": {
+    "stream": false,
+    "max_output_tokens": 16,
+    "messages": [
+      {"role": "user", "content": "Name three moons of Jupiter."}
+    ],
+    "reasoning": {"effort": "none"}
+  },
+  "providers": ["openai-chat"],
+  "requirements": [
+    {
+      "id": "limit-field",
+      "level": "MUST",
+      "check": "request_field_equals",
+      "args": {"path": "max_completion_tokens", "value": 16},
+      "text": "The request sends the output limit as max_completion_tokens."
+    },
+    {
+      "id": "no-legacy-limit",
+      "level": "MUST",
+      "check": "request_field_absent",
+      "args": {"path": "max_tokens"},
+      "text": "The request omits the unsupported max_tokens field."
+    },
+    {
+      "id": "no-temperature",
+      "level": "SHOULD",
+      "check": "request_field_absent",
+      "args": {"path": "temperature"},
+      "text": "The request leaves temperature unset."
+    }
+  ],
+  "grading_notes": "gpt-6-luna rejects max_tokens with a 400 unsupported_parameter error (Use 'max_completion_tokens' instead). The response is an ordinary one; these requirements check the request."
+}

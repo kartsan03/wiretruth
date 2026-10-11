@@ -1,0 +1,38 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "tools.parallel-calls-stream",
+  "title": "Streamed parallel tool calls for two cities",
+  "bug_class": "tool-call-fidelity",
+  "priority": "P1",
+  "summary": "The model returns one weather tool call for each of two cities.",
+  "call": {
+    "stream": true,
+    "messages": [
+      {"role": "user", "content": "What's the weather like right now in São Paulo and in Zürich? Call the tool once for each city."}
+    ],
+    "reasoning": {"effort": "none"},
+    "tools": [
+      {
+        "name": "get_weather",
+        "description": "Get the current weather for a city.",
+        "parameters": {
+          "type": "object",
+          "properties": {"city": {"type": "string"}},
+          "required": ["city"],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "tool_choice": "auto"
+  },
+  "providers": ["openai-chat"],
+  "requirements": [
+    {
+      "id": "calls-reported",
+      "level": "MUST",
+      "check": "tool_calls_match_truth",
+      "text": "Both tool calls are reported with the ids, names and arguments the provider sent."
+    }
+  ],
+  "grading_notes": "Both calls must be reported with their ids, names and parsed arguments in order. The argument deltas of the two calls are told apart by index, so interleaved pieces must stay with their own call."
+}

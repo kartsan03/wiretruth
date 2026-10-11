@@ -1,0 +1,39 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "truncation.reasoning-only",
+  "title": "Reasoning exhausts the output limit before an answer",
+  "bug_class": "silent-truncation",
+  "priority": "P0",
+  "summary": "The model spends the output token limit on reasoning and stops without sending answer text.",
+  "call": {
+    "stream": false,
+    "max_output_tokens": 64,
+    "messages": [
+      {"role": "user", "content": "Find the smallest positive whole number that leaves a remainder of 1 when divided by 2, 3, 4, 5 or 6 and is divisible by 7. Check your answer before replying."}
+    ],
+    "reasoning": {"effort": "medium"}
+  },
+  "providers": ["openai-chat"],
+  "requirements": [
+    {
+      "id": "cause-is-truncation",
+      "level": "MUST",
+      "check": "truncation_is_signalled",
+      "text": "The caller can tell that the output stopped at the token limit."
+    },
+    {
+      "id": "text-reported",
+      "level": "MUST",
+      "check": "text_matches_truth",
+      "text": "The provider sent no answer text, so none may be reported."
+    },
+    {
+      "id": "usage-reported",
+      "level": "SHOULD",
+      "check": "usage_matches_truth",
+      "args": {"fields": ["output"]},
+      "text": "Token usage is reported and matches the provider's counts."
+    }
+  ],
+  "grading_notes": "Effort medium spends the whole 64-token limit on reasoning. Null or empty answer text must be reported as none, and the caller must be told that the output stopped at the token limit. Output usage includes reasoning tokens."
+}

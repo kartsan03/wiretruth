@@ -11,6 +11,28 @@ finding).
 
 ## [Unreleased]
 
+### Added
+- Nine `openai-chat` scenarios for truncated tool arguments, streamed usage, reasoning-only truncation,
+  parallel tool calls, token-limit request fields and tools with default reasoning. Fixtures will be recorded
+  separately; scenarios without fixtures are skipped when running the suite.
+- `wiretruth record --scenario` and `wiretruth run --scenario` accept comma-separated ids or globs, combine
+  matches without duplicates, and reject any part that matches nothing.
+- `wiretruth lint` reports unknown requirement check names, with the scenario path and requirement id.
+- The any-llm shim maps tools, tool choice and stop sequences, and reads tool calls from results, streams and
+  error completions.
+
+### Changed
+- `no_complete_tool_call_from_partial_args` accepts visibly partial, unparsed calls; reporting parsed arguments
+  where the wire carried partial arguments still contradicts. Truncation signalling is checked separately.
+- `request_field_equals` contradicts a JSON request missing the required field, so omitted settings no longer
+  grade as unobservable.
+- `text_matches_truth` accepts reporting no text when the wire carried null or empty text, and rejects invented
+  answer text in that case.
+
+### Fixed
+- Complete tool-call arguments with duplicate JSON keys no longer read as partial. Tool arguments and structured
+  text use the last value for each duplicate key, as clients do, while retaining strict number and Unicode checks.
+
 ## [0.1.0] - 2026-10-11
 
 ### Added

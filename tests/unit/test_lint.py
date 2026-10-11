@@ -102,6 +102,23 @@ def test_scenario_cross_checks(root: Path) -> None:
     ]
 
 
+def test_unknown_requirement_checks_are_reported(root: Path) -> None:
+    path = root / "suite" / "scenarios" / "truncation" / "text-stream.json"
+    scenario = json.loads(path.read_text())
+    scenario["requirements"] = [
+        dict(id="first", level="MUST", check="finish_typo", text="First check."),
+        dict(id="second", level="SHOULD", check="text_typo", text="Second check."),
+        dict(id="known", level="MUST", check="finish_is", args={}, text="Known check."),
+    ]
+    _write(path, scenario)
+    assert _lines(root) == [
+        "suite/scenarios/truncation/text-stream.json: $.requirements[0].check: "
+        "requirement 'first': unknown check 'finish_typo'",
+        "suite/scenarios/truncation/text-stream.json: $.requirements[1].check: "
+        "requirement 'second': unknown check 'text_typo'",
+    ]
+
+
 def test_fixture_cross_checks(root: Path) -> None:
     fixtures = root / "suite" / "fixtures" / "openai-chat"
     (fixtures / "truncation.text-stream.json").rename(fixtures / "truncation.text.json")

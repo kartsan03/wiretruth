@@ -17,7 +17,7 @@ on:
         options: [openai-chat]
         required: true
       scenarios:
-        description: A scenario id, or a glob such as truncation.*
+        description: Comma-separated scenario ids or globs, such as tools.*,usage.*
         type: string
         required: true
       model:

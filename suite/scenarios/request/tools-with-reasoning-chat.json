@@ -1,0 +1,42 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "request.tools-with-reasoning-chat",
+  "title": "Function tools with the default reasoning effort",
+  "bug_class": "request-fidelity",
+  "priority": "P1",
+  "summary": "The caller requests a function tool without setting reasoning effort, and Chat Completions rejects the combination.",
+  "call": {
+    "stream": false,
+    "messages": [
+      {"role": "user", "content": "How long is a 10 km run in miles? Use the tool to convert it."}
+    ],
+    "tools": [
+      {
+        "name": "convert_units",
+        "description": "Convert a value from one unit to another.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "value": {"type": "number"},
+            "from_unit": {"type": "string"},
+            "to_unit": {"type": "string"}
+          },
+          "required": ["value", "from_unit", "to_unit"],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "tool_choice": "auto"
+  },
+  "providers": ["openai-chat"],
+  "requirements": [
+    {
+      "id": "error-reported",
+      "level": "MUST",
+      "check": "outcome_is_error",
+      "args": {"categories": ["api", "validation"]},
+      "text": "The library surfaces the API error or refuses the call through validation before sending it."
+    }
+  ],
+  "grading_notes": "gpt-6-luna answers function tools on Chat Completions with a 400 error (param: reasoning_effort) unless the request sets reasoning_effort: \"none\". The default effort applies when the caller sets none. The library must surface an API error or refuse the call before sending it through validation; it must not crash, hang or return a result. Sending the call to another endpoint, such as /v1/responses, grades HARNESS because this scenario has no fixture for it."
+}

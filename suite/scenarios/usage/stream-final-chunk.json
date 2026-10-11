@@ -1,0 +1,28 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "usage.stream-final-chunk",
+  "title": "Streamed usage in a final chunk with no choices",
+  "bug_class": "usage-accounting",
+  "priority": "P0",
+  "summary": "The model finishes a short streamed answer, then reports usage in a chunk with no choices.",
+  "call": {
+    "stream": true,
+    "max_output_tokens": 64,
+    "messages": [
+      {"role": "user", "content": "In one short sentence, explain why the sky looks blue."}
+    ],
+    "reasoning": {"effort": "none"},
+    "extra": {"include_usage": true}
+  },
+  "providers": ["openai-chat"],
+  "requirements": [
+    {
+      "id": "usage-reported",
+      "level": "MUST",
+      "check": "usage_matches_truth",
+      "args": {"fields": ["input", "output"]},
+      "text": "Token usage is reported and matches the provider's counts."
+    }
+  ],
+  "grading_notes": "Usage comes only in a final chunk with choices: []. A library that crashes on empty choices grades CRASH. A library that needs an opt-in to receive streamed usage is fine when the shim passes it the library's own way."
+}

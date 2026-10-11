@@ -1,0 +1,50 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "truncation.tool-call-args-stream",
+  "title": "Streamed tool-call arguments cut off by the output token limit",
+  "bug_class": "tool-call-fidelity",
+  "priority": "P0",
+  "summary": "The model stops at the output token limit partway through the arguments of a tool call.",
+  "call": {
+    "stream": true,
+    "max_output_tokens": 20,
+    "messages": [
+      {"role": "user", "content": "Create an event for a weekend pottery workshop in Málaga on 2026-11-14 with 30 attendees. Invent their full names, mixing Spanish, Greek and Japanese names written in their own scripts."}
+    ],
+    "reasoning": {"effort": "none"},
+    "tools": [
+      {
+        "name": "create_event",
+        "description": "Create a calendar event.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "title": {"type": "string"},
+            "date": {"type": "string", "description": "YYYY-MM-DD"},
+            "city": {"type": "string"},
+            "attendees": {"type": "array", "items": {"type": "string"}}
+          },
+          "required": ["title", "date", "city", "attendees"],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "tool_choice": "required"
+  },
+  "providers": ["openai-chat"],
+  "requirements": [
+    {
+      "id": "no-complete-partial-call",
+      "level": "MUST",
+      "check": "no_complete_tool_call_from_partial_args",
+      "text": "Partial tool-call arguments are never presented as a complete parsed call."
+    },
+    {
+      "id": "cause-is-truncation",
+      "level": "MUST",
+      "check": "truncation_is_signalled",
+      "text": "The caller can tell that the output stopped at the token limit."
+    }
+  ],
+  "grading_notes": "Effort none keeps the 20-token limit for the tool arguments. Returning unparsed partial arguments satisfies the first requirement; the caller must also be told that the output stopped at the token limit. Repairing the arguments into a complete parsed call contradicts what the wire carried."
+}

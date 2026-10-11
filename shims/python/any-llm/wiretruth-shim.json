@@ -11,6 +11,7 @@
   "surfaces": {
     "finish": {"primary": "choices[0].finish_reason; error.completion.choices[0].finish_reason on finish-reason errors. No separate raw finish."},
     "text": {"primary": "choices[0].message.content; streaming choices[0].delta.content; error.completion.choices[0].message.content"},
+    "tool_calls": {"primary": "choices[0].message.tool_calls; streaming choices[0].delta.tool_calls joined by index; error.completion.choices[0].message.tool_calls; arguments read with json.loads"},
     "usage": {"primary": "usage.prompt_tokens, completion_tokens, total_tokens, prompt_tokens_details.cached_tokens, completion_tokens_details.reasoning_tokens; also error.completion.usage on finish-reason errors"},
     "structured": {"primary": "response_format is a Pydantic model built from the input schema; choices[0].message.parsed is the parsed output"},
     "stream": {"primary": "ChatCompletionChunk iterator ending without error; last finish reason and last usage-bearing chunk"}

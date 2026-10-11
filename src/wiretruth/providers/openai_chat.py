@@ -202,7 +202,7 @@ def _parse(raw: str | None) -> tuple[JsonValue, bool]:
     if raw is None:
         return None, False
     try:
-        return parse_json(raw.encode()), True
+        return parse_json(raw.encode(), duplicates="last"), True
     except (ValueError, RecursionError):
         return None, False
 

@@ -164,11 +164,21 @@ def truncation_is_signalled(
 def text_matches_truth(
     obs: Observation, truth: Truth, req_log: Sequence[LoggedRequest], args: JsonObject
 ) -> CheckResult:
-    """Compare text exactly; raw, absent or null text is NOT_OBSERVABLE."""
+    """Compare primary text exactly; null or empty truth is matched by reporting no text.
+
+    Raw text stays NOT_OBSERVABLE. For non-empty truth, absent or null text is NOT_OBSERVABLE.
+    """
     _keys(args)
     value = obs.text.value if obs.text else None
     surface = obs.text.surface if obs.text else "absent"
     evidence = f"text.value={_show(value)} ({surface}); truth.text={_show(truth.text)}"
+    if surface == "raw":
+        return CheckResult("NOT_OBSERVABLE", evidence)
+    if truth.text in (None, ""):
+        status: Status = (
+            "SATISFIED" if surface == "absent" or value in (None, "") else "CONTRADICTED"
+        )
+        return CheckResult(status, evidence)
     if surface != "primary" or value is None:
         return CheckResult("NOT_OBSERVABLE", evidence)
     return CheckResult("SATISFIED" if value == truth.text else "CONTRADICTED", evidence)
@@ -263,12 +273,11 @@ def tool_calls_match_truth(
 def no_complete_tool_call_from_partial_args(
     obs: Observation, truth: Truth, req_log: Sequence[LoggedRequest], args: JsonObject
 ) -> CheckResult:
-    """Reject calls returned without an error whose arguments are partial or repaired.
+    """Reject parsed calls returned without an error when their truth arguments were partial.
 
-    A returned call is treated as complete. A raised outcome or an error signal (an error object
-    or a primary ``error`` finish) satisfies first.
-    Match truth by id, falling back to position when no id matches. A false parsed flag (the
-    shim's reading of the raw arguments) or partial truth arguments make a returned call partial.
+    A raised outcome, an error object or a primary ``error`` finish satisfies first. Match truth
+    by id, falling back to position when no id matches. Unparsed arguments are visibly partial
+    and satisfy; truncation_is_signalled separately checks whether the cut was signalled.
     """
     _keys(args)
     if obs.outcome == "raised" or obs.error is not None or _primary_finish(obs) == "error":
@@ -278,9 +287,7 @@ def no_complete_tool_call_from_partial_args(
             (item for item in truth.tool_calls if item.id is not None and item.id == call.id),
             truth.tool_calls[index] if index < len(truth.tool_calls) else None,
         )
-        if not call.arguments_parsed_ok or (
-            expected is not None and not expected.arguments_parsed_ok
-        ):
+        if call.arguments_parsed_ok and expected is not None and not expected.arguments_parsed_ok:
             return CheckResult(
                 "CONTRADICTED",
                 f"tool_calls[{index}] id={_show(call.id)} returned without error; "
@@ -288,7 +295,9 @@ def no_complete_tool_call_from_partial_args(
                 "truth.arguments_parsed_ok="
                 f"{_show(expected.arguments_parsed_ok if expected else None)}",
             )
-    return CheckResult("SATISFIED", f"{len(obs.tool_calls)} tool calls; no partial args returned")
+    return CheckResult(
+        "SATISFIED", f"{len(obs.tool_calls)} tool calls; no partial args made complete"
+    )
 
 
 def _usage_value(obs: Observation, field: str) -> tuple[int | None, Surface]:
@@ -432,9 +441,9 @@ def request_field_equals(
 ) -> CheckResult:
     """Every logged request must have the requested JSON value at a dotted path.
 
-    Numeric segments index lists. Non-JSON bodies have no paths. No requests is NOT_OBSERVABLE;
-    any mismatch contradicts, otherwise any missing path is NOT_OBSERVABLE. JSON booleans and
-    numbers differ, including inside arrays and objects.
+    Numeric segments index lists. No requests or non-JSON bodies are NOT_OBSERVABLE. A missing
+    path in a JSON body or a different value contradicts. JSON booleans and numbers differ,
+    including inside arrays and objects.
     """
     _keys(args, ("path", "value"))
     path = _path_arg(args)
@@ -448,6 +457,8 @@ def request_field_equals(
         status: Status = "NOT_OBSERVABLE"
         if present:
             status = "SATISFIED" if _json_equal(value, args["value"]) else "CONTRADICTED"
+        elif request.json_body is not None:
+            status = "CONTRADICTED"
         evidence = f"request[{index}].json_body.{path}={_show(value) if present else 'absent'}"
         results.append(CheckResult(status, f"{evidence}; required={_show(args['value'])}"))
     return _fold(results)

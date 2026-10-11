@@ -79,7 +79,8 @@ def build_parser() -> argparse.ArgumentParser:
             subparser.add_argument(
                 "--scenario",
                 default="*",
-                help="a scenario id, or a glob such as 'truncation.*' (default: every scenario; "
+                help="comma-separated scenario ids or globs, such as 'tools.*,usage.*' "
+                "(default: every scenario; "
                 "read from suite/ in the current directory)",
             )
             subparser.add_argument(
@@ -136,7 +137,7 @@ def build_parser() -> argparse.ArgumentParser:
             subparser.add_argument(
                 "--scenario",
                 required=True,
-                help="a scenario id, or a glob such as 'truncation.*' "
+                help="comma-separated scenario ids or globs, such as 'tools.*,usage.*' "
                 "(read from suite/scenarios/ in the current directory)",
             )
             subparser.add_argument(

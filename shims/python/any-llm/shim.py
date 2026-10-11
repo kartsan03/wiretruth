@@ -44,6 +44,24 @@ def observe(result, prefix="", streaming=False):
         if message.content is not None:
             text = obs["text"]
             text.update(value=(text["value"] or "") + message.content, surface="primary")
+        for index, tool in enumerate(message.tool_calls or []):
+            index = tool.index if streaming else index
+            stored = tool_calls.setdefault(index, dict(id=None, name="", arguments_raw=None))
+            stored["id"] = stored["id"] or tool.id
+            if tool.function is not None:
+                stored["name"] = stored["name"] or tool.function.name or ""
+                if tool.function.arguments is not None:
+                    stored["arguments_raw"] = (
+                        stored["arguments_raw"] or ""
+                    ) + tool.function.arguments
+            try:
+                arguments, ok = json.loads(stored["arguments_raw"]), True
+                # Values the observation can't carry (1e400, a lone surrogate) count as unparsed.
+                json.dumps(arguments, ensure_ascii=False, allow_nan=False).encode()
+            except Exception:
+                arguments, ok = None, False
+            stored.update(arguments_parsed_ok=ok, arguments=arguments)
+        obs["tool_calls"] = [tool_calls[index] for index in sorted(tool_calls)]
         parsed = getattr(message, "parsed", None)
         if parsed is not None and obs["outcome"] == "returned":
             obs["structured"].update(returned_as_success=True, value=parsed.model_dump(mode="json"))
@@ -86,10 +104,8 @@ class ObserverPolicy(asyncio.DefaultEventLoopPolicy):
 started = time.monotonic()
 call = json.load(sys.stdin)
 schema = call["output_schema"]
-if {call["provider"], os.environ["WIRETRUTH_PROVIDER"]} != {"openai-chat"} or any(
-    call.get(key) for key in ("tools", "stop")
-):
-    sys.exit("any-llm: provider, tools or stop not mapped yet")
+if {call["provider"], os.environ["WIRETRUTH_PROVIDER"]} != {"openai-chat"}:
+    sys.exit("any-llm: provider not mapped yet")
 manifest = json.loads(Path("wiretruth-shim.json").read_text())
 usage_fields = dict(
     input="prompt_tokens",
@@ -113,7 +129,16 @@ obs = {
     "stream": dict(used=call["stream"], completed=None, chunks_seen=0 if call["stream"] else None),
     "notes": [],
 }
+tool_calls = {}
 kwargs = {}
+if call.get("tools"):
+    kwargs["tools"] = [{"type": "function", "function": tool} for tool in call["tools"]]
+if (choice := call.get("tool_choice")) is not None:
+    kwargs["tool_choice"] = (
+        {"type": "function", "function": choice} if isinstance(choice, dict) else choice
+    )
+if call.get("stop") is not None:
+    kwargs["stop"] = call["stop"]
 if schema is not None:
     # https://docs.mozilla.ai/api-reference/completion (Structured output)
     kwargs["response_format"] = schema_type(schema)
