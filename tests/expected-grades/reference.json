@@ -27,6 +27,14 @@
       }
     },
     {
+      "scenario": "tools.parallel-calls",
+      "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "calls-reported": "SATISFIED"
+      }
+    },
+    {
       "scenario": "tools.parallel-calls-stream",
       "provider": "openai-chat",
       "grade": "PASS",
@@ -35,8 +43,26 @@
       }
     },
     {
+      "scenario": "tools.parallel-calls-stream",
+      "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "calls-reported": "SATISFIED"
+      }
+    },
+    {
       "scenario": "truncation.reasoning-only",
       "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "provider": "openai-responses",
       "grade": "PASS",
       "requirements": {
         "cause-is-truncation": "SATISFIED",
@@ -56,6 +82,17 @@
       }
     },
     {
+      "scenario": "truncation.structured-output",
+      "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "no-partial-success": "SATISFIED",
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
       "scenario": "truncation.text",
       "provider": "openai-chat",
       "grade": "PASS",
@@ -66,8 +103,28 @@
       }
     },
     {
+      "scenario": "truncation.text",
+      "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
       "scenario": "truncation.text-stream",
       "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "openai-responses",
       "grade": "PASS",
       "requirements": {
         "cause-is-truncation": "SATISFIED",
@@ -95,8 +152,26 @@
       }
     },
     {
+      "scenario": "truncation.tool-call-args",
+      "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "no-complete-partial-call": "SATISFIED",
+        "cause-is-truncation": "SATISFIED"
+      }
+    },
+    {
       "scenario": "truncation.tool-call-args-stream",
       "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "no-complete-partial-call": "SATISFIED",
+        "cause-is-truncation": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.tool-call-args-stream",
+      "provider": "openai-responses",
       "grade": "PASS",
       "requirements": {
         "no-complete-partial-call": "SATISFIED",
