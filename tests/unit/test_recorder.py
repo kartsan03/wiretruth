@@ -478,6 +478,17 @@ def test_a_credential_header_inside_an_event_is_caught(root: Path, scenario: Sce
     )
 
 
+def test_a_credential_header_in_a_multi_line_event_is_caught(
+    root: Path, scenario: Scenario
+) -> None:
+    event = 'data: {"headers": {"x-api-key": "k"},\ndata: "choices": []}\n\n'
+    server = _fake_openai(_exchange("sse", (event, "data: [DONE]\n\n")))
+    with server, pytest.raises(RecordError) as caught:
+        _record(server, root, scenario)
+    assert "the x-api-key header carries credentials" in str(caught.value)
+    assert not (root / "suite" / "fixtures").exists()
+
+
 def test_no_finding_quotes_a_key_in_its_path(root: Path, scenario: Scenario) -> None:
     # An object key with the API key in it, which no pattern sees after the x.
     server = _fake_openai(_exchange("sse", _events_with(f'"x{KEY}":{{"headers":{{"cookie":1}}}},')))

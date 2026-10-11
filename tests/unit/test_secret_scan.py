@@ -188,8 +188,16 @@ def test_header_values_and_other_objects_pass() -> None:
             ['data: {"args":"{\\"headers\\":{\\"Cookie\\":1}}"}'],
             "$[0], in its JSON at $.args, in its JSON at $.headers.Cookie",
         ),
+        (
+            {"sse": ['data: {"a": 1,\ndata: "headers": {"Cookie": "c"}}\n\n']},
+            "$.sse[0], in its JSON at $.headers.Cookie",
+        ),
+        (
+            'event: x\ndata: {"a": 1}\n\ndata: {\ndata: "headers": {"Cookie": "c"}\ndata: }\n\n',
+            "$, in its JSON at $.headers.Cookie",
+        ),
     ],
-    ids=["event", "text", "lines", "twice"],
+    ids=["event", "text", "lines", "twice", "multi-line event", "multi-line stream"],
 )
 def test_credential_headers_inside_strings(doc: JsonValue, where: str) -> None:
     assert [str(finding) for finding in scan_headers(doc)] == [
