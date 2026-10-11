@@ -6,10 +6,11 @@
   "primary_package": "wiretruth",
   "entry": ["python", "shim.py"],
   "providers": {
-    "openai-chat": "providers.openai_chat.build_request over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_CHAT"
+    "openai-chat": "providers.openai_chat.build_request over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_CHAT",
+    "openai-responses": "providers.openai_responses.build_request over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_RESPONSES"
   },
   "surfaces": {
-    "finish": {"primary": "truth.finish", "raw": "truth.raw_finish"},
+    "finish": {"primary": "truth.finish; completed Responses with function_call output map to tool_calls", "raw": "truth.raw_finish"},
     "text": {"primary": "truth.text"},
     "usage": {"primary": "truth.usage"},
     "tool_calls": {"primary": "truth.tool_calls"},
@@ -18,7 +19,8 @@
   },
   "finish_map": {
     "stop": "stop", "length": "length", "tool_calls": "tool_calls",
-    "function_call": "tool_calls", "content_filter": "content_filter"
+    "function_call": "tool_calls", "content_filter": "content_filter",
+    "completed": "stop", "max_output_tokens": "length", "failed": "error"
   },
   "error_map": [],
   "unsupported": [],
