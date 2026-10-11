@@ -101,7 +101,7 @@ Host: api.openai.com
 Authorization: Bearer ***
 Content-Type: application/json
 Accept: application/json
-User-Agent: wiretruth/0.1.0.dev0
+User-Agent: wiretruth/0.1.0
 Accept-Encoding: identity
 Content-Length: 229
 

@@ -7,11 +7,11 @@ happened.
 
 [![CI](https://github.com/kartsan03/wiretruth/actions/workflows/ci.yml/badge.svg)](https://github.com/kartsan03/wiretruth/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/wiretruth)](https://pypi.org/project/wiretruth/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
 Version 0.1 tests one library, any-llm, on the OpenAI Chat Completions API with three truncation scenarios. More
 providers and libraries follow, and a public results matrix arrives in v0.4. Until then, the grades are in
-[`results/`](results/).
+[`results/`](https://github.com/kartsan03/wiretruth/tree/main/results).
 
 ## Why
 
@@ -41,8 +41,9 @@ provider sent.
 | Error classification | Retries and backoff misbehave | planned |
 | Request fidelity | The library sends options the caller didn't set | planned |
 
-The scenarios are in [`suite/scenarios/`](suite/scenarios/), and the bug classes in
-[`suite/bug-classes.json`](suite/bug-classes.json).
+The scenarios are in
+[`suite/scenarios/`](https://github.com/kartsan03/wiretruth/tree/main/suite/scenarios), and the bug classes in
+[`suite/bug-classes.json`](https://github.com/kartsan03/wiretruth/blob/main/suite/bug-classes.json).
 
 ## Grades
 
@@ -58,7 +59,7 @@ The scenarios are in [`suite/scenarios/`](suite/scenarios/), and the bug classes
 
 Each scenario lists its requirements. MUST requirements set the grade. SHOULD requirements, such as the exact
 partial text in the truncation scenarios, add a note when they aren't met. How grades are computed:
-[docs/grading.md](docs/grading.md).
+[docs/grading.md](https://github.com/kartsan03/wiretruth/blob/main/docs/grading.md).
 
 ## Quickstart
 
@@ -87,9 +88,10 @@ so wiretruth runs from a clone.
 ## Add your library
 
 A shim is a small program. It reads a call spec as JSON on stdin, calls your library the way its docs show, and
-prints what the library reported as JSON on stdout. The [any-llm shim](shims/python/any-llm/shim.py) is 150 lines.
-The protocol is in [shims/README.md](shims/README.md); to propose a library,
-[open a new-library issue](https://github.com/kartsan03/wiretruth/issues/new?template=new-library.yml).
+prints what the library reported as JSON on stdout. The
+[any-llm shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/any-llm/shim.py) is 150 lines. The
+protocol is in [shims/README.md](https://github.com/kartsan03/wiretruth/blob/main/shims/README.md); to propose a
+library, [open a new-library issue](https://github.com/kartsan03/wiretruth/issues/new?template=new-library.yml).
 
 ## Related work
 
@@ -114,13 +116,14 @@ If you think a grade is wrong, please
 
 ## Contributing
 
-Scenario ideas, new libraries and grade disputes are all welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Scenario ideas, new libraries and grade disputes are all welcome. See
+[CONTRIBUTING.md](https://github.com/kartsan03/wiretruth/blob/main/CONTRIBUTING.md).
 
 ## Citing
 
-See [CITATION.cff](CITATION.cff).
+See [CITATION.cff](https://github.com/kartsan03/wiretruth/blob/main/CITATION.cff).
 
 ## License
 
-MIT. Fixtures contain model outputs recorded from provider APIs; [docs/recording.md](docs/recording.md) explains
-how they're recorded.
+MIT. Fixtures contain model outputs recorded from provider APIs;
+[docs/recording.md](https://github.com/kartsan03/wiretruth/blob/main/docs/recording.md) explains how they're recorded.

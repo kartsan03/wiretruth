@@ -6,6 +6,8 @@ abstract: >-
   and grades whether each SDK reports what actually happened: truncation, finish reasons, usage,
   stream integrity, tool calls, errors and request fidelity.
 type: software
+version: 0.1.0
+date-released: "2026-10-11"
 authors:
   - alias: kartsan03
 repository-code: "https://github.com/kartsan03/wiretruth"
