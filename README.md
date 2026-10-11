@@ -9,8 +9,8 @@ happened.
 [![PyPI](https://img.shields.io/pypi/v/wiretruth)](https://pypi.org/project/wiretruth/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
-Version 0.1 tests one library, any-llm, on the OpenAI Chat Completions API with three truncation scenarios. More
-providers and libraries follow, and a public results matrix arrives in v0.4. Until then, the grades are in
+So far wiretruth tests one library, any-llm, on the OpenAI Chat Completions API with 12 scenarios. More providers
+and libraries follow, and a public results matrix arrives in v0.4. Until then, the grades are in
 [`results/`](https://github.com/kartsan03/wiretruth/tree/main/results).
 
 ## Why
@@ -33,13 +33,13 @@ provider sent.
 
 | Bug class | What goes wrong for users | Scenarios |
 |---|---|---|
-| Silent truncation | Agents accept partial output or retry without raising the limit | 3 |
+| Silent truncation | Agents accept partial output or retry without raising the limit | 5 |
 | Finish reason mapping | Control flow branches on the wrong reason | planned |
-| Usage accounting | Cost and quota tracking is off (cached and reasoning tokens) | planned |
+| Usage accounting | Cost and quota tracking is off (cached and reasoning tokens) | 1 |
 | Stream integrity | Corrupted or unfinished text is treated as final | planned |
-| Tool call fidelity | Tools run with broken or merged arguments | planned |
+| Tool call fidelity | Tools run with broken or merged arguments | 4 |
 | Error classification | Retries and backoff misbehave | planned |
-| Request fidelity | The library sends options the caller didn't set | planned |
+| Request fidelity | The library sends fields the caller didn't set, or ones the model rejects | 2 |
 
 The scenarios are in
 [`suite/scenarios/`](https://github.com/kartsan03/wiretruth/tree/main/suite/scenarios), and the bug classes in
@@ -71,13 +71,22 @@ uv run wiretruth run --lib any-llm
 ```
 
 ```text
-scenario                      openai-chat
-truncation.structured-output  ✓ PASS
-truncation.text               ✓ PASS
-truncation.text-stream        ✓ PASS
+scenario                           openai-chat
+request.max-tokens-field           ✓ PASS
+request.tools-with-reasoning-chat  ✓ PASS
+tools.parallel-calls               ✓ PASS
+tools.parallel-calls-stream        ✓ PASS
+truncation.reasoning-only          ✓ PASS
+truncation.structured-output       ✓ PASS
+truncation.text                    ✓ PASS
+truncation.text-stream             ✓ PASS
+truncation.text-stream-usage       ✓ PASS
+truncation.tool-call-args          ✓ PASS
+truncation.tool-call-args-stream   ✓ PASS
+usage.stream-final-chunk           ✓ PASS
 
-any-llm 1.33.0: 3 cells, 3 PASS
-stderr: .wiretruth/runs/20261010T193444.312067Z
+any-llm 1.33.0: 12 cells, 12 PASS
+stderr: .wiretruth/runs/20261011T120546.713943Z
 ```
 
 No API keys are needed. Everything runs against recorded responses on `127.0.0.1`. The first run downloads any-llm
