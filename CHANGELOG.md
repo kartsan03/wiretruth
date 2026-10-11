@@ -11,6 +11,8 @@ finding).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-11
+
 ### Added
 - `wiretruth run --lib NAME --write-results` writes `results/<library>/<version>.json`: each cell's grade,
   requirement evidence and observation, and every package installed in the library's environment. It requires
@@ -74,3 +76,6 @@ finding).
 ### Results
 - any-llm 1.33.0, the first library results: PASS on all three truncation scenarios on `openai-chat`
   ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)).
+
+[Unreleased]: https://github.com/kartsan03/wiretruth/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/kartsan03/wiretruth/releases/tag/v0.1.0
