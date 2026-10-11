@@ -411,4 +411,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_record(args)
     if args.command == "run":
         return run_shim(args)
-    return run_envs(args)
+    if args.command == "envs":
+        return run_envs(args)
+    print(f"wiretruth {args.command}: not implemented yet", file=sys.stderr)
+    return EXIT_USAGE

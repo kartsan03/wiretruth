@@ -140,9 +140,10 @@ means a bug in the shim. The exception is a library that ends the process itself
 A reasoning setting that the library can't send doesn't make a cell UNSUPPORTED. The replayed response is the same
 either way, so the shim leaves the setting out and adds a note ([decision 0006](adr/0006-default-library-config.md)).
 
-SHOULD requirements never change the grade. When one is NOT_OBSERVABLE or CONTRADICTED, the cell gets a note that
-says which. A MUST requirement that isn't satisfied gets the same kind of note, so a WRONG or LOSSY cell shows why. A value that is the subject of a scenario is a MUST there: token counts, for example, are MUST
-requirements in the `usage.*` scenarios.
+SHOULD requirements never change the grade. When one is NOT_OBSERVABLE or CONTRADICTED, the cell gets a note that says
+which. A MUST requirement that isn't satisfied gets the same kind of note, so a WRONG or LOSSY cell shows why. A value
+that is the subject of a scenario is a MUST there: token counts, for example, are MUST requirements in the `usage.*`
+scenarios.
 
 ## A worked example: structured output cut off by the token limit
 
