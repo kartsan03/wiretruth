@@ -7,8 +7,8 @@
     "language": "python"
   },
   "run": {
-    "at": "2026-10-11T12:06:02Z",
-    "git_sha": "80c0cbfffdb747530672cae21665e6b7723528a4",
+    "at": "2026-10-11T21:16:24Z",
+    "git_sha": "4a72d5631745b160838e7d7a6d3f19d1b87a33b7",
     "ci_run": null,
     "runner": "wiretruth 0.2.0.dev0",
     "packages": {
@@ -115,7 +115,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 145.06132900714874
+        "elapsed_ms": 188.26763099059463
       },
       "request_count": 1
     },
@@ -187,7 +187,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 134.4161529559642
+        "elapsed_ms": 183.18581208586693
       },
       "request_count": 1
     },
@@ -272,7 +272,92 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 145.59824205935
+        "elapsed_ms": 159.05812196433544
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "tools.parallel-calls",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/tools.parallel-calls",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "calls-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "tool_calls[0] id=\"call_BmeKD1OMtC1VdSDpPbOwYOp4\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_BmeKD1OMtC1VdSDpPbOwYOp4\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_m4m0SD7ATwUk2BagTcrk29Sx\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_m4m0SD7ATwUk2BagTcrk29Sx\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "tool_calls",
+          "raw": "completed",
+          "surface": "primary",
+          "source": "status"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [
+          {
+            "id": "call_BmeKD1OMtC1VdSDpPbOwYOp4",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\":\"São Paulo\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "São Paulo"
+            }
+          },
+          {
+            "id": "call_m4m0SD7ATwUk2BagTcrk29Sx",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\":\"Zürich\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "Zürich"
+            }
+          }
+        ],
+        "usage": {
+          "input": 65,
+          "cached_input": 0,
+          "output": 51,
+          "reasoning": 0,
+          "total": 116,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 288.4038428310305
       },
       "request_count": 1
     },
@@ -357,7 +442,92 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 198.81415809504688
+        "elapsed_ms": 229.12754700519145
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/tools.parallel-calls-stream",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "calls-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "tool_calls[0] id=\"call_29SkAhtIVyQRGcDwkCOwQydm\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_29SkAhtIVyQRGcDwkCOwQydm\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_ZrtYQmfXyQrL0cWXfULamGz8\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_ZrtYQmfXyQrL0cWXfULamGz8\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "tool_calls",
+          "raw": "completed",
+          "surface": "primary",
+          "source": "response.completed.response.status"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [
+          {
+            "id": "call_29SkAhtIVyQRGcDwkCOwQydm",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\":\"São Paulo\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "São Paulo"
+            }
+          },
+          {
+            "id": "call_ZrtYQmfXyQrL0cWXfULamGz8",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\":\"Zürich\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "Zürich"
+            }
+          }
+        ],
+        "usage": {
+          "input": 65,
+          "cached_input": 0,
+          "output": 51,
+          "reasoning": 0,
+          "total": 116,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": true,
+          "chunks_seen": 11
+        },
+        "notes": [],
+        "elapsed_ms": 240.92247686348855
       },
       "request_count": 1
     },
@@ -435,7 +605,85 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 148.6267710570246
+        "elapsed_ms": 154.3375609908253
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/truncation.reasoning-only",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: incomplete_details.reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=null (absent); truth.text=null"
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.output=64 (primary); truth.usage.output=64"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "max_output_tokens",
+          "surface": "primary",
+          "source": "incomplete_details.reason"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 49,
+          "cached_input": 0,
+          "output": 64,
+          "reasoning": 64,
+          "total": 113,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 267.28594792075455
       },
       "request_count": 1
     },
@@ -525,7 +773,101 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 139.73194896243513
+        "elapsed_ms": 171.15478008054197
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.structured-output",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/truncation.structured-output",
+      "fixture_tier": "recorded",
+      "grade": "LOSSY",
+      "requirements": [
+        {
+          "id": "no-partial-success",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "structured.attempted=true; structured.returned_as_success=false"
+        },
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "NOT_OBSERVABLE",
+          "evidence": "finish.value=null (absent); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "NOT_OBSERVABLE",
+          "evidence": "text.value=null (absent); truth.text=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\\\"Κρητικό Πέ\""
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "NOT_OBSERVABLE",
+          "evidence": "usage.input=null (absent); truth.usage.input=68; usage.output=null (absent); truth.usage.output=24"
+        }
+      ],
+      "notes": [
+        "MUST cause-is-truncation: NOT_OBSERVABLE: finish.value=null (absent); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false",
+        "SHOULD text-reported: NOT_OBSERVABLE: text.value=null (absent); truth.text=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\\\"Κρητικό Πέ\"",
+        "SHOULD usage-reported: NOT_OBSERVABLE: usage.input=null (absent); truth.usage.input=68; usage.output=null (absent); truth.usage.output=24"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "raised",
+        "unsupported_reason": null,
+        "error": {
+          "type": "pydantic_core._pydantic_core.ValidationError",
+          "message": "1 validation error for output\n  Invalid JSON: EOF while parsing a string at line 1 column 59 [type=json_invalid, input_value='{\"islands\":[{\"name\":\"Κ...a\":\"Κρητικό Πέ', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.14/v/json_invalid",
+          "category": "validation",
+          "retry_after": null,
+          "stack_top": "pydantic/main.py:845"
+        },
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": true,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 259.26283397711813
       },
       "request_count": 1
     },
@@ -603,7 +945,85 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 153.97995989769697
+        "elapsed_ms": 145.70242911577225
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.text",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/truncation.text",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: incomplete_details.reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Octopuses are masters of disguise, able to change colour in\" (primary); truth.text=\"Octopuses are masters of disguise, able to change colour in\""
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.input=24 (primary); truth.usage.input=24; usage.output=16 (primary); truth.usage.output=16"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "max_output_tokens",
+          "surface": "primary",
+          "source": "incomplete_details.reason"
+        },
+        "text": {
+          "value": "Octopuses are masters of disguise, able to change colour in",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 24,
+          "cached_input": 0,
+          "output": 16,
+          "reasoning": 0,
+          "total": 40,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 269.82885086908937
       },
       "request_count": 1
     },
@@ -681,7 +1101,85 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 187.87497910670936
+        "elapsed_ms": 205.86851588450372
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/truncation.text-stream",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: response.incomplete.response.incomplete_details.reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Octopuses change colour to hide from predators using specialised skin cells\" (primary); truth.text=\"Octopuses change colour to hide from predators using specialised skin cells\""
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.output=16 (primary); truth.usage.output=16"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "max_output_tokens",
+          "surface": "primary",
+          "source": "response.incomplete.response.incomplete_details.reason"
+        },
+        "text": {
+          "value": "Octopuses change colour to hide from predators using specialised skin cells",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 24,
+          "cached_input": 0,
+          "output": 16,
+          "reasoning": 0,
+          "total": 40,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": true,
+          "chunks_seen": 21
+        },
+        "notes": [],
+        "elapsed_ms": 274.14119616150856
       },
       "request_count": 1
     },
@@ -759,7 +1257,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 214.3583409488201
+        "elapsed_ms": 215.91819706372917
       },
       "request_count": 1
     },
@@ -839,7 +1337,87 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 133.90137604437768
+        "elapsed_ms": 137.93872692622244
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.tool-call-args",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/truncation.tool-call-args",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "no-complete-partial-call",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "1 tool calls; no partial args made complete"
+        },
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: incomplete_details.reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "max_output_tokens",
+          "surface": "primary",
+          "source": "incomplete_details.reason"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [
+          {
+            "id": "call_lLsu7YMQmuJzYwIjUOdF8uic",
+            "name": "create_event",
+            "arguments_raw": "{\"title\":\"Weekend Pottery Workshop\",\"",
+            "arguments_parsed_ok": false,
+            "arguments": null
+          }
+        ],
+        "usage": {
+          "input": 100,
+          "cached_input": 0,
+          "output": 20,
+          "reasoning": 0,
+          "total": 120,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 271.88083506189287
       },
       "request_count": 1
     },
@@ -919,7 +1497,87 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 179.5389500912279
+        "elapsed_ms": 192.55030690692365
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.tool-call-args-stream",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/truncation.tool-call-args-stream",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "no-complete-partial-call",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "1 tool calls; no partial args made complete"
+        },
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: response.incomplete.response.incomplete_details.reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "max_output_tokens",
+          "surface": "primary",
+          "source": "response.incomplete.response.incomplete_details.reason"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [
+          {
+            "id": "call_t7e3IgxCdjXlMbNHlOwncu0f",
+            "name": "create_event",
+            "arguments_raw": "{\"title\":\"Weekend Pottery Workshop\",\"",
+            "arguments_parsed_ok": false,
+            "arguments": null
+          }
+        ],
+        "usage": {
+          "input": 100,
+          "cached_input": 0,
+          "output": 20,
+          "reasoning": 0,
+          "total": 120,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": true,
+          "chunks_seen": 14
+        },
+        "notes": [],
+        "elapsed_ms": 279.7747531440109
       },
       "request_count": 1
     },
@@ -985,7 +1643,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 206.7346959374845
+        "elapsed_ms": 245.45152112841606
       },
       "request_count": 1
     }
