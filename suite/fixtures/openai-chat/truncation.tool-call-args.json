@@ -1,0 +1,171 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/truncation.tool-call-args",
+  "scenario": "truncation.tool-call-args",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-11T12:01:04Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "abc285e",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38137650119",
+    "raw_sha256": "6f4836e630f81779cb23e6cff7a59e9ad03b5af0ebf1be6bb4616f89669fc3bb",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Create an event for a weekend pottery workshop in Málaga on 2026-11-14 with 30 attendees. Invent their full names, mixing Spanish, Greek and Japanese names written in their own scripts."
+        }
+      ],
+      "max_completion_tokens": 20,
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "create_event",
+            "description": "Create a calendar event.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "YYYY-MM-DD"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "attendees": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "title",
+                "date",
+                "city",
+                "attendees"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "required",
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "chatcmpl-EXmWepZSbcMU86TnlRq4kH4xvQ2nK",
+            "object": "chat.completion",
+            "created": 1791720064,
+            "model": "gpt-6-luna",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": null,
+                  "tool_calls": [
+                    {
+                      "id": "call_W6i0YDA3qww31EI14Xkd4cmB",
+                      "type": "function",
+                      "function": {
+                        "name": "create_event",
+                        "arguments": "{\"title\":\"Weekend Pottery Workshop\",\""
+                      }
+                    }
+                  ],
+                  "refusal": null,
+                  "annotations": []
+                },
+                "finish_reason": "length"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 182,
+              "completion_tokens": 20,
+              "total_tokens": 202,
+              "prompt_tokens_details": {
+                "cached_tokens": 0,
+                "cache_write_tokens": 0,
+                "audio_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 0,
+                "audio_tokens": 0,
+                "accepted_prediction_tokens": 0,
+                "rejected_prediction_tokens": 0
+              }
+            },
+            "service_tier": "default",
+            "system_fingerprint": null
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": null,
+    "tool_calls": [
+      {
+        "id": "call_W6i0YDA3qww31EI14Xkd4cmB",
+        "name": "create_event",
+        "arguments_raw": "{\"title\":\"Weekend Pottery Workshop\",\"",
+        "arguments_parsed_ok": false,
+        "arguments": null
+      }
+    ],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 182,
+      "cached_input": 0,
+      "output": 20,
+      "reasoning": 0,
+      "total": 202,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 182,
+        "completion_tokens": 20,
+        "total_tokens": 202,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      }
+    }
+  }
+}

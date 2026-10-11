@@ -1,0 +1,124 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/truncation.tool-call-args-stream",
+  "scenario": "truncation.tool-call-args-stream",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-11T12:01:01Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "abc285e",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38137650119",
+    "raw_sha256": "8b65d4f4255e273590dd3d28c96a2d985cfc474a2357c78bcbd1e79cbea0dfd2",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Create an event for a weekend pottery workshop in Málaga on 2026-11-14 with 30 attendees. Invent their full names, mixing Spanish, Greek and Japanese names written in their own scripts."
+        }
+      ],
+      "stream": true,
+      "max_completion_tokens": 20,
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "create_event",
+            "description": "Create a calendar event.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "YYYY-MM-DD"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "attendees": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "title",
+                "date",
+                "city",
+                "attendees"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": "required",
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream; charset=utf-8"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-EXmWbuEH1m1F3czcaV6FIXqLd54H7\",\"object\":\"chat.completion.chunk\",\"created\":1791720061,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":null,\"tool_calls\":[{\"index\":0,\"id\":\"call_DkXNh5JdHW4s54IKfPr4dP1U\",\"type\":\"function\",\"function\":{\"name\":\"create_event\",\"arguments\":\"\"}}],\"refusal\":null},\"finish_reason\":null}],\"obfuscation\":\"AoLyAol\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWbuEH1m1F3czcaV6FIXqLd54H7\",\"object\":\"chat.completion.chunk\",\"created\":1791720061,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"{\\\"\"}}]},\"finish_reason\":null}],\"obfuscation\":\"q3\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWbuEH1m1F3czcaV6FIXqLd54H7\",\"object\":\"chat.completion.chunk\",\"created\":1791720061,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"title\"}}]},\"finish_reason\":null}],\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWbuEH1m1F3czcaV6FIXqLd54H7\",\"object\":\"chat.completion.chunk\",\"created\":1791720061,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"\\\":\\\"\"}}]},\"finish_reason\":null}],\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWbuEH1m1F3czcaV6FIXqLd54H7\",\"object\":\"chat.completion.chunk\",\"created\":1791720061,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"Weekend\"}}]},\"finish_reason\":null}],\"obfuscation\":\"MHeTX929pznvFG\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWbuEH1m1F3czcaV6FIXqLd54H7\",\"object\":\"chat.completion.chunk\",\"created\":1791720061,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\" Pot\"}}]},\"finish_reason\":null}],\"obfuscation\":\"X\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWbuEH1m1F3czcaV6FIXqLd54H7\",\"object\":\"chat.completion.chunk\",\"created\":1791720061,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"tery\"}}]},\"finish_reason\":null}],\"obfuscation\":\"v\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWbuEH1m1F3czcaV6FIXqLd54H7\",\"object\":\"chat.completion.chunk\",\"created\":1791720061,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\" Workshop\"}}]},\"finish_reason\":null}],\"obfuscation\":\"eBxdZFJ0AQaC\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWbuEH1m1F3czcaV6FIXqLd54H7\",\"object\":\"chat.completion.chunk\",\"created\":1791720061,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"function\":{\"arguments\":\"\\\",\\\"\"}}]},\"finish_reason\":null}],\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWbuEH1m1F3czcaV6FIXqLd54H7\",\"object\":\"chat.completion.chunk\",\"created\":1791720061,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"length\"}],\"obfuscation\":\"ppOIfIY\"}\n\n",
+            "data: [DONE]\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": null,
+    "tool_calls": [
+      {
+        "id": "call_DkXNh5JdHW4s54IKfPr4dP1U",
+        "name": "create_event",
+        "arguments_raw": "{\"title\":\"Weekend Pottery Workshop\",\"",
+        "arguments_parsed_ok": false,
+        "arguments": null
+      }
+    ],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": null
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/truncation.text-stream-usage",
+  "scenario": "truncation.text-stream-usage",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-11T12:00:59Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "abc285e",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38137650119",
+    "raw_sha256": "1f80407fe0d32e4ce029d70dcb8b9096ac19807c22a52d6ca9aa37628fbfdcc9",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Describe a traditional Japanese breakfast in about 200 words, giving each dish its Japanese name (for example 味噌汁 or 焼き魚) and an English translation."
+        }
+      ],
+      "stream": true,
+      "stream_options": {
+        "include_usage": true
+      },
+      "max_completion_tokens": 16,
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream; charset=utf-8"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"refusal\":null},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"A\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"b\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" traditional\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"d52OTd\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" Japanese\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"w1dZTLipP\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" breakfast\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"MWjy8UlZ\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" is\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"icVTZPFYRG5lFwL\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" built\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"AYTZtVaq9EDe\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" around\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"kMyBiZ4fH9u\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" rice\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"ipQ7qmg7ME8qn\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"F\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" soup\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"koHOHl6FSzjzv\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"c\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" and\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"zgb5ipuHgdlxrv\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" a\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"length\"}],\"usage\":null,\"obfuscation\":\"xJlB3tfZjb\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[],\"usage\":{\"prompt_tokens\":42,\"completion_tokens\":16,\"total_tokens\":58,\"prompt_tokens_details\":{\"cached_tokens\":0,\"cache_write_tokens\":0,\"audio_tokens\":0},\"completion_tokens_details\":{\"reasoning_tokens\":0,\"audio_tokens\":0,\"accepted_prediction_tokens\":0,\"rejected_prediction_tokens\":0}},\"obfuscation\":\"pGcjuQsxqk\"}\n\n",
+            "data: [DONE]\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": "A traditional Japanese breakfast is built around rice, soup, and a",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 42,
+      "cached_input": 0,
+      "output": 16,
+      "reasoning": 0,
+      "total": 58,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 42,
+        "completion_tokens": 16,
+        "total_tokens": 58,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      }
+    }
+  }
+}
