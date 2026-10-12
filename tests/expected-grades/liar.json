@@ -93,6 +93,42 @@
       }
     },
     {
+      "scenario": "stream.utf8",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "text-reported": "CONTRADICTED",
+        "no-replacement-chars": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.utf8",
+      "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "text-reported": "CONTRADICTED",
+        "no-replacement-chars": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.utf8-split",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "text-reported": "CONTRADICTED",
+        "no-replacement-chars": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.utf8-split",
+      "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "text-reported": "CONTRADICTED",
+        "no-replacement-chars": "CONTRADICTED"
+      }
+    },
+    {
       "scenario": "tools.parallel-calls",
       "provider": "openai-chat",
       "grade": "WRONG",

@@ -14,7 +14,9 @@ finding).
 ### Added
 - Six scenarios for missing stream finishes (clean and aborted), errors during streams, unfamiliar finish
   values and UTF-8 text (unsplit and split inside characters). Eight derived fixtures cover the first four
-  scenarios on `openai-chat` and `openai-responses`; the UTF-8 scenarios await live recordings.
+  scenarios on `openai-chat` and `openai-responses`. `stream.utf8` is recorded in CI against `gpt-6-luna` on
+  both providers, and `stream.utf8-split` re-chunks those recordings so that boundaries fall inside 2-, 3- and
+  4-byte characters.
 - `raw_finish_matches_truth` checks that the provider's raw finish value is preserved on any surface.
 - `outcome_is_returned` checks that a library hands back a response that carried no error, instead of raising
   or returning an error for it.
