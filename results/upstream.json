@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "library": "any-llm",
+    "scenarios": ["finish.unknown-value"],
+    "providers": ["openai-chat"],
+    "issue": "https://github.com/mozilla-ai/any-llm/issues/1471",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-12",
+    "notes": "A finish_reason outside OpenAI's five values raises a pydantic ValidationError (ChatCompletion.model_validate), so the response is lost. Also reproduced on 1.33.3."
+  }
+]
