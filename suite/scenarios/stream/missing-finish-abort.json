@@ -21,7 +21,7 @@
       "extra": {"include_usage": true}
     }
   },
-  "providers": ["openai-chat", "openai-responses"],
+  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai"],
   "requirements": [
     {
       "id": "no-normal-stop",

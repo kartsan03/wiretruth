@@ -1,0 +1,34 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "finish.stop-sequence",
+  "title": "Generation ends at a stop sequence",
+  "bug_class": "finish-reason-mapping",
+  "priority": "P0",
+  "summary": "The model reaches a requested stop sequence and reports a normal stop.",
+  "call": {
+    "stream": false,
+    "max_output_tokens": 120,
+    "stop": ["END"],
+    "messages": [
+      {"role": "user", "content": "Count from 1 to 10, then write END, then count to 20."}
+    ],
+    "reasoning": {"effort": "none"}
+  },
+  "providers": ["ollama", "ollama-openai"],
+  "requirements": [
+    {
+      "id": "finish-is-stop",
+      "level": "MUST",
+      "check": "finish_is",
+      "args": {"value": "stop"},
+      "text": "The library reports a normal stop."
+    },
+    {
+      "id": "text-reported",
+      "level": "MUST",
+      "check": "text_matches_truth",
+      "text": "The text is reported exactly as the provider sent it."
+    }
+  ],
+  "grading_notes": "Ollama reports stop for both a stop sequence and a natural end. The native request sends options.stop; the OpenAI-compatible request sends stop."
+}

@@ -220,7 +220,7 @@ class ObserverPolicy(asyncio.DefaultEventLoopPolicy):
 started = time.monotonic()
 call = json.load(sys.stdin)
 schema = call["output_schema"]
-if call["provider"] not in ("openai-chat", "openai-responses") or (
+if call["provider"] not in ("openai-chat", "openai-responses", "ollama", "ollama-openai") or (
     call["provider"] != os.environ["WIRETRUTH_PROVIDER"]
 ):
     sys.exit("any-llm: provider not mapped yet")
@@ -265,6 +265,8 @@ kwargs = {}
 if call.get("tools"):
     kwargs["tools"] = [{"type": "function", "function": tool} for tool in call["tools"]]
 if (choice := call.get("tool_choice")) is not None:
+    if call["provider"] in ("ollama", "ollama-openai"):
+        sys.exit("any-llm: Ollama tool_choice not mapped yet")
     kwargs["tool_choice"] = (
         {"type": "function", "function": choice} if isinstance(choice, dict) else choice
     )
@@ -306,9 +308,11 @@ try:
             # https://docs.mozilla.ai/api-reference/completion (Basic completion and Streaming)
             result = any_llm.completion(
                 model=call["model"],
-                provider="openai",
+                provider="ollama" if call["provider"] == "ollama" else "openai",
                 messages=call["messages"],
-                api_base=os.environ["WIRETRUTH_BASE_URL_OPENAI_CHAT"],
+                api_base=os.environ[
+                    "WIRETRUTH_BASE_URL_" + call["provider"].upper().replace("-", "_")
+                ],
                 api_key=os.environ["WIRETRUTH_API_KEY"],
                 max_tokens=call["max_output_tokens"],
                 stream=call["stream"],

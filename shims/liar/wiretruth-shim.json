@@ -7,7 +7,9 @@
   "entry": ["python", "shim.py"],
   "providers": {
     "openai-chat": "reference.observe over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_CHAT",
-    "openai-responses": "reference.observe over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_RESPONSES"
+    "openai-responses": "reference.observe over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_RESPONSES",
+    "ollama": "reference.observe over raw HTTP to WIRETRUTH_BASE_URL_OLLAMA",
+    "ollama-openai": "reference.observe over raw HTTP to WIRETRUTH_BASE_URL_OLLAMA_OPENAI"
   },
   "surfaces": {
     "finish": {"primary": "truth.finish with length and errors mapped to stop"},

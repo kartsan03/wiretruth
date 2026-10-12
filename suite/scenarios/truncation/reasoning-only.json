@@ -13,7 +13,7 @@
     ],
     "reasoning": {"effort": "medium"}
   },
-  "providers": ["openai-chat", "openai-responses"],
+  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai"],
   "requirements": [
     {
       "id": "cause-is-truncation",

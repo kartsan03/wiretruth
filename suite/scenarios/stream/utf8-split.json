@@ -13,7 +13,7 @@
     ],
     "reasoning": {"effort": "none"}
   },
-  "providers": ["openai-chat", "openai-responses"],
+  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai"],
   "requirements": [
     {
       "id": "text-reported",

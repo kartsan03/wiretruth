@@ -815,6 +815,13 @@ def test_new_chat_scenario_requests(id, stream, limit, effort, usage, tool, choi
     family, name = id.split(".")
     scenario = load_scenario(REPO / "suite/scenarios" / family / f"{name}.json")
     also = ("openai-responses",) if id in ALSO_RESPONSES else ()
+    if id in {
+        "truncation.reasoning-only",
+        "usage.stream-final-chunk",
+        "tools.parallel-calls",
+        "tools.parallel-calls-stream",
+    }:
+        also += ("ollama", "ollama-openai")
     assert scenario.providers == ("openai-chat", *also)
     body = build_request(scenario.call, "gpt-6-luna").body
     assert body["model"] == "gpt-6-luna"
