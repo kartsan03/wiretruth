@@ -1,0 +1,78 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama-openai/stream.missing-finish-abort",
+  "scenario": "stream.missing-finish-abort",
+  "provider": "ollama-openai",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+        }
+      ],
+      "stream": true,
+      "reasoning_effort": "none",
+      "max_tokens": 16
+    }
+  },
+  "derived_from": {
+    "fixture": "ollama-openai/truncation.text-stream",
+    "transform": "cut_stream_after",
+    "args": {
+      "n": 8,
+      "end": "abort"
+    },
+    "rationale": "The connection closes before the stream has delivered every event.",
+    "evidence_url": "https://github.com/openai/openai-python/issues/2065"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-554\",\"object\":\"chat.completion.chunk\",\"created\":1791831681,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Oct\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-554\",\"object\":\"chat.completion.chunk\",\"created\":1791831681,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"op\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-554\",\"object\":\"chat.completion.chunk\",\"created\":1791831681,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"uses\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-554\",\"object\":\"chat.completion.chunk\",\"created\":1791831681,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" rely\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-554\",\"object\":\"chat.completion.chunk\",\"created\":1791831681,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" on\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-554\",\"object\":\"chat.completion.chunk\",\"created\":1791831681,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" their\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-554\",\"object\":\"chat.completion.chunk\",\"created\":1791831681,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" unique\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-554\",\"object\":\"chat.completion.chunk\",\"created\":1791831681,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" physiology\"},\"finish_reason\":null}]}\n\n"
+          ]
+        },
+        "end": "abort"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "none",
+    "raw_finish": null,
+    "text": "Octopuses rely on their unique physiology",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": false,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": null
+    }
+  }
+}

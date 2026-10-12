@@ -1,0 +1,98 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama-openai/finish.unknown-value",
+  "scenario": "finish.unknown-value",
+  "provider": "ollama-openai",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+        }
+      ],
+      "reasoning_effort": "none",
+      "max_tokens": 16
+    }
+  },
+  "derived_from": {
+    "fixture": "ollama-openai/truncation.text",
+    "transform": "replace_finish_value",
+    "args": {
+      "value": "wiretruth_unknown_reason"
+    },
+    "rationale": "The provider sends a finish value that a library may not recognize.",
+    "evidence_url": "https://github.com/BerriAI/litellm/issues/21347"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "chatcmpl-54",
+            "object": "chat.completion",
+            "created": 1791831683,
+            "model": "qwen3.5:0.8b",
+            "system_fingerprint": "fp_ollama",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "Octopuses, like many marine invertebrates, employ sophisticated methods to camouflage"
+                },
+                "finish_reason": "wiretruth_unknown_reason"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 32,
+              "prompt_tokens_details": {
+                "cached_tokens": 28
+              },
+              "completion_tokens": 16,
+              "total_tokens": 48
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "other",
+    "raw_finish": "wiretruth_unknown_reason",
+    "text": "Octopuses, like many marine invertebrates, employ sophisticated methods to camouflage",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 32,
+      "cached_input": 28,
+      "output": 16,
+      "reasoning": null,
+      "total": 48,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 32,
+        "prompt_tokens_details": {
+          "cached_tokens": 28
+        },
+        "completion_tokens": 16,
+        "total_tokens": 48
+      }
+    }
+  }
+}

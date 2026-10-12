@@ -1,0 +1,87 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama/stream.utf8-split",
+  "scenario": "stream.utf8-split",
+  "provider": "ollama",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Reply exactly with: Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉"
+        }
+      ],
+      "stream": true,
+      "options": {
+        "num_predict": 64
+      },
+      "think": false
+    }
+  },
+  "derived_from": {
+    "fixture": "ollama/stream.utf8",
+    "transform": "rechunk_inside_utf8",
+    "args": {
+      "points": [
+        371,
+        638,
+        770,
+        1426,
+        1964
+      ]
+    },
+    "rationale": "A network chunk boundary splits a multi-byte UTF-8 character.",
+    "evidence_url": "https://github.com/langchain-ai/langchainjs/issues/5285"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/api/chat"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/x-ndjson"
+        },
+        "body": {
+          "chunks_b64": [
+            "eyJtb2RlbCI6InF3ZW4zLjU6MC44YiIsImNyZWF0ZWRfYXQiOiIyMDI2LTEwLTEyVDE5OjAxOjA1LjQxNjE4ODkzNVoiLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjoiQyJ9LCJkb25lIjpmYWxzZX0KeyJtb2RlbCI6InF3ZW4zLjU6MC44YiIsImNyZWF0ZWRfYXQiOiIyMDI2LTEwLTEyVDE5OjAxOjA1LjUzMDA3ODI0M1oiLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjoiYWYifSwiZG9uZSI6ZmFsc2V9CnsibW9kZWwiOiJxd2VuMy41OjAuOGIiLCJjcmVhdGVkX2F0IjoiMjAyNi0xMC0xMlQxOTowMTowNS41MzAxMTE1NDZaIiwibWVzc2FnZSI6eyJyb2xlIjoiYXNzaXN0YW50IiwiY29udGVudCI6IsM=",
+            "qSJ9LCJkb25lIjpmYWxzZX0KeyJtb2RlbCI6InF3ZW4zLjU6MC44YiIsImNyZWF0ZWRfYXQiOiIyMDI2LTEwLTEyVDE5OjAxOjA1LjY0MzU2Mjk4NloiLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjoiIFrDvHJpY2gifSwiZG9uZSI6ZmFsc2V9CnsibW9kZWwiOiJxd2VuMy41OjAuOGIiLCJjcmVhdGVkX2F0IjoiMjAyNi0xMC0xMlQxOTowMTowNS42NDM4Mzg5NjFaIiwibWVzc2FnZSI6eyJyb2xlIjoiYXNzaXN0YW50IiwiY29udGVudCI6IiDi",
+            "gJQifSwiZG9uZSI6ZmFsc2V9CnsibW9kZWwiOiJxd2VuMy41OjAuOGIiLCJjcmVhdGVkX2F0IjoiMjAyNi0xMC0xMlQxOTowMTowNS43NTg4MTc4MjRaIiwibWVzc2FnZSI6eyJyb2xlIjoiYXNzaXN0YW50IiwiY29udGVudCI6IiDO",
+            "us6xIn0sImRvbmUiOmZhbHNlfQp7Im1vZGVsIjoicXdlbjMuNTowLjhiIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMTJUMTk6MDE6MDUuNzU4ODc3MzA1WiIsIm1lc3NhZ2UiOnsicm9sZSI6ImFzc2lzdGFudCIsImNvbnRlbnQiOiLOu863In0sImRvbmUiOmZhbHNlfQp7Im1vZGVsIjoicXdlbjMuNTowLjhiIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMTJUMTk6MDE6MDUuNzU5MDk5NTJaIiwibWVzc2FnZSI6eyJyb2xlIjoiYXNzaXN0YW50IiwiY29udGVudCI6Is68zq0ifSwiZG9uZSI6ZmFsc2V9CnsibW9kZWwiOiJxd2VuMy41OjAuOGIiLCJjcmVhdGVkX2F0IjoiMjAyNi0xMC0xMlQxOTowMTowNS44NzQzNjAyM1oiLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoiz4HOsSJ9LCJkb25lIjpmYWxzZX0KeyJtb2RlbCI6InF3ZW4zLjU6MC44YiIsImNyZWF0ZWRfYXQiOiIyMDI2LTEwLTEyVDE5OjAxOjA1Ljg3NDQxNjI3NFoiLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjoiISJ9LCJkb25lIjpmYWxzZX0KeyJtb2RlbCI6InF3ZW4zLjU6MC44YiIsImNyZWF0ZWRfYXQiOiIyMDI2LTEwLTEyVDE5OjAxOjA1Ljk4ODk1MDM5N1oiLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50IjoiIOY=",
+            "nbHkuqwifSwiZG9uZSI6ZmFsc2V9CnsibW9kZWwiOiJxd2VuMy41OjAuOGIiLCJjcmVhdGVkX2F0IjoiMjAyNi0xMC0xMlQxOTowMTowNS45ODg5NzY0MDVaIiwibWVzc2FnZSI6eyJyb2xlIjoiYXNzaXN0YW50IiwiY29udGVudCI6IuOBpyJ9LCJkb25lIjpmYWxzZX0KeyJtb2RlbCI6InF3ZW4zLjU6MC44YiIsImNyZWF0ZWRfYXQiOiIyMDI2LTEwLTEyVDE5OjAxOjA1Ljk4OTA2MjQ3NloiLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoi5Lya44GEIn0sImRvbmUiOmZhbHNlfQp7Im1vZGVsIjoicXdlbjMuNTowLjhiIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMTJUMTk6MDE6MDYuMTA0MjA4MTNaIiwibWVzc2FnZSI6eyJyb2xlIjoiYXNzaXN0YW50IiwiY29udGVudCI6IuOBvuOBl+OCh+OBhiJ9LCJkb25lIjpmYWxzZX0KeyJtb2RlbCI6InF3ZW4zLjU6MC44YiIsImNyZWF0ZWRfYXQiOiIyMDI2LTEwLTEyVDE5OjAxOjA2LjIxOTA2MjUyWiIsIm1lc3NhZ2UiOnsicm9sZSI6ImFzc2lzdGFudCIsImNvbnRlbnQiOiIg8A==",
+            "n4y4In0sImRvbmUiOmZhbHNlfQp7Im1vZGVsIjoicXdlbjMuNTowLjhiIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMTJUMTk6MDE6MDYuMzM0MDgzOTQzWiIsIm1lc3NhZ2UiOnsicm9sZSI6ImFzc2lzdGFudCIsImNvbnRlbnQiOiLwn46JIn0sImRvbmUiOmZhbHNlfQp7Im1vZGVsIjoicXdlbjMuNTowLjhiIiwiY3JlYXRlZF9hdCI6IjIwMjYtMTAtMTJUMTk6MDE6MDYuMzM0MjM5Nzg0WiIsIm1lc3NhZ2UiOnsicm9sZSI6ImFzc2lzdGFudCIsImNvbnRlbnQiOiIifSwiZG9uZSI6dHJ1ZSwiZG9uZV9yZWFzb24iOiJzdG9wIiwidG90YWxfZHVyYXRpb24iOjEzMTE0NTAwMzgsImxvYWRfZHVyYXRpb24iOjIxNzIyODQsInByb21wdF9ldmFsX2NvdW50IjozNSwicHJvbXB0X2V2YWxfY2FjaGVkX2NvdW50IjowLCJwcm9tcHRfZXZhbF9kdXJhdGlvbiI6MzgyNjQ5MDAwLCJldmFsX2NvdW50IjoyMiwiZXZhbF9kdXJhdGlvbiI6OTE3ODE0MDAwfQo="
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 35,
+      "cached_input": 0,
+      "output": 22,
+      "reasoning": null,
+      "total": 57,
+      "alternatives": {},
+      "raw": {
+        "prompt_eval_count": 35,
+        "prompt_eval_cached_count": 0,
+        "eval_count": 22
+      }
+    }
+  }
+}
