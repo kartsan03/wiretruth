@@ -1,0 +1,85 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama-openai/stream.utf8",
+  "scenario": "stream.utf8",
+  "provider": "ollama-openai",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:01:09Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294739276",
+    "raw_sha256": "5d116ae0462687f3335ead340be037914d9ab644322aa8e51a8acb6a55eb7767",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Reply exactly with: Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉"
+        }
+      ],
+      "stream": true,
+      "reasoning_effort": "none",
+      "max_tokens": 64
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"C\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"af\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"é\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" Zürich\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" —\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" κα\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"λη\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"μέ\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"ρα\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"!\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" Tokyo\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" for\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" us\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"!\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" 🌸\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"🎉\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-308\",\"object\":\"chat.completion.chunk\",\"created\":1791831670,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\n",
+            "data: [DONE]\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "Café Zürich — καλημέρα! Tokyo for us! 🌸🎉",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": null
+    }
+  }
+}

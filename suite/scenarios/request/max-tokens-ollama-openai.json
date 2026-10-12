@@ -23,6 +23,6 @@
       "text": "The request sends the output limit as max_tokens, the field Ollama applies."
     }
   ],
-  "grading_notes": "Ollama v0.40.3 ignores max_completion_tokens on /v1/chat/completions: a request for 16 tokens ran to its natural end (about 1 KB, 65 s), while max_tokens stopped at 16 (docs: https://docs.ollama.com/api/openai-compatibility lists max_tokens only). The response is an ordinary recorded one; the requirement checks the request.",
+  "grading_notes": "Ollama v0.40.3 ignores max_completion_tokens on /v1/chat/completions: a request for 16 tokens ran to its natural end (about 1 KB, 65 s), while max_tokens stopped at 16 (docs: https://docs.ollama.com/api/openai-compatibility lists max_tokens only). The response is an ordinary recorded one; the requirement checks the request, so it is tied to Ollama v0.40.3: once Ollama accepts max_completion_tokens (ollama/ollama#7125) a library that sends it is fine in practice, but this cell still grades it WRONG. Retire or rewrite the scenario then.",
   "references": ["https://docs.ollama.com/api/openai-compatibility"]
 }

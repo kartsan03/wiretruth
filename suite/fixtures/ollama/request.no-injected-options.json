@@ -1,0 +1,85 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama/request.no-injected-options",
+  "scenario": "request.no-injected-options",
+  "provider": "ollama",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:00:54Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294709109",
+    "raw_sha256": "fade5df2cfab704ae3951f8699539639a61eb2753ed63da2b7d6730f809238b0",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Name three moons of Jupiter."
+        }
+      ],
+      "stream": false,
+      "think": false
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/api/chat"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "json": {
+            "model": "qwen3.5:0.8b",
+            "created_at": "2026-10-12T19:01:05.015444316Z",
+            "message": {
+              "role": "assistant",
+              "content": "Three of the most prominent moons orbiting Jupiter are:\n\n1.  ** Europa** – It is a rocky moon surrounded by a subsurface ocean, making it one of the best candidates for future human missions like those planned by NASA's Europa Clipper mission.\n2.  ** Ganeo** – An early discovery from the Galilean Group that has now been confirmed by telescopes as a true moon with an active atmosphere and geological features, distinct from Io, Ganymede, and Phobos.\n3.  ** Callisto** – The largest moon in our solar system (about 4.8 times Earth's mass), it is composed of frozen ice and rock and hosts one of the most powerful volcanoes in the galaxy, though it does not have water on its surface."
+            },
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 10602529327,
+            "load_duration": 2339922,
+            "prompt_eval_count": 18,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 219567000,
+            "eval_count": 164,
+            "eval_duration": 10372826000
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "Three of the most prominent moons orbiting Jupiter are:\n\n1.  ** Europa** – It is a rocky moon surrounded by a subsurface ocean, making it one of the best candidates for future human missions like those planned by NASA's Europa Clipper mission.\n2.  ** Ganeo** – An early discovery from the Galilean Group that has now been confirmed by telescopes as a true moon with an active atmosphere and geological features, distinct from Io, Ganymede, and Phobos.\n3.  ** Callisto** – The largest moon in our solar system (about 4.8 times Earth's mass), it is composed of frozen ice and rock and hosts one of the most powerful volcanoes in the galaxy, though it does not have water on its surface.",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 18,
+      "cached_input": 0,
+      "output": 164,
+      "reasoning": null,
+      "total": 182,
+      "alternatives": {},
+      "raw": {
+        "prompt_eval_count": 18,
+        "prompt_eval_cached_count": 0,
+        "eval_count": 164
+      }
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama-openai/usage.stream-final-chunk",
+  "scenario": "usage.stream-final-chunk",
+  "provider": "ollama-openai",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:01:23Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294739276",
+    "raw_sha256": "0e2fcfd9042230f2f374fae7f77852f634b2a9040d43a92338c6509133c24b66",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "In one short sentence, explain why the sky looks blue."
+        }
+      ],
+      "stream": true,
+      "stream_options": {
+        "include_usage": true
+      },
+      "reasoning_effort": "none",
+      "max_tokens": 64
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Ray\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"leigh\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" scattering\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" causes\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" shorter\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" wavelengths\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" of\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" blue\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" light\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" to\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" scatter\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" more\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" effectively\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" by\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" sunlight\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" making\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" the\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" sky\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" appear\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" blue\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\".\"},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}]}\n\n",
+            "data: {\"id\":\"chatcmpl-107\",\"object\":\"chat.completion.chunk\",\"created\":1791831683,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[],\"usage\":{\"prompt_tokens\":24,\"prompt_tokens_details\":{\"cached_tokens\":0},\"completion_tokens\":23,\"total_tokens\":47},\"timings\":{\"prompt_n\":24,\"prompt_ms\":217,\"prompt_per_token_ms\":9.041666666666666,\"prompt_per_second\":110.59907834101382,\"predicted_n\":23,\"predicted_ms\":974,\"predicted_per_token_ms\":42.34782608695652,\"predicted_per_second\":23.613963039014372}}\n\n",
+            "data: [DONE]\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "Rayleigh scattering causes shorter wavelengths of blue light to scatter more effectively by sunlight, making the sky appear blue.",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 24,
+      "cached_input": 0,
+      "output": 23,
+      "reasoning": null,
+      "total": 47,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 24,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens": 23,
+        "total_tokens": 47
+      }
+    }
+  }
+}

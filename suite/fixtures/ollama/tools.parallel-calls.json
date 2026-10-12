@@ -1,0 +1,147 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama/tools.parallel-calls",
+  "scenario": "tools.parallel-calls",
+  "provider": "ollama",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:01:11Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294709109",
+    "raw_sha256": "0dc0b7e26ebc47cc85256976c4268ea86a1fb8c8f6e4ba57f4a1b720fee7e786",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What's the weather like right now in São Paulo and in Zürich? Call the tool once for each city."
+        }
+      ],
+      "stream": false,
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "description": "Get the current weather for a city.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "think": false
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/api/chat"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "json": {
+            "model": "qwen3.5:0.8b",
+            "created_at": "2026-10-12T19:01:13.696397757Z",
+            "message": {
+              "role": "assistant",
+              "content": "",
+              "tool_calls": [
+                {
+                  "id": "call_9epwsqu6",
+                  "function": {
+                    "index": 0,
+                    "name": "get_weather",
+                    "arguments": {
+                      "city": "São Paulo"
+                    }
+                  }
+                },
+                {
+                  "id": "call_bvzy1ra9",
+                  "function": {
+                    "index": 1,
+                    "name": "get_weather",
+                    "arguments": {
+                      "city": "Zürich"
+                    }
+                  }
+                }
+              ]
+            },
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 2299982620,
+            "load_duration": 3338545,
+            "prompt_eval_count": 292,
+            "prompt_eval_cached_count": 288,
+            "prompt_eval_duration": 71919000,
+            "eval_count": 55,
+            "eval_duration": 2221115000
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "tool_calls",
+    "raw_finish": "stop",
+    "text": "",
+    "tool_calls": [
+      {
+        "id": "call_9epwsqu6",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\":\"São Paulo\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "São Paulo"
+        }
+      },
+      {
+        "id": "call_bvzy1ra9",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\":\"Zürich\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "Zürich"
+        }
+      }
+    ],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 292,
+      "cached_input": 288,
+      "output": 55,
+      "reasoning": null,
+      "total": 347,
+      "alternatives": {},
+      "raw": {
+        "prompt_eval_count": 292,
+        "prompt_eval_cached_count": 288,
+        "eval_count": 55
+      }
+    }
+  }
+}

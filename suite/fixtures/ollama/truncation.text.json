@@ -1,0 +1,88 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama/truncation.text",
+  "scenario": "truncation.text",
+  "provider": "ollama",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:01:20Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294709109",
+    "raw_sha256": "21f9c45b8161ec8fb4c38214486ec88cc91906dd7c05f0447053ece902359051",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+        }
+      ],
+      "stream": false,
+      "options": {
+        "num_predict": 16
+      },
+      "think": false
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/api/chat"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "json": {
+            "model": "qwen3.5:0.8b",
+            "created_at": "2026-10-12T19:01:21.735707058Z",
+            "message": {
+              "role": "assistant",
+              "content": "Octopuses are unique marine invertebrates that possess three separate hearts, enabling"
+            },
+            "done": true,
+            "done_reason": "length",
+            "total_duration": 1180977461,
+            "load_duration": 2015632,
+            "prompt_eval_count": 32,
+            "prompt_eval_cached_count": 28,
+            "prompt_eval_duration": 70673000,
+            "eval_count": 16,
+            "eval_duration": 1106321000
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": "Octopuses are unique marine invertebrates that possess three separate hearts, enabling",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 32,
+      "cached_input": 28,
+      "output": 16,
+      "reasoning": null,
+      "total": 48,
+      "alternatives": {},
+      "raw": {
+        "prompt_eval_count": 32,
+        "prompt_eval_cached_count": 28,
+        "eval_count": 16
+      }
+    }
+  }
+}

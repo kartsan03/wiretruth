@@ -1,0 +1,99 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama-openai/finish.stop-sequence",
+  "scenario": "finish.stop-sequence",
+  "provider": "ollama-openai",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:01:06Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294739276",
+    "raw_sha256": "dfcc144bbe1254c2d001b4225ab599bbefb211c2d878b9b86f54e300cb9287ec",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Count from 1 to 10, then write END, then count to 20."
+        }
+      ],
+      "stop": [
+        "END"
+      ],
+      "reasoning_effort": "none",
+      "max_tokens": 120
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "chatcmpl-551",
+            "object": "chat.completion",
+            "created": 1791831669,
+            "model": "qwen3.5:0.8b",
+            "system_fingerprint": "fp_ollama",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "```text\n1\n2\n3\n4\n5\n6\n7\n8\n9"
+                },
+                "finish_reason": "stop"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 32,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens": 22,
+              "total_tokens": 54
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "```text\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 32,
+      "cached_input": 0,
+      "output": 22,
+      "reasoning": null,
+      "total": 54,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 32,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens": 22,
+        "total_tokens": 54
+      }
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama/stream.missing-finish-abort",
+  "scenario": "stream.missing-finish-abort",
+  "provider": "ollama",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+        }
+      ],
+      "stream": true,
+      "options": {
+        "num_predict": 16
+      },
+      "think": false
+    }
+  },
+  "derived_from": {
+    "fixture": "ollama/truncation.text-stream",
+    "transform": "cut_stream_after",
+    "args": {
+      "n": 8,
+      "end": "abort"
+    },
+    "rationale": "The connection closes before the stream has delivered every event.",
+    "evidence_url": "https://github.com/openai/openai-python/issues/2065"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/api/chat"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/x-ndjson"
+        },
+        "body": {
+          "ndjson": [
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.421674958Z\",\"message\":{\"role\":\"assistant\",\"content\":\"Oct\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.533325633Z\",\"message\":{\"role\":\"assistant\",\"content\":\"op\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.533383631Z\",\"message\":{\"role\":\"assistant\",\"content\":\"uses\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.533501035Z\",\"message\":{\"role\":\"assistant\",\"content\":\" are\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.65099542Z\",\"message\":{\"role\":\"assistant\",\"content\":\" master\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.759551535Z\",\"message\":{\"role\":\"assistant\",\"content\":\" of\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.872036409Z\",\"message\":{\"role\":\"assistant\",\"content\":\" camouflage\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.982184117Z\",\"message\":{\"role\":\"assistant\",\"content\":\",\"},\"done\":false}"
+          ]
+        },
+        "end": "abort"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "none",
+    "raw_finish": null,
+    "text": "Octopuses are master of camouflage,",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": false,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": {}
+    }
+  }
+}

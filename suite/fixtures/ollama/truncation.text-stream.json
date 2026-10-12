@@ -1,0 +1,90 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama/truncation.text-stream",
+  "scenario": "truncation.text-stream",
+  "provider": "ollama",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:01:19Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294709109",
+    "raw_sha256": "61c75247cd6a1c42ff46f6ea54e68a0fb628612e4d3380239cea36b7ff05b977",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+        }
+      ],
+      "stream": true,
+      "options": {
+        "num_predict": 16
+      },
+      "think": false
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/api/chat"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/x-ndjson"
+        },
+        "body": {
+          "ndjson": [
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.421674958Z\",\"message\":{\"role\":\"assistant\",\"content\":\"Oct\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.533325633Z\",\"message\":{\"role\":\"assistant\",\"content\":\"op\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.533383631Z\",\"message\":{\"role\":\"assistant\",\"content\":\"uses\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.533501035Z\",\"message\":{\"role\":\"assistant\",\"content\":\" are\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.65099542Z\",\"message\":{\"role\":\"assistant\",\"content\":\" master\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.759551535Z\",\"message\":{\"role\":\"assistant\",\"content\":\" of\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.872036409Z\",\"message\":{\"role\":\"assistant\",\"content\":\" camouflage\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.982184117Z\",\"message\":{\"role\":\"assistant\",\"content\":\",\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:19.982211749Z\",\"message\":{\"role\":\"assistant\",\"content\":\" relying\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:20.092858018Z\",\"message\":{\"role\":\"assistant\",\"content\":\" on\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:20.092890519Z\",\"message\":{\"role\":\"assistant\",\"content\":\" a\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:20.202009085Z\",\"message\":{\"role\":\"assistant\",\"content\":\" distinct\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:20.315262694Z\",\"message\":{\"role\":\"assistant\",\"content\":\" ability\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:20.4294355Z\",\"message\":{\"role\":\"assistant\",\"content\":\" where\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:20.510076663Z\",\"message\":{\"role\":\"assistant\",\"content\":\" their\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:20.543159517Z\",\"message\":{\"role\":\"assistant\",\"content\":\" color\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:20.543468977Z\",\"message\":{\"role\":\"assistant\",\"content\":\"\"},\"done\":true,\"done_reason\":\"length\",\"total_duration\":1478058493,\"load_duration\":3370746,\"prompt_eval_count\":32,\"prompt_eval_cached_count\":0,\"prompt_eval_duration\":346200000,\"eval_count\":16,\"eval_duration\":1121510000}"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": "Octopuses are master of camouflage, relying on a distinct ability where their color",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 32,
+      "cached_input": 0,
+      "output": 16,
+      "reasoning": null,
+      "total": 48,
+      "alternatives": {},
+      "raw": {
+        "prompt_eval_count": 32,
+        "prompt_eval_cached_count": 0,
+        "eval_count": 16
+      }
+    }
+  }
+}

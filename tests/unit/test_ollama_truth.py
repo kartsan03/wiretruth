@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 from ollama_samples import NATIVE_REASONING_LINES, PROBES, exchange
 
+from wiretruth.checks import CHECKS
 from wiretruth.formats import (
     Body,
     Call,
@@ -18,7 +19,7 @@ from wiretruth.formats import (
     load_scenario,
 )
 from wiretruth.providers import PROVIDERS, body_text, ollama, ollama_openai, openai_chat
-from wiretruth.replay import BASE_PATHS, _chunks
+from wiretruth.replay import BASE_PATHS, LoggedRequest, _chunks
 
 REPO = Path(__file__).resolve().parents[2]
 CALL = Call(
@@ -488,6 +489,20 @@ def test_new_ollama_scenario_calls():
     assert scenario.call.stop == ("END",)
     assert scenario.call.max_output_tokens == 120
     assert scenario.call.reasoning.effort == "none"
+
+
+def test_no_injected_options_requirement_catches_a_num_ctx_override():
+    scenario = load_scenario(REPO / "suite/scenarios/request/no-injected-options.json")
+    requirement = next(r for r in scenario.requirements if r.id == "no-context-override")
+    body = ollama.build_request(scenario.call, ollama.DEFAULT_MODEL).body
+    sent = LoggedRequest("POST", ollama.PATH, {}, {}, body, None, "", 0, True)
+    # any-llm before #1389 added a hard-coded context size to every native call.
+    injected = replace(sent, json_body={**body, "options": {"num_ctx": 32000}})
+    check = CHECKS[requirement.check]
+    assert check(None, None, (sent,), requirement.args).status == "SATISFIED"
+    result = check(None, None, (injected,), requirement.args)
+    assert result.status == "CONTRADICTED"
+    assert "options.num_ctx=32000" in result.evidence
 
 
 def test_native_unicode_line_separators_are_content():

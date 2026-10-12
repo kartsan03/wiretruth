@@ -1,0 +1,90 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama/stream.utf8",
+  "scenario": "stream.utf8",
+  "provider": "ollama",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:01:05Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294709109",
+    "raw_sha256": "ae8f5fd99c0fb334010e02b42c7e3cf10a2f97b1bf5a6e2c0a7493c1b10be26a",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Reply exactly with: Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉"
+        }
+      ],
+      "stream": true,
+      "options": {
+        "num_predict": 64
+      },
+      "think": false
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/api/chat"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/x-ndjson"
+        },
+        "body": {
+          "ndjson": [
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.416188935Z\",\"message\":{\"role\":\"assistant\",\"content\":\"C\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.530078243Z\",\"message\":{\"role\":\"assistant\",\"content\":\"af\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.530111546Z\",\"message\":{\"role\":\"assistant\",\"content\":\"é\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.643562986Z\",\"message\":{\"role\":\"assistant\",\"content\":\" Zürich\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.643838961Z\",\"message\":{\"role\":\"assistant\",\"content\":\" —\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.758817824Z\",\"message\":{\"role\":\"assistant\",\"content\":\" κα\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.758877305Z\",\"message\":{\"role\":\"assistant\",\"content\":\"λη\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.75909952Z\",\"message\":{\"role\":\"assistant\",\"content\":\"μέ\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.87436023Z\",\"message\":{\"role\":\"assistant\",\"content\":\"ρα\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.874416274Z\",\"message\":{\"role\":\"assistant\",\"content\":\"!\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.988950397Z\",\"message\":{\"role\":\"assistant\",\"content\":\" 東京\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.988976405Z\",\"message\":{\"role\":\"assistant\",\"content\":\"で\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:05.989062476Z\",\"message\":{\"role\":\"assistant\",\"content\":\"会い\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:06.10420813Z\",\"message\":{\"role\":\"assistant\",\"content\":\"ましょう\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:06.21906252Z\",\"message\":{\"role\":\"assistant\",\"content\":\" 🌸\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:06.334083943Z\",\"message\":{\"role\":\"assistant\",\"content\":\"🎉\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:06.334239784Z\",\"message\":{\"role\":\"assistant\",\"content\":\"\"},\"done\":true,\"done_reason\":\"stop\",\"total_duration\":1311450038,\"load_duration\":2172284,\"prompt_eval_count\":35,\"prompt_eval_cached_count\":0,\"prompt_eval_duration\":382649000,\"eval_count\":22,\"eval_duration\":917814000}"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 35,
+      "cached_input": 0,
+      "output": 22,
+      "reasoning": null,
+      "total": 57,
+      "alternatives": {},
+      "raw": {
+        "prompt_eval_count": 35,
+        "prompt_eval_cached_count": 0,
+        "eval_count": 22
+      }
+    }
+  }
+}

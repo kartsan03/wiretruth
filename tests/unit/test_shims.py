@@ -20,7 +20,7 @@ from wiretruth.formats import (
 from wiretruth.grading import grade_cell
 from wiretruth.providers import PROVIDERS, openai_chat
 from wiretruth.recorder import Response
-from wiretruth.replay import LoggedRequest
+from wiretruth.replay import BASE_PATHS, LoggedRequest
 from wiretruth.runner import (
     CellResult,
     compare_grades,
@@ -56,9 +56,8 @@ def test_builtin_observations_match_hand_derived_expected_grades_without_sockets
         doc = REFERENCE["observation_from_truth"](spec, truth)
         if name == "liar":
             doc = LIAR["lie"](doc)
-        log = [
-            LoggedRequest("POST", "/v1/chat/completions", {}, {}, request.body, None, "", 0, True)
-        ]
+        path = BASE_PATHS[cell.provider] + request.path
+        log = [LoggedRequest("POST", path, {}, {}, request.body, None, "", 0, True)]
         run = process_to_run(
             timed_out=False,
             returncode=0,

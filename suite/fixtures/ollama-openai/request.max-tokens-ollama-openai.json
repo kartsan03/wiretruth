@@ -1,0 +1,96 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama-openai/request.max-tokens-ollama-openai",
+  "scenario": "request.max-tokens-ollama-openai",
+  "provider": "ollama-openai",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:01:09Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294739276",
+    "raw_sha256": "5ae8909f0805d94da892effe2dee0ff9029cfba10c737cf2cea7db95804bb359",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Name three moons of Jupiter."
+        }
+      ],
+      "reasoning_effort": "none",
+      "max_tokens": 16
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "chatcmpl-390",
+            "object": "chat.completion",
+            "created": 1791831669,
+            "model": "qwen3.5:0.8b",
+            "system_fingerprint": "fp_ollama",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "Here are three moons of Jupiter:\n\n1.  **Callisto** ("
+                },
+                "finish_reason": "length"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 18,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens": 16,
+              "total_tokens": 34
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": "Here are three moons of Jupiter:\n\n1.  **Callisto** (",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 18,
+      "cached_input": 0,
+      "output": 16,
+      "reasoning": null,
+      "total": 34,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 18,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens": 16,
+        "total_tokens": 34
+      }
+    }
+  }
+}

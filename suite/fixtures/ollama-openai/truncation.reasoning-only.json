@@ -1,0 +1,97 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama-openai/truncation.reasoning-only",
+  "scenario": "truncation.reasoning-only",
+  "provider": "ollama-openai",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:01:16Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294739276",
+    "raw_sha256": "b715c94818e7daa7cb31f06ddd9b5d1e2e420fa0a146def35180c90076698ac4",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Find the smallest positive whole number that leaves a remainder of 1 when divided by 2, 3, 4, 5 or 6 and is divisible by 7. Check your answer before replying."
+        }
+      ],
+      "reasoning_effort": "medium",
+      "max_tokens": 64
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "chatcmpl-741",
+            "object": "chat.completion",
+            "created": 1791831679,
+            "model": "qwen3.5:0.8b",
+            "system_fingerprint": "fp_ollama",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "",
+                  "reasoning": "Here's my thought process for finding the smallest positive whole number with these constraints:\n\n1.  **Understand the Goal:** I need to find a specific integer $x$ satisfying three conditions simultaneously:\n    *   Condition A (Modulo): $x \\equiv 1 \\pmod{2}$ ("
+                },
+                "finish_reason": "length"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 54,
+              "prompt_tokens_details": {
+                "cached_tokens": 0
+              },
+              "completion_tokens": 64,
+              "total_tokens": 118
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "length",
+    "text": "",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 54,
+      "cached_input": 0,
+      "output": 64,
+      "reasoning": null,
+      "total": 118,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens": 64,
+        "total_tokens": 118
+      }
+    }
+  }
+}

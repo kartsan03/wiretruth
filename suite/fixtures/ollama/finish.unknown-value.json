@@ -1,0 +1,90 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama/finish.unknown-value",
+  "scenario": "finish.unknown-value",
+  "provider": "ollama",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+        }
+      ],
+      "stream": false,
+      "options": {
+        "num_predict": 16
+      },
+      "think": false
+    }
+  },
+  "derived_from": {
+    "fixture": "ollama/truncation.text",
+    "transform": "replace_finish_value",
+    "args": {
+      "value": "wiretruth_unknown_reason"
+    },
+    "rationale": "The provider sends a finish value that a library may not recognize.",
+    "evidence_url": "https://github.com/BerriAI/litellm/issues/21347"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/api/chat"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "json": {
+            "model": "qwen3.5:0.8b",
+            "created_at": "2026-10-12T19:01:21.735707058Z",
+            "message": {
+              "role": "assistant",
+              "content": "Octopuses are unique marine invertebrates that possess three separate hearts, enabling"
+            },
+            "done": true,
+            "done_reason": "wiretruth_unknown_reason",
+            "total_duration": 1180977461,
+            "load_duration": 2015632,
+            "prompt_eval_count": 32,
+            "prompt_eval_cached_count": 28,
+            "prompt_eval_duration": 70673000,
+            "eval_count": 16,
+            "eval_duration": 1106321000
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "other",
+    "raw_finish": "wiretruth_unknown_reason",
+    "text": "Octopuses are unique marine invertebrates that possess three separate hearts, enabling",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 32,
+      "cached_input": 28,
+      "output": 16,
+      "reasoning": null,
+      "total": 48,
+      "alternatives": {},
+      "raw": {
+        "prompt_eval_count": 32,
+        "prompt_eval_cached_count": 28,
+        "eval_count": 16
+      }
+    }
+  }
+}
