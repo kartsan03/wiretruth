@@ -15,7 +15,7 @@
     "tool_calls": {"primary": "choices[0].message.tool_calls; streaming choices[0].delta.tool_calls joined by index; error.completion.choices[0].message.tool_calls; Responses function_call items use call_id, name and arguments; streaming output_item.added and argument deltas joined by output_index; arguments read with json.loads"},
     "usage": {"primary": "usage.prompt_tokens, completion_tokens, total_tokens, prompt_tokens_details.cached_tokens, completion_tokens_details.reasoning_tokens; also error.completion.usage on finish-reason errors; Responses usage.input_tokens, output_tokens, total_tokens, input_tokens_details.cached_tokens, output_tokens_details.reasoning_tokens"},
     "structured": {"primary": "response_format is a Pydantic model built from the input schema; choices[0].message.parsed is the parsed output; Responses output_parsed from response_format is reported only on return"},
-    "stream": {"primary": "ChatCompletionChunk iterator ending without error; last finish reason and last usage-bearing chunk; Responses final event (response.completed, response.incomplete or response.failed) and no error"}
+    "stream": {"primary": "Chat: no completion signal (the ChatCompletionChunk iterator ends the same way with or without [DONE]); last finish reason and last usage-bearing chunk. Responses: the final event (response.completed, response.incomplete or response.failed) and no error"}
   },
   "finish_map": {
     "stop": "stop", "length": "length", "tool_calls": "tool_calls",

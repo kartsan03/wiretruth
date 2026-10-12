@@ -15,11 +15,20 @@ reference = runpy.run_path(str(Path(__file__).resolve().parents[1] / "reference"
 def lie(observation: JsonObject) -> JsonObject:
     obs = deepcopy(observation)
     finish = cast(JsonObject, obs["finish"])
-    if finish["value"] == "length" or obs["error"] is not None:
+    if finish["value"] in ("length", "other") or obs["error"] is not None:
         finish["value"] = "stop"
         finish["surface"] = "primary"
     finish["raw"] = None
     obs["outcome"], obs["error"] = "returned", None
+    stream = cast(JsonObject, obs["stream"])
+    if stream["used"]:
+        stream["completed"] = True
+    text = cast(JsonObject, obs["text"])
+    if isinstance(text["value"], str):
+        for index, char in enumerate(text["value"]):
+            if not char.isascii():
+                text["value"] = text["value"][:index] + "\ufffd" + text["value"][index + 1 :]
+                break
     usage = cast(JsonObject, obs["usage"])
     for name in reference["USAGE_FIELDS"]:
         usage[name] = None

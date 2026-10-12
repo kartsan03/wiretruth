@@ -254,3 +254,47 @@ def test_liar_drops_parallel_tool_calls():
     liar = observation_from_document(LIAR["lie"](doc))
     assert [call.id for call in liar.tool_calls] == ["call-1"]
     assert len(doc["tool_calls"]) == 2
+
+
+@pytest.mark.parametrize("completed", [None, False, True])
+@pytest.mark.parametrize("used", [False, True])
+def test_liar_claims_every_used_stream_completed(used, completed):
+    doc = REFERENCE["observation_from_truth"](
+        find_cells(REPO, "truncation.text")[0].call_spec, sample_truth()
+    )
+    doc["stream"].update(used=used, completed=completed)
+    liar = observation_from_document(LIAR["lie"](doc))
+    assert liar.stream.completed is (True if used else completed)
+    assert doc["stream"]["completed"] is completed
+
+
+def test_liar_maps_unknown_finish_to_primary_stop():
+    truth = {**sample_truth(), "finish": "other", "raw_finish": "wiretruth_unknown_reason"}
+    doc = REFERENCE["observation_from_truth"](
+        find_cells(REPO, "truncation.text")[0].call_spec, truth
+    )
+    liar = observation_from_document(LIAR["lie"](doc))
+    assert liar.finish.value == "stop" and liar.finish.surface == "primary"
+    assert liar.finish.raw is None
+    assert doc["finish"]["value"] == "other"
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        (None, None),
+        ("", ""),
+        ("Hello", "Hello"),
+        ("Café 東京 🌸", "Caf\ufffd 東京 🌸"),
+        ("東京 🌸", "\ufffd京 🌸"),
+        ("🌸🎉", "\ufffd🎉"),
+    ],
+)
+def test_liar_replaces_only_the_first_non_ascii_character(text, expected):
+    doc = REFERENCE["observation_from_truth"](
+        find_cells(REPO, "truncation.text")[0].call_spec, {**sample_truth(), "text": text}
+    )
+    liar = observation_from_document(LIAR["lie"](doc))
+    assert liar.text.value == expected
+    assert LIAR["lie"](doc) == LIAR["lie"](doc)
+    assert doc["text"]["value"] == text
