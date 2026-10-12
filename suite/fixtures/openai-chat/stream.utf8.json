@@ -1,0 +1,87 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/stream.utf8",
+  "scenario": "stream.utf8",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T15:24:35Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "dd0c149",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38269995348",
+    "raw_sha256": "a39cc3c96beac2059e6e185e7046444e35ec7a477e327c557c4e8a7092d5eac5",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Reply exactly with: Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉"
+        }
+      ],
+      "stream": true,
+      "max_completion_tokens": 64,
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream; charset=utf-8"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"refusal\":null},\"finish_reason\":null}],\"obfuscation\":\"Zkag2u86fHx3a\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"C\"},\"finish_reason\":null}],\"obfuscation\":\"6ccNht7P7rI21f\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"afé\"},\"finish_reason\":null}],\"obfuscation\":\"arNCkP9ZUz2f\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" Zürich\"},\"finish_reason\":null}],\"obfuscation\":\"LuuIWHGL\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" —\"},\"finish_reason\":null}],\"obfuscation\":\"HoDMBn9gxQ475\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" κα\"},\"finish_reason\":null}],\"obfuscation\":\"4C0atYTZxugD\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"λη\"},\"finish_reason\":null}],\"obfuscation\":\"xTXTBmIQalNQQ\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"μέ\"},\"finish_reason\":null}],\"obfuscation\":\"nbVfqErVUfPR2\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"ρα\"},\"finish_reason\":null}],\"obfuscation\":\"6m2BKMTc8KTKI\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"!\"},\"finish_reason\":null}],\"obfuscation\":\"G9sGmqHIFHlL1S\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" 東京\"},\"finish_reason\":null}],\"obfuscation\":\"V4naIFS6tnH1\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"で\"},\"finish_reason\":null}],\"obfuscation\":\"4X0jNXSIFlfOnz\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"会\"},\"finish_reason\":null}],\"obfuscation\":\"kTrhlA9jQuJzsC\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"い\"},\"finish_reason\":null}],\"obfuscation\":\"P23CJsbmUnEZQm\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"ま\"},\"finish_reason\":null}],\"obfuscation\":\"vT3FG2VfwaY0IE\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"しょう\"},\"finish_reason\":null}],\"obfuscation\":\"lqMXRfhKJGuE\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" 🌸\"},\"finish_reason\":null}],\"obfuscation\":\"TsLiW9xzcer8P\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"🎉\"},\"finish_reason\":null}],\"obfuscation\":\"1NUdbZN9pRBhJB\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EYCBCVHLj5ypfxkOeabNNtAkhfRjf\",\"object\":\"chat.completion.chunk\",\"created\":1791818678,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"stop\"}],\"obfuscation\":\"gd0egnsIa\"}\n\n",
+            "data: [DONE]\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": null
+    }
+  }
+}
