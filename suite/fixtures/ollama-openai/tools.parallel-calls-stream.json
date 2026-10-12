@@ -1,0 +1,110 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama-openai/tools.parallel-calls-stream",
+  "scenario": "tools.parallel-calls-stream",
+  "provider": "ollama-openai",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:01:11Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294739276",
+    "raw_sha256": "98057a114ec9708e2bf9a64e62ac0a79be4e70b0bb78f35ed2af94e78d439871",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What's the weather like right now in São Paulo and in Zürich? Call the tool once for each city."
+        }
+      ],
+      "stream": true,
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "description": "Get the current weather for a city.",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "city": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "city"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "reasoning_effort": "none"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-27\",\"object\":\"chat.completion.chunk\",\"created\":1791831673,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"tool_calls\":[{\"id\":\"call_ksf3asbw\",\"index\":0,\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"São Paulo\\\"}\"}}]},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-27\",\"object\":\"chat.completion.chunk\",\"created\":1791831673,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\",\"tool_calls\":[{\"id\":\"call_j3d219yx\",\"index\":1,\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Zürich\\\"}\"}}]},\"finish_reason\":null}]}\n\n",
+            "data: {\"id\":\"chatcmpl-27\",\"object\":\"chat.completion.chunk\",\"created\":1791831673,\"model\":\"qwen3.5:0.8b\",\"system_fingerprint\":\"fp_ollama\",\"choices\":[{\"index\":0,\"delta\":{},\"finish_reason\":\"tool_calls\"}]}\n\n",
+            "data: [DONE]\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "tool_calls",
+    "raw_finish": "tool_calls",
+    "text": "",
+    "tool_calls": [
+      {
+        "id": "call_ksf3asbw",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\":\"São Paulo\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "São Paulo"
+        }
+      },
+      {
+        "id": "call_j3d219yx",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\":\"Zürich\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "Zürich"
+        }
+      }
+    ],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": null
+    }
+  }
+}
