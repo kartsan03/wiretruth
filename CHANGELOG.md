@@ -87,7 +87,8 @@ finding).
   ([ollama/ollama-python#667](https://github.com/ollama/ollama-python/issues/667)). WRONG on `finish.unknown-value`
   over `ollama`: an unfamiliar `done_reason` is reported as `stop`, a fallback any-llm documents in its code. WRONG on
   `request.max-tokens-ollama-openai`: the `openai` provider sends `max_completion_tokens`, which Ollama's
-  OpenAI-compatible endpoint ignores ([ollama/ollama#7125](https://github.com/ollama/ollama/issues/7125)).
+  OpenAI-compatible endpoint ignores ([ollama/ollama#7125](https://github.com/ollama/ollama/issues/7125)). That
+  cell is tied to Ollama v0.40.3: it checks the request, so it stays WRONG until the scenario is retired.
 - `request.no-injected-options` backtest of any-llm #1389: any-llm 1.28.0 sends `options.num_ctx` 32000 on a
   minimal Ollama call (WRONG); 1.29.0 and 1.33.0 don't (PASS).
 

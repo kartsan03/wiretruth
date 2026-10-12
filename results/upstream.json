@@ -59,6 +59,6 @@
     "status": "reported",
     "fixed_in": null,
     "opened": "2024-10-08",
-    "notes": "Existing upstream issue, not opened by wiretruth. Ollama's OpenAI-compatible endpoint ignores max_completion_tokens (v0.40.3), and any-llm's openai provider sends only that name (providers/openai/base.py), so the limit never applies. The root cause is in Ollama; the PR listed adds the field."
+    "notes": "Existing upstream issue, not opened by wiretruth. Ollama's OpenAI-compatible endpoint ignores max_completion_tokens (v0.40.3), and any-llm's openai provider sends only that name (providers/openai/base.py), so the limit never applies. The root cause is in Ollama; the PR listed adds the field. The check reads the request any-llm sends, so the cell stays WRONG after Ollama's fix and re-recording does not change it: retire or rewrite the scenario when that release ships."
   }
 ]
