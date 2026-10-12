@@ -82,10 +82,12 @@ finding).
   `openai-chat`: Chat Completions streams give no completion signal, so nothing tells the caller that the
   stream ended early. The same two cells on `ollama-openai`, and LOSSY `stream.missing-finish` on `ollama`.
 - any-llm 1.33.0 on Ollama, recorded with `qwen3.5:0.8b` on Ollama v0.40.3. WRONG on `tools.parallel-calls` and
-  `tools.parallel-calls-stream` over `ollama`: the native provider replaces the `call_*` ids Ollama sends with
-  generated UUIDs. WRONG on `finish.unknown-value` over `ollama`: an unfamiliar `done_reason` is reported as `stop`.
-  WRONG on `request.max-tokens-ollama-openai`: the `openai` provider sends `max_completion_tokens`, which Ollama's
-  OpenAI-compatible endpoint ignores, so the limit never applies.
+  `tools.parallel-calls-stream` over `ollama`: the native provider generates UUIDs for tool calls because the
+  `ollama` Python client has no field for the `call_*` ids Ollama sends
+  ([ollama/ollama-python#667](https://github.com/ollama/ollama-python/issues/667)). WRONG on `finish.unknown-value`
+  over `ollama`: an unfamiliar `done_reason` is reported as `stop`, a fallback any-llm documents in its code. WRONG on
+  `request.max-tokens-ollama-openai`: the `openai` provider sends `max_completion_tokens`, which Ollama's
+  OpenAI-compatible endpoint ignores ([ollama/ollama#7125](https://github.com/ollama/ollama/issues/7125)).
 - `request.no-injected-options` backtest of any-llm #1389: any-llm 1.28.0 sends `options.num_ctx` 32000 on a
   minimal Ollama call (WRONG); 1.29.0 and 1.33.0 don't (PASS).
 

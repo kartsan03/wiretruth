@@ -1,13 +1,64 @@
 [
   {
     "library": "any-llm",
-    "scenarios": ["finish.unknown-value"],
-    "providers": ["openai-chat"],
+    "scenarios": [
+      "finish.unknown-value"
+    ],
+    "providers": [
+      "openai-chat",
+      "ollama-openai"
+    ],
     "issue": "https://github.com/mozilla-ai/any-llm/issues/1471",
     "pr": null,
     "status": "reported",
     "fixed_in": null,
     "opened": "2026-10-12",
-    "notes": "A finish_reason outside OpenAI's five values raises a pydantic ValidationError (ChatCompletion.model_validate), so the response is lost. Also reproduced on 1.33.3."
+    "notes": "A finish_reason outside OpenAI's five values raises a pydantic ValidationError (ChatCompletion.model_validate), so the response is lost. Also reproduced on 1.33.3. The same error reaches provider='openai' pointed at Ollama's OpenAI-compatible endpoint (ollama-openai)."
+  },
+  {
+    "library": "any-llm",
+    "scenarios": [
+      "tools.parallel-calls",
+      "tools.parallel-calls-stream"
+    ],
+    "providers": [
+      "ollama"
+    ],
+    "issue": "https://github.com/ollama/ollama-python/issues/667",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-05-18",
+    "notes": "Existing upstream issue, not opened by wiretruth. Ollama sends an id on each tool call, but the ollama Python client (0.6.3, latest) has no field for it, so any-llm's native provider generates UUIDs instead (providers/ollama/utils.py)."
+  },
+  {
+    "library": "any-llm",
+    "scenarios": [
+      "finish.unknown-value"
+    ],
+    "providers": [
+      "ollama"
+    ],
+    "issue": null,
+    "pr": null,
+    "status": "documented-behavior",
+    "fixed_in": null,
+    "opened": "2026-10-12",
+    "notes": "any-llm documents the fallback: a done_reason outside stop, length, tool_calls, content_filter and function_call is reported as stop (https://github.com/mozilla-ai/any-llm/blob/18ed82b8ae89db560bf0b1ec8bccb752fc0e2b5d/src/any_llm/providers/ollama/utils.py#L33-L46). The caller cannot tell an unfamiliar reason from a normal stop."
+  },
+  {
+    "library": "any-llm",
+    "scenarios": [
+      "request.max-tokens-ollama-openai"
+    ],
+    "providers": [
+      "ollama-openai"
+    ],
+    "issue": "https://github.com/ollama/ollama/issues/7125",
+    "pr": "https://github.com/ollama/ollama/pull/18604",
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2024-10-08",
+    "notes": "Existing upstream issue, not opened by wiretruth. Ollama's OpenAI-compatible endpoint ignores max_completion_tokens (v0.40.3), and any-llm's openai provider sends only that name (providers/openai/base.py), so the limit never applies. The root cause is in Ollama; the PR listed adds the field."
   }
 ]
