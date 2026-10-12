@@ -120,6 +120,10 @@ library, [open a new-library issue](https://github.com/kartsan03/wiretruth/issue
   conformance for inference engines (vLLM, llama.cpp, Ollama, …).
 - [aimock](https://github.com/CopilotKit/aimock): a mock server for testing AI apps, with record and replay. Use it
   for your app's tests; wiretruth audits the SDK layer itself.
+- [Plexito-de/wiretruth](https://github.com/Plexito-de/wiretruth): a separate project that shares this one's name.
+  It replays provider responses through LLM instrumentation libraries (OpenLLMetry, OpenInference, the OpenTelemetry
+  GenAI instrumentation) and checks what they write on spans. Use it for your traces; wiretruth checks what the SDK
+  returns to the caller.
 - The design borrows from [JSONTestSuite](https://github.com/nst/JSONTestSuite),
   [Wycheproof](https://github.com/C2SP/wycheproof), [toml-test](https://github.com/toml-lang/toml-test) and
   [compat-table](https://github.com/compat-table/compat-table).
