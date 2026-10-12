@@ -122,7 +122,8 @@ def _line_object(line: str) -> JsonObject:
 
 def _lines(exchange: Exchange) -> list[str]:
     lines = body_text(exchange).split("\n")
-    return lines[:-1] if lines[-1] == "" else lines
+    # The last piece has no newline after it: the empty tail, or a record that an abort cut short.
+    return lines[:-1] if lines[-1] == "" or exchange.end == "abort" else lines
 
 
 def returned_model(exchange: Exchange) -> str | None:

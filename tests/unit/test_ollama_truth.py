@@ -277,6 +277,24 @@ def test_native_bad_utf8_and_non_stream_body():
     assert ollama.extract_truth([ex], None)["error"]["message"] == "HTTP 500"
 
 
+def test_native_abort_inside_a_line_keeps_the_complete_lines():
+    cut = (
+        b'{"model":"qwen3.5:0.8b","message":{"role":"assistant","content":"Hel"},"done":false}\n'
+        b'{"model":"qwen3.5:0.8b","message":{"role":"assistant","content":"lo"},"done":fal'
+    )
+    ex = replace(
+        exchange("n-text-stream"),
+        body=Body("chunks_b64", None, (base64.b64encode(cut).decode(),)),
+        end="abort",
+    )
+    result = ollama.extract_truth([ex], None)
+    assert (result["finish"], result["text"], result["stream_completed"]) == ("none", "Hel", False)
+    assert ollama.returned_model(ex) == "qwen3.5:0.8b"
+    # The same bytes on a clean end are a broken record, not an abort.
+    with pytest.raises(ValueError):
+        ollama.extract_truth([replace(ex, end="clean")], None)
+
+
 @pytest.mark.parametrize(
     "body",
     [
