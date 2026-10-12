@@ -12,6 +12,8 @@ finding).
 ## [Unreleased]
 
 ### Added
+- `wiretruth derive` creates derived fixtures with recomputed truth using six transforms: `cut_stream_after`,
+  `strip_finish`, `inject_error_event`, `rechunk_inside_utf8`, `replace_finish_value` and `prepend_http_error`.
 - `openai-responses` supports recording, truth extraction, lint and replay. The any-llm shim maps it through
   `any_llm.responses`. The truncated tool-argument scenarios (plain and streamed), reasoning-only truncation
   and parallel tool-call scenarios (plain and streamed) now list the provider.
