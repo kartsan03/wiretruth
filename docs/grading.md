@@ -17,7 +17,8 @@ It returns a status and a short evidence string. It does not run a shim or read 
 
 Only **primary** values count when comparing finish, text or usage. A value on the **raw** or **absent** surface
 cannot satisfy or contradict a comparison, except that absent text or usage can satisfy the reports-none
-rule when the wire carried no value, described below.
+rule when the wire carried no value, described below. `raw_finish_matches_truth` compares the raw finish
+value on any surface.
 A separate signal, such as a raised error, can satisfy a check without a primary value.
 
 Within a check, SATISFIED conditions take precedence over CONTRADICTED conditions. If neither applies, the status
@@ -38,6 +39,7 @@ with `ValueError`. That is a scenario bug, not a library grade.
 |---|---|---|---|
 | `finish_is(value)` | Reported finish equals `value`, including on an error. | A different finish is reported. | Finish is raw-only, absent or null. |
 | `finish_is_not(value)` | The outcome is raised, or the reported finish is anything but `value`, including raw-only, absent or null. | The forbidden finish is reported without a raised outcome. | — |
+| `raw_finish_matches_truth` | Raw finish equals truth on any surface, or null truth is matched by reporting none. | A non-null raw value differs from truth. | Finish is absent or raw is null when truth is non-null. |
 | `truncation_is_signalled` | Reported finish is `length`, or error category is `truncation`. | Without either satisfying signal, reported finish is `stop` or `tool_calls`, or structured output came back as success. | Neither condition applies, including raw-only truncation or a generic parse/validation error without a primary finish. |
 | `text_matches_truth` | Reported text exactly equals non-empty truth, or null/empty truth is matched by reporting no text. | Reported text differs from non-empty truth, or non-empty text is reported for null/empty truth. | Text is raw-only, or absent/null when truth is non-empty. |
 | `no_replacement_chars` | Reported non-null text contains no U+FFFD. | It contains U+FFFD. | Text is raw-only, absent or null. |
@@ -46,7 +48,8 @@ with `ValueError`. That is a scenario bug, not a library grade.
 | `no_complete_tool_call_from_partial_args` | A raised outcome, an error object or a primary `error` finish; otherwise no call reports parsed arguments against partial truth. Unparsed partial calls satisfy. | A call reports `arguments_parsed_ok: true` while its matched truth call has `arguments_parsed_ok: false`, without an error signal. | — |
 | `usage_matches_truth(fields)` | Every field matches truth or an alternative, including the null-truth rule. | Any reported field differs from every accepted value. | No contradiction, but at least one field is unavailable on primary; see null truth below. |
 | `usage_total_reconciles` | Reported total matches an accepted total, or primary components reconstruct one when no primary total is reported. Null truth uses the reports-none rule. | A reported total differs, or available primary components cannot reconstruct any accepted total. | Total cannot be compared and primary input/output are unavailable; raw-only null-truth total also stays unobservable. |
-| `outcome_is_error(categories?)` | Outcome is raised, with a listed category if a list was supplied. | Outcome is returned with no error signal. | Raised with another category, returned with an error signal, or unsupported. |
+| `outcome_is_error(categories?)` | Outcome is raised or returned with an error object, with a listed category if a list was supplied. | Outcome is returned with no error signal. | Error category is unlisted, returned with only a primary error finish, or unsupported. |
+| `outcome_is_returned` | Outcome is returned with no error object. | Outcome is raised, or returned with an error object, while the wire carried no error. | Unsupported, or the wire carried an error. |
 | `stream_not_reported_complete` | Completion is false, or outcome is raised. | Completion is true without a raised outcome. | No completion signal and no raised outcome. |
 | `request_field_equals(path, value)` | Every request has the path with the expected JSON value. | Any JSON request lacks the path or has a different value there. | No requests, or a non-JSON request with no contradiction elsewhere. |
 | `request_field_absent(path)` | Path absent from every request, including no requests. | Path present in any request, even with a null value. | — |
@@ -61,7 +64,9 @@ with `ValueError`. That is a scenario bug, not a library grade.
 arguments.
 
 For `outcome_is_error`, an error signal is an error object or a primary finish of `error`. Either signal on a
-returned outcome is NOT_OBSERVABLE: it reports an error, but did not raise one.
+returned outcome prevents silent success. A returned or yielded error object satisfies when no categories were
+requested or its category is listed; an unlisted category is NOT_OBSERVABLE. A primary finish of `error` without
+an error object on a returned outcome remains NOT_OBSERVABLE.
 
 Request paths are non-empty dotted paths without empty segments. For example, `stream_options.include_usage`
 looks up an object field, and `messages.0.content` indexes the first list item. ASCII digit-only segments index

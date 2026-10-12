@@ -1,0 +1,81 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/stream.missing-finish-abort",
+  "scenario": "stream.missing-finish-abort",
+  "provider": "openai-chat",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Describe a traditional Japanese breakfast in about 200 words, giving each dish its Japanese name (for example 味噌汁 or 焼き魚) and an English translation."
+        }
+      ],
+      "stream": true,
+      "stream_options": {
+        "include_usage": true
+      },
+      "max_completion_tokens": 16,
+      "reasoning_effort": "none"
+    }
+  },
+  "derived_from": {
+    "fixture": "openai-chat/truncation.text-stream-usage",
+    "transform": "cut_stream_after",
+    "args": {
+      "n": 8,
+      "end": "abort"
+    },
+    "rationale": "The connection closes before the stream has delivered every event.",
+    "evidence_url": "https://github.com/openai/openai-python/issues/2065"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream; charset=utf-8"
+        },
+        "body": {
+          "sse": [
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"refusal\":null},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"A\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"b\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" traditional\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"d52OTd\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" Japanese\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"w1dZTLipP\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" breakfast\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"MWjy8UlZ\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" is\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"icVTZPFYRG5lFwL\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" built\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"AYTZtVaq9EDe\"}\n\n",
+            "data: {\"id\":\"chatcmpl-EXmWZAYmW8gL0ntPfYzZYrbv99Dcb\",\"object\":\"chat.completion.chunk\",\"created\":1791720059,\"model\":\"gpt-6-luna\",\"service_tier\":\"default\",\"system_fingerprint\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\" around\"},\"finish_reason\":null}],\"usage\":null,\"obfuscation\":\"kMyBiZ4fH9u\"}\n\n"
+          ]
+        },
+        "end": "abort"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "none",
+    "raw_finish": null,
+    "text": "A traditional Japanese breakfast is built around",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": false,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": null
+    }
+  }
+}

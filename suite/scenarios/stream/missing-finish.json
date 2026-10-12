@@ -1,0 +1,41 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "stream.missing-finish",
+  "title": "Stream ends without a finish signal",
+  "bug_class": "stream-integrity",
+  "priority": "P0",
+  "summary": "The HTTP stream ends cleanly after partial text, without a finish event or a completion marker.",
+  "call": {
+    "stream": true,
+    "max_output_tokens": 16,
+    "messages": [
+      {"role": "user", "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."}
+    ],
+    "reasoning": {"effort": "none"}
+  },
+  "call_overrides": {
+    "openai-chat": {
+      "messages": [
+        {"role": "user", "content": "Describe a traditional Japanese breakfast in about 200 words, giving each dish its Japanese name (for example 味噌汁 or 焼き魚) and an English translation."}
+      ],
+      "extra": {"include_usage": true}
+    }
+  },
+  "providers": ["openai-chat", "openai-responses"],
+  "requirements": [
+    {
+      "id": "no-normal-stop",
+      "level": "MUST",
+      "check": "finish_is_not",
+      "args": {"value": "stop"},
+      "text": "The library does not report that the model stopped normally."
+    },
+    {
+      "id": "stream-incomplete",
+      "level": "MUST",
+      "check": "stream_not_reported_complete",
+      "text": "The caller can tell that the stream did not complete."
+    }
+  ],
+  "grading_notes": "Reporting stop for partial text is WRONG. A finish of none with no error is PASS only when the library exposes that the stream did not complete; no completion signal is LOSSY. A raised error satisfies both requirements. The openai-chat override preserves the Japanese breakfast prompt and usage option of its source recording; openai-responses uses the octopus recording."
+}

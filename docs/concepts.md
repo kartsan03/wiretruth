@@ -77,7 +77,10 @@ or raised, the finish reason, text, structured output, tool calls, usage and str
 observation also records where the library exposed it. When the library raised, the observation records the error's
 type, message and category (such as `truncation`, `parse`, `validation`, `network`, `api` or `internal`), and the
 file and line that raised it. The category comes from the library's manifest, which maps the library's error types
-to categories. A language builtin raised from a frame inside the library's code is `internal`.
+to categories. A language builtin raised from a frame inside the library's code is `internal`. When the library
+returns or yields an error instead of raising it, the outcome stays `returned` and the observation records the
+error object. The stream state's `completed` is the library's own signal that the stream ended normally, or null
+when the library gives none.
 
 **Surface.** Where a value was found:
 

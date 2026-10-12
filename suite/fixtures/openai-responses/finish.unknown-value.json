@@ -1,0 +1,176 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-responses/finish.unknown-value",
+  "scenario": "finish.unknown-value",
+  "provider": "openai-responses",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "request": {
+      "model": "gpt-6-luna",
+      "input": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+        }
+      ],
+      "max_output_tokens": 16,
+      "reasoning": {
+        "effort": "none"
+      }
+    }
+  },
+  "derived_from": {
+    "fixture": "openai-responses/truncation.text",
+    "transform": "replace_finish_value",
+    "args": {
+      "value": "wiretruth_unknown_reason"
+    },
+    "rationale": "The provider sends a finish value that a library may not recognize.",
+    "evidence_url": "https://github.com/BerriAI/litellm/issues/21347"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/responses"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "resp_094389768e05d226006acbfc03e52887d1b6e75d17520a0a64",
+            "object": "response",
+            "created_at": 1791753219,
+            "status": "incomplete",
+            "access_programs": null,
+            "background": false,
+            "billing": {
+              "payer": "developer"
+            },
+            "completed_at": null,
+            "error": null,
+            "frequency_penalty": 0.0,
+            "incomplete_details": {
+              "reason": "wiretruth_unknown_reason"
+            },
+            "instructions": null,
+            "max_output_tokens": 16,
+            "max_tool_calls": null,
+            "model": "gpt-6-luna",
+            "moderation": null,
+            "output": [
+              {
+                "id": "msg_094389768e05d226006acbfc04c2b487d187d11a4b4425c595",
+                "type": "message",
+                "status": "incomplete",
+                "content": [
+                  {
+                    "type": "output_text",
+                    "annotations": [],
+                    "logprobs": [],
+                    "text": "Octopuses are masters of disguise, able to change colour in"
+                  }
+                ],
+                "phase": "final_answer",
+                "role": "assistant"
+              }
+            ],
+            "parallel_tool_calls": true,
+            "presence_penalty": 0.0,
+            "previous_response_id": null,
+            "prompt_cache_key": null,
+            "prompt_cache_retention": "24h",
+            "reasoning": {
+              "context": "all_turns",
+              "effort": "none",
+              "mode": "standard",
+              "summary": null
+            },
+            "safety_identifier": null,
+            "service_tier": "default",
+            "store": true,
+            "temperature": 1.0,
+            "text": {
+              "format": {
+                "type": "text"
+              },
+              "verbosity": "medium"
+            },
+            "tool_choice": "auto",
+            "tool_usage": {
+              "image_gen": {
+                "input_tokens": 0,
+                "input_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "output_tokens": 0,
+                "output_tokens_details": {
+                  "image_tokens": 0,
+                  "text_tokens": 0
+                },
+                "total_tokens": 0
+              },
+              "web_search": {
+                "num_requests": 0
+              }
+            },
+            "tools": [],
+            "top_logprobs": 0,
+            "top_p": 0.98,
+            "truncation": "disabled",
+            "usage": {
+              "input_tokens": 24,
+              "input_tokens_details": {
+                "cache_write_tokens": 0,
+                "cached_tokens": 0
+              },
+              "output_tokens": 16,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 40
+            },
+            "user": null,
+            "metadata": {}
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "other",
+    "raw_finish": "wiretruth_unknown_reason",
+    "text": "Octopuses are masters of disguise, able to change colour in",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 24,
+      "cached_input": 0,
+      "output": 16,
+      "reasoning": 0,
+      "total": 40,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 24,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 16,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 40
+      }
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-responses/stream.missing-finish-abort",
+  "scenario": "stream.missing-finish-abort",
+  "provider": "openai-responses",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "request": {
+      "model": "gpt-6-luna",
+      "input": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+        }
+      ],
+      "stream": true,
+      "max_output_tokens": 16,
+      "reasoning": {
+        "effort": "none"
+      }
+    }
+  },
+  "derived_from": {
+    "fixture": "openai-responses/truncation.text-stream",
+    "transform": "cut_stream_after",
+    "args": {
+      "n": 8,
+      "end": "abort"
+    },
+    "rationale": "The connection closes before the stream has delivered every event.",
+    "evidence_url": "https://github.com/openai/openai-python/issues/2065"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/responses"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream; charset=utf-8"
+        },
+        "body": {
+          "sse": [
+            "event: response.created\ndata: {\"type\":\"response.created\",\"response\":{\"id\":\"resp_025c23fff6653590006acbfc0086cc87d18124e70e8d3ff838\",\"object\":\"response\",\"created_at\":1791753216,\"status\":\"in_progress\",\"access_programs\":null,\"background\":false,\"completed_at\":null,\"error\":null,\"frequency_penalty\":0.0,\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":16,\"max_tool_calls\":null,\"model\":\"gpt-6-luna\",\"moderation\":null,\"output\":[],\"parallel_tool_calls\":true,\"presence_penalty\":0.0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"prompt_cache_retention\":\"24h\",\"reasoning\":{\"context\":\"all_turns\",\"effort\":\"none\",\"mode\":\"standard\",\"summary\":null},\"safety_identifier\":null,\"service_tier\":\"auto\",\"store\":true,\"temperature\":1.0,\"text\":{\"format\":{\"type\":\"text\"},\"verbosity\":\"medium\"},\"tool_choice\":\"auto\",\"tool_usage\":{\"image_gen\":{\"input_tokens\":0,\"input_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"output_tokens\":0,\"output_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"total_tokens\":0},\"web_search\":{\"num_requests\":0}},\"tools\":[],\"top_logprobs\":0,\"top_p\":0.98,\"truncation\":\"disabled\",\"usage\":null,\"user\":null,\"metadata\":{}},\"sequence_number\":0}\n\n",
+            "event: response.in_progress\ndata: {\"type\":\"response.in_progress\",\"response\":{\"id\":\"resp_025c23fff6653590006acbfc0086cc87d18124e70e8d3ff838\",\"object\":\"response\",\"created_at\":1791753216,\"status\":\"in_progress\",\"access_programs\":null,\"background\":false,\"completed_at\":null,\"error\":null,\"frequency_penalty\":0.0,\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":16,\"max_tool_calls\":null,\"model\":\"gpt-6-luna\",\"moderation\":null,\"output\":[],\"parallel_tool_calls\":true,\"presence_penalty\":0.0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"prompt_cache_retention\":\"24h\",\"reasoning\":{\"context\":\"all_turns\",\"effort\":\"none\",\"mode\":\"standard\",\"summary\":null},\"safety_identifier\":null,\"service_tier\":\"auto\",\"store\":true,\"temperature\":1.0,\"text\":{\"format\":{\"type\":\"text\"},\"verbosity\":\"medium\"},\"tool_choice\":\"auto\",\"tool_usage\":{\"image_gen\":{\"input_tokens\":0,\"input_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"output_tokens\":0,\"output_tokens_details\":{\"image_tokens\":0,\"text_tokens\":0},\"total_tokens\":0},\"web_search\":{\"num_requests\":0}},\"tools\":[],\"top_logprobs\":0,\"top_p\":0.98,\"truncation\":\"disabled\",\"usage\":null,\"user\":null,\"metadata\":{}},\"sequence_number\":1}\n\n",
+            "event: response.output_item.added\ndata: {\"type\":\"response.output_item.added\",\"item\":{\"id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"type\":\"message\",\"status\":\"in_progress\",\"content\":[],\"phase\":\"final_answer\",\"role\":\"assistant\"},\"output_index\":0,\"sequence_number\":2}\n\n",
+            "event: response.content_part.added\ndata: {\"type\":\"response.content_part.added\",\"content_index\":0,\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"output_index\":0,\"part\":{\"type\":\"output_text\",\"annotations\":[],\"logprobs\":[],\"text\":\"\"},\"sequence_number\":3}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\"Oct\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"JJEbJBKhHOigL\",\"output_index\":0,\"sequence_number\":4}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\"op\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"rCPO5tGFW8ghsz\",\"output_index\":0,\"sequence_number\":5}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\"uses\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"byausMiYWM8M\",\"output_index\":0,\"sequence_number\":6}\n\n",
+            "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"content_index\":0,\"delta\":\" change\",\"item_id\":\"msg_025c23fff6653590006acbfc016d8087d18e46405588162435\",\"logprobs\":[],\"obfuscation\":\"lE22JEr0R\",\"output_index\":0,\"sequence_number\":7}\n\n"
+          ]
+        },
+        "end": "abort"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "none",
+    "raw_finish": null,
+    "text": "Octopuses change",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": false,
+    "usage": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": null,
+      "alternatives": {},
+      "raw": null
+    }
+  }
+}

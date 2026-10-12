@@ -318,7 +318,8 @@ try:
                 for chunk in result:
                     obs["stream"]["chunks_seen"] += 1
                     observe(chunk, streaming=True)
-                obs["stream"]["completed"] = obs["error"] is None
+                # Chat iteration ends the same way with or without the wire's completion marker,
+                # so the library gives no completion signal and `completed` stays None.
             else:
                 observe(result)
 except Exception as error:

@@ -3,11 +3,13 @@
 Each module builds the native request for a provider-neutral call and extracts the canonical
 truth from recorded exchanges. The truth extractors are the reference parsers: the recorder writes
 their result into each fixture, and ``wiretruth lint`` recomputes it.
+An aborted byte body drops only an incomplete trailing UTF-8 sequence before truth is read.
 """
 
 from __future__ import annotations
 
 import base64
+import codecs
 import json
 import re
 from collections.abc import Callable, Mapping, Sequence
@@ -85,7 +87,10 @@ def body_text(exchange: Exchange) -> str:
     if body.kind == "text":
         return cast(str, body.data)
     if body.kind == "chunks_b64":
-        return b"".join(base64.b64decode(part) for part in body.parts).decode("utf-8")
+        raw = b"".join(base64.b64decode(part) for part in body.parts)
+        if exchange.end == "abort":
+            return codecs.getincrementaldecoder("utf-8")().decode(raw, final=False)
+        return raw.decode("utf-8")
     newline = "\n" if body.kind == "ndjson" else ""
     return "".join(part + newline for part in body.parts)
 

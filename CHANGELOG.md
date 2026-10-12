@@ -12,6 +12,12 @@ finding).
 ## [Unreleased]
 
 ### Added
+- Six scenarios for missing stream finishes (clean and aborted), errors during streams, unfamiliar finish
+  values and UTF-8 text (unsplit and split inside characters). Eight derived fixtures cover the first four
+  scenarios on `openai-chat` and `openai-responses`; the UTF-8 scenarios await live recordings.
+- `raw_finish_matches_truth` checks that the provider's raw finish value is preserved on any surface.
+- `outcome_is_returned` checks that a library hands back a response that carried no error, instead of raising
+  or returning an error for it.
 - `wiretruth derive` creates derived fixtures with recomputed truth using six transforms: `cut_stream_after`,
   `strip_finish`, `inject_error_event`, `rechunk_inside_utf8`, `replace_finish_value` and `prepend_http_error`.
 - `openai-responses` supports recording, truth extraction, lint and replay. The any-llm shim maps it through
@@ -30,6 +36,13 @@ finding).
   error completions.
 
 ### Changed
+- `outcome_is_error` counts returned or yielded error objects, with the same category rule as raised errors.
+- The any-llm shim reports no completion signal for Chat Completions streams, since iteration alone does not
+  distinguish a complete stream from one that ends early.
+- Truth extraction from an aborted byte body accepts an incomplete trailing UTF-8 sequence, while still
+  rejecting invalid bytes elsewhere.
+- The liar shim claims every stream completed, maps unfamiliar finishes to stop, and replaces the first
+  non-ASCII text character with U+FFFD.
 - The plain and streamed text truncation scenarios use an octopus prompt, and structured-output truncation
   uses Greek islands. An openai-chat override keeps the earlier calls its fixtures were recorded with; every
   other provider uses the current prompts.
@@ -45,10 +58,14 @@ finding).
   text use the last value for each duplicate key, as clients do, while retaining strict number and Unicode checks.
 
 ### Results
-- any-llm 1.33.0: PASS on all 12 `openai-chat` scenarios and on 7 of 8 `openai-responses` scenarios
+- any-llm 1.33.0: PASS on 14 of 16 `openai-chat` scenarios and on 11 of 12 `openai-responses` scenarios
   ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)). LOSSY on `truncation.structured-output` over
   `openai-responses`: structured output raises a pydantic `ValidationError` on the cut-off JSON, with no sign that
   the token limit was hit, and without the partial text or usage.
+- any-llm 1.33.0: WRONG on `finish.unknown-value` over `openai-chat`: a finish value outside OpenAI's five raises
+  a pydantic `ValidationError`, so the caller loses a valid response. LOSSY on `stream.missing-finish` over
+  `openai-chat`: Chat Completions streams give no completion signal, so nothing tells the caller that the
+  stream ended early.
 
 ## [0.1.0] - 2026-10-11
 

@@ -1,8 +1,9 @@
 """Pure requirement checks against an observation, wire truth and the replay request log.
 
 Checks validate scenario arguments before looking at the observation. Only primary values count;
-raw metadata cannot satisfy or contradict a value comparison. Independent signals (such as a
-raised error) can still satisfy a check. Within a check, satisfaction precedes contradiction.
+raw metadata cannot satisfy or contradict a value comparison, except for raw_finish_matches_truth.
+Independent signals (such as a raised error) can still satisfy a check. Within a check,
+satisfaction precedes contradiction.
 """
 
 from __future__ import annotations
@@ -135,6 +136,23 @@ def finish_is_not(
     if obs.outcome != "raised" and _primary_finish(obs) == forbidden:
         return CheckResult("CONTRADICTED", evidence)
     return CheckResult("SATISFIED", evidence)
+
+
+def raw_finish_matches_truth(
+    obs: Observation, truth: Truth, req_log: Sequence[LoggedRequest], args: JsonObject
+) -> CheckResult:
+    """Compare raw finish strings on any surface; null truth is matched by reporting none.
+
+    For non-null truth, an absent finish or null raw value is NOT_OBSERVABLE.
+    """
+    _keys(args)
+    value = obs.finish.raw if obs.finish else None
+    evidence = f"finish.raw={_show(value)}; truth.raw_finish={_show(truth.raw_finish)}"
+    if value == truth.raw_finish:
+        return CheckResult("SATISFIED", evidence)
+    if value is not None:
+        return CheckResult("CONTRADICTED", evidence)
+    return CheckResult("NOT_OBSERVABLE", evidence)
 
 
 def truncation_is_signalled(
@@ -383,11 +401,11 @@ def usage_total_reconciles(
 def outcome_is_error(
     obs: Observation, truth: Truth, req_log: Sequence[LoggedRequest], args: JsonObject
 ) -> CheckResult:
-    """A raised outcome must have a listed category, if categories were requested.
+    """A raised outcome or returned error object must have a listed category, if requested.
 
-    Raised with another category is NOT_OBSERVABLE: it failed loudly with the wrong cause.
-    A returned outcome with an error object or primary error finish is also NOT_OBSERVABLE,
-    rather than silent success.
+    An unlisted category is NOT_OBSERVABLE: it reported an error with the wrong cause.
+    A returned outcome with only a primary error finish is also NOT_OBSERVABLE,
+    rather than silent success. Unsupported outcomes remain NOT_OBSERVABLE.
     """
     _keys(args, optional=("categories",))
     categories = (
@@ -399,11 +417,34 @@ def outcome_is_error(
     )
     if categories is not None:
         evidence += f"; required categories={_show(categories)}"
-    if obs.outcome == "raised" and (categories is None or category in categories):
+    if (obs.outcome == "raised" or (obs.outcome == "returned" and obs.error is not None)) and (
+        categories is None or category in categories
+    ):
         return CheckResult("SATISFIED", evidence)
     if obs.outcome == "returned" and obs.error is None and _primary_finish(obs) != "error":
         return CheckResult("CONTRADICTED", evidence)
     return CheckResult("NOT_OBSERVABLE", evidence)
+
+
+def outcome_is_returned(
+    obs: Observation, truth: Truth, req_log: Sequence[LoggedRequest], args: JsonObject
+) -> CheckResult:
+    """When the wire carried no error, the library must hand the response back without one.
+
+    A raised outcome or a returned error object contradicts an error-free wire. An unsupported
+    outcome, or a wire that carried an error, is NOT_OBSERVABLE.
+    """
+    _keys(args)
+    category = obs.error.category if obs.error else None
+    evidence = (
+        f"outcome={obs.outcome}; error.category={_show(category)}; "
+        f"truth.error={'present' if truth.error is not None else 'null'}"
+    )
+    if truth.error is not None or obs.outcome == "unsupported":
+        return CheckResult("NOT_OBSERVABLE", evidence)
+    if obs.outcome == "returned" and obs.error is None:
+        return CheckResult("SATISFIED", evidence)
+    return CheckResult("CONTRADICTED", evidence)
 
 
 def stream_not_reported_complete(
@@ -497,6 +538,7 @@ CHECKS: Mapping[str, Check] = MappingProxyType(
         for check in (
             finish_is,
             finish_is_not,
+            raw_finish_matches_truth,
             truncation_is_signalled,
             text_matches_truth,
             no_replacement_chars,
@@ -506,6 +548,7 @@ CHECKS: Mapping[str, Check] = MappingProxyType(
             usage_matches_truth,
             usage_total_reconciles,
             outcome_is_error,
+            outcome_is_returned,
             stream_not_reported_complete,
             request_field_equals,
             request_field_absent,

@@ -280,7 +280,7 @@ def test_discovery_uses_scenario_ids_filters_and_undated_fixtures(suite):
     with pytest.raises(RunError, match="no cell matches"):
         find_cells(suite, provider="gemini")
     with pytest.raises(RecordError, match="no scenario"):
-        find_cells(suite, "finish.*")
+        find_cells(suite, "finish.not-a-scenario")
     with pytest.raises(RecordError, match="lists"):
         find_cells(suite, provider="unlisted")
 
