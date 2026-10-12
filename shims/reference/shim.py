@@ -115,7 +115,7 @@ def observe(spec: CallSpec) -> JsonObject:
     body, _ = response_body(response, False)
     exchange = build_exchange(exchange_document(request, base_url, response, body))
     obs = observation_from_truth(spec, provider.extract_truth([exchange], request.body))
-    events = body.get("sse")
+    events = body.get("sse", body.get("ndjson"))
     cast(JsonObject, obs["stream"])["chunks_seen"] = (
         len(events) if spec.call.stream and isinstance(events, list) else None
     )
