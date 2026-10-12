@@ -31,17 +31,21 @@ non-object body or non-JSON event data raises ValueError, as for Chat Completion
 
 from __future__ import annotations
 
+import json
 from collections.abc import Sequence
 from dataclasses import dataclass, field
+from typing import cast
 
-from wiretruth.formats import Call, Exchange, ForcedTool, JsonObject, JsonValue, parse_json
+from wiretruth.formats import Body, Call, Exchange, ForcedTool, JsonObject, JsonValue, parse_json
 from wiretruth.providers import (
     RawRequest,
     body_text,
+    event_object,
     is_event_stream,
     json_int,
     json_object,
     json_str,
+    replace_finish_fields,
     sse_events,
 )
 from wiretruth.providers.openai_chat import _error_truth, _parse, _payload, _ToolCall
@@ -133,6 +137,61 @@ def returned_model(exchange: Exchange) -> str | None:
             if model is not None:
                 return model
     return None
+
+
+# --- Transforms -----------------------------------------------------------------------------------
+
+
+def finish_index(events: Sequence[str], *, kind: str = "sse") -> int | None:
+    """The first completed, incomplete or failed response event."""
+    if kind != "sse":
+        raise ValueError("Responses finish events need an sse body")
+    for index, event in enumerate(events):
+        payload = event_object(event)
+        if payload is not None and payload.get("type") in _FINAL:
+            return index
+    return None
+
+
+def error_event(error: JsonObject, *, kind: str = "sse") -> str:
+    """Frame the complete error data with its Responses event type."""
+    if kind != "sse":
+        raise ValueError("Responses error events need an sse body")
+    event_type = error.get("type")
+    if not isinstance(event_type, str) or not event_type or any(c in event_type for c in "\r\n"):
+        raise ValueError("a Responses error event needs a non-empty, single-line type")
+    return (
+        f"event: {event_type}\ndata: "
+        + json.dumps(error, ensure_ascii=False, separators=(",", ":"))
+        + "\n\n"
+    )
+
+
+def _finish_fields(payload: JsonObject, stream: bool) -> list[tuple[JsonObject, str]]:
+    if stream:
+        if payload.get("type") not in _FINAL:
+            return []
+        payload = json_object(payload.get("response")) or {}
+    details = json_object(payload.get("incomplete_details"))
+    return (
+        [(details, "reason")] if details is not None and details.get("reason") is not None else []
+    )
+
+
+def replace_finish(body: Body, value: str) -> JsonObject:
+    """Change the final response's incomplete_details.reason, when present."""
+    if body.kind == "sse":
+        reverse_index = finish_index(list(reversed(body.parts)))
+        if reverse_index is None:
+            raise ValueError("the stream has no final response event")
+        index = len(body.parts) - reverse_index - 1
+        changed = replace_finish_fields(
+            Body("sse", None, (body.parts[index],)), value, _finish_fields
+        )
+        parts = list(body.parts)
+        parts[index] = cast("list[str]", changed["sse"])[0]
+        return {"sse": cast("list[JsonValue]", parts)}
+    return replace_finish_fields(body, value, _finish_fields)
 
 
 # --- Truth ----------------------------------------------------------------------------------------
