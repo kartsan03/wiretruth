@@ -113,13 +113,13 @@ spend seconds in replay pauses alone. Use fewer explicit points or a larger `eve
 
 This simulates network chunks that split a character. A
 [multi-byte text report](https://github.com/langchain-ai/langchainjs/issues/5285) describes replacement characters
-appearing in streamed text when chunk boundaries split characters. In the committed source below, offset 1596
-falls inside a multi-byte sequence. This illustrates the transform with an existing tool-call recording; it is
-not the fixture for `stream.utf8-split`, which awaits a recording of the `stream.utf8` text call.
+appearing in streamed text when chunk boundaries split characters. This command made the `openai-chat` fixture
+for `stream.utf8-split`: each offset falls inside a different character of the recorded text, `é` and `κ` (2
+bytes), `東` (3 bytes) and `🌸` (4 bytes).
 
 ```bash
-wiretruth derive --from openai-chat/tools.parallel-calls-stream --transform rechunk_inside_utf8 \
-  --out openai-chat/stream.utf8-split --args '{"points":[1596]}'
+wiretruth derive --from openai-chat/stream.utf8 --transform rechunk_inside_utf8 \
+  --out openai-chat/stream.utf8-split --args '{"points":[818,1664,3078,4782]}'
 ```
 
 ## `replace_finish_value`

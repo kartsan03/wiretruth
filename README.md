@@ -9,7 +9,7 @@ happened.
 [![PyPI](https://img.shields.io/pypi/v/wiretruth?label=PyPI)](https://pypi.org/project/wiretruth/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
-So far wiretruth tests one library, any-llm, on two OpenAI APIs, Chat Completions and Responses: 16 scenarios, 28
+So far wiretruth tests one library, any-llm, on two OpenAI APIs, Chat Completions and Responses: 18 scenarios, 32
 cells. More providers and libraries follow, and a public results matrix arrives in v0.4. Until then, the grades are in
 [`results/`](https://github.com/kartsan03/wiretruth/tree/main/results).
 
@@ -36,7 +36,7 @@ provider sent.
 | Silent truncation | Agents accept partial output or retry without raising the limit | 5 |
 | Finish reason mapping | Control flow branches on the wrong reason | 1 |
 | Usage accounting | Cost and quota tracking is off (cached and reasoning tokens) | 1 |
-| Stream integrity | Corrupted or unfinished text is treated as final | 2 |
+| Stream integrity | Corrupted or unfinished text is treated as final | 4 |
 | Tool call fidelity | Tools run with broken or merged arguments | 4 |
 | Error classification | Retries and backoff misbehave | 1 |
 | Request fidelity | The library sends fields the caller didn't set, or ones the model rejects | 2 |
@@ -78,6 +78,8 @@ request.tools-with-reasoning-chat  ✓ PASS
 stream.error-midstream             ✓ PASS       ✓ PASS
 stream.missing-finish              ~ LOSSY      ✓ PASS
 stream.missing-finish-abort        ✓ PASS       ✓ PASS
+stream.utf8                        ✓ PASS       ✓ PASS
+stream.utf8-split                  ✓ PASS       ✓ PASS
 tools.parallel-calls               ✓ PASS       ✓ PASS
 tools.parallel-calls-stream        ✓ PASS       ✓ PASS
 truncation.reasoning-only          ✓ PASS       ✓ PASS
@@ -103,8 +105,8 @@ truncation.structured-output openai-responses
   SHOULD text-reported: NOT_OBSERVABLE: text.value=null (absent); truth.text="{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ"
   SHOULD usage-reported: NOT_OBSERVABLE: usage.input=null (absent); truth.usage.input=68; usage.output=null (absent); truth.usage.output=24
 
-any-llm 1.33.0: 28 cells, 25 PASS, 2 LOSSY, 1 WRONG
-stderr: .wiretruth/runs/20261012T150030.719206Z
+any-llm 1.33.0: 32 cells, 29 PASS, 2 LOSSY, 1 WRONG
+stderr: .wiretruth/runs/20261012T152757.428497Z
 ```
 
 No API keys are needed. Everything runs against recorded responses on `127.0.0.1`. The first run downloads any-llm
