@@ -1,13 +1,8 @@
 [
   {
     "library": "any-llm",
-    "scenarios": [
-      "finish.unknown-value"
-    ],
-    "providers": [
-      "openai-chat",
-      "ollama-openai"
-    ],
+    "scenarios": ["finish.unknown-value"],
+    "providers": ["openai-chat", "ollama-openai"],
     "issue": "https://github.com/mozilla-ai/any-llm/issues/1471",
     "pr": null,
     "status": "reported",
@@ -17,13 +12,8 @@
   },
   {
     "library": "any-llm",
-    "scenarios": [
-      "tools.parallel-calls",
-      "tools.parallel-calls-stream"
-    ],
-    "providers": [
-      "ollama"
-    ],
+    "scenarios": ["tools.parallel-calls", "tools.parallel-calls-stream"],
+    "providers": ["ollama"],
     "issue": "https://github.com/ollama/ollama-python/issues/667",
     "pr": null,
     "status": "reported",
@@ -33,12 +23,8 @@
   },
   {
     "library": "any-llm",
-    "scenarios": [
-      "finish.unknown-value"
-    ],
-    "providers": [
-      "ollama"
-    ],
+    "scenarios": ["finish.unknown-value"],
+    "providers": ["ollama"],
     "issue": null,
     "pr": null,
     "status": "documented-behavior",
@@ -48,12 +34,8 @@
   },
   {
     "library": "any-llm",
-    "scenarios": [
-      "request.max-tokens-ollama-openai"
-    ],
-    "providers": [
-      "ollama-openai"
-    ],
+    "scenarios": ["request.max-tokens-ollama-openai"],
+    "providers": ["ollama-openai"],
     "issue": "https://github.com/ollama/ollama/issues/7125",
     "pr": "https://github.com/ollama/ollama/pull/18604",
     "status": "reported",

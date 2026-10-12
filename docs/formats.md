@@ -357,7 +357,8 @@ Lint doesn't check cells against the current suite, so results stay valid after 
 
 ## Upstream tracking
 
-`results/upstream.json`: a list of findings reported to library maintainers.
+`results/upstream.json`: a list of findings and the upstream issues that track them. When the root cause is in a
+dependency of the library or in the provider, `issue` links that project's existing issue and `notes` says so.
 
 | Field | Type | Meaning |
 |---|---|---|

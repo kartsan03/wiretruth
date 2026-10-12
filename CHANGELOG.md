@@ -89,8 +89,6 @@ finding).
   `request.max-tokens-ollama-openai`: the `openai` provider sends `max_completion_tokens`, which Ollama's
   OpenAI-compatible endpoint ignores ([ollama/ollama#7125](https://github.com/ollama/ollama/issues/7125)). That
   cell is tied to Ollama v0.40.3: it checks the request, so it stays WRONG until the scenario is retired.
-- `request.no-injected-options` backtest of any-llm #1389: any-llm 1.28.0 sends `options.num_ctx` 32000 on a
-  minimal Ollama call (WRONG); 1.29.0 and 1.33.0 don't (PASS).
 
 ## [0.1.0] - 2026-10-11
 
