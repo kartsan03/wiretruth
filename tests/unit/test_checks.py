@@ -77,6 +77,16 @@ CASES = [
     ("finish_is", replace(OBS, finish=None), TRUTH, (), {"value": "length"}, "NOT_OBSERVABLE"),
     ("finish_is_not", OBS, TRUTH, (), {"value": "stop"}, "SATISFIED"),
     ("finish_is_not", OBS, TRUTH, (), {"value": "length"}, "CONTRADICTED"),
+    ("raw_finish_matches_truth", OBS, TRUTH, (), {}, "SATISFIED"),
+    (
+        "raw_finish_matches_truth",
+        OBS,
+        replace(TRUTH, raw_finish="wiretruth_unknown_reason"),
+        (),
+        {},
+        "CONTRADICTED",
+    ),
+    ("raw_finish_matches_truth", replace(OBS, finish=None), TRUTH, (), {}, "NOT_OBSERVABLE"),
     ("truncation_is_signalled", OBS, TRUTH, (), {}, "SATISFIED"),
     (
         "truncation_is_signalled",
@@ -159,6 +169,9 @@ CASES = [
     ("outcome_is_error", raised(), TRUTH, (), {}, "SATISFIED"),
     ("outcome_is_error", OBS, TRUTH, (), {}, "CONTRADICTED"),
     ("outcome_is_error", raised(), TRUTH, (), {"categories": ["truncation"]}, "NOT_OBSERVABLE"),
+    ("outcome_is_returned", OBS, TRUTH, (), {}, "SATISFIED"),
+    ("outcome_is_returned", raised(), TRUTH, (), {}, "CONTRADICTED"),
+    ("outcome_is_returned", replace(OBS, outcome="unsupported"), TRUTH, (), {}, "NOT_OBSERVABLE"),
     ("stream_not_reported_complete", OBS, TRUTH, (), {}, "SATISFIED"),
     (
         "stream_not_reported_complete",
@@ -244,6 +257,7 @@ def test_registry_and_status_table_are_complete() -> None:
     expected = {
         "finish_is",
         "finish_is_not",
+        "raw_finish_matches_truth",
         "truncation_is_signalled",
         "text_matches_truth",
         "no_replacement_chars",
@@ -253,6 +267,7 @@ def test_registry_and_status_table_are_complete() -> None:
         "usage_matches_truth",
         "usage_total_reconciles",
         "outcome_is_error",
+        "outcome_is_returned",
         "stream_not_reported_complete",
         "request_field_equals",
         "request_field_absent",
@@ -552,9 +567,36 @@ def test_error_categories(categories: list[str], status: Status) -> None:
     )
 
 
-def test_returned_error_signal_is_not_silent_success() -> None:
+@pytest.mark.parametrize(
+    "args,status",
+    [
+        ({}, "SATISFIED"),
+        ({"categories": ["api"]}, "SATISFIED"),
+        ({"categories": ["network"]}, "NOT_OBSERVABLE"),
+    ],
+)
+def test_returned_error_object_counts_as_an_error(args: JsonObject, status: Status) -> None:
     obs = replace(raised("api"), outcome="returned")
+    assert CHECKS["outcome_is_error"](obs, TRUTH, (), args).status == status
+
+
+@pytest.mark.parametrize("error", [None, raised("api").error])
+def test_unsupported_outcome_does_not_satisfy_error_check(error) -> None:
+    obs = replace(OBS, outcome="unsupported", error=error)
     assert CHECKS["outcome_is_error"](obs, TRUTH, (), {}).status == "NOT_OBSERVABLE"
+
+
+@pytest.mark.parametrize(
+    "obs,truth,status",
+    [
+        (replace(raised("api"), outcome="returned"), TRUTH, "CONTRADICTED"),
+        (raised("validation"), TRUTH, "CONTRADICTED"),
+        (raised("api"), replace(TRUTH, error={"message": "Server busy"}), "NOT_OBSERVABLE"),
+        (OBS, replace(TRUTH, error={"message": "Server busy"}), "NOT_OBSERVABLE"),
+    ],
+)
+def test_outcome_is_returned_only_judges_an_error_free_wire(obs, truth, status) -> None:
+    assert CHECKS["outcome_is_returned"](obs, truth, (), {}).status == status
 
 
 def test_tool_calls_ignore_raw_json_formatting() -> None:
@@ -818,3 +860,31 @@ def test_null_truth_still_accepts_an_explicit_alternative() -> None:
     assert (
         CHECKS["usage_matches_truth"](OBS, truth, (), {"fields": ["output"]}).status == "SATISFIED"
     )
+
+
+@pytest.mark.parametrize("surface", ["primary", "raw", "absent"])
+@pytest.mark.parametrize(
+    "raw,expected,status",
+    [
+        ("wiretruth_unknown_reason", "wiretruth_unknown_reason", "SATISFIED"),
+        ("stop", "wiretruth_unknown_reason", "CONTRADICTED"),
+        ("", "wiretruth_unknown_reason", "CONTRADICTED"),
+        (None, "wiretruth_unknown_reason", "NOT_OBSERVABLE"),
+        (None, None, "SATISFIED"),
+        ("stop", None, "CONTRADICTED"),
+        ("", None, "CONTRADICTED"),
+    ],
+)
+def test_raw_finish_compares_on_every_surface(surface, raw, expected, status) -> None:
+    obs = replace(OBS, finish=ObservedFinish("other", raw, surface, "finish_reason"))
+    truth = replace(TRUTH, raw_finish=expected)
+    result = CHECKS["raw_finish_matches_truth"](obs, truth, (), {})
+    assert result.status == status
+    assert f"finish.raw={json.dumps(raw)}" in result.evidence
+    assert f"truth.raw_finish={json.dumps(expected)}" in result.evidence
+
+
+def test_absent_raw_finish_matches_null_truth() -> None:
+    obs = replace(OBS, finish=None)
+    truth = replace(TRUTH, raw_finish=None)
+    assert CHECKS["raw_finish_matches_truth"](obs, truth, (), {}).status == "SATISFIED"
