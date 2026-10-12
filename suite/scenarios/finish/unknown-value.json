@@ -1,0 +1,52 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "finish.unknown-value",
+  "title": "Unfamiliar provider finish value",
+  "bug_class": "finish-reason-mapping",
+  "priority": "P0",
+  "summary": "The provider returns a finish value that the library has not mapped.",
+  "call": {
+    "stream": false,
+    "max_output_tokens": 16,
+    "messages": [
+      {"role": "user", "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."}
+    ],
+    "reasoning": {"effort": "none"}
+  },
+  "call_overrides": {
+    "openai-chat": {
+      "messages": [
+        {"role": "user", "content": "Name three moons of Jupiter."}
+      ]
+    }
+  },
+  "providers": ["openai-chat", "openai-responses"],
+  "requirements": [
+    {
+      "id": "response-returned",
+      "level": "MUST",
+      "check": "outcome_is_returned",
+      "text": "The library hands back the response instead of reporting an error the provider never sent."
+    },
+    {
+      "id": "finish-is-other",
+      "level": "MUST",
+      "check": "finish_is",
+      "args": {"value": "other"},
+      "text": "The library reports a finish outside the known values, not a familiar one or none."
+    },
+    {
+      "id": "text-reported",
+      "level": "MUST",
+      "check": "text_matches_truth",
+      "text": "The text is reported exactly as the provider sent it."
+    },
+    {
+      "id": "raw-finish-reported",
+      "level": "SHOULD",
+      "check": "raw_finish_matches_truth",
+      "text": "The provider's raw finish value is preserved."
+    }
+  ],
+  "grading_notes": "The response is valid apart from its finish value, so raising or returning an error for it is WRONG, and so is mapping the value to stop or any other known finish. Dropping the finish leaves it unknown to the caller: LOSSY. Rejecting the value through schema validation is a reported error, not a crash. Preserving the raw value on any surface satisfies the SHOULD requirement. The openai-chat override preserves the Jupiter prompt of its source recording; openai-responses uses the octopus recording."
+}

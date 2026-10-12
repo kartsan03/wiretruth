@@ -30,8 +30,8 @@ can be overwritten only with `--replace`. The output is schema-validated before 
 arguments and options produce identical output. Retained stream events keep their bytes; a rewritten event keeps
 its key order, JSON spacing and Unicode escaping. An event layout the transform cannot preserve is rejected.
 
-Each output scenario must exist and list its provider before `wiretruth lint` will pass. The examples below name
-new scenarios; create their scenario files separately. The command does not create scenarios.
+Each output scenario must exist and list its provider before `wiretruth lint` will pass. The command does not
+create scenarios. The examples below match the committed fixtures except where noted.
 
 | Exit code | Meaning |
 |---|---|
@@ -54,7 +54,7 @@ failing partway through the response. `abort` closes before the final HTTP chunk
 
 ```bash
 wiretruth derive --from openai-chat/truncation.text-stream-usage --transform cut_stream_after \
-  --out openai-chat/stream.missing-finish-abort --args '{"n":5,"end":"abort"}'
+  --out openai-chat/stream.missing-finish-abort --args '{"n":8,"end":"abort"}'
 ```
 
 ## `strip_finish`
@@ -92,8 +92,11 @@ This simulates an error inside an HTTP 200 stream. The
 ```bash
 wiretruth derive --from openai-responses/truncation.text-stream --transform inject_error_event \
   --out openai-responses/stream.error-midstream \
-  --args '{"after":3,"error":{"type":"error","code":"server_error","message":"Try again."}}'
+  --args '{"after":8,"error":{"type":"error","code":"server_error","message":"The server had an error while processing your request. Sorry about that!","param":null,"sequence_number":8}}'
 ```
+
+The Chat fixture uses the same event count with a nested `error` object and an explicit evidence URL to
+[the Chat stream error handler](https://github.com/openai/openai-python/blob/v3.29.0/src/openai/_streaming.py#L94-L106).
 
 ## `rechunk_inside_utf8`
 
@@ -111,7 +114,8 @@ spend seconds in replay pauses alone. Use fewer explicit points or a larger `eve
 This simulates network chunks that split a character. A
 [multi-byte text report](https://github.com/langchain-ai/langchainjs/issues/5285) describes replacement characters
 appearing in streamed text when chunk boundaries split characters. In the committed source below, offset 1596
-falls inside a multi-byte sequence.
+falls inside a multi-byte sequence. This illustrates the transform with an existing tool-call recording; it is
+not the fixture for `stream.utf8-split`, which awaits a recording of the `stream.utf8` text call.
 
 ```bash
 wiretruth derive --from openai-chat/tools.parallel-calls-stream --transform rechunk_inside_utf8 \
@@ -133,8 +137,8 @@ This simulates a finish value a library has not mapped. The
 finish values and library mappings. The constructed value tests whether a library retains an unfamiliar value.
 
 ```bash
-wiretruth derive --from openai-responses/truncation.text-stream --transform replace_finish_value \
-  --out openai-responses/finish.unknown-value --args '{"value":"future_finish"}'
+wiretruth derive --from openai-responses/truncation.text --transform replace_finish_value \
+  --out openai-responses/finish.unknown-value --args '{"value":"wiretruth_unknown_reason"}'
 ```
 
 ## `prepend_http_error`
@@ -147,7 +151,8 @@ cleanly. Every original exchange follows unchanged.
 This simulates a retryable failure before the original response. The
 [rate-limit guide](https://developers.openai.com/api/docs/guides/rate-limits) describes HTTP 429 and retrying with
 backoff. Replay serves exchanges in order, so the first retry receives the source's first response. Truth still
-comes from the final exchange; it does not grade the initial error as the final outcome.
+comes from the final exchange; it does not grade the initial error as the final outcome. The following example
+is illustrative; no `errors.rate-limit` scenario or fixture is committed.
 
 ```bash
 wiretruth derive --from openai-chat/request.max-tokens-field --transform prepend_http_error \

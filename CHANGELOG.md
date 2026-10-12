@@ -12,6 +12,12 @@ finding).
 ## [Unreleased]
 
 ### Added
+- Six scenarios for missing stream finishes (clean and aborted), errors during streams, unfamiliar finish
+  values and UTF-8 text (unsplit and split inside characters). Eight derived fixtures cover the first four
+  scenarios on `openai-chat` and `openai-responses`; the UTF-8 scenarios await live recordings.
+- `raw_finish_matches_truth` checks that the provider's raw finish value is preserved on any surface.
+- `outcome_is_returned` checks that a library hands back a response that carried no error, instead of raising
+  or returning an error for it.
 - `wiretruth derive` creates derived fixtures with recomputed truth using six transforms: `cut_stream_after`,
   `strip_finish`, `inject_error_event`, `rechunk_inside_utf8`, `replace_finish_value` and `prepend_http_error`.
 - `openai-responses` supports recording, truth extraction, lint and replay. The any-llm shim maps it through
@@ -30,6 +36,13 @@ finding).
   error completions.
 
 ### Changed
+- `outcome_is_error` counts returned or yielded error objects, with the same category rule as raised errors.
+- The any-llm shim reports no completion signal for Chat Completions streams, since iteration alone does not
+  distinguish a complete stream from one that ends early.
+- Truth extraction from an aborted byte body accepts an incomplete trailing UTF-8 sequence, while still
+  rejecting invalid bytes elsewhere.
+- The liar shim claims every stream completed, maps unfamiliar finishes to stop, and replaces the first
+  non-ASCII text character with U+FFFD.
 - The plain and streamed text truncation scenarios use an octopus prompt, and structured-output truncation
   uses Greek islands. An openai-chat override keeps the earlier calls its fixtures were recorded with; every
   other provider uses the current prompts.

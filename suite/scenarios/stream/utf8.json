@@ -1,0 +1,32 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "stream.utf8",
+  "title": "Streamed text with several scripts and emoji",
+  "bug_class": "stream-integrity",
+  "priority": "P0",
+  "summary": "The provider streams text containing accented Latin letters, Greek, Japanese and emoji.",
+  "call": {
+    "stream": true,
+    "max_output_tokens": 64,
+    "messages": [
+      {"role": "user", "content": "Reply exactly with: Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉"}
+    ],
+    "reasoning": {"effort": "none"}
+  },
+  "providers": ["openai-chat", "openai-responses"],
+  "requirements": [
+    {
+      "id": "text-reported",
+      "level": "MUST",
+      "check": "text_matches_truth",
+      "text": "The streamed text is reported exactly as the provider sent it."
+    },
+    {
+      "id": "no-replacement-chars",
+      "level": "MUST",
+      "check": "no_replacement_chars",
+      "text": "The reported text contains no replacement characters."
+    }
+  ],
+  "grading_notes": "This is the unsplit control for stream.utf8-split. Text is compared with the recorded response, without Unicode normalization."
+}

@@ -1,6 +1,28 @@
 {
   "cells": [
     {
+      "scenario": "finish.unknown-value",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "response-returned": "SATISFIED",
+        "finish-is-other": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "raw-finish-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "response-returned": "SATISFIED",
+        "finish-is-other": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "raw-finish-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
       "scenario": "request.max-tokens-field",
       "provider": "openai-chat",
       "grade": "PASS",
@@ -19,6 +41,58 @@
       }
     },
     {
+      "scenario": "stream.error-midstream",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "error-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.error-midstream",
+      "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "error-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish",
+      "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
+      "provider": "openai-chat",
+      "grade": "WRONG",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
+      "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "CONTRADICTED"
+      }
+    },
+    {
       "scenario": "tools.parallel-calls",
       "provider": "openai-chat",
       "grade": "WRONG",
@@ -77,7 +151,7 @@
       "requirements": {
         "no-partial-success": "CONTRADICTED",
         "cause-is-truncation": "CONTRADICTED",
-        "text-reported": "SATISFIED",
+        "text-reported": "CONTRADICTED",
         "usage-reported": "NOT_OBSERVABLE"
       }
     },
@@ -88,7 +162,7 @@
       "requirements": {
         "no-partial-success": "CONTRADICTED",
         "cause-is-truncation": "CONTRADICTED",
-        "text-reported": "SATISFIED",
+        "text-reported": "CONTRADICTED",
         "usage-reported": "NOT_OBSERVABLE"
       }
     },

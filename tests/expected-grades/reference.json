@@ -1,6 +1,28 @@
 {
   "cells": [
     {
+      "scenario": "finish.unknown-value",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "response-returned": "SATISFIED",
+        "finish-is-other": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "raw-finish-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "response-returned": "SATISFIED",
+        "finish-is-other": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "raw-finish-reported": "SATISFIED"
+      }
+    },
+    {
       "scenario": "request.max-tokens-field",
       "provider": "openai-chat",
       "grade": "PASS",
@@ -16,6 +38,58 @@
       "grade": "PASS",
       "requirements": {
         "error-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.error-midstream",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "error-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.error-midstream",
+      "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "error-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish",
+      "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
+      "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "SATISFIED"
       }
     },
     {
