@@ -27,17 +27,20 @@ an error: the extractor can't say what happened.
 
 from __future__ import annotations
 
+import json
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 
-from wiretruth.formats import Call, Exchange, ForcedTool, JsonObject, JsonValue, parse_json
+from wiretruth.formats import Body, Call, Exchange, ForcedTool, JsonObject, JsonValue, parse_json
 from wiretruth.providers import (
     RawRequest,
     body_text,
+    event_object,
     is_event_stream,
     json_int,
     json_object,
     json_str,
+    replace_finish_fields,
     sse_events,
 )
 from wiretruth.replay import BASE_PATHS
@@ -135,6 +138,45 @@ def returned_model(exchange: Exchange) -> str | None:
         if model is not None:
             return model
     return None
+
+
+# --- Transforms -----------------------------------------------------------------------------------
+
+
+def _finish_fields(payload: JsonObject, stream: bool) -> list[tuple[JsonObject, str]]:
+    choices = payload.get("choices")
+    return (
+        [
+            (choice, "finish_reason")
+            for choice in choices
+            if isinstance(choice, dict) and choice.get("finish_reason") is not None
+        ]
+        if isinstance(choices, list)
+        else []
+    )
+
+
+def finish_index(events: Sequence[str], *, kind: str = "sse") -> int | None:
+    """The first chunk with a non-null finish_reason on any choice."""
+    if kind != "sse":
+        raise ValueError("Chat Completions finish events need an sse body")
+    for index, event in enumerate(events):
+        payload = event_object(event, terminator="[DONE]")
+        if payload is not None and _finish_fields(payload, True):
+            return index
+    return None
+
+
+def error_event(error: JsonObject, *, kind: str = "sse") -> str:
+    """Frame the complete error data as a Chat Completions event."""
+    if kind != "sse":
+        raise ValueError("Chat Completions error events need an sse body")
+    return "data: " + json.dumps(error, ensure_ascii=False, separators=(",", ":")) + "\n\n"
+
+
+def replace_finish(body: Body, value: str) -> JsonObject:
+    """Change every choice's non-null finish_reason."""
+    return replace_finish_fields(body, value, _finish_fields, terminator="[DONE]")
 
 
 # --- Truth ----------------------------------------------------------------------------------------

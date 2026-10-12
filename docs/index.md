@@ -14,6 +14,8 @@ This is the map of wiretruth's documentation. Start with Concepts if you're new.
   upstream tracking and bug classes, and what `wiretruth lint` checks.
 - [Recording fixtures](recording.md): what the recorder sends and stores, recording in CI or locally, the secret
   scan, and how the truth is read from each provider's responses.
+- [Derived fixtures](derived-fixtures.md): the six transforms, their evidence and arguments, and how to create a
+  fixture with recomputed truth.
 
 ## Decisions
 

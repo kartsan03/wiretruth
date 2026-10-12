@@ -179,7 +179,8 @@ All fields are required.
 ### Provenance
 
 `requested_model` is required for every tier, because the call spec takes its model from here. A derived fixture
-copies it from its source. The other fields are optional, except where the tier requires them.
+copies `requested_model`, `returned_model` and `request` from its source, when present. It copies no other
+provenance fields. The other fields are optional, except where the tier requires them.
 
 | Field | Type | Required for | Meaning |
 |---|---|---|---|
