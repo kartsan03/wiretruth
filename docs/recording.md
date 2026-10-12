@@ -62,8 +62,8 @@ is public.
    `model` is optional. Leave it empty to use the provider's current model. `replace` (default `false`) passes
    `--replace`. For `ollama` and `ollama-openai`, the job installs the pinned Ollama v0.40.3 Linux
    tarball after checking its SHA-256, starts a local server, and pulls the chosen model (default
-   `qwen3.5:0.8b`). It installs `zstd` if needed to unpack the tarball. The job has a 40-minute timeout
-   and includes the server log tail in its summary.
+   `qwen3.5:0.8b`). It installs `zstd` if needed to unpack the tarball. An Ollama job has a 40-minute timeout
+   (20 for the OpenAI providers) and includes the server log tail in its summary.
 3. The workflow records, runs `wiretruth lint`, and pushes a branch named `record/<provider>-<run id>-<attempt>`
    with one commit by `github-actions[bot]`. Its summary lists each fixture with its status, finish and token
    counts. If some scenarios fail, the run fails, but the fixtures that were written still pass through lint and

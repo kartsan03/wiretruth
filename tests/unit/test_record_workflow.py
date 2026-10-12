@@ -91,7 +91,7 @@ def test_ollama_ci_install_and_readiness_offline(tmp_path, model, ready_after, b
 def test_record_workflow_credentials_stay_in_record_step():
     text = WORKFLOW.read_text()
     record, push = text.split("\n  push:\n", 1)
-    assert "timeout-minutes: 40" in record
+    assert "timeout-minutes: ${{ startsWith(inputs.provider, 'ollama') && 40 || 20 }}" in record
     assert "secrets." not in push and "OPENAI_API_KEY" not in push
     assert record.count("secrets.") == 1
     assert "(inputs.provider == 'openai-chat' || inputs.provider == 'openai-responses')" in record

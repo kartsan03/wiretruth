@@ -41,7 +41,8 @@ env:
 jobs:
   record:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    # A CPU model on a 4-core runner needs longer; the jobs that hold the OpenAI key keep 20.
+    timeout-minutes: ${{ startsWith(inputs.provider, 'ollama') && 40 || 20 }}
     environment: recording
     outputs:
       changed: ${{ steps.changes.outputs.changed }}
