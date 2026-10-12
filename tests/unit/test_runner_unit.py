@@ -309,7 +309,7 @@ def test_discovery_sorts_multiple_providers_and_requires_their_modules(suite, mo
 
 
 def test_call_spec_uses_provenance_model_default_and_provider_override():
-    cell = find_cells(REPO, "truncation.text")[0]
+    cell = find_cells(REPO, "truncation.text", "openai-chat")[0]
     assert cell.call_spec.model == cell.fixture.provenance.requested_model
     changed = replace(cell.scenario.call, stream=True)
     cell = replace(
@@ -329,7 +329,7 @@ def test_call_spec_uses_provenance_model_default_and_provider_override():
     + [("ok", "python", "/custom/python"), ("ok", "javascript", "python")],
 )
 def test_process_lifecycle_and_final_log(mode, language, entry, tmp_path, monkeypatch):
-    cell = find_cells(REPO, "truncation.text")[0]
+    cell = find_cells(REPO, "truncation.text", "openai-chat")[0]
     manifest = load_shim_manifest(SHIM / "wiretruth-shim.json")
     manifest = replace(manifest, language=language, entry=(entry, "shim.py"))
     active = False
