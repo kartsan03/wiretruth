@@ -2,7 +2,7 @@
 
 This page is for contributors who record provider responses into fixtures. It explains what the recorder sends and
 stores, how to record in CI or on your own machine, and the checks that keep credentials out of the repository.
-Running the suite needs no keys. Only recording does.
+Running the suite needs no keys. Recording OpenAI needs a key; Ollama needs none.
 
 ## What the recorder does
 
@@ -14,7 +14,7 @@ fixture in `suite/fixtures/<provider>/<scenario>.json`.
 - **The key stays in the request.** It is read from the provider's environment variable (`OPENAI_API_KEY` for
   both OpenAI providers) and sent only in a header. Request headers are never stored. A key with spaces or other
   characters a header can't carry is rejected without being printed. If the key itself shows up in a response,
-  nothing is written.
+  nothing is written. Ollama providers use no key and send no Authorization header.
 - **One call, the scenario's call.** The request is built from the scenario's `call` (with its `call_overrides` for
   the provider) and the provider's current model, or `--model`. The request doesn't set a temperature or a seed:
   the call format has no such fields, and the libraries under test don't send them either.
@@ -25,8 +25,8 @@ fixture in `suite/fixtures/<provider>/<scenario>.json`.
 |---|---|
 | Status | The HTTP status |
 | Headers | Only `content-type` and `retry-after`. Everything else is dropped: request ids, rate-limit counters, organization and project headers, cookies |
-| Body | An event stream split into events, each with its blank line. A JSON body parsed and written back in the same key order. Any other body as text |
-| Body, as read | `--keep-bytes` stores the chunks exactly as they were read, base64-encoded. The recorder does the same when the body isn't UTF-8, or when an event stream doesn't split into events that each end with one blank line |
+| Body | An event stream split into events, each with its blank line. NDJSON split into JSON lines without their trailing newline. A JSON body parsed and written back in the same key order. Any other body as text |
+| Body, as read | `--keep-bytes` stores the chunks exactly as they were read, base64-encoded. The recorder does the same when the body isn't UTF-8, when an event stream doesn't split into events that each end with one blank line, or when NDJSON has irregular line framing or an aborted response |
 | End | `abort` when the connection closed before the body was complete, otherwise `clean` |
 | Provenance | `recorded_at` (UTC), `requested_model`, `returned_model` (from the body), `recorder` (the wiretruth version), `source_commit`, `ci_run` (in CI), `raw_sha256` (of the body bytes as received), and `request` (the body that was sent) |
 | Truth | Computed from the response by the provider module, right away |
@@ -49,10 +49,10 @@ When fixtures were derived from the one that moves, the recorder names them: der
 Recording in CI is the default for anything that lands on `main`: the fixture links to the run, and the run's log
 is public.
 
-1. A maintainer stores the key once, as a secret of the `recording` environment:
+1. For OpenAI, a maintainer stores the key once, as a secret of the `recording` environment:
    `gh secret set OPENAI_API_KEY --env recording` (it prompts for the value). Only `main` may use that
    environment, so the key never runs with code from another branch. Scenarios are merged before they are
-   recorded.
+   recorded. Ollama providers need no key.
 2. Run the **record** workflow from the Actions tab, or from the command line:
 
    ```bash
@@ -60,7 +60,10 @@ is public.
    ```
 
    `model` is optional. Leave it empty to use the provider's current model. `replace` (default `false`) passes
-   `--replace`.
+   `--replace`. For `ollama` and `ollama-openai`, the job installs the pinned Ollama v0.40.3 Linux
+   tarball after checking its SHA-256, starts a local server, and pulls the chosen model (default
+   `qwen3.5:0.8b`). It installs `zstd` if needed to unpack the tarball. The job has a 40-minute timeout
+   and includes the server log tail in its summary.
 3. The workflow records, runs `wiretruth lint`, and pushes a branch named `record/<provider>-<run id>-<attempt>`
    with one commit by `github-actions[bot]`. Its summary lists each fixture with its status, finish and token
    counts. If some scenarios fail, the run fails, but the fixtures that were written still pass through lint and
@@ -96,7 +99,17 @@ command fails naming that part. Quote globs so the shell leaves them alone. For 
 wiretruth record --provider openai-chat --scenario 'truncation.tool-call-args*,usage.stream-final-chunk'
 ```
 
-A local recording has no `ci_run`. Prefer CI for fixtures you plan to merge.
+Ollama can also record against a local server, with no key:
+
+```bash
+ollama serve
+# In another shell, pull the model and record.
+ollama pull qwen3.5:0.8b
+wiretruth record --provider ollama --scenario truncation.text
+```
+
+The native provider talks to `http://127.0.0.1:11434/api/chat`; `ollama-openai` uses the same server
+at `/v1/chat/completions`. A local recording has no `ci_run`. Committed Ollama fixtures come from CI.
 
 To see what would be sent without sending it, add `--dry-run`. It needs no key and prints the request exactly as
 `http.client` sends it, with the key masked:
@@ -132,9 +145,9 @@ wiretruth record --provider PROVIDER --scenario PATTERNS [--model MODEL] [--dry-
 
 | Option | Meaning |
 |---|---|
-| `--provider` | The wire API. Today: `openai-chat`, `openai-responses` |
+| `--provider` | The wire API: `openai-chat`, `openai-responses`, `ollama`, `ollama-openai` |
 | `--scenario` | Comma-separated scenario ids or globs, such as `'tools.*,usage.*'`. Scenarios that don't list the provider are skipped, with a note |
-| `--model` | The model to request. Default: the provider's current model (`gpt-6-luna` for both OpenAI providers) |
+| `--model` | The model to request. Default: the provider's current model (`gpt-6-luna` for OpenAI, `qwen3.5:0.8b` for Ollama) |
 | `--dry-run` | Print each request and send nothing |
 | `--replace` | Overwrite `<scenario>.json` instead of keeping it as a dated variant |
 | `--keep-bytes` | Store the body as the chunks read |
@@ -218,3 +231,14 @@ from deltas. A stream that ends before a final event keeps its partial text and 
 As with `openai-chat`, truth reads only the last exchange. A cut-off non-stream body that never parses has finish
 `none`; any other non-object body or non-JSON event data raises an error. Responses has no `stop` parameter,
 and `max_output_tokens` must be at least 16.
+
+For `ollama`, content comes from `message.content`; `message.thinking` is excluded. A `done: true`
+response maps `done_reason` stop/length directly, or to `other` for an unfamiliar string; tool calls take
+precedence. Without `done: true`, finish is `none`. HTTP errors and native error strings map to `error`.
+Tool arguments arrive as objects, so truth stores their compact JSON as `arguments_raw`. Native usage keeps
+`prompt_eval_count`, `prompt_eval_cached_count` (part of input), and `eval_count`; total is input plus output.
+Timing fields are excluded. A clean NDJSON stream with a done line is complete.
+
+`ollama-openai` uses the Chat Completions truth rules above. Its recorder sends `max_tokens`, because
+Ollama ignores `max_completion_tokens`. Its `message.reasoning` and non-standard `timings` add no answer
+text or canonical usage fields. Streamed usage requires `stream_options.include_usage`.

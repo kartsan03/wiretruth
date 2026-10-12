@@ -39,8 +39,11 @@ create scenarios. The examples below match the committed fixtures except where n
 | 1 | A fixture document is invalid |
 | 2 | A source or transform is unknown, arguments are invalid, the shape is unsupported, or the file cannot be written |
 
-Today the provider helpers support `openai-chat` and `openai-responses`. Both use SSE for stream finish signals
-and error events. A transform fails when the provider cannot read the resulting body; it does not infer truth.
+Provider helpers support `openai-chat`, `openai-responses`, `ollama` and `ollama-openai`. Native Ollama
+NDJSON bodies work with every transform: the finish is the `done: true` line, error injection adds an
+`{"error":"message"}` line, and finish replacement changes `done_reason`. Stored lines omit the newline
+that replay appends. The other providers use SSE. A transform fails when the provider cannot read the
+resulting body; it does not infer truth.
 
 ## `cut_stream_after`
 
@@ -82,8 +85,8 @@ response cleanly. Both arguments are required: `after` is an integer from 1 to o
 `error` is an object containing the event's complete JSON data in the provider's format.
 
 Chat Completions uses `data: <json>` followed by a blank line. Responses also puts `event: <type>` before the data
-line, taking the type from `error.type`. Both helpers require SSE for injection. The output is rejected unless
-the provider's extractor reads an error from it.
+line, taking the type from `error.type`. These helpers require SSE for injection; native Ollama uses NDJSON.
+The output is rejected unless the provider's extractor reads an error from it.
 
 This simulates an error inside an HTTP 200 stream. The
 [Responses error handling change](https://github.com/pydantic/pydantic-ai/pull/9321) covers `error` and
@@ -129,8 +132,8 @@ Completions, replace every non-null `finish_reason` on a choice, in the finish c
 Responses, replace `incomplete_details.reason` in the final stream response or top-level JSON response.
 A completed Responses response without a reason cannot be changed this way.
 
-The body must be `sse` or `json` for these providers. The transform fails if no finish value changes, or if the
-recomputed `truth.raw_finish` does not equal `value`.
+The body must be `sse` or `json` for these providers; native Ollama accepts `ndjson` or `json`. The transform
+fails if no finish value changes, or if the recomputed `truth.raw_finish` does not equal `value`.
 
 This simulates a finish value a library has not mapped. The
 [provider mapping report](https://github.com/BerriAI/litellm/issues/21347) describes gaps between published provider
