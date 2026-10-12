@@ -239,6 +239,15 @@ def test_prepend_http_error_preserves_exchanges_and_final_truth(body):
     assert result["truth"]["error"] is None
 
 
+def test_prepend_http_error_does_not_share_objects_with_args():
+    args = {"status": 429, "headers": {"retry-after": "1"}, "body": {"error": {"message": "Later"}}}
+    result = run("prepend_http_error", args, source("openai-chat/request.max-tokens-field"))
+    stored = result["derived_from"]["args"]
+    added = result["exchanges"][0]["response"]
+    assert added["headers"] is not stored["headers"]
+    assert added["body"]["json"] is not stored["body"]
+
+
 def test_documented_source_optional_provenance_and_overrides():
     doc = source()
     doc["tier"] = "documented"

@@ -195,8 +195,8 @@ def derive(
                 "match": deepcopy(exchanges[0]["match"]),
                 "response": {
                     "status": status,
-                    "headers": headers,
-                    "body": {"json": args["body"]},
+                    "headers": deepcopy(headers),
+                    "body": {"json": deepcopy(args["body"])},
                     "end": "clean",
                 },
             },
