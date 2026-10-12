@@ -6,11 +6,13 @@ Exit codes: 0 ok, 1 check failure (invalid suite data, grade mismatch), 2 usage 
 import argparse
 import contextlib
 import os
+import re
 import signal
 import sys
 import time
 from collections.abc import Sequence
 from pathlib import Path
+from typing import cast
 
 from wiretruth import __version__
 from wiretruth.envs import (
@@ -21,11 +23,20 @@ from wiretruth.envs import (
     prune_envs,
     resolve_interpreter,
 )
-from wiretruth.formats import FormatError, load_fixture, load_shim_manifest
+from wiretruth.formats import (
+    FormatError,
+    JsonObject,
+    load_document,
+    load_fixture,
+    load_shim_manifest,
+    parse_json,
+)
 from wiretruth.lint import SetupError, lint
 from wiretruth.providers import PROVIDERS
 from wiretruth.recorder import (
     RecordError,
+    _dump,
+    _write,
     api_key,
     describe_request,
     destination,
@@ -43,6 +54,7 @@ from wiretruth.results import (
     write_results,
 )
 from wiretruth.runner import DEFAULT_JOBS, compare_grades, load_expected_grades, run_suite
+from wiretruth.transforms import TRANSFORMS, derive
 
 EXIT_CHECK = 1
 EXIT_USAGE = 2
@@ -51,6 +63,7 @@ COMMANDS = {
     "run": "run shims against replayed fixtures and grade the results",
     "serve": "serve one fixture on 127.0.0.1 for manual reproduction",
     "record": "record provider responses into fixtures (needs API keys)",
+    "derive": "derive a fixture by transforming recorded or documented responses",
     "lint": "validate suite data and results",
     "envs": "list, build or prune per-library environments",
 }
@@ -129,6 +142,22 @@ def build_parser() -> argparse.ArgumentParser:
             )
             subparser.add_argument(
                 "--port", type=int, default=0, help=f"port on {HOST} (default: a free one)"
+            )
+        elif name == "derive":
+            subparser.add_argument("--from", dest="source", required=True, help="source fixture id")
+            subparser.add_argument(
+                "--transform", required=True, help="one of: " + ", ".join(TRANSFORMS)
+            )
+            subparser.add_argument("--out", required=True, help="output fixture id")
+            subparser.add_argument(
+                "--args", default="{}", help="transform arguments as a JSON object"
+            )
+            subparser.add_argument(
+                "--rationale", help="why this shape is useful (default: transform's own)"
+            )
+            subparser.add_argument("--evidence-url", help="evidence URL (default: transform's own)")
+            subparser.add_argument(
+                "--replace", action="store_true", help="overwrite an existing derived fixture"
             )
         elif name == "record":
             subparser.add_argument(
@@ -283,6 +312,49 @@ def run_record(args: argparse.Namespace) -> int:
     return code
 
 
+def run_derive(args: argparse.Namespace) -> int:
+    try:
+        # Only ids under suite/fixtures are accepted, never arbitrary paths.
+        if (
+            re.fullmatch(
+                r"[a-z0-9-]+/[a-z]+\.[a-z0-9-]+(?:@[0-9]{4}-[0-9]{2}-[0-9]{2})?", args.source
+            )
+            is None
+        ):
+            raise ValueError("--from must be a fixture id: <provider>/<scenario>")
+        source_path = Path("suite", "fixtures", f"{args.source}.json")
+        if not source_path.is_file():
+            raise ValueError(f"unknown fixture {args.source!r}")
+        arguments = parse_json(args.args.encode())
+        if not isinstance(arguments, dict):
+            raise ValueError("--args must be a JSON object")
+        source = cast(JsonObject, load_document("fixture", source_path))
+        document = derive(
+            source,
+            transform=args.transform,
+            out=args.out,
+            args=arguments,
+            rationale=args.rationale,
+            evidence_url=args.evidence_url,
+        )
+        path = Path("suite", "fixtures", f"{args.out}.json")
+        if path.exists():
+            previous = load_fixture(path)
+            if previous.tier != "derived":
+                raise ValueError(f"cannot overwrite a {previous.tier} fixture: {path}")
+            if not args.replace:
+                raise ValueError(f"{path} exists; pass --replace to overwrite a derived fixture")
+        _write(path, _dump(document), None)
+    except FormatError as error:
+        print(f"wiretruth derive: {' '.join(str(error.problems[0]).splitlines())}", file=sys.stderr)
+        return EXIT_CHECK
+    except (ValueError, OSError, RecursionError) as error:
+        print(f"wiretruth derive: {' '.join(str(error).splitlines())}", file=sys.stderr)
+        return EXIT_USAGE
+    print(f"wrote {path}")
+    return 0
+
+
 def run_shim(args: argparse.Namespace) -> int:
     used = {
         "--write-results": args.write_results,
@@ -410,6 +482,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_serve(args.fixture, args.port)
     if args.command == "record":
         return run_record(args)
+    if args.command == "derive":
+        return run_derive(args)
     if args.command == "run":
         return run_shim(args)
     if args.command == "envs":
