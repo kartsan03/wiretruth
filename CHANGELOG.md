@@ -60,7 +60,7 @@ finding).
   text use the last value for each duplicate key, as clients do, while retaining strict number and Unicode checks.
 
 ### Results
-- any-llm 1.33.0: PASS on 14 of 16 `openai-chat` scenarios and on 11 of 12 `openai-responses` scenarios
+- any-llm 1.33.0: PASS on 16 of 18 `openai-chat` scenarios and on 13 of 14 `openai-responses` scenarios
   ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)). LOSSY on `truncation.structured-output` over
   `openai-responses`: structured output raises a pydantic `ValidationError` on the cut-off JSON, with no sign that
   the token limit was hit, and without the partial text or usage.

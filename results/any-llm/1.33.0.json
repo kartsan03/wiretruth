@@ -7,8 +7,8 @@
     "language": "python"
   },
   "run": {
-    "at": "2026-10-12T14:58:14Z",
-    "git_sha": "7fda3ed1288f8b38b73422308fef085c57146529",
+    "at": "2026-10-12T15:27:48Z",
+    "git_sha": "2dbc5dc29594c10cf69d307e1ff083dbb5d218e7",
     "ci_run": null,
     "runner": "wiretruth 0.2.0.dev0",
     "packages": {
@@ -132,7 +132,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 148.12797005288303
+        "elapsed_ms": 148.4266349580139
       },
       "request_count": 1
     },
@@ -216,7 +216,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 253.5661479923874
+        "elapsed_ms": 251.31408497691154
       },
       "request_count": 1
     },
@@ -294,7 +294,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 154.5628230087459
+        "elapsed_ms": 145.47024201601744
       },
       "request_count": 1
     },
@@ -366,7 +366,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 130.80032402649522
+        "elapsed_ms": 127.725186990574
       },
       "request_count": 1
     },
@@ -438,7 +438,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 177.5396449957043
+        "elapsed_ms": 194.06606489792466
       },
       "request_count": 1
     },
@@ -510,7 +510,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 228.53379300795496
+        "elapsed_ms": 231.87125381082296
       },
       "request_count": 1
     },
@@ -584,7 +584,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 236.7740049958229
+        "elapsed_ms": 200.66058891825378
       },
       "request_count": 1
     },
@@ -656,7 +656,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 236.93317989818752
+        "elapsed_ms": 240.76103908009827
       },
       "request_count": 1
     },
@@ -734,7 +734,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 170.8184361923486
+        "elapsed_ms": 166.32859804667532
       },
       "request_count": 1
     },
@@ -812,7 +812,295 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 235.52407510578632
+        "elapsed_ms": 230.88573291897774
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.utf8",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/stream.utf8",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); truth.text=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\""
+        },
+        {
+          "id": "no-replacement-chars",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); U+FFFD count=0"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 19
+        },
+        "notes": [],
+        "elapsed_ms": 229.7342529054731
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.utf8",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/stream.utf8",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); truth.text=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\""
+        },
+        {
+          "id": "no-replacement-chars",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); U+FFFD count=0"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "completed",
+          "surface": "primary",
+          "source": "response.completed.response.status"
+        },
+        "text": {
+          "value": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 28,
+          "cached_input": 0,
+          "output": 23,
+          "reasoning": 0,
+          "total": 51,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": true,
+          "chunks_seen": 25
+        },
+        "notes": [],
+        "elapsed_ms": 261.0540420282632
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.utf8-split",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/stream.utf8-split",
+      "fixture_tier": "derived",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); truth.text=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\""
+        },
+        {
+          "id": "no-replacement-chars",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); U+FFFD count=0"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 19
+        },
+        "notes": [],
+        "elapsed_ms": 158.25244295410812
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.utf8-split",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/stream.utf8-split",
+      "fixture_tier": "derived",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); truth.text=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\""
+        },
+        {
+          "id": "no-replacement-chars",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); U+FFFD count=0"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "completed",
+          "surface": "primary",
+          "source": "response.completed.response.status"
+        },
+        "text": {
+          "value": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 28,
+          "cached_input": 0,
+          "output": 23,
+          "reasoning": 0,
+          "total": 51,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": true,
+          "chunks_seen": 25
+        },
+        "notes": [],
+        "elapsed_ms": 216.03970206342638
       },
       "request_count": 1
     },
@@ -897,7 +1185,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 151.10563696362078
+        "elapsed_ms": 157.13348588906229
       },
       "request_count": 1
     },
@@ -982,7 +1270,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 283.86739105917513
+        "elapsed_ms": 262.1441420633346
       },
       "request_count": 1
     },
@@ -1067,7 +1355,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 201.58189698122442
+        "elapsed_ms": 199.7870469931513
       },
       "request_count": 1
     },
@@ -1152,7 +1440,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 255.3181240800768
+        "elapsed_ms": 229.06877705827355
       },
       "request_count": 1
     },
@@ -1230,7 +1518,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 149.43570899777114
+        "elapsed_ms": 145.4847981221974
       },
       "request_count": 1
     },
@@ -1308,7 +1596,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 263.9680430293083
+        "elapsed_ms": 239.67275209724903
       },
       "request_count": 1
     },
@@ -1398,7 +1686,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 151.3376838993281
+        "elapsed_ms": 156.23537101782858
       },
       "request_count": 1
     },
@@ -1492,7 +1780,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 355.18816486001015
+        "elapsed_ms": 268.4610169380903
       },
       "request_count": 1
     },
@@ -1570,7 +1858,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 145.79654415138066
+        "elapsed_ms": 148.50292587652802
       },
       "request_count": 1
     },
@@ -1648,7 +1936,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 285.5712559539825
+        "elapsed_ms": 261.74218486994505
       },
       "request_count": 1
     },
@@ -1726,7 +2014,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 208.8047699071467
+        "elapsed_ms": 208.9851729106158
       },
       "request_count": 1
     },
@@ -1804,7 +2092,7 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 258.3522980567068
+        "elapsed_ms": 254.0433860849589
       },
       "request_count": 1
     },
@@ -1882,7 +2170,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 230.38478009402752
+        "elapsed_ms": 225.81849992275238
       },
       "request_count": 1
     },
@@ -1962,7 +2250,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 154.09790189005435
+        "elapsed_ms": 146.3368369732052
       },
       "request_count": 1
     },
@@ -2042,7 +2330,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 284.8333059810102
+        "elapsed_ms": 315.5447959434241
       },
       "request_count": 1
     },
@@ -2122,7 +2410,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 184.3813769519329
+        "elapsed_ms": 172.55974211730063
       },
       "request_count": 1
     },
@@ -2202,7 +2490,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 262.30380893684924
+        "elapsed_ms": 247.4006498232484
       },
       "request_count": 1
     },
@@ -2268,7 +2556,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 177.4271938484162
+        "elapsed_ms": 178.234739927575
       },
       "request_count": 1
     }
