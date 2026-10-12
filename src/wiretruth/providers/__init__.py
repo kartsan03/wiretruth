@@ -35,7 +35,7 @@ class Provider(Protocol):
 
     ID: str
     API_BASE: str  # where the recorder sends requests, such as https://api.openai.com/v1
-    KEY_ENV: str  # the environment variable that holds the API key
+    KEY_ENV: str  # the environment variable that holds the API key, or empty when none is needed
     DEFAULT_MODEL: str
 
     def build_request(self, call: Call, model: str) -> RawRequest: ...
@@ -151,18 +151,20 @@ def event_object(event: str, *, terminator: str | None = None) -> JsonObject | N
     return payload
 
 
-def _rewrite_event(event: str, payload: JsonObject) -> str:
-    data = sse_events(event)[0].data
+def _rewrite_event(event: str, payload: JsonObject, *, kind: str) -> str:
+    data = sse_events(event)[0].data if kind == "sse" else event
     original = parse_json(data.encode())
     # Recordings use compact JSON and raw UTF-8; documented events can use spaces or
     # escaped Unicode. Round-trip the original before changing any of its bytes.
     for separators in ((",", ":"), (", ", ": "), (",", ": ")):
         for ascii_only in (False, True):
             if json.dumps(original, ensure_ascii=ascii_only, separators=separators) == data:
+                changed = json.dumps(payload, ensure_ascii=ascii_only, separators=separators)
+                if kind == "ndjson":
+                    return changed
                 field = re.search(r"(?:^|[\r\n])data: ?", event)
                 if field is None or not event.startswith(data, field.end()):
                     raise ValueError("can't preserve JSON spread across multiple data lines")
-                changed = json.dumps(payload, ensure_ascii=ascii_only, separators=separators)
                 start = field.end()
                 return event[:start] + changed + event[start + len(data) :]
     raise ValueError("can't preserve this event's JSON serialization")
@@ -174,6 +176,7 @@ def replace_finish_fields(
     fields: Callable[[JsonObject, bool], list[tuple[JsonObject, str]]],
     *,
     terminator: str | None = None,
+    kind: str = "sse",
 ) -> JsonObject:
     """Replace selected finish fields, retaining other events and their framing verbatim."""
     if body.kind == "json":
@@ -184,12 +187,16 @@ def replace_finish_fields(
         for obj, key in targets:
             obj[key] = value
         return {"json": payload}
-    if body.kind != "sse":
-        raise ValueError("replacing finish values needs a json or sse body for this provider")
+    if body.kind != kind:
+        raise ValueError(f"replacing finish values needs a json or {kind} body for this provider")
     parts = list(body.parts)
     changed = False
     for index in reversed(range(len(parts))):
-        payload = event_object(parts[index], terminator=terminator)
+        payload = (
+            event_object(parts[index], terminator=terminator)
+            if kind == "sse"
+            else json_object(parse_json(parts[index].encode()))
+        )
         targets = [] if payload is None else fields(payload, True)
         if not targets:
             continue
@@ -198,17 +205,22 @@ def replace_finish_fields(
             for obj, key in targets:
                 obj[key] = value
             assert payload is not None
-            parts[index] = _rewrite_event(parts[index], payload)
+            parts[index] = _rewrite_event(parts[index], payload, kind=kind)
             changed = True
     if not changed:
         raise ValueError("the stream has no finish value to change")
-    return {"sse": cast("list[JsonValue]", parts)}
+    return {kind: cast("list[JsonValue]", parts)}
 
 
 def _registry() -> dict[str, Provider]:
-    from wiretruth.providers import openai_chat, openai_responses
+    from wiretruth.providers import ollama, ollama_openai, openai_chat, openai_responses
 
-    return {openai_chat.ID: openai_chat, openai_responses.ID: openai_responses}
+    return {
+        openai_chat.ID: openai_chat,
+        openai_responses.ID: openai_responses,
+        ollama.ID: ollama,
+        ollama_openai.ID: ollama_openai,
+    }
 
 
 PROVIDERS: Mapping[str, Provider] = _registry()

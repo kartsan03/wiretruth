@@ -7,6 +7,7 @@ name: record
 # Two jobs, so no step holds both credentials: `record` has the API key and a read-only token;
 # `push` has a token that can push, and only the fixtures `record` handed over. The key is a secret
 # of the `recording` environment, which only `main` may use, so it never runs with a branch's code.
+# Ollama providers use a checksum-verified local server and need no API key.
 
 on:
   workflow_dispatch:
@@ -14,7 +15,7 @@ on:
       provider:
         description: The wire API to record
         type: choice
-        options: [openai-chat, openai-responses]
+        options: [openai-chat, openai-responses, ollama, ollama-openai]
         required: true
       scenarios:
         description: Comma-separated scenario ids or globs, such as tools.*,usage.*
@@ -32,10 +33,16 @@ on:
 permissions:
   contents: read
 
+env:
+  # ollama/ollama v0.40.3 release asset: ollama-linux-amd64.tar.zst and its SHA-256.
+  OLLAMA_VERSION: v0.40.3
+  OLLAMA_SHA256: ce6f8b671a699bf1ebafb28d60dbbabf4f37b30b499145fa308a8ba72de021d6
+
 jobs:
   record:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # A CPU model on a 4-core runner needs longer; the jobs that hold the OpenAI key keep 20.
+    timeout-minutes: ${{ startsWith(inputs.provider, 'ollama') && 40 || 20 }}
     environment: recording
     outputs:
       changed: ${{ steps.changes.outputs.changed }}
@@ -48,6 +55,39 @@ jobs:
           version: "0.12.21"
           enable-cache: false # nothing cached by other runs reaches the step that holds the key
       - run: uv sync --locked
+
+      - name: Start Ollama
+        if: ${{ startsWith(inputs.provider, 'ollama') }}
+        shell: bash
+        env:
+          MODEL: ${{ inputs.model }}
+        run: |
+          if ! command -v zstd >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y zstd
+          fi
+          archive="$RUNNER_TEMP/ollama-linux-amd64.tar.zst"
+          curl --fail --location --retry 3 \
+            "https://github.com/ollama/ollama/releases/download/${OLLAMA_VERSION}/ollama-linux-amd64.tar.zst" \
+            --output "$archive"
+          echo "$OLLAMA_SHA256  $archive" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/ollama"
+          tar --zstd -xf "$archive" -C "$RUNNER_TEMP/ollama"
+          export PATH="$RUNNER_TEMP/ollama/bin:$PATH"
+          ollama serve > "$RUNNER_TEMP/ollama.log" 2>&1 &
+          ready=false
+          for attempt in {1..60}; do
+            if curl --fail --silent --max-time 2 http://127.0.0.1:11434/api/version; then
+              ready=true
+              break
+            fi
+            sleep 2
+          done
+          if [ "$ready" != true ]; then
+            tail -n 100 "$RUNNER_TEMP/ollama.log"
+            exit 1
+          fi
+          ollama pull "${MODEL:-qwen3.5:0.8b}"
 
       # A scenario that fails doesn't stop the others; the step still fails, and the fixtures that
       # were written go on to lint and the push.
@@ -97,6 +137,13 @@ jobs:
             echo '```text'
             cat record.log 2>/dev/null || echo "(no output)"
             echo '```'
+            if [ -f "$RUNNER_TEMP/ollama.log" ]; then
+              echo
+              echo "## Ollama server log"
+              echo '```text'
+              tail -n 100 "$RUNNER_TEMP/ollama.log"
+              echo '```'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
   push:

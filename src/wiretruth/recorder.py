@@ -4,8 +4,8 @@ No SDK sits between the provider and the fixture. The provider module builds the
 ``http.client`` sends it, and the response is stored as it came (docs/recording.md):
 
 - the status, and only the ``content-type`` and ``retry-after`` headers;
-- the body: an event stream split into events, JSON re-serialized with its key order, anything
-  else as text, or as the chunks read (``--keep-bytes``, or when it isn't UTF-8 or ends early);
+- the body: SSE split into events, NDJSON split into lines, JSON re-serialized with its key order,
+  anything else as text, or as the chunks read (``--keep-bytes`` or irregular framing);
 - the SHA-256 of the raw body, the request body (credentials travel in headers, which are never
   stored), the models, the recorder version, the commit and the CI run;
 - the truth, computed by the provider module.
@@ -148,6 +148,8 @@ def describe_request(provider: Provider, request: RawRequest, base_url: str) -> 
 
 def api_key(provider: Provider, env: Mapping[str, str]) -> str:
     """The key from the environment. The error never includes the value."""
+    if not provider.KEY_ENV:
+        return ""
     key = env.get(provider.KEY_ENV, "").strip()
     if not key:
         raise RecordError(f"{provider.KEY_ENV} is not set")
@@ -238,6 +240,21 @@ def response_body(response: Response, keep_bytes: bool) -> tuple[JsonObject, lis
     except UnicodeDecodeError:
         return as_read, ["the body isn't UTF-8: stored as the chunks read"]
     media = response.headers.get("content-type", "").split(";")[0].strip().lower()
+    if media == "application/x-ndjson":
+        lines = text.split("\n")[:-1]
+        try:
+            if not text.endswith("\n") or "\r" in text:
+                raise ValueError("incomplete line framing")
+            for line in lines:
+                parse_json(line.encode())
+        except (ValueError, RecursionError):
+            message = (
+                "the NDJSON stream doesn't split into JSON lines that each end with one newline"
+            )
+            return as_read, [f"{message}: stored as read"]
+        if response.end == "abort":
+            return as_read, []
+        return {"ndjson": cast("list[JsonValue]", lines)}, []
     if media == "text/event-stream":
         events = _sse_events(text)
         if events is None:
@@ -376,7 +393,7 @@ def _write(path: Path, text: str, previous: tuple[Path, JsonObject] | None) -> N
 
 
 def _holds(text: str, key: str) -> bool:
-    return any(key in layer for layer in layers(text))
+    return bool(key) and any(key in layer for layer in layers(text))
 
 
 def _secrets(where: str, text: str, doc: JsonValue, key: str) -> list[str]:

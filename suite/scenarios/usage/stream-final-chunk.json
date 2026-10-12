@@ -14,7 +14,7 @@
     "reasoning": {"effort": "none"},
     "extra": {"include_usage": true}
   },
-  "providers": ["openai-chat"],
+  "providers": ["openai-chat", "ollama", "ollama-openai"],
   "requirements": [
     {
       "id": "usage-reported",
@@ -24,5 +24,5 @@
       "text": "Token usage is reported and matches the provider's counts."
     }
   ],
-  "grading_notes": "Usage comes only in a final chunk with choices: []. A library that crashes on empty choices grades CRASH. A library that needs an opt-in to receive streamed usage is fine when the shim passes it the library's own way."
+  "grading_notes": "Chat Completions usage comes in a final chunk with choices: []. Native Ollama always puts usage on its done: true line; include_usage needs no wire option. A library that crashes on empty choices grades CRASH. A library that needs an opt-in to receive streamed usage is fine when the shim passes it the library's own way."
 }

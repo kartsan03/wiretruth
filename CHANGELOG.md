@@ -12,6 +12,15 @@ finding).
 ## [Unreleased]
 
 ### Added
+- `ollama` and `ollama-openai` support recording, truth extraction, lint, transforms and shim mapping,
+  using `qwen3.5:0.8b` by default. Native streams record as NDJSON lines, with byte chunks for irregular
+  framing or aborted responses. Both providers record without an API key.
+- The record workflow installs a checksum-verified Ollama release, pulls the model and records against
+  the local server, with a 40-minute timeout for Ollama jobs and the server log in the summary.
+- `finish.stop-sequence` checks stop and text fidelity on both Ollama APIs. `request.no-injected-options`
+  checks that a minimal native call leaves `options.num_ctx` unset. `request.max-tokens-ollama-openai`
+  checks that the output limit is sent as `max_tokens`, the only field Ollama's OpenAI-compatible
+  endpoint applies.
 - Six scenarios for missing stream finishes (clean and aborted), errors during streams, unfamiliar finish
   values and UTF-8 text (unsplit and split inside characters). Eight derived fixtures cover the first four
   scenarios on `openai-chat` and `openai-responses`. `stream.utf8` is recorded in CI against `gpt-6-luna` on

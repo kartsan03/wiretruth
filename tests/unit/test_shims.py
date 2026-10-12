@@ -298,3 +298,126 @@ def test_liar_replaces_only_the_first_non_ascii_character(text, expected):
     assert liar.text.value == expected
     assert LIAR["lie"](doc) == LIAR["lie"](doc)
     assert doc["text"]["value"] == text
+
+
+@pytest.mark.parametrize(
+    "provider_id,probe_name,kind",
+    [("ollama", "n-text-stream", "ndjson"), ("ollama-openai", "o-text-stream-usage", "sse")],
+)
+def test_reference_counts_ollama_stream_lines_and_liar_applies(
+    monkeypatch, provider_id, probe_name, kind
+):
+    from ollama_samples import PROBES
+
+    spec = find_cells(REPO, "truncation.text-stream")[0].call_spec
+    spec = replace(spec, provider=provider_id)
+    probe = PROBES[probe_name]
+    response = Response(
+        200, {"content-type": probe["content_type"]}, [probe["body"].encode()], "clean"
+    )
+    observe = REFERENCE["observe"]
+    monkeypatch.setitem(observe.__globals__, "send", MagicMock(return_value=response))
+    monkeypatch.setenv("WIRETRUTH_PROVIDER", provider_id)
+    monkeypatch.setenv(
+        "WIRETRUTH_BASE_URL_" + provider_id.upper().replace("-", "_"), "http://127.0.0.1:4321"
+    )
+    monkeypatch.setenv("WIRETRUTH_API_KEY", "wt-test-key")
+    doc = observe(spec)
+    obs = observation_from_document(doc)
+    expected = len(probe["body"].splitlines()) if kind == "ndjson" else probe["body"].count("\n\n")
+    assert obs.stream.chunks_seen == expected
+    assert obs.finish.value == "length"
+    liar = observation_from_document(LIAR["lie"](doc))
+    assert liar.finish.value == "stop" and liar.finish.raw is None
+    assert liar.usage.output is None and liar.stream.completed is True
+
+
+@pytest.mark.parametrize("provider", ["ollama", "ollama-openai"])
+@pytest.mark.parametrize("stream", [False, True])
+def test_any_llm_ollama_mapping_offline(monkeypatch, capsys, provider, stream):
+    import asyncio
+    import io
+    from types import SimpleNamespace
+    from unittest.mock import patch
+
+    from wiretruth.formats import load_scenario
+
+    scenario = load_scenario(REPO / "suite/scenarios/finish/stop-sequence.json")
+    spec = replace(
+        find_cells(REPO)[0].call_spec,
+        provider=provider,
+        model="qwen3.5:0.8b",
+        call=replace(scenario.call_for(provider), stream=stream, extra={"include_usage": True}),
+    )
+    doc = call_spec_document(spec)
+    doc["tools"] = [{"name": "get_weather", "description": "Weather", "parameters": {}}]
+    message = SimpleNamespace(
+        content="",
+        tool_calls=[
+            SimpleNamespace(
+                index=0,
+                id="library-id",
+                function=SimpleNamespace(name="get_weather", arguments='{"city":"Zürich"}'),
+            )
+        ],
+        parsed=None,
+    )
+    result = SimpleNamespace(
+        choices=[SimpleNamespace(finish_reason="stop", message=message, delta=message)],
+        usage=SimpleNamespace(prompt_tokens=2, completion_tokens=3, total_tokens=5),
+    )
+    completion = MagicMock(return_value=iter([result]) if stream else result)
+    monkeypatch.setitem(sys.modules, "any_llm", SimpleNamespace(completion=completion))
+    monkeypatch.setitem(sys.modules, "pydantic", SimpleNamespace(create_model=MagicMock()))
+    monkeypatch.setenv("WIRETRUTH_PROVIDER", provider)
+    env_name = "WIRETRUTH_BASE_URL_" + provider.upper().replace("-", "_")
+    monkeypatch.setenv(
+        env_name, "http://127.0.0.1:4321" + ("/v1" if provider == "ollama-openai" else "")
+    )
+    monkeypatch.setenv("WIRETRUTH_API_KEY", "wt-test-key")
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(doc)))
+    monkeypatch.chdir(REPO / "shims/python/any-llm")
+    with (
+        patch("importlib.metadata.version", return_value="1.33.0"),
+        patch("threading.excepthook"),
+        patch.object(asyncio, "set_event_loop_policy"),
+    ):
+        runpy.run_path("shim.py", run_name="__main__")
+    sent = completion.call_args.kwargs
+    assert sent["provider"] == ("ollama" if provider == "ollama" else "openai")
+    assert sent["api_base"] == "http://127.0.0.1:4321" + (
+        "/v1" if provider == "ollama-openai" else ""
+    )
+    assert sent["api_key"] == "wt-test-key"
+    assert sent["max_tokens"] == 120 and sent["stop"] == ["END"]
+    assert sent["reasoning_effort"] == "none"
+    assert sent["stream_options"] == {"include_usage": True}
+    assert sent["tools"] == [{"type": "function", "function": doc["tools"][0]}]
+    obs = observation_from_document(parse_json(capsys.readouterr().out.encode()))
+    assert obs.finish.value == "stop" and obs.finish.raw == "stop"
+    assert obs.tool_calls[0].id == "library-id"
+    assert obs.usage.output == 3
+    assert obs.stream.completed is None
+
+
+@pytest.mark.parametrize("provider", ["ollama", "ollama-openai"])
+def test_any_llm_unmapped_ollama_tool_choice_exits(monkeypatch, provider):
+    import io
+    from types import SimpleNamespace
+    from unittest.mock import patch
+
+    doc = call_spec_document(find_cells(REPO, "tools.parallel-calls")[0].call_spec)
+    doc["provider"] = provider
+    doc["tool_choice"] = "required"
+    completion = MagicMock()
+    monkeypatch.setitem(sys.modules, "any_llm", SimpleNamespace(completion=completion))
+    monkeypatch.setitem(sys.modules, "pydantic", SimpleNamespace(create_model=MagicMock()))
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(doc)))
+    monkeypatch.setenv("WIRETRUTH_PROVIDER", provider)
+    monkeypatch.chdir(REPO / "shims/python/any-llm")
+    with (
+        patch("importlib.metadata.version", return_value="1.33.0"),
+        pytest.raises(SystemExit, match="not mapped yet"),
+    ):
+        runpy.run_path("shim.py", run_name="__main__")
+    completion.assert_not_called()
