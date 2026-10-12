@@ -1,0 +1,101 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama/usage.stream-final-chunk",
+  "scenario": "usage.stream-final-chunk",
+  "provider": "ollama",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:01:21Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294709109",
+    "raw_sha256": "92df4f92e6a6b8f7160a008282c109324d04647604acea42d8af3273eb39b54c",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "In one short sentence, explain why the sky looks blue."
+        }
+      ],
+      "stream": true,
+      "options": {
+        "num_predict": 64
+      },
+      "think": false
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/api/chat"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/x-ndjson"
+        },
+        "body": {
+          "ndjson": [
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.023206005Z\",\"message\":{\"role\":\"assistant\",\"content\":\"At\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.132197654Z\",\"message\":{\"role\":\"assistant\",\"content\":\"mos\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.24271841Z\",\"message\":{\"role\":\"assistant\",\"content\":\"pheric\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.242776698Z\",\"message\":{\"role\":\"assistant\",\"content\":\" scattering\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.242876505Z\",\"message\":{\"role\":\"assistant\",\"content\":\" of\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.356821555Z\",\"message\":{\"role\":\"assistant\",\"content\":\" sunlight\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.356876698Z\",\"message\":{\"role\":\"assistant\",\"content\":\" by\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.465613792Z\",\"message\":{\"role\":\"assistant\",\"content\":\" air\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.575266255Z\",\"message\":{\"role\":\"assistant\",\"content\":\" molecules\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.575294768Z\",\"message\":{\"role\":\"assistant\",\"content\":\" prevents\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.684142858Z\",\"message\":{\"role\":\"assistant\",\"content\":\" blue\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.795010846Z\",\"message\":{\"role\":\"assistant\",\"content\":\" light\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.795040632Z\",\"message\":{\"role\":\"assistant\",\"content\":\" from\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.795279197Z\",\"message\":{\"role\":\"assistant\",\"content\":\" reaching\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.906040216Z\",\"message\":{\"role\":\"assistant\",\"content\":\" the\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:22.906072626Z\",\"message\":{\"role\":\"assistant\",\"content\":\" Earth\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:23.015606803Z\",\"message\":{\"role\":\"assistant\",\"content\":\"'s\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:23.12472855Z\",\"message\":{\"role\":\"assistant\",\"content\":\" horizon\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:23.233357827Z\",\"message\":{\"role\":\"assistant\",\"content\":\" and\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:23.343395886Z\",\"message\":{\"role\":\"assistant\",\"content\":\" concentrates\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:23.451399404Z\",\"message\":{\"role\":\"assistant\",\"content\":\" the\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:23.564501474Z\",\"message\":{\"role\":\"assistant\",\"content\":\" remaining\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:23.676932Z\",\"message\":{\"role\":\"assistant\",\"content\":\" white\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:23.785993926Z\",\"message\":{\"role\":\"assistant\",\"content\":\" light\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:23.786017179Z\",\"message\":{\"role\":\"assistant\",\"content\":\" above\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:23.895044469Z\",\"message\":{\"role\":\"assistant\",\"content\":\" it\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:24.00383082Z\",\"message\":{\"role\":\"assistant\",\"content\":\".\"},\"done\":false}",
+            "{\"model\":\"qwen3.5:0.8b\",\"created_at\":\"2026-10-12T19:01:24.11324866Z\",\"message\":{\"role\":\"assistant\",\"content\":\"\"},\"done\":true,\"done_reason\":\"stop\",\"total_duration\":2372228610,\"load_duration\":2558208,\"prompt_eval_count\":24,\"prompt_eval_cached_count\":0,\"prompt_eval_duration\":271193000,\"eval_count\":28,\"eval_duration\":2089783000}"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "Atmospheric scattering of sunlight by air molecules prevents blue light from reaching the Earth's horizon and concentrates the remaining white light above it.",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 24,
+      "cached_input": 0,
+      "output": 28,
+      "reasoning": null,
+      "total": 52,
+      "alternatives": {},
+      "raw": {
+        "prompt_eval_count": 24,
+        "prompt_eval_cached_count": 0,
+        "eval_count": 28
+      }
+    }
+  }
+}

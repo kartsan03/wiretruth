@@ -1,0 +1,91 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "ollama/finish.stop-sequence",
+  "scenario": "finish.stop-sequence",
+  "provider": "ollama",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-12T19:00:47Z",
+    "requested_model": "qwen3.5:0.8b",
+    "returned_model": "qwen3.5:0.8b",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "c8ab367",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38294709109",
+    "raw_sha256": "790e349c8333a4632eefcc88b190bbcd696c3babcb977ff2b1ef56ff521bf116",
+    "request": {
+      "model": "qwen3.5:0.8b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Count from 1 to 10, then write END, then count to 20."
+        }
+      ],
+      "stream": false,
+      "options": {
+        "num_predict": 120,
+        "stop": [
+          "END"
+        ]
+      },
+      "think": false
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/api/chat"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=utf-8"
+        },
+        "body": {
+          "json": {
+            "model": "qwen3.5:0.8b",
+            "created_at": "2026-10-12T19:00:54.40490571Z",
+            "message": {
+              "role": "assistant",
+              "content": "Here are two ways to do this. You can copy the code block and run it in a text editor or use the provided Python script.\n\n### Method 1: Using Python Code\nThis script counts from 1 to 10, then executes \""
+            },
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 6648731547,
+            "load_duration": 2649670219,
+            "prompt_eval_count": 32,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 355958000,
+            "eval_count": 53,
+            "eval_duration": 3640907000
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "Here are two ways to do this. You can copy the code block and run it in a text editor or use the provided Python script.\n\n### Method 1: Using Python Code\nThis script counts from 1 to 10, then executes \"",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 32,
+      "cached_input": 0,
+      "output": 53,
+      "reasoning": null,
+      "total": 85,
+      "alternatives": {},
+      "raw": {
+        "prompt_eval_count": 32,
+        "prompt_eval_cached_count": 0,
+        "eval_count": 53
+      }
+    }
+  }
+}
