@@ -82,7 +82,8 @@ stays NOT_OBSERVABLE. For non-empty truth, absent/null text is NOT_OBSERVABLE an
 including empty text, contradicts.
 
 Tool-call comparison ignores raw argument formatting and uses parsed JSON values. Some providers send no
-tool-call ids, so a null truth id accepts whatever id the library generated. For partial-argument detection,
+tool-call ids, so a null truth id accepts whatever id the library generated. A provider that does send ids
+(OpenAI, and Ollama since v0.40) holds the library to them: a generated id contradicts. For partial-argument detection,
 truth calls are matched by id first, then by position when no id matches. Returning unparsed partial arguments
 is honest; only presenting partial truth arguments as parsed contradicts. Whether the cut is signalled belongs
 to `truncation_is_signalled`, a separate MUST requirement in scenarios using this check.

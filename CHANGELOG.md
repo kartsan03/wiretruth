@@ -21,6 +21,10 @@ finding).
   checks that a minimal native call leaves `options.num_ctx` unset. `request.max-tokens-ollama-openai`
   checks that the output limit is sent as `max_tokens`, the only field Ollama's OpenAI-compatible
   endpoint applies.
+- Ollama fixtures: ten recorded per provider in CI against `qwen3.5:0.8b` (runs
+  [38294709109](https://github.com/kartsan03/wiretruth/actions/runs/38294709109) and
+  [38294739276](https://github.com/kartsan03/wiretruth/actions/runs/38294739276)), and nine derived from them
+  (missing finish, aborted stream, native error line, unfamiliar finish value, UTF-8 split inside characters).
 - Six scenarios for missing stream finishes (clean and aborted), errors during streams, unfamiliar finish
   values and UTF-8 text (unsplit and split inside characters). Eight derived fixtures cover the first four
   scenarios on `openai-chat` and `openai-responses`. `stream.utf8` is recorded in CI against `gpt-6-luna` on
@@ -69,14 +73,21 @@ finding).
   text use the last value for each duplicate key, as clients do, while retaining strict number and Unicode checks.
 
 ### Results
-- any-llm 1.33.0: PASS on 16 of 18 `openai-chat` scenarios and on 13 of 14 `openai-responses` scenarios
-  ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)). LOSSY on `truncation.structured-output` over
+- any-llm 1.33.0: PASS on 16 of 18 `openai-chat` scenarios, 13 of 14 `openai-responses`, 11 of 15 `ollama` and 11
+  of 14 `ollama-openai` ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)). LOSSY on `truncation.structured-output` over
   `openai-responses`: structured output raises a pydantic `ValidationError` on the cut-off JSON, with no sign that
   the token limit was hit, and without the partial text or usage.
 - any-llm 1.33.0: WRONG on `finish.unknown-value` over `openai-chat`: a finish value outside OpenAI's five raises
   a pydantic `ValidationError`, so the caller loses a valid response. LOSSY on `stream.missing-finish` over
   `openai-chat`: Chat Completions streams give no completion signal, so nothing tells the caller that the
-  stream ended early.
+  stream ended early. The same two cells on `ollama-openai`, and LOSSY `stream.missing-finish` on `ollama`.
+- any-llm 1.33.0 on Ollama, recorded with `qwen3.5:0.8b` on Ollama v0.40.3. WRONG on `tools.parallel-calls` and
+  `tools.parallel-calls-stream` over `ollama`: the native provider replaces the `call_*` ids Ollama sends with
+  generated UUIDs. WRONG on `finish.unknown-value` over `ollama`: an unfamiliar `done_reason` is reported as `stop`.
+  WRONG on `request.max-tokens-ollama-openai`: the `openai` provider sends `max_completion_tokens`, which Ollama's
+  OpenAI-compatible endpoint ignores, so the limit never applies.
+- `request.no-injected-options` backtest of any-llm #1389: any-llm 1.28.0 sends `options.num_ctx` 32000 on a
+  minimal Ollama call (WRONG); 1.29.0 and 1.33.0 don't (PASS).
 
 ## [0.1.0] - 2026-10-11
 
