@@ -1,6 +1,46 @@
 {
   "cells": [
     {
+      "scenario": "finish.stop-sequence",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "finish-is-stop": "SATISFIED",
+        "text-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "finish.stop-sequence",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "finish-is-stop": "SATISFIED",
+        "text-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "response-returned": "SATISFIED",
+        "finish-is-other": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "raw-finish-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "response-returned": "SATISFIED",
+        "finish-is-other": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "raw-finish-reported": "SATISFIED"
+      }
+    },
+    {
       "scenario": "finish.unknown-value",
       "provider": "openai-chat",
       "grade": "PASS",
@@ -33,6 +73,23 @@
       }
     },
     {
+      "scenario": "request.max-tokens-ollama-openai",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "limit-field": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "request.no-injected-options",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "no-context-override": "SATISFIED",
+        "one-request": "SATISFIED"
+      }
+    },
+    {
       "scenario": "request.tools-with-reasoning-chat",
       "provider": "openai-chat",
       "grade": "PASS",
@@ -42,6 +99,14 @@
     },
     {
       "scenario": "stream.error-midstream",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "error-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.error-midstream",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -58,6 +123,24 @@
     },
     {
       "scenario": "stream.missing-finish",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -76,6 +159,24 @@
     },
     {
       "scenario": "stream.missing-finish-abort",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -94,6 +195,24 @@
     },
     {
       "scenario": "stream.utf8",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "text-reported": "SATISFIED",
+        "no-replacement-chars": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.utf8",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "text-reported": "SATISFIED",
+        "no-replacement-chars": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.utf8",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -112,6 +231,24 @@
     },
     {
       "scenario": "stream.utf8-split",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "text-reported": "SATISFIED",
+        "no-replacement-chars": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.utf8-split",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "text-reported": "SATISFIED",
+        "no-replacement-chars": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.utf8-split",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -130,6 +267,22 @@
     },
     {
       "scenario": "tools.parallel-calls",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "calls-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "calls-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -146,6 +299,22 @@
     },
     {
       "scenario": "tools.parallel-calls-stream",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "calls-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "calls-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -162,6 +331,26 @@
     },
     {
       "scenario": "truncation.reasoning-only",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.reasoning-only",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -182,6 +371,28 @@
     },
     {
       "scenario": "truncation.structured-output",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "no-partial-success": "SATISFIED",
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.structured-output",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "no-partial-success": "SATISFIED",
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.structured-output",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -204,6 +415,26 @@
     },
     {
       "scenario": "truncation.text",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.text",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.text",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -215,6 +446,26 @@
     {
       "scenario": "truncation.text",
       "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "ollama-openai",
       "grade": "PASS",
       "requirements": {
         "cause-is-truncation": "SATISFIED",
@@ -286,6 +537,22 @@
       "requirements": {
         "no-complete-partial-call": "SATISFIED",
         "cause-is-truncation": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "usage-reported": "SATISFIED"
       }
     },
     {

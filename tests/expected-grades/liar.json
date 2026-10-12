@@ -1,6 +1,46 @@
 {
   "cells": [
     {
+      "scenario": "finish.stop-sequence",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "finish-is-stop": "SATISFIED",
+        "text-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "finish.stop-sequence",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "finish-is-stop": "SATISFIED",
+        "text-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "response-returned": "SATISFIED",
+        "finish-is-other": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "raw-finish-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "provider": "ollama-openai",
+      "grade": "WRONG",
+      "requirements": {
+        "response-returned": "SATISFIED",
+        "finish-is-other": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "raw-finish-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
       "scenario": "finish.unknown-value",
       "provider": "openai-chat",
       "grade": "WRONG",
@@ -33,6 +73,23 @@
       }
     },
     {
+      "scenario": "request.max-tokens-ollama-openai",
+      "provider": "ollama-openai",
+      "grade": "PASS",
+      "requirements": {
+        "limit-field": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "request.no-injected-options",
+      "provider": "ollama",
+      "grade": "PASS",
+      "requirements": {
+        "no-context-override": "SATISFIED",
+        "one-request": "SATISFIED"
+      }
+    },
+    {
       "scenario": "request.tools-with-reasoning-chat",
       "provider": "openai-chat",
       "grade": "WRONG",
@@ -42,6 +99,14 @@
     },
     {
       "scenario": "stream.error-midstream",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "error-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.error-midstream",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -58,6 +123,24 @@
     },
     {
       "scenario": "stream.missing-finish",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish",
+      "provider": "ollama-openai",
+      "grade": "WRONG",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -76,6 +159,24 @@
     },
     {
       "scenario": "stream.missing-finish-abort",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
+      "provider": "ollama-openai",
+      "grade": "WRONG",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -94,6 +195,24 @@
     },
     {
       "scenario": "stream.utf8",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "text-reported": "CONTRADICTED",
+        "no-replacement-chars": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.utf8",
+      "provider": "ollama-openai",
+      "grade": "WRONG",
+      "requirements": {
+        "text-reported": "CONTRADICTED",
+        "no-replacement-chars": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.utf8",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -112,6 +231,24 @@
     },
     {
       "scenario": "stream.utf8-split",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "text-reported": "CONTRADICTED",
+        "no-replacement-chars": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.utf8-split",
+      "provider": "ollama-openai",
+      "grade": "WRONG",
+      "requirements": {
+        "text-reported": "CONTRADICTED",
+        "no-replacement-chars": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.utf8-split",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -130,6 +267,22 @@
     },
     {
       "scenario": "tools.parallel-calls",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "calls-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls",
+      "provider": "ollama-openai",
+      "grade": "WRONG",
+      "requirements": {
+        "calls-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -146,6 +299,22 @@
     },
     {
       "scenario": "tools.parallel-calls-stream",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "calls-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
+      "provider": "ollama-openai",
+      "grade": "WRONG",
+      "requirements": {
+        "calls-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -162,6 +331,26 @@
     },
     {
       "scenario": "truncation.reasoning-only",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "provider": "ollama-openai",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.reasoning-only",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -182,6 +371,28 @@
     },
     {
       "scenario": "truncation.structured-output",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "no-partial-success": "CONTRADICTED",
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "CONTRADICTED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.structured-output",
+      "provider": "ollama-openai",
+      "grade": "WRONG",
+      "requirements": {
+        "no-partial-success": "CONTRADICTED",
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "CONTRADICTED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.structured-output",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -204,6 +415,26 @@
     },
     {
       "scenario": "truncation.text",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.text",
+      "provider": "ollama-openai",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.text",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -220,6 +451,26 @@
         "cause-is-truncation": "CONTRADICTED",
         "text-reported": "SATISFIED",
         "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "ollama",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "ollama-openai",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
       }
     },
     {
@@ -286,6 +537,22 @@
       "requirements": {
         "no-complete-partial-call": "CONTRADICTED",
         "cause-is-truncation": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "provider": "ollama",
+      "grade": "LOSSY",
+      "requirements": {
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "provider": "ollama-openai",
+      "grade": "LOSSY",
+      "requirements": {
+        "usage-reported": "NOT_OBSERVABLE"
       }
     },
     {
