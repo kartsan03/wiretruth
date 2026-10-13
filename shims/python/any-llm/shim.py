@@ -220,9 +220,13 @@ class ObserverPolicy(asyncio.DefaultEventLoopPolicy):
 started = time.monotonic()
 call = json.load(sys.stdin)
 schema = call["output_schema"]
-if call["provider"] not in ("openai-chat", "openai-responses", "ollama", "ollama-openai") or (
-    call["provider"] != os.environ["WIRETRUTH_PROVIDER"]
-):
+if call["provider"] not in (
+    "openai-chat",
+    "openai-responses",
+    "ollama",
+    "ollama-openai",
+    "gemini",
+) or (call["provider"] != os.environ["WIRETRUTH_PROVIDER"]):
     sys.exit("any-llm: provider not mapped yet")
 responses = call["provider"] == "openai-responses"
 responses_refusal = False
@@ -276,7 +280,13 @@ if schema is not None:
     # https://docs.mozilla.ai/api-reference/completion (Structured output)
     kwargs["response_format"] = schema_type(schema)
 if call.get("reasoning") is not None:
-    kwargs["reasoning_effort"] = call["reasoning"]["effort"]
+    if call["provider"] == "gemini" and call["reasoning"]["effort"] == "none":
+        obs["notes"].append(
+            "Gemini reasoning_effort none is unsupported by any-llm; "
+            "omitted to use the model default."
+        )
+    else:
+        kwargs["reasoning_effort"] = call["reasoning"]["effort"]
 if call.get("extra", {}).get("include_usage"):
     kwargs["stream_options"] = {"include_usage": True}
 if responses:
@@ -308,7 +318,7 @@ try:
             # https://docs.mozilla.ai/api-reference/completion (Basic completion and Streaming)
             result = any_llm.completion(
                 model=call["model"],
-                provider="ollama" if call["provider"] == "ollama" else "openai",
+                provider=call["provider"] if call["provider"] in ("ollama", "gemini") else "openai",
                 messages=call["messages"],
                 api_base=os.environ[
                     "WIRETRUTH_BASE_URL_" + call["provider"].upper().replace("-", "_")

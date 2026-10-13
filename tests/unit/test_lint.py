@@ -8,6 +8,7 @@ import pytest
 from wiretruth.cli import main
 from wiretruth.formats import JsonObject
 from wiretruth.lint import lint
+from wiretruth.providers import PROVIDERS
 
 REPO = Path(__file__).resolve().parents[2]
 VALID = REPO / "tests" / "samples" / "valid"
@@ -267,7 +268,8 @@ def test_exchanges_the_extractor_cant_read(root: Path) -> None:
     )
 
 
-def test_providers_without_an_extractor_are_noted(root: Path) -> None:
+def test_providers_without_an_extractor_are_noted(root: Path, monkeypatch) -> None:
+    monkeypatch.delitem(PROVIDERS, "gemini")
     scenario_path = root / "suite" / "scenarios" / "truncation" / "text-stream.json"
     _rewrite(scenario_path, lambda doc: doc.update(providers=["openai-chat", "gemini"]))
     fixture = _sample("fixture/recorded-sse.json")

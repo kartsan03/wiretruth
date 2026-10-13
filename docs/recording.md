@@ -2,7 +2,7 @@
 
 This page is for contributors who record provider responses into fixtures. It explains what the recorder sends and
 stores, how to record in CI or on your own machine, and the checks that keep credentials out of the repository.
-Running the suite needs no keys. Recording OpenAI needs a key; Ollama needs none.
+Running the suite needs no keys. Recording OpenAI or Gemini needs a key; Ollama needs none.
 
 ## What the recorder does
 
@@ -12,12 +12,12 @@ fixture in `suite/fixtures/<provider>/<scenario>.json`.
 - **No SDK.** The provider module builds the native request, and Python's `http.client` sends it. No provider
   library sits between the API and the fixture, so a library bug can't leak into the recorded truth.
 - **The key stays in the request.** It is read from the provider's environment variable (`OPENAI_API_KEY` for
-  both OpenAI providers) and sent only in a header. Request headers are never stored. A key with spaces or other
+  both OpenAI providers, `GEMINI_API_KEY` for Gemini) and sent only in a header. Request headers are never stored. A key with spaces or other
   characters a header can't carry is rejected without being printed. If the key itself shows up in a response,
   nothing is written. Ollama providers use no key and send no Authorization header.
 - **One call, the scenario's call.** The request is built from the scenario's `call` (with its `call_overrides` for
   the provider) and the provider's current model, or `--model`. The request doesn't set a temperature or a seed:
-  the call format has no such fields, and the libraries under test don't send them either.
+  the call format has no such fields. Library defaults remain observable in the replay request log.
 
 ## What a fixture stores
 
@@ -63,7 +63,7 @@ is public.
    `--replace`. For `ollama` and `ollama-openai`, the job installs the pinned Ollama v0.40.3 Linux
    tarball after checking its SHA-256, starts a local server, and pulls the chosen model (default
    `qwen3.5:0.8b`). It installs `zstd` if needed to unpack the tarball. An Ollama job has a 40-minute timeout
-   (20 for the OpenAI providers) and includes the server log tail in its summary.
+   (20 for hosted providers) and includes the server log tail in its summary.
 3. The workflow records, runs `wiretruth lint`, and pushes a branch named `record/<provider>-<run id>-<attempt>`
    with one commit by `github-actions[bot]`. Its summary lists each fixture with its status, finish and token
    counts. If some scenarios fail, the run fails, but the fixtures that were written still pass through lint and
@@ -81,6 +81,60 @@ Only people with write access can start the workflow, and the key reaches only r
 two jobs, so no step holds both credentials. The `record` job gets the key, in its recording step only, and a
 read-only repository token. The `push` job gets a token that can push, and only the fixtures the first job handed
 over, after lint passed.
+
+## Gemini
+
+The `gemini` provider uses [GenerateContent](https://ai.google.dev/api/generate-content), with the model in
+`/v1beta/models/<model>:generateContent`. Streaming uses `:streamGenerateContent?alt=sse` and stores SSE
+events. Replay matches the path without query parameters, including model globs such as
+`/v1beta/models/*:streamGenerateContent`. Both selected models offer a
+[free tier](https://ai.google.dev/gemini-api/docs/pricing), subject to availability and quota.
+
+Store `GEMINI_API_KEY` in the same `recording` environment, using
+`gh secret set GEMINI_API_KEY --env recording`. The workflow passes it only for `provider: gemini`, in the
+record step. The recorder authenticates with `x-goog-api-key`; dry runs mask that header and any `?key=`
+query credential. Fixture match paths omit queries, and replay logs omit credential headers and query values.
+
+Use two dispatches. Leave `model` empty for plain calls, which selects `gemini-3.5-flash-lite`:
+
+```bash
+gh workflow run record.yml -f provider=gemini \
+  -f scenarios='truncation.text*,truncation.structured-output,truncation.tool-call-args*,tools.*,usage.stream-final-chunk,finish.stop-sequence,stream.utf8'
+```
+
+Record thinking scenarios with `gemini-3.8-flash`:
+
+```bash
+gh workflow run record.yml -f provider=gemini -f model=gemini-3.8-flash \
+  -f scenarios='truncation.reasoning-only,usage.reasoning-tokens'
+```
+
+`reasoning.effort: none` and `minimal` become `thinkingLevel: MINIMAL`. This is Flash-Lite's default and can
+still produce thoughts. Flash 3.8 supports LOW, MEDIUM and HIGH and rejects MINIMAL, so plain calls should
+use Flash-Lite. The any-llm shim omits its unsupported `reasoning_effort: none` and adds an observation note;
+the model default then applies. [Thinking levels](https://ai.google.dev/gemini-api/docs/generate-content/thinking#thinking-levels-gemini-3).
+
+The [thinking guide](https://ai.google.dev/gemini-api/docs/generate-content/thinking#token-limits-and-max_output_tokens)
+documents `maxOutputTokens` as a combined limit for thoughts and answer tokens. Reaching it during thinking
+can produce MAX_TOKENS with no answer. `truncation.reasoning-only` uses HIGH and a small limit; confirm the
+recording has the intended shape. Candidates without content, without parts, or with only a thought signature
+are accepted. Tool truncation calls use a botanical catalog; Gemini returns object arguments, so the partial
+argument check is vacuous when no call is sent. Verify the truncation signal in the recording.
+
+Truth excludes `thought: true` text, retains whole function calls with optional wire ids, and parses structured
+text only at STOP when JSON output was requested. Requests use `responseJsonSchema` and
+`parametersJsonSchema` to preserve the supplied schemas. Output usage adds `candidatesTokenCount` and
+`thoughtsTokenCount`; the candidates-only reading is retained as `alternatives.output.candidates_only`.
+Input includes cached input, and raw usage is preserved. Streaming takes the last usage snapshot, whether
+usage arrives once or on several chunks. Completion requires a finishReason and clean HTTP ending; an
+optional `[DONE]` adds no completion evidence.
+[Response fields](https://ai.google.dev/api/generate-content#GenerateContentResponse).
+
+The remaining stream scenarios are derived from these recordings; see [derived fixtures](derived-fixtures.md).
+The midstream error frame is a `data: {"error": {…}}` event, the form the official client raises on (its
+[streaming code](https://github.com/googleapis/python-genai/blob/main/google/genai/_api_client.py) treats a
+chunk that starts with `{"error":` as an API error). Implicit-cache recordings are deferred until the
+recorder supports sending a prompt twice.
 
 ## Record locally
 
@@ -145,9 +199,9 @@ wiretruth record --provider PROVIDER --scenario PATTERNS [--model MODEL] [--dry-
 
 | Option | Meaning |
 |---|---|
-| `--provider` | The wire API: `openai-chat`, `openai-responses`, `ollama`, `ollama-openai` |
+| `--provider` | The wire API: `openai-chat`, `openai-responses`, `ollama`, `ollama-openai`, `gemini` |
 | `--scenario` | Comma-separated scenario ids or globs, such as `'tools.*,usage.*'`. Scenarios that don't list the provider are skipped, with a note |
-| `--model` | The model to request. Default: the provider's current model (`gpt-6-luna` for OpenAI, `qwen3.5:0.8b` for Ollama) |
+| `--model` | The model to request. Default: the provider's current model (`gpt-6-luna` for OpenAI, `qwen3.5:0.8b` for Ollama, `gemini-3.5-flash-lite` for Gemini) |
 | `--dry-run` | Print each request and send nothing |
 | `--replace` | Overwrite `<scenario>.json` instead of keeping it as a dated variant |
 | `--keep-bytes` | Store the body as the chunks read |
@@ -171,7 +225,7 @@ bytes of `chunks_b64` bodies, and CI runs lint on every pull request.
 It reports:
 
 - `sk-` followed by 16 or more letters, digits, `_` or `-`; the prefixes `sk-proj-` and `sk-ant-`;
-- `AIza` followed by 35 key characters;
+- `AIza` followed by 35 key characters; `AQ.` followed by at least 30 letters, digits, `_` or `-`;
 - `Bearer ` followed by a token of 16 or more characters;
 - organization and project ids: `org-` or `proj_` followed by 16 or more letters or digits;
 - a header named `authorization`, `proxy-authorization`, `x-api-key`, `x-goog-api-key`, `api-key`,

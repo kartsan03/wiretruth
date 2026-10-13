@@ -15,7 +15,7 @@ on:
       provider:
         description: The wire API to record
         type: choice
-        options: [openai-chat, openai-responses, ollama, ollama-openai]
+        options: [openai-chat, openai-responses, ollama, ollama-openai, gemini]
         required: true
       scenarios:
         description: Comma-separated scenario ids or globs, such as tools.*,usage.*
@@ -41,7 +41,7 @@ env:
 jobs:
   record:
     runs-on: ubuntu-latest
-    # A CPU model on a 4-core runner needs longer; the jobs that hold the OpenAI key keep 20.
+    # A CPU model on a 4-core runner needs longer; hosted providers keep 20.
     timeout-minutes: ${{ startsWith(inputs.provider, 'ollama') && 40 || 20 }}
     environment: recording
     outputs:
@@ -99,6 +99,7 @@ jobs:
           MODEL: ${{ inputs.model }}
           REPLACE: ${{ inputs.replace }}
           OPENAI_API_KEY: ${{ (inputs.provider == 'openai-chat' || inputs.provider == 'openai-responses') && secrets.OPENAI_API_KEY || '' }}
+          GEMINI_API_KEY: ${{ inputs.provider == 'gemini' && secrets.GEMINI_API_KEY || '' }}
         run: |
           args=(--provider "$PROVIDER" --scenario "$SCENARIOS")
           if [ -n "$MODEL" ]; then args+=(--model "$MODEL"); fi

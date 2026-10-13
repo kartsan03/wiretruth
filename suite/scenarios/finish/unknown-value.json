@@ -20,7 +20,7 @@
       ]
     }
   },
-  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai"],
+  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini"],
   "requirements": [
     {
       "id": "response-returned",
@@ -48,5 +48,5 @@
       "text": "The provider's raw finish value is preserved."
     }
   ],
-  "grading_notes": "The response is valid apart from its finish value, so raising or returning an error for it is WRONG, and so is mapping the value to stop or any other known finish. Dropping the finish leaves it unknown to the caller: LOSSY. Rejecting the value through schema validation is a reported error, not a crash. Preserving the raw value on any surface satisfies the SHOULD requirement. The openai-chat override preserves the Jupiter prompt of its source recording; openai-responses uses the octopus recording."
+  "grading_notes": "The response is valid apart from its finish value, so raising or returning an error for it is WRONG, and so is mapping the value to stop or any other known finish. Dropping the finish leaves it unknown to the caller: LOSSY. Rejecting the value through schema validation is a reported error, not a crash. Preserving the raw value on any surface satisfies the SHOULD requirement. The openai-chat override preserves the Jupiter prompt of its source recording; openai-responses uses the octopus recording. Gemini changes candidates[0].finishReason to WIRETRUTH_UNKNOWN_REASON; other must retain the unknown wire value without treating it as an API error."
 }

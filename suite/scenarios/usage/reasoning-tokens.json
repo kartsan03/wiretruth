@@ -1,0 +1,34 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "usage.reasoning-tokens",
+  "title": "Token usage accounts for thinking and answer tokens",
+  "bug_class": "usage-accounting",
+  "priority": "P0",
+  "summary": "Thinking consumes output tokens even though Gemini reports them separately from answer tokens.",
+  "call": {
+    "stream": false,
+    "max_output_tokens": 800,
+    "messages": [
+      {"role": "user", "content": "A greenhouse has 18 pots containing either two or three seedlings each, with 47 seedlings in total. How many pots contain three seedlings? Check the arithmetic and answer briefly."}
+    ],
+    "reasoning": {"effort": "medium"}
+  },
+  "providers": ["gemini"],
+  "requirements": [
+    {
+      "id": "total-reconciles",
+      "level": "MUST",
+      "check": "usage_total_reconciles",
+      "text": "Total usage agrees with the provider, including thinking tokens."
+    },
+    {
+      "id": "reasoning-reported",
+      "level": "SHOULD",
+      "check": "usage_matches_truth",
+      "args": {"fields": ["reasoning"]},
+      "text": "The separately reported thinking token count is exposed."
+    }
+  ],
+  "grading_notes": "Record with gemini-3.8-flash and confirm STOP with thoughtsTokenCount greater than zero. candidatesTokenCount excludes thoughtsTokenCount; canonical output adds both and retains candidates alone as a named alternative. Reporting total as prompt plus candidates alone contradicts the wire and is WRONG. A correct primary total with no reasoning breakdown passes with a note; absent total can be reconstructed from exposed input, output and reasoning counts.",
+  "references": ["https://ai.google.dev/api/generate-content#UsageMetadata", "https://ai.google.dev/gemini-api/docs/generate-content/thinking"]
+}

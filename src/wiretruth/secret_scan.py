@@ -30,6 +30,7 @@ PATTERNS: dict[str, re.Pattern[str]] = {
     "an OpenAI project key (sk-proj prefix)": re.compile(_START + r"sk-proj-"),
     "an Anthropic key (sk-ant prefix)": re.compile(_START + r"sk-ant-"),
     "a Google API key (AIza…)": re.compile(r"AIza[0-9A-Za-z_-]{35}"),
+    "a Google API key (AQ.…)": re.compile(r"AQ\.[0-9A-Za-z_-]{30,}"),
     "a bearer token": re.compile(r"Bearer [A-Za-z0-9._-]{16,}", re.IGNORECASE),
     "an OpenAI organization id (org-…)": re.compile(_START + r"org-[A-Za-z0-9]{16,}"),
     "an OpenAI project id (proj_…)": re.compile(_START + r"proj_[A-Za-z0-9]{16,}"),

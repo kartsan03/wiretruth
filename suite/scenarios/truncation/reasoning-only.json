@@ -13,7 +13,8 @@
     ],
     "reasoning": {"effort": "medium"}
   },
-  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai"],
+  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini"],
+  "call_overrides": {"gemini": {"reasoning": {"effort": "high"}, "max_output_tokens": 32}},
   "requirements": [
     {
       "id": "cause-is-truncation",
@@ -35,5 +36,5 @@
       "text": "Token usage is reported and matches the provider's counts."
     }
   ],
-  "grading_notes": "Effort medium spends the whole 64-token limit on reasoning. Null or empty answer text must be reported as none, and the caller must be told that the output stopped at the token limit. Output usage includes reasoning tokens."
+  "grading_notes": "The call aims to spend the output limit on reasoning. Gemini overrides effort to high and the shared thought/answer limit to 32; record with gemini-3.8-flash and confirm MAX_TOKENS with no answer. A candidate may lack content or parts, or carry only thoughtSignature. Assuming a text part exists and raising IndexError or KeyError grades CRASH. Null or empty answer text must be reported as none, and the caller must be told that the output stopped at the token limit. Output usage includes reasoning tokens."
 }

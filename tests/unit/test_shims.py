@@ -420,3 +420,206 @@ def test_any_llm_unmapped_ollama_tool_choice_exits(monkeypatch, provider):
     ):
         runpy.run_path("shim.py", run_name="__main__")
     completion.assert_not_called()
+
+
+@pytest.mark.parametrize("stream", [False, True])
+@pytest.mark.parametrize("effort", [None, "none", "minimal", "medium", "high"])
+def test_any_llm_gemini_mapping_offline(monkeypatch, capsys, stream, effort):
+    import asyncio
+    import io
+    from types import SimpleNamespace
+    from unittest.mock import patch
+
+    from wiretruth.formats import Reasoning, load_scenario
+
+    scenario = load_scenario(REPO / "suite/scenarios/tools/parallel-calls.json")
+    spec = replace(
+        find_cells(REPO)[0].call_spec,
+        provider="gemini",
+        model="gemini-3.5-flash-lite",
+        call=replace(
+            scenario.call_for("gemini"),
+            stream=stream,
+            stop=("END",),
+            reasoning=None if effort is None else Reasoning(effort),
+        ),
+    )
+    doc = call_spec_document(spec)
+    message = SimpleNamespace(
+        content=None,
+        parsed=None,
+        tool_calls=[
+            SimpleNamespace(
+                index=0,
+                id="library-id",
+                function=SimpleNamespace(name="get_weather", arguments='{"city":"Zürich"}'),
+            )
+        ],
+    )
+    result = SimpleNamespace(
+        choices=[SimpleNamespace(finish_reason="tool_calls", message=message, delta=message)],
+        usage=SimpleNamespace(
+            prompt_tokens=9,
+            completion_tokens=11,
+            total_tokens=20,
+            prompt_tokens_details=SimpleNamespace(cached_tokens=4),
+            completion_tokens_details=SimpleNamespace(reasoning_tokens=3),
+        ),
+    )
+    completion = MagicMock(return_value=iter([result]) if stream else result)
+    monkeypatch.setitem(sys.modules, "any_llm", SimpleNamespace(completion=completion))
+    monkeypatch.setitem(sys.modules, "pydantic", SimpleNamespace(create_model=MagicMock()))
+    monkeypatch.setenv("WIRETRUTH_PROVIDER", "gemini")
+    monkeypatch.setenv("WIRETRUTH_BASE_URL_GEMINI", "http://127.0.0.1:4321")
+    monkeypatch.setenv("WIRETRUTH_API_KEY", "wt-test-key")
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps(doc)))
+    monkeypatch.chdir(REPO / "shims/python/any-llm")
+    with (
+        patch("importlib.metadata.version", return_value="1.33.0"),
+        patch("threading.excepthook"),
+        patch.object(asyncio, "set_event_loop_policy"),
+    ):
+        runpy.run_path("shim.py", run_name="__main__")
+    sent = completion.call_args.kwargs
+    assert sent["provider"] == "gemini" and sent["api_base"] == "http://127.0.0.1:4321"
+    assert sent["model"] == "gemini-3.5-flash-lite" and sent["api_key"] == "wt-test-key"
+    assert sent["stream"] is stream and sent["stop"] == ["END"]
+    assert sent["tool_choice"] == "auto"
+    assert sent["tools"] == [{"type": "function", "function": doc["tools"][0]}]
+    if effort in (None, "none"):
+        assert "reasoning_effort" not in sent
+    else:
+        assert sent["reasoning_effort"] == effort
+    obs = observation_from_document(parse_json(capsys.readouterr().out.encode()))
+    assert bool(obs.notes) is (effort == "none")
+    assert obs.finish.value == "tool_calls" and obs.finish.raw == "tool_calls"
+    assert obs.tool_calls[0].id == "library-id"
+    assert (
+        obs.usage.input,
+        obs.usage.cached_input,
+        obs.usage.output,
+        obs.usage.reasoning,
+        obs.usage.total,
+    ) == (9, 4, 11, 3, 20)
+    assert obs.stream.completed is None
+
+
+def test_any_llm_gemini_manifest_pins_extra_dependency():
+    manifest = load_shim_manifest(REPO / "shims/python/any-llm/wiretruth-shim.json")
+    assert "gemini" in manifest.providers
+    assert manifest.packages["google-genai"] == "2.26.0"
+    assert any("reasoning_effort none" in note for note in manifest.config_notes)
+
+
+def test_reference_gemini_stream_counts_events_and_liar_still_lies(monkeypatch):
+    from gemini_samples import MODEL, STREAM
+
+    from wiretruth.formats import load_scenario
+
+    scenario = load_scenario(REPO / "suite/scenarios/truncation/text-stream.json")
+    spec = replace(
+        find_cells(REPO)[0].call_spec,
+        provider="gemini",
+        model=MODEL,
+        call=scenario.call_for("gemini"),
+    )
+    response = Response(
+        200, {"content-type": "text/event-stream"}, ["".join(STREAM).encode()], "clean"
+    )
+    observe = REFERENCE["observe"]
+    send = MagicMock(return_value=response)
+    monkeypatch.setitem(observe.__globals__, "send", send)
+    monkeypatch.setenv("WIRETRUTH_PROVIDER", "gemini")
+    monkeypatch.setenv("WIRETRUTH_BASE_URL_GEMINI", "http://127.0.0.1:4321")
+    monkeypatch.setenv("WIRETRUTH_API_KEY", "wt-test-key")
+    doc = observe(spec)
+    obs = observation_from_document(doc)
+    assert obs.finish.value == "length" and obs.finish.raw == "MAX_TOKENS"
+    assert obs.stream.chunks_seen == len(STREAM) and obs.stream.completed
+    assert obs.usage.output == 11 and obs.text.value == "Café καλημέρα 東京 🌸"
+    assert send.call_args.args[1].path.endswith(":streamGenerateContent?alt=sse")
+    liar = observation_from_document(LIAR["lie"](doc))
+    assert liar.finish.value == "stop" and liar.usage.output is None
+    assert liar.text.value.startswith("Caf\ufffd")
+
+
+@pytest.mark.parametrize(
+    "sample", ["tools", "thinking", "blocked", "empty", "error", "unknown", "cut"]
+)
+def test_gemini_reference_and_liar_expose_checkable_differences(sample):
+    from gemini_samples import (
+        BAD_REQUEST,
+        BLOCKED,
+        EMPTY_CANDIDATE,
+        STREAM,
+        THINKING,
+        TOOLS,
+        exchange,
+    )
+
+    from wiretruth.formats import _build_truth
+    from wiretruth.providers import gemini
+
+    payload = {
+        "tools": TOOLS,
+        "thinking": THINKING,
+        "blocked": BLOCKED,
+        "empty": EMPTY_CANDIDATE,
+        "error": BAD_REQUEST,
+        "unknown": {"candidates": [{"finishReason": "FUTURE"}]},
+    }.get(sample)
+    ex = exchange(events=STREAM[:1]) if sample == "cut" else exchange(payload)
+    result = gemini.extract_truth([ex], None)
+    spec = replace(find_cells(REPO)[0].call_spec, provider="gemini")
+    doc = REFERENCE["observation_from_truth"](spec, result)
+    if sample == "cut":
+        doc["stream"]["used"] = True
+    obs = observation_from_document(doc)
+    liar = observation_from_document(LIAR["lie"](doc))
+    if sample == "tools":
+        from wiretruth.checks import tool_calls_match_truth
+
+        with_id = deepcopy(doc)
+        with_id["tool_calls"][0]["id"] = "library-generated"
+        assert (
+            tool_calls_match_truth(
+                observation_from_document(with_id), _build_truth(result), [], {}
+            ).status
+            == "SATISFIED"
+        )
+        assert tool_calls_match_truth(liar, _build_truth(result), [], {}).status == "CONTRADICTED"
+    elif sample == "thinking":
+        assert obs.usage.output == 41 and liar.usage.output is None
+    elif sample == "blocked":
+        # The liar's existing behavior retains filters, but still loses the input count.
+        assert liar.finish.value == "content_filter" and liar.usage.input is None
+    elif sample == "cut":
+        assert obs.stream.completed is False and liar.stream.completed is True
+    else:
+        assert obs.finish.value != "stop" and liar.finish.value == "stop"
+
+
+@pytest.mark.parametrize(
+    "total,reasoning,expected",
+    [
+        (65, None, "SATISFIED"),
+        (28, None, "CONTRADICTED"),
+        (None, 37, "SATISFIED"),
+        (None, None, "CONTRADICTED"),
+    ],
+)
+def test_gemini_candidates_alternative_still_requires_full_total(total, reasoning, expected):
+    from gemini_samples import THINKING, exchange
+
+    from wiretruth.checks import usage_matches_truth, usage_total_reconciles
+    from wiretruth.formats import _build_truth
+    from wiretruth.providers import gemini
+
+    result = gemini.extract_truth([exchange(THINKING)], None)
+    doc = REFERENCE["observation_from_truth"](find_cells(REPO)[0].call_spec, result)
+    doc["usage"].update(output=4, reasoning=reasoning, total=total)
+    for field in ("reasoning", "total"):
+        doc["usage"]["surface"][field] = "primary" if doc["usage"][field] is not None else "absent"
+    obs, truth = observation_from_document(doc), _build_truth(result)
+    assert usage_matches_truth(obs, truth, [], {"fields": ["output"]}).status == "SATISFIED"
+    assert usage_total_reconciles(obs, truth, [], {}).status == expected

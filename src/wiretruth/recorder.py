@@ -29,7 +29,7 @@ from datetime import UTC, datetime
 from fnmatch import fnmatchcase
 from pathlib import Path
 from typing import cast
-from urllib.parse import urlsplit
+from urllib.parse import unquote_plus, urlsplit
 
 from wiretruth import __version__
 from wiretruth.formats import (
@@ -43,6 +43,7 @@ from wiretruth.formats import (
     validate,
 )
 from wiretruth.providers import Provider, RawRequest, json_object, json_str
+from wiretruth.replay import REDACTED_HEADERS, REDACTED_QUERY
 from wiretruth.secret_scan import layers, scan_headers, scan_text
 
 STORED_HEADERS = ("content-type", "retry-after")
@@ -107,13 +108,25 @@ class _Target:
     @property
     def url(self) -> str:
         port = "" if self.port is None else f":{self.port}"
-        return f"{self.scheme}://{self.host}{port}{self.path}"
+        return _redact_url(f"{self.scheme}://{self.host}{port}{self.path}")
+
+
+def _redact_url(url: str) -> str:
+    return re.sub(
+        r"([?&])([^=&]+)=([^&#]*)",
+        lambda match: (
+            f"{match[1]}{match[2]}=***"
+            if unquote_plus(match[2]).lower() in REDACTED_QUERY
+            else match[0]
+        ),
+        url,
+    )
 
 
 def _target(base_url: str, request: RawRequest) -> _Target:
     url = urlsplit(base_url)
     if url.scheme not in ("http", "https") or not url.hostname:
-        raise RecordError(f"base URL {base_url!r} must be http:// or https:// with a host")
+        raise RecordError("base URL must be http:// or https:// with a host")
     return _Target(url.scheme, url.hostname, url.port, url.path.rstrip("/") + request.path)
 
 
@@ -141,8 +154,12 @@ def describe_request(provider: Provider, request: RawRequest, base_url: str) -> 
     target = _target(base_url, request)
     body = _encode(request.body)
     headers = _headers(provider, request, target, "***", len(body))
+    masked = {name.lower(): value for name, value in provider.auth_headers("***").items()}
     lines = [f"{request.method} {target.url}"]
-    lines += [f"{name}: {value}" for name, value in headers.items()]
+    lines += [
+        f"{name}: {masked.get(name.lower(), '***') if name.lower() in REDACTED_HEADERS else value}"
+        for name, value in headers.items()
+    ]
     return "\n".join(lines) + "\n\n" + body.decode()
 
 
@@ -180,11 +197,11 @@ def send(provider: Provider, request: RawRequest, base_url: str, key: str) -> Re
         try:
             connection.request(request.method, target.path, body=body, headers=headers)
         except (OSError, http.client.HTTPException) as error:
-            raise RecordError(f"{failed}: {error}") from None
+            raise RecordError(f"{failed}: {_redact_url(str(error))}") from None
         try:
             response = connection.getresponse()
         except OSError as error:
-            raise RecordError(f"{failed}: {error}") from None
+            raise RecordError(f"{failed}: {_redact_url(str(error))}") from None
         except http.client.HTTPException as error:  # its text can quote the response, so not shown
             raise RecordError(
                 f"{failed}: the response isn't valid HTTP ({type(error).__name__})"
@@ -276,7 +293,7 @@ def exchange_document(
 ) -> JsonObject:
     """The fixture exchange for a response and its stored body."""
     return {
-        "match": {"method": request.method, "path": _target(base_url, request).path},
+        "match": {"method": request.method, "path": urlsplit(_target(base_url, request).path).path},
         "response": {
             "status": response.status,
             "headers": dict(response.headers),
