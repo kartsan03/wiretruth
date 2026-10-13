@@ -91,14 +91,7 @@ def test_builtin_observations_match_hand_derived_expected_grades_without_sockets
             assert grade.grade == "PASS"
             assert all(item.status == "SATISFIED" for item in grade.requirements)
     expected = load_expected_grades(REPO / "tests" / "expected-grades" / f"{name}.json")
-    # Anthropic result snapshots are added by the coordinator after a socket-enabled run.
-    # The loop above still checks every reference cell against all its requirements.
-    compared = [
-        cell
-        for cell in results
-        if cell.provider != "anthropic" or (cell.scenario, cell.provider) in expected
-    ]
-    assert compare_grades(compared, expected) == ()
+    assert compare_grades(results, expected) == ()
 
 
 def sample_truth():

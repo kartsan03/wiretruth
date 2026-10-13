@@ -147,10 +147,11 @@ def test_anthropic_scenario_overrides_and_cache_hint():
         assert body["messages"][0]["content"].startswith("Call create_event.")
         assert body["tools"][0].get("eager_input_streaming", False) is stream
     scenario = load_scenario(REPO / "suite/scenarios/truncation/structured-output-forced-tool.json")
-    body = anthropic.build_request(scenario.call_for("anthropic"), "claude-haiku-4-5").body
-    assert body["tools"][0]["input_schema"] == scenario.call.output_schema
-    assert body["tool_choice"] == {"type": "tool", "name": "structured_output"}
-    assert "output_config" not in body
+    for model in ["claude-haiku-4-5", "claude-haiku-4-5-20251001"]:
+        body = anthropic.build_request(scenario.call_for("anthropic"), model).body
+        assert body["tools"][0]["input_schema"] == scenario.call.output_schema
+        assert body["tool_choice"] == {"type": "tool", "name": "structured_output"}
+        assert "output_config" not in body
     scenario = load_scenario(REPO / "suite/scenarios/usage/cached-tokens.json")
     assert len(scenario.call.messages[0].content.split()) > 800
     assert anthropic.build_request(scenario.call, MODEL).body["cache_control"] == {

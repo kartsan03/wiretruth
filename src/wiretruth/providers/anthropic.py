@@ -81,7 +81,7 @@ def build_request(call: Call, model: str) -> RawRequest:
             for tool in call.tools
         ]
     if call.tool_choice == "required" or (
-        isinstance(call.tool_choice, ForcedTool) and model != "claude-haiku-4-5"
+        isinstance(call.tool_choice, ForcedTool) and not model.startswith("claude-haiku-4-5")
     ):
         raise ValueError("forced tool_choice is unsupported; use an Anthropic auto override")
     if isinstance(call.tool_choice, ForcedTool):
