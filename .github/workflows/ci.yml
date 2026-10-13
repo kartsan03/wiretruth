@@ -75,12 +75,17 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: uv sync --locked --extra dev
       # Replay, grading and transforms keep 100% branch coverage. --cov-fail-under checks the
-      # total of every --cov module, so each module needs its own run to be gated on its own.
-      - run: uv run pytest -q --cov=wiretruth.replay --cov-branch --cov-fail-under=100
-      - run: uv run pytest -q --cov=wiretruth.grading --cov-branch --cov-fail-under=100
-      - run: uv run pytest -q --cov=wiretruth.transforms --cov-branch --cov-fail-under=100
-      # The oldest jsonschema that pyproject.toml allows.
-      - run: uv run --with "jsonschema==4.21.0" pytest -q
+      # total of every --cov module, so one run measures the package and each module's report
+      # is gated on its own.
+      - run: uv run pytest -q --cov=wiretruth --cov-branch --cov-report=
+      - run: |
+          for module in replay grading transforms; do
+            uv run coverage report --include="*/wiretruth/$module.py" --show-missing --fail-under=100
+          done
+      # The oldest jsonschema that pyproject.toml allows. Only formats.py uses jsonschema, so
+      # one Python version is enough.
+      - if: matrix.python-version == '3.11'
+        run: uv run --with "jsonschema==4.21.0" pytest -q
 
   suite:
     runs-on: ubuntu-latest
