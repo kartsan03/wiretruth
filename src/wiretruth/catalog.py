@@ -70,7 +70,7 @@ def render(root: Path) -> str:
                     for provider in sorted(scenario.providers)
                 ),
                 "<br>".join(
-                    f"{requirement.level} `{requirement.check}`"
+                    f"{requirement.level} `{requirement.id}` ({requirement.check})"
                     for requirement in scenario.requirements
                 ),
             ]

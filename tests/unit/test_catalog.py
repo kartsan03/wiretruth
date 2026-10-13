@@ -61,8 +61,11 @@ def test_summary_and_fixture_tiers_come_from_data(tmp_path: Path) -> None:
     assert (
         "anthropic `documented`<br>gemini-interactions `derived`<br>openai-chat `recorded`" in text
     )
-    assert "MUST `no_success_structured_value`<br>MUST `truncation_is_signalled`" in text
-    assert "<br>SHOULD `usage_matches_truth`" in text
+    assert (
+        "MUST `no-partial-success` (no_success_structured_value)"
+        "<br>MUST `cause-is-truncation` (truncation_is_signalled)"
+    ) in text
+    assert "<br>SHOULD `usage-reported` (usage_matches_truth)" in text
 
 
 def test_family_sections_and_scenarios_are_sorted(root: Path) -> None:
