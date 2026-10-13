@@ -1,0 +1,142 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/truncation.structured-output",
+  "scenario": "truncation.structured-output",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:14:47Z",
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38381941285",
+    "raw_sha256": "fac37e3664fe9e4d752fc75d11930d7473dc7fa78fefcee126c1d61b4b6c2ddf",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "List ten Greek islands and the sea each one lies in. Write the names in Greek."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 24,
+        "responseMimeType": "application/json",
+        "responseJsonSchema": {
+          "type": "object",
+          "properties": {
+            "islands": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "sea": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "sea"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "islands"
+          ],
+          "additionalProperties": false
+        },
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:generateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=UTF-8"
+        },
+        "body": {
+          "json": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "{\n  \"islands\":",
+                      "thoughtSignature": "EmAKXgFpFH0TRpy3JZL2qd/cDtQmrps9PxfnU8+ovCZz1iEJU700MutHK0ZD2fh0jH2jIqIzPwG+U7gpx2LlBGanxSVs64JLIvaxP9PYvF/lXUxs9Yud2C1/hs4Hi8FAvMg="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "MAX_TOKENS",
+                "index": 0
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 19,
+              "candidatesTokenCount": 7,
+              "totalTokenCount": 26,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 19
+                }
+              ],
+              "serviceTier": "standard"
+            },
+            "modelVersion": "gemini-3.5-flash-lite",
+            "responseId": "lwTOap6OEvjljMcPvYSCgAU"
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "MAX_TOKENS",
+    "text": "{\n  \"islands\":",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 19,
+      "cached_input": null,
+      "output": 7,
+      "reasoning": null,
+      "total": 26,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 19,
+        "candidatesTokenCount": 7,
+        "totalTokenCount": 26,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 19
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}

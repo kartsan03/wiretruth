@@ -1,0 +1,132 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/tools.parallel-calls-stream",
+  "scenario": "tools.parallel-calls-stream",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:14:30Z",
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38381941285",
+    "raw_sha256": "066c60f70f9076856b9b9d2253700fce6752599d5c5da053171706eda5d8b426",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "What's the weather like right now in São Paulo and in Zürich? Call the tool once for each city."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      },
+      "tools": [
+        {
+          "functionDeclarations": [
+            {
+              "name": "get_weather",
+              "description": "Get the current weather for a city.",
+              "parametersJsonSchema": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ]
+        }
+      ],
+      "toolConfig": {
+        "functionCallingConfig": {
+          "mode": "AUTO"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"functionCall\": {\"name\": \"get_weather\",\"args\": {\"city\": \"São Paulo\"},\"id\": \"call_89893\"},\"thoughtSignature\": \"EmAKXgFpFH0TxZ2NGVDnAk7zdroOwEtjCQZ5QStCxNyB3D0EMEvzcedHokaxnZ1ccgbmfFfhWDeIyd0qiEnNn4U+roU6nrrrPT3fZoLqOOMqJVT9oPtsSaWF14m+Eb5xptM=\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 69,\"candidatesTokenCount\": 17,\"totalTokenCount\": 86,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 69}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"hwTOat8Lv_D7xg-8iNfgCw\"}\r\n\r\n",
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"functionCall\": {\"name\": \"get_weather\",\"args\": {\"city\": \"Zürich\"},\"id\": \"call_89896\"}}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 69,\"candidatesTokenCount\": 34,\"totalTokenCount\": 103,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 69}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"hwTOat8Lv_D7xg-8iNfgCw\"}\r\n\r\n",
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"\"}],\"role\": \"model\"},\"finishReason\": \"STOP\",\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 69,\"candidatesTokenCount\": 34,\"totalTokenCount\": 103,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 69}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"hwTOat8Lv_D7xg-8iNfgCw\"}\r\n\r\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "tool_calls",
+    "raw_finish": "STOP",
+    "text": "",
+    "tool_calls": [
+      {
+        "id": "call_89893",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\":\"São Paulo\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "São Paulo"
+        }
+      },
+      {
+        "id": "call_89896",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\":\"Zürich\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "Zürich"
+        }
+      }
+    ],
+    "structured": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 69,
+      "cached_input": null,
+      "output": 34,
+      "reasoning": null,
+      "total": 103,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 69,
+        "candidatesTokenCount": 34,
+        "totalTokenCount": 103,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 69
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/usage.stream-final-chunk",
+  "scenario": "usage.stream-final-chunk",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:15:22Z",
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38381941285",
+    "raw_sha256": "8dd844597daf3026284e8e609ea4bf5c2633c1755ad11d6877768bd25423a457",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "In one short sentence, explain why the sky looks blue."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 64,
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"The sky\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 13,\"candidatesTokenCount\": 2,\"totalTokenCount\": 15,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 13}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"ugTOaqmIKYGU_uMPo5fqSQ\"}\r\n\r\n",
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \" looks blue because molecules in Earth's atmosphere scatter short-wavelength blue light from\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 13,\"candidatesTokenCount\": 18,\"totalTokenCount\": 31,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 13}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"ugTOaqmIKYGU_uMPo5fqSQ\"}\r\n\r\n",
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \" the sun in all directions more than they scatter the other colors.\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 13,\"candidatesTokenCount\": 31,\"totalTokenCount\": 44,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 13}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"ugTOaqmIKYGU_uMPo5fqSQ\"}\r\n\r\n",
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"\",\"thoughtSignature\": \"EmAKXgFpFH0TU4wpG/EyT9awmbm6yp5Wege7OQgCOOX5XVMcLyZSBXQ3kah+VjX+me4nWUIulgItkc3Z2pQUeOiQ8INcN8Gwp4egQk17BMU7jgg1xO/a5t/3z7gKP6ZLwBY=\"}],\"role\": \"model\"},\"finishReason\": \"STOP\",\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 13,\"candidatesTokenCount\": 31,\"totalTokenCount\": 44,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 13}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"ugTOaqmIKYGU_uMPo5fqSQ\"}\r\n\r\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "STOP",
+    "text": "The sky looks blue because molecules in Earth's atmosphere scatter short-wavelength blue light from the sun in all directions more than they scatter the other colors.",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 13,
+      "cached_input": null,
+      "output": 31,
+      "reasoning": null,
+      "total": 44,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 13,
+        "candidatesTokenCount": 31,
+        "totalTokenCount": 44,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 13
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}

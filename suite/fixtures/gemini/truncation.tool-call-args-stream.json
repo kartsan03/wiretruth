@@ -1,0 +1,118 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/truncation.tool-call-args-stream",
+  "scenario": "truncation.tool-call-args-stream",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:15:11Z",
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38381941285",
+    "raw_sha256": "9347ac8e1265766aca523ba908bf20e6d490d23c82db888d983920595c3c9e44",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Create a catalog of 30 flowering plants for a greenhouse. Include an accented Latin, Greek or Japanese common name for each plant and a short description of its flowers."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 20,
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      },
+      "tools": [
+        {
+          "functionDeclarations": [
+            {
+              "name": "create_catalog",
+              "description": "Create a botanical catalog.",
+              "parametersJsonSchema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "plants": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "title",
+                  "plants"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ]
+        }
+      ],
+      "toolConfig": {
+        "functionCallingConfig": {
+          "mode": "ANY"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"\",\"thoughtSignature\": \"EmAKXgFpFH0ToZC7e+4YckLNvjlIxAKhlkcNAevG+qY+/c+uDYA/aplOqTjirrn26dcn3t5QwCdn5q5HPeZgsq/TaBjVJd0tU+1DiS0Rp/ECPEChZpZuKNHUbuSJ5Hqvfc4=\"}],\"role\": \"model\"},\"finishReason\": \"MAX_TOKENS\",\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 97,\"totalTokenCount\": 97,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 97}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"rwTOavTZD_6b9MoP9ZyT2Ag\"}\r\n\r\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "MAX_TOKENS",
+    "text": "",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 97,
+      "cached_input": null,
+      "output": null,
+      "reasoning": null,
+      "total": 97,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 97,
+        "totalTokenCount": 97,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 97
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}

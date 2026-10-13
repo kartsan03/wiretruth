@@ -1,0 +1,87 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/truncation.text-stream-usage",
+  "scenario": "truncation.text-stream-usage",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:14:55Z",
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38381941285",
+    "raw_sha256": "87a7b9a5f7fea3341003c68bb2d26971a8e8818a638117fb67d785d60e53d7df",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Describe a traditional Japanese breakfast in about 200 words, giving each dish its Japanese name (for example 味噌汁 or 焼き魚) and an English translation."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 16,
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"A traditional\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 36,\"candidatesTokenCount\": 2,\"totalTokenCount\": 38,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 36}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"nwTOas7UFJee1MkPzOjWoQg\"}\r\n\r\n",
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \" Japanese breakfast (*Asagohan*) is a beautifully\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 36,\"candidatesTokenCount\": 12,\"totalTokenCount\": 48,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 36}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"nwTOas7UFJee1MkPzOjWoQg\"}\r\n\r\n",
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"\",\"thoughtSignature\": \"EmAKXgFpFH0TCQP7jZV7ol4IlmGfO/MLokQEa/Fvb8AEmEuaDRR/RrCQdmL+BJoMeLm3Qg10DtXxTogo4Vc0rAlnsdWd2/MKjxW2267tztLQgdhMZGvKYygnUUScYoGPAGw=\"}],\"role\": \"model\"},\"finishReason\": \"MAX_TOKENS\",\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 36,\"candidatesTokenCount\": 12,\"totalTokenCount\": 48,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 36}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"nwTOas7UFJee1MkPzOjWoQg\"}\r\n\r\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "MAX_TOKENS",
+    "text": "A traditional Japanese breakfast (*Asagohan*) is a beautifully",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 36,
+      "cached_input": null,
+      "output": 12,
+      "reasoning": null,
+      "total": 48,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 36,
+        "candidatesTokenCount": 12,
+        "totalTokenCount": 48,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 36
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}

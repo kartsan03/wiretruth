@@ -1,0 +1,87 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/stream.utf8",
+  "scenario": "stream.utf8",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:14:22Z",
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38381941285",
+    "raw_sha256": "c72093174a196f92cf8addd7440979d0daad04c74776050bf42337a11279effc",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Reply exactly with: Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉"
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 64,
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"Café\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 20,\"candidatesTokenCount\": 2,\"totalTokenCount\": 22,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 20}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"fgTOari7NYzgjMcP3JzqoA0\"}\r\n\r\n",
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \" Zürich — καλημέρα! 東京で会いましょう 🌸🎉\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 20,\"candidatesTokenCount\": 16,\"totalTokenCount\": 36,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 20}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"fgTOari7NYzgjMcP3JzqoA0\"}\r\n\r\n",
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"\",\"thoughtSignature\": \"EmAKXgFpFH0ToIziWD0S62w/cQyQTW/chQMNatQSwypYBrF2ETjVC5O4hF1imTO3ZhjEsEwUaLOuawCpmlmW2ZOyVFC+U5tXyeqaCynxX+OKwKOzt1yXxVSgICqLcZ0Udy4=\"}],\"role\": \"model\"},\"finishReason\": \"STOP\",\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 20,\"candidatesTokenCount\": 16,\"totalTokenCount\": 36,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 20}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"fgTOari7NYzgjMcP3JzqoA0\"}\r\n\r\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "STOP",
+    "text": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 20,
+      "cached_input": null,
+      "output": 16,
+      "reasoning": null,
+      "total": 36,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 20,
+        "candidatesTokenCount": 16,
+        "totalTokenCount": 36,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 20
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}

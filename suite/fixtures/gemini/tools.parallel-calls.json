@@ -1,0 +1,174 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/tools.parallel-calls",
+  "scenario": "tools.parallel-calls",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:14:37Z",
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38381941285",
+    "raw_sha256": "47a1d352905b09cc63223a7e2b967ea13f078be629f4f368083a37be29ef0336",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "What's the weather like right now in São Paulo and in Zürich? Call the tool once for each city."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      },
+      "tools": [
+        {
+          "functionDeclarations": [
+            {
+              "name": "get_weather",
+              "description": "Get the current weather for a city.",
+              "parametersJsonSchema": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ]
+        }
+      ],
+      "toolConfig": {
+        "functionCallingConfig": {
+          "mode": "AUTO"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:generateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=UTF-8"
+        },
+        "body": {
+          "json": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "functionCall": {
+                        "name": "get_weather",
+                        "args": {
+                          "city": "São Paulo"
+                        },
+                        "id": "call_120847"
+                      },
+                      "thoughtSignature": "EmAKXgFpFH0TucStVhN+6mgGthmi4ZTSeXOraFjbeCmsoaavB5dIA0B5vGZy5k0Pzv8P83Tu07mHaNUyxKlTdDTX4/jln5bEXkbPUr0u5/9V2FRkpP2krwRNuCvFaArPNjk="
+                    },
+                    {
+                      "functionCall": {
+                        "name": "get_weather",
+                        "args": {
+                          "city": "Zürich"
+                        },
+                        "id": "call_120848"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0,
+                "finishMessage": "Model generated function call(s)."
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 69,
+              "candidatesTokenCount": 34,
+              "totalTokenCount": 103,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 69
+                }
+              ],
+              "serviceTier": "standard"
+            },
+            "modelVersion": "gemini-3.5-flash-lite",
+            "responseId": "jQTOasLtM62a9MoPzJKqyAg"
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "tool_calls",
+    "raw_finish": "STOP",
+    "text": null,
+    "tool_calls": [
+      {
+        "id": "call_120847",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\":\"São Paulo\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "São Paulo"
+        }
+      },
+      {
+        "id": "call_120848",
+        "name": "get_weather",
+        "arguments_raw": "{\"city\":\"Zürich\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "city": "Zürich"
+        }
+      }
+    ],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 69,
+      "cached_input": null,
+      "output": 34,
+      "reasoning": null,
+      "total": 103,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 69,
+        "candidatesTokenCount": 34,
+        "totalTokenCount": 103,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 69
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}
