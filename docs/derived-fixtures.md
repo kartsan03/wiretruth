@@ -32,6 +32,7 @@ its key order, JSON spacing and Unicode escaping. An event layout the transform 
 
 Each output scenario must exist and list its provider before `wiretruth lint` will pass. The command does not
 create scenarios. The examples below match the committed fixtures except where noted.
+The examples use `--replace` to regenerate committed fixtures; omit it when deriving a new fixture.
 
 | Exit code | Meaning |
 |---|---|
@@ -57,7 +58,7 @@ failing partway through the response. `abort` closes before the final HTTP chunk
 
 ```bash
 wiretruth derive --from openai-chat/truncation.text-stream-usage --transform cut_stream_after \
-  --out openai-chat/stream.missing-finish-abort --args '{"n":8,"end":"abort"}'
+  --out openai-chat/stream.missing-finish-abort --replace --args '{"n":8,"end":"abort"}'
 ```
 
 ## `strip_finish`
@@ -82,7 +83,7 @@ Chat response as complete when both `finish_reason` and `[DONE]` are absent.
 
 ```bash
 wiretruth derive --from openai-chat/truncation.text-stream-usage --transform strip_finish \
-  --out openai-chat/stream.missing-finish
+  --out openai-chat/stream.missing-finish --replace
 ```
 
 ## `inject_error_event`
@@ -112,7 +113,7 @@ This simulates an error inside an HTTP 200 stream. The
 
 ```bash
 wiretruth derive --from openai-responses/truncation.text-stream --transform inject_error_event \
-  --out openai-responses/stream.error-midstream \
+  --out openai-responses/stream.error-midstream --replace \
   --args '{"after":8,"error":{"type":"error","code":"server_error","message":"The server had an error while processing your request. Sorry about that!","param":null,"sequence_number":8}}'
 ```
 
@@ -140,7 +141,7 @@ bytes), `東` (3 bytes) and `🌸` (4 bytes).
 
 ```bash
 wiretruth derive --from openai-chat/stream.utf8 --transform rechunk_inside_utf8 \
-  --out openai-chat/stream.utf8-split --args '{"points":[818,1664,3078,4782]}'
+  --out openai-chat/stream.utf8-split --replace --args '{"points":[818,1664,3078,4782]}'
 ```
 
 ## `replace_finish_value`
@@ -165,7 +166,7 @@ finish values and library mappings. The constructed value tests whether a librar
 
 ```bash
 wiretruth derive --from openai-responses/truncation.text --transform replace_finish_value \
-  --out openai-responses/finish.unknown-value --args '{"value":"wiretruth_unknown_reason"}'
+  --out openai-responses/finish.unknown-value --replace --args '{"value":"wiretruth_unknown_reason"}'
 ```
 
 ## `prepend_http_error`
