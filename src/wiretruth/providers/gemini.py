@@ -314,7 +314,9 @@ def extract_truth(exchanges: Sequence[Exchange], request: JsonObject | None) -> 
         "text": text,
         "tool_calls": calls,
         "structured": structured,
-        "stream_completed": raw_finish is not None and exchange.end == "clean" if stream else None,
+        "stream_completed": raw_finish is not None and error is None and exchange.end == "clean"
+        if stream
+        else None,
         "usage": _usage_truth(usage),
         "error": error,
     }

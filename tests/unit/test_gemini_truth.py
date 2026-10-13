@@ -292,6 +292,11 @@ def test_abort_mid_event_and_mid_utf8_drops_only_incomplete_event():
         gemini.extract_truth([replace(ex, end="clean")], None)
 
 
+def test_error_frame_after_the_finish_chunk_is_not_a_completed_stream():
+    result = gemini.extract_truth([exchange(events=[*STREAM, STREAM_ERROR])], None)
+    assert result["finish"] == "error" and result["stream_completed"] is False
+
+
 @pytest.mark.parametrize("prefix", ["", "event: error\n"])
 def test_in_stream_error_preserves_prior_text_and_usage(prefix):
     result = gemini.extract_truth([exchange(events=[STREAM[0], prefix + STREAM_ERROR])], None)
