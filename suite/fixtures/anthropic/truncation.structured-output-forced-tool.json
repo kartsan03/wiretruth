@@ -1,0 +1,141 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "anthropic/truncation.structured-output-forced-tool",
+  "scenario": "truncation.structured-output-forced-tool",
+  "provider": "anthropic",
+  "tier": "documented",
+  "provenance": {
+    "requested_model": "claude-haiku-4-5",
+    "returned_model": "claude-haiku-4-5",
+    "source_url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools#forcing-tool-use",
+    "notes": "Documented shapes, not a recording. Message envelope follows handling-stop-reasons; tool_use object and forced tool choice follow define-tools. Model changed to claude-haiku-4-5; message ID follows the handle-tool-calls example. Scenario data and token counts are filled in, not measured. ASSUMED truncation: input stays an object as documented, but the island is missing its required sea. The docs do not show this exact forced Haiku truncation. No thinking block: forced tool use skips thinking. The call override supplies explicit tools and named tool_choice while output_schema retains the structured intent; no native output_config.format is sent.",
+    "request": {
+      "model": "claude-haiku-4-5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "List ten Greek islands and the sea each one lies in. Write the names in Greek."
+        }
+      ],
+      "max_tokens": 24,
+      "tools": [
+        {
+          "name": "structured_output",
+          "description": "Return the requested structured output.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "islands": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "sea": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "sea"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "islands"
+            ],
+            "additionalProperties": false
+          }
+        }
+      ],
+      "tool_choice": {
+        "type": "tool",
+        "name": "structured_output"
+      }
+    }
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/messages"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "msg_01Aq9w938a90dw8q",
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "tool_use",
+                "id": "toolu_01A09q90qw90lq917835lq9",
+                "name": "structured_output",
+                "input": {
+                  "islands": [
+                    {
+                      "name": "Κρήτη"
+                    }
+                  ]
+                }
+              }
+            ],
+            "model": "claude-haiku-4-5",
+            "stop_reason": "max_tokens",
+            "stop_sequence": null,
+            "stop_details": null,
+            "usage": {
+              "input_tokens": 25,
+              "output_tokens": 24
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "max_tokens",
+    "text": null,
+    "tool_calls": [
+      {
+        "id": "toolu_01A09q90qw90lq917835lq9",
+        "name": "structured_output",
+        "arguments_raw": "{\"islands\":[{\"name\":\"Κρήτη\"}]}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "islands": [
+            {
+              "name": "Κρήτη"
+            }
+          ]
+        }
+      }
+    ],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 25,
+      "cached_input": null,
+      "output": 24,
+      "reasoning": null,
+      "total": 49,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 25,
+        "output_tokens": 24
+      }
+    },
+    "error": null
+  }
+}

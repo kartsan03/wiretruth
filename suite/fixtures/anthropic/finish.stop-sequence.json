@@ -1,0 +1,84 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "anthropic/finish.stop-sequence",
+  "scenario": "finish.stop-sequence",
+  "provider": "anthropic",
+  "tier": "documented",
+  "provenance": {
+    "requested_model": "claude-sonnet-5-5",
+    "returned_model": "claude-sonnet-5-5",
+    "source_url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons#stop-sequence",
+    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. stop_reason stop_sequence and stop_sequence END follow the documented example; visible count text is filled in. Adaptive thinking is assumed skipped for this simple count.",
+    "request": {
+      "model": "claude-sonnet-5-5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Count from 1 to 10, then write END, then count to 20."
+        }
+      ],
+      "max_tokens": 120,
+      "stop_sequences": [
+        "END"
+      ]
+    }
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/messages"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "msg_01Aq9w938a90dw8q",
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10"
+              }
+            ],
+            "model": "claude-sonnet-5-5",
+            "stop_reason": "stop_sequence",
+            "stop_sequence": "END",
+            "stop_details": null,
+            "usage": {
+              "input_tokens": 25,
+              "output_tokens": 30
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop_sequence",
+    "text": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 25,
+      "cached_input": null,
+      "output": 30,
+      "reasoning": null,
+      "total": 55,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 25,
+        "output_tokens": 30
+      }
+    },
+    "error": null
+  }
+}

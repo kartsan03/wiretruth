@@ -13,7 +13,7 @@
     ],
     "reasoning": {"effort": "medium"}
   },
-  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini"],
+  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini", "anthropic"],
   "call_overrides": {"gemini": {"reasoning": {"effort": "high"}, "max_output_tokens": 32}},
   "requirements": [
     {
@@ -36,5 +36,5 @@
       "text": "Token usage is reported and matches the provider's counts."
     }
   ],
-  "grading_notes": "The call aims to spend the output limit on reasoning. Gemini overrides effort to high and the shared thought/answer limit to 32 (as recorded, thoughts and answer share the limit). The recorded candidate is MAX_TOKENS with content {} and no parts, and usage has thoughtsTokenCount but no candidatesTokenCount. A candidate may lack content or parts, or carry only thoughtSignature. Assuming a text part exists and raising IndexError or KeyError grades CRASH. Null or empty answer text must be reported as none, and the caller must be told that the output stopped at the token limit. Output usage includes reasoning tokens."
+  "grading_notes": "The call aims to spend the output limit on reasoning. Gemini overrides effort to high and the shared thought/answer limit to 32 (as recorded, thoughts and answer share the limit). The recorded candidate is MAX_TOKENS with content {} and no parts, and usage has thoughtsTokenCount but no candidatesTokenCount. A candidate may lack content or parts, or carry only thoughtSignature. Assuming a text part exists and raising IndexError or KeyError grades CRASH. Null or empty answer text must be reported as none, and the caller must be told that the output stopped at the token limit. Output usage includes reasoning tokens. Anthropic expresses the neutral medium effort with adaptive thinking and output_config.effort; no override is needed. The assumed max_tokens response has one empty thinking block plus signature, no text, and no separate reasoning-token counter."
 }

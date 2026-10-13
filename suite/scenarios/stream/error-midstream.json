@@ -21,7 +21,7 @@
       "extra": {"include_usage": true}
     }
   },
-  "providers": ["openai-chat", "openai-responses", "ollama", "gemini"],
+  "providers": ["openai-chat", "openai-responses", "ollama", "gemini", "anthropic"],
   "requirements": [
     {
       "id": "error-reported",

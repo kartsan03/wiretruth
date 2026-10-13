@@ -14,7 +14,7 @@
     ],
     "reasoning": {"effort": "none"}
   },
-  "providers": ["ollama", "ollama-openai", "gemini"],
+  "providers": ["ollama", "ollama-openai", "gemini", "anthropic"],
   "requirements": [
     {
       "id": "finish-is-stop",
@@ -30,5 +30,5 @@
       "text": "The text is reported exactly as the provider sent it."
     }
   ],
-  "grading_notes": "Ollama reports stop for both a stop sequence and a natural end. The native request sends options.stop; the OpenAI-compatible request sends stop. Gemini sends generationConfig.stopSequences and reports STOP in both cases, without identifying which sequence matched."
+  "grading_notes": "Ollama reports stop for both a stop sequence and a natural end. The native request sends options.stop; the OpenAI-compatible request sends stop. Gemini sends generationConfig.stopSequences and reports STOP in both cases, without identifying which sequence matched. Anthropic reports stop_reason stop_sequence and identifies END in stop_sequence."
 }

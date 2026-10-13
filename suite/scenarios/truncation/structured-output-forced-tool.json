@@ -1,0 +1,131 @@
+{
+  "format": "wiretruth.scenario/v1",
+  "id": "truncation.structured-output-forced-tool",
+  "title": "Structured output through a forced tool cut off at the token limit",
+  "bug_class": "silent-truncation",
+  "priority": "P1",
+  "summary": "A legacy forced structured_output tool stops at max_tokens with an incomplete input object.",
+  "call": {
+    "stream": false,
+    "max_output_tokens": 24,
+    "messages": [
+      {
+        "role": "user",
+        "content": "List ten Greek islands and the sea each one lies in. Write the names in Greek."
+      }
+    ],
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "islands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "sea": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "sea"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "islands"
+      ],
+      "additionalProperties": false
+    },
+    "reasoning": {
+      "effort": "none"
+    }
+  },
+  "call_overrides": {
+    "anthropic": {
+      "tools": [
+        {
+          "name": "structured_output",
+          "description": "Return the requested structured output.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "islands": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "sea": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "sea"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "islands"
+            ],
+            "additionalProperties": false
+          }
+        }
+      ],
+      "tool_choice": {
+        "name": "structured_output"
+      }
+    }
+  },
+  "providers": [
+    "anthropic"
+  ],
+  "requirements": [
+    {
+      "id": "no-partial-success",
+      "level": "MUST",
+      "check": "no_success_structured_value",
+      "text": "A partial object is never returned as a successful result."
+    },
+    {
+      "id": "cause-is-truncation",
+      "level": "MUST",
+      "check": "truncation_is_signalled",
+      "text": "The caller can tell that the output stopped at the token limit."
+    },
+    {
+      "id": "text-reported",
+      "level": "SHOULD",
+      "check": "text_matches_truth",
+      "text": "The partial JSON text is available exactly as the provider sent it."
+    },
+    {
+      "id": "usage-reported",
+      "level": "SHOULD",
+      "check": "usage_matches_truth",
+      "args": {
+        "fields": [
+          "input",
+          "output"
+        ]
+      },
+      "text": "Token usage is reported, and matches the provider's counts, even though the result is unusable."
+    }
+  ],
+  "grading_notes": "The neutral prompt and schema match truncation.structured-output. The Anthropic override supplies that schema in the structured_output tool and forces it by name on claude-haiku-4-5, which defaults to thinking off. output_schema retains the structured-output intent; the provider emits only the forced tool surface, without native output_config.format. Sonnet 5.5 rejects this request. The same structured-success and truncation checks apply. The docs do not show this exact truncated input object; missing fields are assumed and disclosed in fixture notes. A shim must use a documented structured tool parser or report this surface unsupported; returning ordinary tool calls is not an attempted structured result.",
+  "references": [
+    "https://github.com/TanStack/ai/issues/1426",
+    "https://github.com/TanStack/ai/pull/1427",
+    "https://github.com/TanStack/ai/pull/1548"
+  ]
+}

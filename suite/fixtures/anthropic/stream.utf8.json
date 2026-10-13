@@ -1,0 +1,73 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "anthropic/stream.utf8",
+  "scenario": "stream.utf8",
+  "provider": "anthropic",
+  "tier": "documented",
+  "provenance": {
+    "requested_model": "claude-sonnet-5-5",
+    "returned_model": "claude-sonnet-5-5",
+    "source_url": "https://platform.claude.com/docs/en/build-with-claude/streaming#basic-streaming-request",
+    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. Based on the basic Hello stream, substituting the requested accented Latin, Greek, Japanese and emoji text. Each text fragment occurs once in the response. Adaptive thinking is assumed skipped. UTF-8 byte boundaries are unchanged here; the derived variant splits characters. SSE names, JSON shapes, field order and spaced text/thinking events follow streaming examples; the compact message_delta follows Streaming request with tool use. Fragment boundaries and counts are filled in. Signature placeholder is copied literally from the signature_delta example; empty thinking_delta follows the documented omitted display flow.",
+    "request": {
+      "model": "claude-sonnet-5-5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Reply exactly with: Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉"
+        }
+      ],
+      "max_tokens": 64,
+      "stream": true
+    }
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/messages"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "event: message_start\ndata: {\"type\": \"message_start\", \"message\": {\"id\": \"msg_01Aq9w938a90dw8q\", \"type\": \"message\", \"role\": \"assistant\", \"content\": [], \"model\": \"claude-sonnet-5-5\", \"stop_reason\": null, \"stop_sequence\": null, \"usage\": {\"input_tokens\": 25, \"output_tokens\": 1}}}\n\n",
+            "event: content_block_start\ndata: {\"type\": \"content_block_start\", \"index\": 0, \"content_block\": {\"type\": \"text\", \"text\": \"\"}}\n\n",
+            "event: ping\ndata: {\"type\": \"ping\"}\n\n",
+            "event: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"Café \"}}\n\n",
+            "event: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 0, \"delta\": {\"type\": \"text_delta\", \"text\": \"Zürich — καλημέρα! 東京で会いましょう 🌸🎉\"}}\n\n",
+            "event: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 0}\n\n",
+            "event: message_delta\ndata: {\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"end_turn\",\"stop_sequence\":null},\"usage\":{\"output_tokens\":40}}\n\n",
+            "event: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "end_turn",
+    "text": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 25,
+      "cached_input": null,
+      "output": 40,
+      "reasoning": null,
+      "total": 65,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 25,
+        "output_tokens": 40
+      }
+    },
+    "error": null
+  }
+}
