@@ -12,6 +12,9 @@ finding).
 ## [Unreleased]
 
 ### Added
+- Anthropic Messages provider for JSON and SSE, with truth extraction, transforms and shim mapping.
+- Thirteen documented Anthropic fixtures and five derived stream/finish fixtures, with source links and assumptions.
+- Cached-token usage and legacy forced-tool structured-output truncation scenarios.
 - `gemini` GenerateContent support for JSON and SSE: recording, truth extraction, transforms and shim
   mapping, using `gemini-3.5-flash-lite` by default. Thinking usage includes thoughts and preserves the
   candidates-only alternative. Empty candidates and optional function-call ids are handled.

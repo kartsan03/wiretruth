@@ -64,5 +64,16 @@
     "fixed_in": null,
     "opened": "2026-10-13",
     "notes": "any-llm's Gemini provider builds call_{hash(function_call.name)}_{n} ids (providers/gemini/utils.py, non-stream and stream converters) and never reads FunctionCall.id, which google-genai exposes and Gemini sends. The ids also differ between processes because str hash() is salted. Reproduced on 1.33.0 and on main at 18ed82b."
+  },
+  {
+    "library": "any-llm",
+    "scenarios": ["finish.unknown-value"],
+    "providers": ["anthropic"],
+    "issue": null,
+    "pr": null,
+    "status": "documented-behavior",
+    "fixed_in": null,
+    "opened": "2026-10-13",
+    "notes": "any-llm documents the fallback: Anthropic stop reasons without an OpenAI counterpart (stop_sequence, pause_turn) fall through to stop, and the lookup defaults to stop for any unfamiliar value (https://github.com/mozilla-ai/any-llm/blob/18ed82b8ae89db560bf0b1ec8bccb752fc0e2b5d/src/any_llm/providers/anthropic/utils.py#L40-L50). The caller cannot tell such a stop from a normal one."
   }
 ]
