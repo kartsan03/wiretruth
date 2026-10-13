@@ -207,7 +207,7 @@ built-in reference client, which must pass every cell. The scenarios, fixtures a
 so wiretruth runs from a clone.
 
 Releases are also on [PyPI](https://pypi.org/project/wiretruth/) (`pip install wiretruth`). The package is the
-command only, so run it inside a checkout of the matching release tag (for example `v0.1.0`); on `main`, use
+command only, so run it inside a checkout of the matching release tag (for example `v0.2.0`); on `main`, use
 `uv run` as above.
 
 ## Add your library
