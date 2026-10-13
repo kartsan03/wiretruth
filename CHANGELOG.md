@@ -11,6 +11,8 @@ finding).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-13
+
 ### Added
 - `wiretruth catalog` generates `docs/scenarios.md` from the suite data; CI fails when it is stale.
 - Anthropic Messages provider for JSON and SSE, with truth extraction, transforms and shim mapping.
@@ -187,5 +189,6 @@ finding).
 - any-llm 1.33.0, the first library results: PASS on all three truncation scenarios on `openai-chat`
   ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)).
 
-[Unreleased]: https://github.com/kartsan03/wiretruth/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/kartsan03/wiretruth/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/kartsan03/wiretruth/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/kartsan03/wiretruth/releases/tag/v0.1.0
