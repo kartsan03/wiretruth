@@ -1,0 +1,105 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/truncation.reasoning-only",
+  "scenario": "truncation.reasoning-only",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:19:19Z",
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38382529221",
+    "raw_sha256": "b8a25139e386b1b455c6725672130c644ca5088791ef3e55af203a0fc7485963",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Find the smallest positive whole number that leaves a remainder of 1 when divided by 2, 3, 4, 5 or 6 and is divisible by 7. Check your answer before replying."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 32,
+        "thinkingConfig": {
+          "thinkingLevel": "HIGH"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:generateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=UTF-8"
+        },
+        "body": {
+          "json": {
+            "candidates": [
+              {
+                "content": {},
+                "finishReason": "MAX_TOKENS",
+                "index": 0
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 44,
+              "totalTokenCount": 72,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 44
+                }
+              ],
+              "thoughtsTokenCount": 28,
+              "serviceTier": "standard"
+            },
+            "modelVersion": "gemini-3.5-flash-lite",
+            "responseId": "qAXOar_qAaeVmtkPp5_qyQQ"
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "MAX_TOKENS",
+    "text": null,
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 44,
+      "cached_input": null,
+      "output": 28,
+      "reasoning": 28,
+      "total": 72,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 44,
+        "totalTokenCount": 72,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 44
+          }
+        ],
+        "thoughtsTokenCount": 28,
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}
