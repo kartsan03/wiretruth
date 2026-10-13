@@ -29,7 +29,7 @@
     "ollama": {"tool_choice": null},
     "ollama-openai": {"tool_choice": null}
   },
-  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai"],
+  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini"],
   "requirements": [
     {
       "id": "calls-reported",
@@ -38,5 +38,5 @@
       "text": "Both tool calls are reported with the ids, names and arguments the provider sent."
     }
   ],
-  "grading_notes": "Both calls must be reported with their ids, names and parsed arguments in order. The argument deltas of the two calls are told apart by index (Chat Completions) or by output item (Responses), so interleaved pieces must stay with their own call. Ollama overrides omit tool_choice because neither endpoint supports it. Native tool calls arrive whole, and done_reason is stop even when calls are present."
+  "grading_notes": "Both calls must be reported with their ids, names and parsed arguments in order. The argument deltas of the two calls are told apart by index (Chat Completions) or by output item (Responses), so interleaved pieces must stay with their own call. Ollama overrides omit tool_choice because neither endpoint supports it. Native tool calls arrive whole, and done_reason is stop even when calls are present. Gemini functionCall parts also arrive whole: STOP with any calls means tool_calls. Wire ids are optional; when absent, a library-generated id is accepted."
 }

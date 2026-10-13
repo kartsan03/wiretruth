@@ -21,7 +21,7 @@
       "extra": {"include_usage": true}
     }
   },
-  "providers": ["openai-chat", "openai-responses", "ollama"],
+  "providers": ["openai-chat", "openai-responses", "ollama", "gemini"],
   "requirements": [
     {
       "id": "error-reported",
@@ -30,5 +30,5 @@
       "text": "The caller receives the provider's error, whether raised, returned or yielded."
     }
   ],
-  "grading_notes": "An error object returned or yielded through the public API satisfies the requirement, as does a raised error. Returning partial text without an error signal is WRONG. The openai-chat override preserves the Japanese breakfast prompt and usage option of its source recording; openai-responses uses the octopus recording. Native Ollama uses an NDJSON line with an error string, as documented at https://docs.ollama.com/api/errors. ollama-openai is not listed: Ollama's OpenAI-compatible stream writer (middleware/openai.go at v0.40.3) has no error frame, so there is no real shape to derive."
+  "grading_notes": "An error object returned or yielded through the public API satisfies the requirement, as does a raised error. Returning partial text without an error signal is WRONG. The openai-chat override preserves the Japanese breakfast prompt and usage option of its source recording; openai-responses uses the octopus recording. Native Ollama uses an NDJSON line with an error string, as documented at https://docs.ollama.com/api/errors. ollama-openai is not listed: Ollama's OpenAI-compatible stream writer (middleware/openai.go at v0.40.3) has no error frame, so there is no real shape to derive. Gemini sends the error as an SSE data object with an error key, which the official client raises on (https://github.com/googleapis/python-genai/blob/main/google/genai/_api_client.py); the extractor also reads it with event: error."
 }

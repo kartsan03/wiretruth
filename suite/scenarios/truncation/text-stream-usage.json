@@ -14,7 +14,7 @@
     "reasoning": {"effort": "none"},
     "extra": {"include_usage": true}
   },
-  "providers": ["openai-chat"],
+  "providers": ["openai-chat", "gemini"],
   "requirements": [
     {
       "id": "cause-is-truncation",
@@ -36,5 +36,5 @@
       "text": "Token usage is reported and matches the provider's counts."
     }
   ],
-  "grading_notes": "The finish chunk is no longer the last event: a usage-only chunk with choices: [] follows it. The library must retain the truncation signal while reading the usage. Effort none keeps the 16-token limit for answer text."
+  "grading_notes": "For Chat Completions, a usage-only chunk with choices: [] follows the finish chunk. Gemini needs no usage opt-in and may carry usageMetadata on several chunks, including the finish chunk; truth takes the last snapshot. The library must retain the truncation signal while reading usage. Gemini MINIMAL can still use tokens for thoughts."
 }

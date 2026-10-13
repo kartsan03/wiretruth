@@ -822,6 +822,8 @@ def test_new_chat_scenario_requests(id, stream, limit, effort, usage, tool, choi
         "tools.parallel-calls-stream",
     }:
         also += ("ollama", "ollama-openai")
+    if not id.startswith("request."):
+        also += ("gemini",)
     assert scenario.providers == ("openai-chat", *also)
     body = build_request(scenario.call, "gpt-6-luna").body
     assert body["model"] == "gpt-6-luna"
