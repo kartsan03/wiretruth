@@ -30,7 +30,7 @@
         }
       }
     },
-    "notes": ""
+    "notes": "Recorded on gemini-3.5-flash-lite at thinkingLevel HIGH with maxOutputTokens 32, because gemini-3.8-flash answered HTTP 503 (high demand) on three attempts. Thoughts used 28 of the 32 tokens and the candidate has content {} with finishReason MAX_TOKENS: the output limit bounds thoughts and answer together."
   },
   "derived_from": null,
   "exchanges": [
