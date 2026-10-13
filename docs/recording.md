@@ -109,6 +109,11 @@ gh workflow run record.yml -f provider=gemini -f model=gemini-3.8-flash \
   -f scenarios='truncation.reasoning-only,usage.reasoning-tokens'
 ```
 
+Flash 3.8 answers HTTP 503 ("high demand") or times out at busy hours on the free tier; the recorder keeps the
+503 as a fixture, so check the run output and dispatch again. `truncation.reasoning-only` records the same on
+`-f model=gemini-3.5-flash-lite`, because its call sets thinking level HIGH explicitly: that is how the
+committed fixture was recorded.
+
 `reasoning.effort: none` and `minimal` become `thinkingLevel: MINIMAL`. This is Flash-Lite's default and can
 still produce thoughts. Flash 3.8 supports LOW, MEDIUM and HIGH and rejects MINIMAL, so plain calls should
 use Flash-Lite. The any-llm shim omits its unsupported `reasoning_effort: none` and adds an observation note;
@@ -116,10 +121,11 @@ the model default then applies. [Thinking levels](https://ai.google.dev/gemini-a
 
 The [thinking guide](https://ai.google.dev/gemini-api/docs/generate-content/thinking#token-limits-and-max_output_tokens)
 documents `maxOutputTokens` as a combined limit for thoughts and answer tokens. Reaching it during thinking
-can produce MAX_TOKENS with no answer. `truncation.reasoning-only` uses HIGH and a small limit; confirm the
-recording has the intended shape. Candidates without content, without parts, or with only a thought signature
-are accepted. Tool truncation calls use a botanical catalog; Gemini returns object arguments, so the partial
-argument check is vacuous when no call is sent. Verify the truncation signal in the recording.
+produces MAX_TOKENS with no answer: the recorded candidate is `"content": {}` with `thoughtsTokenCount` and no
+`candidatesTokenCount`. `truncation.reasoning-only` uses HIGH and a limit of 32. Candidates without content,
+without parts, or with only a thought signature are accepted. Tool truncation calls use a botanical catalog;
+Gemini sends whole `functionCall` parts with ids, so a cut at the limit sends MAX_TOKENS with no call and the
+partial-argument check is vacuous, while the truncation signal is still graded.
 
 Truth excludes `thought: true` text, retains whole function calls with optional wire ids, and parses structured
 text only at STOP when JSON output was requested. Requests use `responseJsonSchema` and

@@ -19,6 +19,13 @@ finding).
   plain and thinking calls. The any-llm shim uses its native Gemini provider and pins `google-genai`.
 - Google `AQ.` credential detection, masked Gemini header and query credentials, and query-free fixture
   match paths for streamed GenerateContent requests.
+- Gemini fixtures: eleven scenarios recorded in CI against `gemini-3.5-flash-lite` (run
+  [38381941285](https://github.com/kartsan03/wiretruth/actions/runs/38381941285)), `usage.reasoning-tokens` against
+  `gemini-3.8-flash` (run [38381937993](https://github.com/kartsan03/wiretruth/actions/runs/38381937993)),
+  `truncation.reasoning-only` on `gemini-3.5-flash-lite` at thinking level HIGH (run
+  [38382529221](https://github.com/kartsan03/wiretruth/actions/runs/38382529221); `gemini-3.8-flash` answered 503
+  three times), and five derived from them (missing finish, aborted stream, a 503 error frame mid-stream,
+  unfamiliar finish value, UTF-8 split inside characters).
 - `ollama` and `ollama-openai` support recording, truth extraction, lint, transforms and shim mapping,
   using `qwen3.5:0.8b` by default. Native streams record as NDJSON lines, with byte chunks for irregular
   framing or aborted responses. Both providers record without an API key.
@@ -80,8 +87,8 @@ finding).
   text use the last value for each duplicate key, as clients do, while retaining strict number and Unicode checks.
 
 ### Results
-- any-llm 1.33.0: PASS on 16 of 18 `openai-chat` scenarios, 13 of 14 `openai-responses`, 11 of 15 `ollama` and 11
-  of 14 `ollama-openai` ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)). LOSSY on `truncation.structured-output` over
+- any-llm 1.33.0: PASS on 16 of 18 `openai-chat` scenarios, 13 of 14 `openai-responses`, 11 of 15 `ollama`, 11
+  of 14 `ollama-openai` and 14 of 18 `gemini` ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)). LOSSY on `truncation.structured-output` over
   `openai-responses`: structured output raises a pydantic `ValidationError` on the cut-off JSON, with no sign that
   the token limit was hit, and without the partial text or usage.
 - any-llm 1.33.0: WRONG on `finish.unknown-value` over `openai-chat`: a finish value outside OpenAI's five raises
@@ -96,6 +103,12 @@ finding).
   `request.max-tokens-ollama-openai`: the `openai` provider sends `max_completion_tokens`, which Ollama's
   OpenAI-compatible endpoint ignores ([ollama/ollama#7125](https://github.com/ollama/ollama/issues/7125)). That
   cell is tied to Ollama v0.40.3: it checks the request, so it stays WRONG until the scenario is retired.
+- any-llm 1.33.0 on Gemini, recorded with `gemini-3.5-flash-lite` and `gemini-3.8-flash`. PASS on every
+  token-usage scenario, including `usage.reasoning-tokens` (output includes thoughts) and the empty candidate in
+  `truncation.reasoning-only`. WRONG on `tools.parallel-calls` and `tools.parallel-calls-stream`: the Gemini
+  provider builds its own `call_{hash(name)}_{n}` ids and ignores the id Gemini sends. WRONG on
+  `finish.unknown-value`: a finish reason without an OpenAI counterpart is reported as `stop`, a fallback any-llm
+  documents in its code. LOSSY on `stream.missing-finish`: no completion signal for streams.
 
 ## [0.1.0] - 2026-10-11
 

@@ -7,8 +7,8 @@
     "language": "python"
   },
   "run": {
-    "at": "2026-10-12T19:05:41Z",
-    "git_sha": "c522c98dc0414fa36714e6b99cb85872f58d0afc",
+    "at": "2026-10-13T10:23:50Z",
+    "git_sha": "be9901c1a29e146c7d5d8acbd49e5ad385227cb5",
     "ci_run": null,
     "runner": "wiretruth 0.2.0.dev0",
     "packages": {
@@ -17,8 +17,13 @@
       "any-llm-sdk": "1.33.0",
       "anyio": "4.15.1",
       "certifi": "2026.7.22",
+      "cffi": "2.1.1",
+      "charset-normalizer": "3.5.2",
+      "cryptography": "50.0.2",
       "distro": "1.9.0",
       "docstring-parser": "0.18.0",
+      "google-auth": "2.62.0",
+      "google-genai": "2.26.0",
       "h11": "0.16.0",
       "httpcore": "1.0.9",
       "httpcore2": "2.13.1",
@@ -31,17 +36,98 @@
       "ollama": "0.6.3",
       "openai": "3.28.0",
       "openresponses-types": "2.4.0",
+      "pyasn1": "0.6.4",
+      "pyasn1-modules": "0.4.2",
+      "pycparser": "3.11",
       "pydantic": "2.14.1",
       "pydantic-core": "2.50.1",
       "pygments": "2.21.0",
+      "requests": "2.34.2",
       "rich": "15.0.0",
       "sniffio": "1.3.1",
-      "truststore": "0.10.4",
+      "tenacity": "9.1.4",
+      "truststore": "0.10.5",
       "typing-extensions": "4.16.0",
-      "typing-inspection": "0.4.4"
+      "typing-inspection": "0.4.4",
+      "urllib3": "2.8.0",
+      "websockets": "16.1.1"
     }
   },
   "cells": [
+    {
+      "scenario": "finish.stop-sequence",
+      "provider": "gemini",
+      "fixture": "gemini/finish.stop-sequence",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "finish-is-stop",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"stop\" (primary: choices[0].finish_reason); truth.finish=\"stop\"; required finish=\"stop\""
+        },
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"1, 2, 3, 4, 5, 6, 7, 8, 9, 10, \" (primary); truth.text=\"1, 2, 3, 4, 5, 6, 7, 8, 9, 10, \""
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 21,
+          "cached_input": null,
+          "output": 30,
+          "reasoning": null,
+          "total": 51,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 1253.9307931438088
+      },
+      "request_count": 1
+    },
     {
       "scenario": "finish.stop-sequence",
       "provider": "ollama",
@@ -110,7 +196,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 198.0536610353738
+        "elapsed_ms": 387.6783719751984
       },
       "request_count": 1
     },
@@ -182,7 +268,96 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 155.98956192843616
+        "elapsed_ms": 257.9918329138309
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "provider": "gemini",
+      "fixture": "gemini/finish.unknown-value",
+      "fixture_tier": "derived",
+      "grade": "WRONG",
+      "requirements": [
+        {
+          "id": "response-returned",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "outcome=returned; error.category=null; truth.error=null"
+        },
+        {
+          "id": "finish-is-other",
+          "level": "MUST",
+          "status": "CONTRADICTED",
+          "evidence": "finish.value=\"stop\" (primary: choices[0].finish_reason); truth.finish=\"other\"; required finish=\"other\""
+        },
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Octopuses are masters of disguise, utilizing an extraordinary biological\" (primary); truth.text=\"Octopuses are masters of disguise, utilizing an extraordinary biological\""
+        },
+        {
+          "id": "raw-finish-reported",
+          "level": "SHOULD",
+          "status": "CONTRADICTED",
+          "evidence": "finish.raw=\"stop\"; truth.raw_finish=\"WIRETRUTH_UNKNOWN_REASON\""
+        }
+      ],
+      "notes": [
+        "MUST finish-is-other: CONTRADICTED: finish.value=\"stop\" (primary: choices[0].finish_reason); truth.finish=\"other\"; required finish=\"other\"",
+        "SHOULD raw-finish-reported: CONTRADICTED: finish.raw=\"stop\"; truth.raw_finish=\"WIRETRUTH_UNKNOWN_REASON\""
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Octopuses are masters of disguise, utilizing an extraordinary biological",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 22,
+          "cached_input": null,
+          "output": 12,
+          "reasoning": null,
+          "total": 34,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 715.4113189317286
       },
       "request_count": 1
     },
@@ -269,7 +444,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 192.91448895819485
+        "elapsed_ms": 198.42374604195356
       },
       "request_count": 1
     },
@@ -364,7 +539,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 156.83397301472723
+        "elapsed_ms": 150.3686031792313
       },
       "request_count": 1
     },
@@ -459,7 +634,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 155.19695496186614
+        "elapsed_ms": 159.65495398268104
       },
       "request_count": 1
     },
@@ -543,7 +718,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 274.4075220543891
+        "elapsed_ms": 318.07806994765997
       },
       "request_count": 1
     },
@@ -621,7 +796,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 156.09102812595665
+        "elapsed_ms": 147.59382884949446
       },
       "request_count": 1
     },
@@ -689,7 +864,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 146.51450514793396
+        "elapsed_ms": 145.8179501350969
       },
       "request_count": 1
     },
@@ -761,7 +936,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 199.3961101397872
+        "elapsed_ms": 198.54934397153556
       },
       "request_count": 1
     },
@@ -833,7 +1008,81 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 150.08611092343926
+        "elapsed_ms": 133.0010020174086
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.error-midstream",
+      "provider": "gemini",
+      "fixture": "gemini/stream.error-midstream",
+      "fixture_tier": "derived",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "error-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "outcome=raised; error.category=\"api\"; finish.value=null (absent); truth.finish=\"error\""
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "raised",
+        "unsupported_reason": null,
+        "error": {
+          "type": "google.genai.errors.ServerError",
+          "message": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
+          "category": "api",
+          "retry_after": null,
+          "stack_top": "google/genai/errors.py:289"
+        },
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": "Octop",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 22,
+          "cached_input": null,
+          "output": 2,
+          "reasoning": null,
+          "total": 24,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": false,
+          "chunks_seen": 1
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 696.878446964547
       },
       "request_count": 1
     },
@@ -905,7 +1154,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 234.98530290089548
+        "elapsed_ms": 221.20468504726887
       },
       "request_count": 1
     },
@@ -977,7 +1226,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 164.1867170110345
+        "elapsed_ms": 178.65503602661192
       },
       "request_count": 1
     },
@@ -1049,7 +1298,83 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 260.67183003760874
+        "elapsed_ms": 247.82684119418263
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.missing-finish",
+      "provider": "gemini",
+      "fixture": "gemini/stream.missing-finish",
+      "fixture_tier": "derived",
+      "grade": "LOSSY",
+      "requirements": [
+        {
+          "id": "no-normal-stop",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "outcome=returned; finish.value=null (absent); truth.finish=\"none\"; forbidden finish=\"stop\""
+        },
+        {
+          "id": "stream-incomplete",
+          "level": "MUST",
+          "status": "NOT_OBSERVABLE",
+          "evidence": "stream.completed=null; outcome=returned; truth.stream_completed=false"
+        }
+      ],
+      "notes": [
+        "MUST stream-incomplete: NOT_OBSERVABLE: stream.completed=null; outcome=returned; truth.stream_completed=false"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": "Octopuses are the ultimate masters of disguise, utilizing a",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 22,
+          "cached_input": null,
+          "output": 12,
+          "reasoning": null,
+          "total": 34,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 2
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 734.7602488007396
       },
       "request_count": 1
     },
@@ -1123,7 +1448,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 258.02087411284447
+        "elapsed_ms": 245.42506295256317
       },
       "request_count": 1
     },
@@ -1197,7 +1522,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 211.7623621597886
+        "elapsed_ms": 214.66646599583328
       },
       "request_count": 1
     },
@@ -1271,7 +1596,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 193.97762999869883
+        "elapsed_ms": 182.12730321101844
       },
       "request_count": 1
     },
@@ -1343,7 +1668,87 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 279.9750149715692
+        "elapsed_ms": 245.16241298988461
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
+      "provider": "gemini",
+      "fixture": "gemini/stream.missing-finish-abort",
+      "fixture_tier": "derived",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "no-normal-stop",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "outcome=raised; finish.value=null (absent); truth.finish=\"none\"; forbidden finish=\"stop\""
+        },
+        {
+          "id": "stream-incomplete",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "stream.completed=false; outcome=raised; truth.stream_completed=false"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "raised",
+        "unsupported_reason": null,
+        "error": {
+          "type": "httpx.RemoteProtocolError",
+          "message": "peer closed connection without sending complete message body (incomplete chunked read)",
+          "category": "network",
+          "retry_after": null,
+          "stack_top": "httpx/_transports/default.py:118"
+        },
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": "Octop",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 22,
+          "cached_input": null,
+          "output": 2,
+          "reasoning": null,
+          "total": 24,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": false,
+          "chunks_seen": 1
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 657.0184170268476
       },
       "request_count": 1
     },
@@ -1421,7 +1826,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 215.12770815752447
+        "elapsed_ms": 215.92544694431126
       },
       "request_count": 1
     },
@@ -1499,7 +1904,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 186.93586415611207
+        "elapsed_ms": 171.0249928291887
       },
       "request_count": 1
     },
@@ -1577,7 +1982,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 174.73859805613756
+        "elapsed_ms": 169.50807301327586
       },
       "request_count": 1
     },
@@ -1655,7 +2060,81 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 256.80212397128344
+        "elapsed_ms": 259.50128701515496
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.utf8",
+      "provider": "gemini",
+      "fixture": "gemini/stream.utf8",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); truth.text=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\""
+        },
+        {
+          "id": "no-replacement-chars",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); U+FFFD count=0"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 20,
+          "cached_input": null,
+          "output": 16,
+          "reasoning": null,
+          "total": 36,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 3
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 696.1853250395507
       },
       "request_count": 1
     },
@@ -1727,7 +2206,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 275.4641391802579
+        "elapsed_ms": 236.09545920044184
       },
       "request_count": 1
     },
@@ -1799,7 +2278,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 225.07488005794585
+        "elapsed_ms": 224.2162588518113
       },
       "request_count": 1
     },
@@ -1871,7 +2350,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 224.26684200763702
+        "elapsed_ms": 228.90670807100832
       },
       "request_count": 1
     },
@@ -1943,7 +2422,81 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 276.3261089567095
+        "elapsed_ms": 274.9470800627023
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.utf8-split",
+      "provider": "gemini",
+      "fixture": "gemini/stream.utf8-split",
+      "fixture_tier": "derived",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); truth.text=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\""
+        },
+        {
+          "id": "no-replacement-chars",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); U+FFFD count=0"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 20,
+          "cached_input": null,
+          "output": 16,
+          "reasoning": null,
+          "total": 36,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 3
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 691.6137558873743
       },
       "request_count": 1
     },
@@ -2015,7 +2568,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 190.8865689765662
+        "elapsed_ms": 205.10994596406817
       },
       "request_count": 1
     },
@@ -2087,7 +2640,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 158.92693307250738
+        "elapsed_ms": 157.4742440134287
       },
       "request_count": 1
     },
@@ -2159,7 +2712,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 155.99807212129235
+        "elapsed_ms": 156.72371699474752
       },
       "request_count": 1
     },
@@ -2231,7 +2784,96 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 305.18258991651237
+        "elapsed_ms": 270.2601538039744
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "tools.parallel-calls",
+      "provider": "gemini",
+      "fixture": "gemini/tools.parallel-calls",
+      "fixture_tier": "recorded",
+      "grade": "WRONG",
+      "requirements": [
+        {
+          "id": "calls-reported",
+          "level": "MUST",
+          "status": "CONTRADICTED",
+          "evidence": "tool_calls[0] id=\"call_652863599527796041_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_120847\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_652863599527796041_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_120848\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        }
+      ],
+      "notes": [
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"call_652863599527796041_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_120847\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_652863599527796041_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_120848\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "tool_calls",
+          "raw": "tool_calls",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [
+          {
+            "id": "call_652863599527796041_0",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "São Paulo"
+            }
+          },
+          {
+            "id": "call_652863599527796041_1",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "Zürich"
+            }
+          }
+        ],
+        "usage": {
+          "input": 69,
+          "cached_input": null,
+          "output": 34,
+          "reasoning": null,
+          "total": 103,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 735.3672329336405
       },
       "request_count": 1
     },
@@ -2246,11 +2888,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"739da0a4-72e6-4899-aad4-07979883938c\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"1128b972-6f5d-4171-aa00-31c7b819c075\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"ecdf831d-f6b6-4b0a-988d-7cfdfb64a002\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"923b4917-199a-46ea-bbe7-263638353569\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"739da0a4-72e6-4899-aad4-07979883938c\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"1128b972-6f5d-4171-aa00-31c7b819c075\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"ecdf831d-f6b6-4b0a-988d-7cfdfb64a002\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"923b4917-199a-46ea-bbe7-263638353569\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -2280,7 +2922,7 @@
         },
         "tool_calls": [
           {
-            "id": "739da0a4-72e6-4899-aad4-07979883938c",
+            "id": "ecdf831d-f6b6-4b0a-988d-7cfdfb64a002",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -2289,7 +2931,7 @@
             }
           },
           {
-            "id": "1128b972-6f5d-4171-aa00-31c7b819c075",
+            "id": "923b4917-199a-46ea-bbe7-263638353569",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -2318,7 +2960,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 231.9683670066297
+        "elapsed_ms": 177.19546612352133
       },
       "request_count": 1
     },
@@ -2403,7 +3045,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 172.62103711254895
+        "elapsed_ms": 143.49184092134237
       },
       "request_count": 1
     },
@@ -2488,7 +3130,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 143.14484898932278
+        "elapsed_ms": 134.0967658907175
       },
       "request_count": 1
     },
@@ -2573,7 +3215,96 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 282.70054212771356
+        "elapsed_ms": 272.3085831385106
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
+      "provider": "gemini",
+      "fixture": "gemini/tools.parallel-calls-stream",
+      "fixture_tier": "recorded",
+      "grade": "WRONG",
+      "requirements": [
+        {
+          "id": "calls-reported",
+          "level": "MUST",
+          "status": "CONTRADICTED",
+          "evidence": "tool_calls[0] id=\"call_-4621487615810391883_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_89893\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_-4621487615810391883_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_89896\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        }
+      ],
+      "notes": [
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"call_-4621487615810391883_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_89893\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_-4621487615810391883_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_89896\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "tool_calls",
+          "raw": "tool_calls",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [
+          {
+            "id": "call_-4621487615810391883_0",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "São Paulo"
+            }
+          },
+          {
+            "id": "call_-4621487615810391883_1",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "Zürich"
+            }
+          }
+        ],
+        "usage": {
+          "input": 69,
+          "cached_input": null,
+          "output": 34,
+          "reasoning": null,
+          "total": 103,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 3
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 707.7521798200905
       },
       "request_count": 1
     },
@@ -2588,11 +3319,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"045103bb-d820-4b1f-8890-a0f3825b9419\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"b6b8e3fe-8bdc-4607-b7ea-fc8cda07b0d6\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"7e1e6f49-8075-4b14-95cb-3c7922946cef\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"30d56fc4-bfdf-4d4c-88d2-0ba6fe8373db\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"045103bb-d820-4b1f-8890-a0f3825b9419\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"b6b8e3fe-8bdc-4607-b7ea-fc8cda07b0d6\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"7e1e6f49-8075-4b14-95cb-3c7922946cef\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"30d56fc4-bfdf-4d4c-88d2-0ba6fe8373db\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -2622,7 +3353,7 @@
         },
         "tool_calls": [
           {
-            "id": "045103bb-d820-4b1f-8890-a0f3825b9419",
+            "id": "7e1e6f49-8075-4b14-95cb-3c7922946cef",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -2631,7 +3362,7 @@
             }
           },
           {
-            "id": "b6b8e3fe-8bdc-4607-b7ea-fc8cda07b0d6",
+            "id": "30d56fc4-bfdf-4d4c-88d2-0ba6fe8373db",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -2660,7 +3391,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 181.71119806356728
+        "elapsed_ms": 203.71552999131382
       },
       "request_count": 1
     },
@@ -2745,7 +3476,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 149.57515615969896
+        "elapsed_ms": 160.92728497460485
       },
       "request_count": 1
     },
@@ -2830,7 +3561,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 193.28859192319214
+        "elapsed_ms": 198.59682978130877
       },
       "request_count": 1
     },
@@ -2915,7 +3646,85 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 263.1470349151641
+        "elapsed_ms": 267.7742119412869
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "provider": "gemini",
+      "fixture": "gemini/truncation.reasoning-only",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=null (absent); truth.text=null"
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.output=28 (primary); truth.usage.output=28"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 44,
+          "cached_input": null,
+          "output": 28,
+          "reasoning": 28,
+          "total": 72,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 713.8595259748399
       },
       "request_count": 1
     },
@@ -2993,7 +3802,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 185.09603291749954
+        "elapsed_ms": 182.22518195398152
       },
       "request_count": 1
     },
@@ -3071,7 +3880,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 151.56817203387618
+        "elapsed_ms": 144.94554209522903
       },
       "request_count": 1
     },
@@ -3149,7 +3958,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 167.2829689923674
+        "elapsed_ms": 130.97815308719873
       },
       "request_count": 1
     },
@@ -3227,7 +4036,99 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 258.92219482921064
+        "elapsed_ms": 272.4429809022695
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.structured-output",
+      "provider": "gemini",
+      "fixture": "gemini/truncation.structured-output",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "no-partial-success",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "structured.attempted=true; structured.returned_as_success=false"
+        },
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: error.completion.choices[0].finish_reason); truth.finish=\"length\"; error.category=\"truncation\"; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"{\\n  \\\"islands\\\":\" (primary); truth.text=\"{\\n  \\\"islands\\\":\""
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.input=19 (primary); truth.usage.input=19; usage.output=7 (primary); truth.usage.output=7"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "raised",
+        "unsupported_reason": null,
+        "error": {
+          "type": "any_llm.exceptions.LengthFinishReasonError",
+          "message": "Could not parse response content as the length limit was reached",
+          "category": "truncation",
+          "retry_after": null,
+          "stack_top": "any_llm/any_llm.py:872"
+        },
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "error.completion.choices[0].finish_reason"
+        },
+        "text": {
+          "value": "{\n  \"islands\":",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": true,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 19,
+          "cached_input": null,
+          "output": 7,
+          "reasoning": null,
+          "total": 26,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 678.4867718815804
       },
       "request_count": 1
     },
@@ -3317,7 +4218,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 188.5740978177637
+        "elapsed_ms": 199.4148998055607
       },
       "request_count": 1
     },
@@ -3407,7 +4308,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 152.77482196688652
+        "elapsed_ms": 148.25144899077713
       },
       "request_count": 1
     },
@@ -3497,7 +4398,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 147.66883291304111
+        "elapsed_ms": 153.1900849658996
       },
       "request_count": 1
     },
@@ -3591,7 +4492,87 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 289.1617980785668
+        "elapsed_ms": 275.2579338848591
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.text",
+      "provider": "gemini",
+      "fixture": "gemini/truncation.text",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Octopuses are masters of disguise, utilizing an extraordinary biological\" (primary); truth.text=\"Octopuses are masters of disguise, utilizing an extraordinary biological\""
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.input=22 (primary); truth.usage.input=22; usage.output=12 (primary); truth.usage.output=12"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Octopuses are masters of disguise, utilizing an extraordinary biological",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 22,
+          "cached_input": null,
+          "output": 12,
+          "reasoning": null,
+          "total": 34,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 691.2171531002969
       },
       "request_count": 1
     },
@@ -3669,7 +4650,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 182.75023996829987
+        "elapsed_ms": 181.7418730352074
       },
       "request_count": 1
     },
@@ -3747,7 +4728,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 145.93430911190808
+        "elapsed_ms": 172.60686890222132
       },
       "request_count": 1
     },
@@ -3825,7 +4806,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 152.6647841092199
+        "elapsed_ms": 138.13024200499058
       },
       "request_count": 1
     },
@@ -3903,7 +4884,87 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 291.28418397158384
+        "elapsed_ms": 267.8172520827502
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "gemini",
+      "fixture": "gemini/truncation.text-stream",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Octopuses are the ultimate masters of disguise, utilizing a\" (primary); truth.text=\"Octopuses are the ultimate masters of disguise, utilizing a\""
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.output=12 (primary); truth.usage.output=12"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Octopuses are the ultimate masters of disguise, utilizing a",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 22,
+          "cached_input": null,
+          "output": 12,
+          "reasoning": null,
+          "total": 34,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 3
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 660.0465311203152
       },
       "request_count": 1
     },
@@ -3981,7 +5042,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 289.5693611353636
+        "elapsed_ms": 262.0864489581436
       },
       "request_count": 1
     },
@@ -4059,7 +5120,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 223.41768280602992
+        "elapsed_ms": 213.43824290670455
       },
       "request_count": 1
     },
@@ -4137,7 +5198,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 205.2523479796946
+        "elapsed_ms": 211.82201011106372
       },
       "request_count": 1
     },
@@ -4215,7 +5276,87 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 263.4262330830097
+        "elapsed_ms": 253.70341609232128
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.text-stream-usage",
+      "provider": "gemini",
+      "fixture": "gemini/truncation.text-stream-usage",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"A traditional Japanese breakfast (*Asagohan*) is a beautifully\" (primary); truth.text=\"A traditional Japanese breakfast (*Asagohan*) is a beautifully\""
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.input=36 (primary); truth.usage.input=36; usage.output=12 (primary); truth.usage.output=12"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "A traditional Japanese breakfast (*Asagohan*) is a beautifully",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 36,
+          "cached_input": null,
+          "output": 12,
+          "reasoning": null,
+          "total": 48,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 3
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 711.0022129490972
       },
       "request_count": 1
     },
@@ -4293,7 +5434,81 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 211.96622378192842
+        "elapsed_ms": 210.1820029783994
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.tool-call-args",
+      "provider": "gemini",
+      "fixture": "gemini/truncation.tool-call-args",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "no-complete-partial-call",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "0 tool calls; no partial args made complete"
+        },
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 97,
+          "cached_input": null,
+          "output": 0,
+          "reasoning": null,
+          "total": 97,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 718.9145521260798
       },
       "request_count": 1
     },
@@ -4373,7 +5588,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 148.1619980186224
+        "elapsed_ms": 146.57633611932397
       },
       "request_count": 1
     },
@@ -4453,7 +5668,81 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 282.2107959073037
+        "elapsed_ms": 281.7213609814644
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.tool-call-args-stream",
+      "provider": "gemini",
+      "fixture": "gemini/truncation.tool-call-args-stream",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "no-complete-partial-call",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "0 tool calls; no partial args made complete"
+        },
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 97,
+          "cached_input": null,
+          "output": 0,
+          "reasoning": null,
+          "total": 97,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 1
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 714.7729580756277
       },
       "request_count": 1
     },
@@ -4533,7 +5822,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 185.09715399704874
+        "elapsed_ms": 193.60184599645436
       },
       "request_count": 1
     },
@@ -4613,7 +5902,147 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 216.69209795072675
+        "elapsed_ms": 266.89093792811036
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "gemini",
+      "fixture": "gemini/usage.reasoning-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=520 (primary); truth.usage.total=520"
+        },
+        {
+          "id": "reasoning-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.reasoning=388 (primary); truth.usage.reasoning=388"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "There are **11** pots containing three seedlings.\n\n**Check:**\n* 11 pots with 3 seedlings: $11 \\times 3 = 33$ seedlings\n* 7 pots with 2 seedlings: $7 \\times 2 = 14$ seedlings\n* Total pots: $11 + 7 = 18$\n* Total seedlings: $33 + 14 = 47$",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 38,
+          "cached_input": null,
+          "output": 482,
+          "reasoning": 388,
+          "total": 520,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 696.278135990724
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "provider": "gemini",
+      "fixture": "gemini/usage.stream-final-chunk",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "usage-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.input=13 (primary); truth.usage.input=13; usage.output=31 (primary); truth.usage.output=31"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "The sky looks blue because molecules in Earth's atmosphere scatter short-wavelength blue light from the sun in all directions more than they scatter the other colors.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 13,
+          "cached_input": null,
+          "output": 31,
+          "reasoning": null,
+          "total": 44,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 4
+        },
+        "notes": [
+          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
+        ],
+        "elapsed_ms": 683.8536381255835
       },
       "request_count": 1
     },
@@ -4679,7 +6108,7 @@
           "chunks_seen": 28
         },
         "notes": [],
-        "elapsed_ms": 320.7202800549567
+        "elapsed_ms": 317.38709891214967
       },
       "request_count": 1
     },
@@ -4745,7 +6174,7 @@
           "chunks_seen": 24
         },
         "notes": [],
-        "elapsed_ms": 255.78934187069535
+        "elapsed_ms": 258.8544189929962
       },
       "request_count": 1
     },
@@ -4811,7 +6240,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 177.7679231017828
+        "elapsed_ms": 176.44021078012884
       },
       "request_count": 1
     }
