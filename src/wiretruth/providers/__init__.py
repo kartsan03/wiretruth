@@ -213,13 +213,14 @@ def replace_finish_fields(
 
 
 def _registry() -> dict[str, Provider]:
-    from wiretruth.providers import ollama, ollama_openai, openai_chat, openai_responses
+    from wiretruth.providers import gemini, ollama, ollama_openai, openai_chat, openai_responses
 
     return {
         openai_chat.ID: openai_chat,
         openai_responses.ID: openai_responses,
         ollama.ID: ollama,
         ollama_openai.ID: ollama_openai,
+        gemini.ID: gemini,
     }
 
 
