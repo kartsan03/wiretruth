@@ -53,5 +53,16 @@
     "fixed_in": null,
     "opened": "2026-10-13",
     "notes": "any-llm documents the fallback: a Gemini finish reason without an OpenAI counterpart (OTHER, LANGUAGE, MALFORMED_FUNCTION_CALL and any unfamiliar value) maps to None and a complete response then reports stop (https://github.com/mozilla-ai/any-llm/blob/18ed82b8ae89db560bf0b1ec8bccb752fc0e2b5d/src/any_llm/providers/gemini/utils.py#L572-L581). The caller cannot tell such a stop from a normal one."
+  },
+  {
+    "library": "any-llm",
+    "scenarios": ["tools.parallel-calls", "tools.parallel-calls-stream"],
+    "providers": ["gemini"],
+    "issue": "https://github.com/mozilla-ai/any-llm/issues/1472",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-13",
+    "notes": "any-llm's Gemini provider builds call_{hash(function_call.name)}_{n} ids (providers/gemini/utils.py, non-stream and stream converters) and never reads FunctionCall.id, which google-genai exposes and Gemini sends. The ids also differ between processes because str hash() is salted. Reproduced on 1.33.0 and on main at 18ed82b."
   }
 ]

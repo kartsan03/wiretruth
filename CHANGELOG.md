@@ -106,7 +106,8 @@ finding).
 - any-llm 1.33.0 on Gemini, recorded with `gemini-3.5-flash-lite` and `gemini-3.8-flash`. PASS on every
   token-usage scenario, including `usage.reasoning-tokens` (output includes thoughts) and the empty candidate in
   `truncation.reasoning-only`. WRONG on `tools.parallel-calls` and `tools.parallel-calls-stream`: the Gemini
-  provider builds its own `call_{hash(name)}_{n}` ids and ignores the id Gemini sends. WRONG on
+  provider builds its own `call_{hash(name)}_{n}` ids and ignores the id Gemini sends
+  ([mozilla-ai/any-llm#1472](https://github.com/mozilla-ai/any-llm/issues/1472)). WRONG on
   `finish.unknown-value`: a finish reason without an OpenAI counterpart is reported as `stop`, a fallback any-llm
   documents in its code. LOSSY on `stream.missing-finish`: no completion signal for streams.
 
