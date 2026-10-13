@@ -31,42 +31,7 @@
     ],
     "tool_choice": "required"
   },
-  "providers": ["openai-chat", "openai-responses", "gemini"],
-  "call_overrides": {
-    "gemini": {
-      "messages": [
-        {
-          "role": "user",
-          "content": "Create a catalog of 30 flowering plants for a greenhouse. Include an accented Latin, Greek or Japanese common name for each plant and a short description of its flowers."
-        }
-      ],
-      "tools": [
-        {
-          "name": "create_catalog",
-          "description": "Create a botanical catalog.",
-          "parameters": {
-            "type": "object",
-            "properties": {
-              "title": {
-                "type": "string"
-              },
-              "plants": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            },
-            "required": [
-              "title",
-              "plants"
-            ],
-            "additionalProperties": false
-          }
-        }
-      ]
-    }
-  },
+  "providers": ["openai-chat", "openai-responses"],
   "requirements": [
     {
       "id": "no-complete-partial-call",
@@ -81,5 +46,5 @@
       "text": "The caller can tell that the output stopped at the token limit."
     }
   ],
-  "grading_notes": "Where supported, effort none disables reasoning to reserve the limit for tool arguments. Returning unparsed partial arguments satisfies the first requirement; the caller must also be told that the output stopped at the token limit. Repairing the arguments into a complete parsed call contradicts what the wire carried. Ollama providers are not listed because they emit whole calls or no call at the token limit, so the partial-argument requirement cannot be exercised. Gemini uses a botanical catalog override. Its functionCall args are objects, so a token limit may yield no call; the partial-argument check is then vacuous, while truncation signalling is still required. As recorded, the cut at 20 tokens sends MAX_TOKENS with no functionCall part and no candidatesTokenCount."
+  "grading_notes": "Effort none keeps the 20-token limit for the tool arguments. Returning unparsed partial arguments satisfies the first requirement; the caller must also be told that the output stopped at the token limit. Repairing the arguments into a complete parsed call contradicts what the wire carried. Ollama providers are not listed because they emit whole calls or no call at the token limit, so the partial-argument requirement cannot be exercised. Gemini is not listed for the same reason: it sends whole functionCall parts, and a cut at the token limit sends MAX_TOKENS with no call part, the shape truncation.reasoning-only already covers."
 }

@@ -636,15 +636,6 @@
     },
     {
       "scenario": "truncation.tool-call-args",
-      "provider": "gemini",
-      "grade": "PASS",
-      "requirements": {
-        "no-complete-partial-call": "SATISFIED",
-        "cause-is-truncation": "SATISFIED"
-      }
-    },
-    {
-      "scenario": "truncation.tool-call-args",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -655,15 +646,6 @@
     {
       "scenario": "truncation.tool-call-args",
       "provider": "openai-responses",
-      "grade": "PASS",
-      "requirements": {
-        "no-complete-partial-call": "SATISFIED",
-        "cause-is-truncation": "SATISFIED"
-      }
-    },
-    {
-      "scenario": "truncation.tool-call-args-stream",
-      "provider": "gemini",
       "grade": "PASS",
       "requirements": {
         "no-complete-partial-call": "SATISFIED",

@@ -99,7 +99,7 @@ Use two dispatches. Leave `model` empty for plain calls, which selects `gemini-3
 
 ```bash
 gh workflow run record.yml -f provider=gemini \
-  -f scenarios='truncation.text*,truncation.structured-output,truncation.tool-call-args*,tools.*,usage.stream-final-chunk,finish.stop-sequence,stream.utf8'
+  -f scenarios='truncation.text*,truncation.structured-output,tools.*,usage.stream-final-chunk,finish.stop-sequence,stream.utf8'
 ```
 
 Record thinking scenarios with `gemini-3.8-flash`:
@@ -123,9 +123,9 @@ The [thinking guide](https://ai.google.dev/gemini-api/docs/generate-content/thin
 documents `maxOutputTokens` as a combined limit for thoughts and answer tokens. Reaching it during thinking
 produces MAX_TOKENS with no answer: the recorded candidate is `"content": {}` with `thoughtsTokenCount` and no
 `candidatesTokenCount`. `truncation.reasoning-only` uses HIGH and a limit of 32. Candidates without content,
-without parts, or with only a thought signature are accepted. Tool truncation calls use a botanical catalog;
-Gemini sends whole `functionCall` parts with ids, so a cut at the limit sends MAX_TOKENS with no call and the
-partial-argument check is vacuous, while the truncation signal is still graded.
+without parts, or with only a thought signature are accepted. The tool-argument truncation scenarios don't list
+Gemini: it sends whole `functionCall` parts with ids, and a cut at the limit sends MAX_TOKENS with no call part,
+which is the empty-candidate shape `truncation.reasoning-only` already grades.
 
 Truth excludes `thought: true` text, retains whole function calls with optional wire ids, and parses structured
 text only at STOP when JSON output was requested. Requests use `responseJsonSchema` and

@@ -536,8 +536,6 @@ def test_all_gemini_scenarios_build_and_thinking_override_is_effective():
         "truncation.text-stream",
         "truncation.text-stream-usage",
         "truncation.structured-output",
-        "truncation.tool-call-args",
-        "truncation.tool-call-args-stream",
         "truncation.reasoning-only",
         "tools.parallel-calls",
         "tools.parallel-calls-stream",
