@@ -1,0 +1,143 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "anthropic/truncation.tool-call-args",
+  "scenario": "truncation.tool-call-args",
+  "provider": "anthropic",
+  "tier": "documented",
+  "provenance": {
+    "requested_model": "claude-sonnet-5-5",
+    "returned_model": "claude-sonnet-5-5",
+    "source_url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls#handling-results-from-client-tools",
+    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. ASSUMED non-stream truncation: the documented input object contains only title and lacks date, city and attendees. No official example shows this particular max_tokens object. This preserves the documented object type; the partial-JSON check is not exercised by a parsed object. The finish check still applies. The output_tokens_details.thinking_tokens breakdown follows thinking-steering.md (https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost#pricing); the thinking count of 8 is filled in, not measured.",
+    "request": {
+      "model": "claude-sonnet-5-5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Call create_event. Create an event for a weekend pottery workshop in Málaga on 2026-11-14 with 30 attendees. Invent their full names, mixing Spanish, Greek and Japanese names written in their own scripts."
+        }
+      ],
+      "max_tokens": 20,
+      "tools": [
+        {
+          "name": "create_event",
+          "description": "Create a calendar event.",
+          "input_schema": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string",
+                "description": "YYYY-MM-DD"
+              },
+              "city": {
+                "type": "string"
+              },
+              "attendees": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "title",
+              "date",
+              "city",
+              "attendees"
+            ],
+            "additionalProperties": false
+          }
+        }
+      ],
+      "tool_choice": {
+        "type": "auto"
+      }
+    }
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/messages"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "msg_01Aq9w938a90dw8q",
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "thinking",
+                "thinking": "",
+                "signature": "EqQBCgIYAhIM1gbcDa9GJwZA2b3hGgxBdjrkzLoky3dl1pkiMOYds..."
+              },
+              {
+                "type": "tool_use",
+                "id": "toolu_01A09q90qw90lq917835lq9",
+                "name": "create_event",
+                "input": {
+                  "title": "Pottery"
+                }
+              }
+            ],
+            "model": "claude-sonnet-5-5",
+            "stop_reason": "max_tokens",
+            "stop_sequence": null,
+            "stop_details": null,
+            "usage": {
+              "input_tokens": 25,
+              "output_tokens": 20,
+              "output_tokens_details": {
+                "thinking_tokens": 8
+              }
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "max_tokens",
+    "text": null,
+    "tool_calls": [
+      {
+        "id": "toolu_01A09q90qw90lq917835lq9",
+        "name": "create_event",
+        "arguments_raw": "{\"title\":\"Pottery\"}",
+        "arguments_parsed_ok": true,
+        "arguments": {
+          "title": "Pottery"
+        }
+      }
+    ],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 25,
+      "cached_input": null,
+      "output": 20,
+      "reasoning": 8,
+      "total": 45,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 25,
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "thinking_tokens": 8
+        }
+      }
+    },
+    "error": null
+  }
+}

@@ -2,7 +2,7 @@
   "format": "wiretruth.shim/v1",
   "name": "any-llm",
   "language": "python",
-  "packages": {"any-llm-sdk": "1.33.0", "openai": "3.28.0", "ollama": "0.6.3", "google-genai": "2.26.0"},
+  "packages": {"any-llm-sdk": "1.33.0", "openai": "3.28.0", "ollama": "0.6.3", "google-genai": "2.26.0", "anthropic": "0.125.0"},
   "primary_package": "any-llm-sdk",
   "entry": ["python", "shim.py"],
   "providers": {
@@ -10,22 +10,30 @@
     "openai-responses": "any_llm.responses(model=model, provider='openai', api_base=WIRETRUTH_BASE_URL_OPENAI_RESPONSES, api_key=WIRETRUTH_API_KEY)",
     "ollama": "any_llm.completion(model=model, provider='ollama', api_base=WIRETRUTH_BASE_URL_OLLAMA, api_key=WIRETRUTH_API_KEY)",
     "ollama-openai": "any_llm.completion(model=model, provider='openai', api_base=WIRETRUTH_BASE_URL_OLLAMA_OPENAI, api_key=WIRETRUTH_API_KEY)",
-    "gemini": "any_llm.completion(model=model, provider='gemini', api_base=WIRETRUTH_BASE_URL_GEMINI, api_key=WIRETRUTH_API_KEY); host-root base URL"
+    "gemini": "any_llm.completion(model=model, provider='gemini', api_base=WIRETRUTH_BASE_URL_GEMINI, api_key=WIRETRUTH_API_KEY); host-root base URL",
+    "anthropic": "any_llm.completion(model=model, provider='anthropic', api_base=WIRETRUTH_BASE_URL_ANTHROPIC, api_key=WIRETRUTH_API_KEY); host root, SDK appends /v1/messages and uses x-api-key"
   },
   "surfaces": {
-    "finish": {"primary": "choices[0].finish_reason; error.completion.choices[0].finish_reason on finish-reason errors. Responses status / incomplete_details.reason; completed with function_call output means tool_calls; refusal parts mean refusal. No separate raw finish. Native Ollama: non-stream tool calls report tool_calls; streams map done_reason directly, including stop on a tool finish; unknown reasons become stop. Gemini also exposes normalized ChatCompletion finish reasons, without the native enum."},
+    "finish": {"primary": "choices[0].finish_reason; error.completion.choices[0].finish_reason on finish-reason errors. Responses status / incomplete_details.reason; completed with function_call output means tool_calls; refusal parts mean refusal. No separate raw finish. Native Ollama: non-stream tool calls report tool_calls; streams map done_reason directly, including stop on a tool finish; unknown reasons become stop. Gemini also exposes normalized ChatCompletion finish reasons, without the native enum. Anthropic stop_reason is normalized by any-llm into choices[0].finish_reason; native stop_reason is not exposed separately."},
     "text": {"primary": "choices[0].message.content; streaming choices[0].delta.content; error.completion.choices[0].message.content; Responses output message output_text parts or response.output_text.delta"},
     "tool_calls": {"primary": "choices[0].message.tool_calls; streaming choices[0].delta.tool_calls joined by index; error.completion.choices[0].message.tool_calls; Responses function_call items use call_id, name and arguments; streaming output_item.added and argument deltas joined by output_index; arguments read with json.loads. Native Ollama generates UUID ids and serializes argument objects; streaming calls have increasing indexes. Gemini creates ids when absent on the wire; truth accepts those ids."},
-    "usage": {"primary": "usage.prompt_tokens, completion_tokens, total_tokens, prompt_tokens_details.cached_tokens, completion_tokens_details.reasoning_tokens; also error.completion.usage on finish-reason errors; Responses usage.input_tokens, output_tokens, total_tokens, input_tokens_details.cached_tokens, output_tokens_details.reasoning_tokens. Native Ollama exposes prompt/eval counts and their sum, but no cached or reasoning counts. Gemini reports candidates plus thoughts as completion_tokens and exposes thoughts separately as reasoning_tokens; streamed usage is the last snapshot."},
+    "usage": {"primary": "usage.prompt_tokens, completion_tokens, total_tokens, prompt_tokens_details.cached_tokens, completion_tokens_details.reasoning_tokens; also error.completion.usage on finish-reason errors; Responses usage.input_tokens, output_tokens, total_tokens, input_tokens_details.cached_tokens, output_tokens_details.reasoning_tokens. Native Ollama exposes prompt/eval counts and their sum, but no cached or reasoning counts. Gemini reports candidates plus thoughts as completion_tokens and exposes thoughts separately as reasoning_tokens; streamed usage is the last snapshot. Anthropic input includes cache reads and writes in prompt_tokens; cache_read_input_tokens is exposed as prompt_tokens_details.cached_tokens. Thinking is included in completion_tokens with no separate reasoning count."},
     "structured": {"primary": "response_format is a Pydantic model built from the input schema; choices[0].message.parsed is the parsed output; Responses output_parsed from response_format is reported only on return"},
-    "stream": {"primary": "Chat: no completion signal (the ChatCompletionChunk iterator ends the same way with or without [DONE]); last finish reason and last usage-bearing chunk. Responses: the final event (response.completed, response.incomplete or response.failed) and no error. Native Ollama also yields ChatCompletionChunk objects without a separate completion signal. Gemini uses the same iterator without an independent completion signal."}
+    "stream": {"primary": "Chat: no completion signal (the ChatCompletionChunk iterator ends the same way with or without [DONE]); last finish reason and last usage-bearing chunk. Responses: the final event (response.completed, response.incomplete or response.failed) and no error. Native Ollama also yields ChatCompletionChunk objects without a separate completion signal. Gemini uses the same iterator without an independent completion signal. Anthropic also yields normalized ChatCompletionChunk objects with final accumulated usage; no independent message_stop signal is exposed."}
   },
   "finish_map": {
     "stop": "stop", "length": "length", "tool_calls": "tool_calls",
     "function_call": "tool_calls", "content_filter": "content_filter",
-    "completed": "stop", "max_output_tokens": "length", "failed": "error"
+    "completed": "stop", "max_output_tokens": "length", "failed": "error",
+    "end_turn": "stop", "max_tokens": "length", "stop_sequence": "stop",
+    "tool_use": "tool_calls", "refusal": "refusal", "pause_turn": "other",
+    "model_context_window_exceeded": "length"
   },
   "error_map": [
+    {"type": "anthropic.RateLimitError", "category": "rate_limit"},
+    {"type": "anthropic.APIConnectionError", "category": "network"},
+    {"type": "anthropic.APIResponseValidationError", "category": "validation"},
+    {"type": "anthropic.APIError", "category": "api"},
     {"type": "google.genai.errors.APIError", "category": "api"},
     {"type": "ollama._types.ResponseError", "category": "api"},
     {"type": "httpx.TransportError", "category": "network"},
@@ -45,14 +53,15 @@
     {"type": "openai.APIError", "category": "api"},
     {"type": "any_llm.exceptions.AnyLLMError", "category": "api"}
   ],
-  "unsupported": [],
-  "config_notes": ["any-llm Responses rejects a typed response_format with stream=True; structured scenarios use the non-stream path.", "Ollama tool_choice is not mapped; scenarios omit it. Native stream_options is accepted and discarded by any-llm; final usage needs no opt-in.", "Native reasoning_effort none becomes think=false; other explicit efforts become low/medium/high strings. The shim passes the requested effort unchanged.", "The openai provider remaps max_tokens to max_completion_tokens even with an Ollama base URL. The shim retains this library behavior.", "Native Ollama needs the ollama Python package (any-llm-sdk[ollama] extra), pinned here as ollama 0.6.3.", "Gemini reasoning_effort none raises in any-llm; the shim omits it and records a note, using the model default (MINIMAL for gemini-3.5-flash-lite). Other efforts pass through.", "Gemini completion needs google-genai from the any-llm-sdk[gemini] extra, pinned here as 2.26.0 from the supplied library surface probe. Its completion imports do not require the extra's google-cloud-storage package. Manifest packages are installed individually; no project lock change is needed."],
+  "unsupported": [{"scenario": "truncation.structured-output-forced-tool", "providers": ["anthropic"], "reason": "any-llm completion maps typed response_format to native output_config.format and has no structured parser for an explicitly forced tool.", "docs": "https://github.com/mozilla-ai/any-llm/blob/1.33.0/src/any_llm/providers/anthropic/utils.py#L628-L655"}],
+  "config_notes": ["any-llm Responses rejects a typed response_format with stream=True; structured scenarios use the non-stream path.", "Ollama tool_choice is not mapped; scenarios omit it. Native stream_options is accepted and discarded by any-llm; final usage needs no opt-in.", "Native reasoning_effort none becomes think=false; other explicit efforts become low/medium/high strings. The shim passes the requested effort unchanged.", "The openai provider remaps max_tokens to max_completion_tokens even with an Ollama base URL. The shim retains this library behavior.", "Native Ollama needs the ollama Python package (any-llm-sdk[ollama] extra), pinned here as ollama 0.6.3.", "Gemini reasoning_effort none raises in any-llm; the shim omits it and records a note, using the model default (MINIMAL for gemini-3.5-flash-lite). Other efforts pass through.", "Gemini completion needs google-genai from the any-llm-sdk[gemini] extra, pinned here as 2.26.0 from the supplied library surface probe. Its completion imports do not require the extra's google-cloud-storage package. Manifest packages are installed individually; no project lock change is needed.", "Anthropic 0.125.0 is pinned from the offline uv cache; any-llm-sdk 1.33.0 requires anthropic>=0.124.0,<1. Each manifest package is installed individually.", "Anthropic reasoning_effort is passed unchanged. any-llm 1.33.0 sends thinking disabled for reasoning_effort none (its default, auto, sends no thinking field); Sonnet 5.5 rejects that on the real API. Replay preserves this library request behavior; these cells grade response handling.", "extra.anthropic.cache uses the native cache_control keyword. eager_input_streaming uses the SDK extra_body tools field because any-llm's generic tool conversion drops per-tool native options; only the scenario-requested flag is added.", "The forced-tool structured-output scenario is unsupported: response_format selects native JSON output and ordinary tool calls do not attempt structured parsing."],
   "docs": [
+    "https://github.com/mozilla-ai/any-llm/blob/1.33.0/src/any_llm/providers/anthropic/utils.py",
     "https://docs.mozilla.ai/api-reference/completion",
     "https://docs.mozilla.ai/api-reference/exceptions",
     "https://docs.mozilla.ai/api-reference/responses",
-    "https://github.com/mozilla-ai/any-llm/blob/v1.33.0/src/any_llm/providers/gemini/base.py",
-    "https://github.com/mozilla-ai/any-llm/blob/v1.33.0/src/any_llm/providers/gemini/utils.py",
+    "https://github.com/mozilla-ai/any-llm/blob/1.33.0/src/any_llm/providers/gemini/base.py",
+    "https://github.com/mozilla-ai/any-llm/blob/1.33.0/src/any_llm/providers/gemini/utils.py",
     "https://github.com/mozilla-ai/any-llm/blob/main/src/any_llm/providers/ollama/ollama.py",
     "https://github.com/mozilla-ai/any-llm/blob/main/src/any_llm/providers/ollama/utils.py",
     "https://docs.ollama.com/api/openai-compatibility"

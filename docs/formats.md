@@ -67,7 +67,7 @@ directory). Then it checks the files against each other:
 - each results file's path matches its `library.name` and `library.version`;
 - no other JSON file sits under `suite/` or `results/`;
 - each fixture's `truth` matches the truth its provider module computes from its exchanges (today for
-  `openai-chat`, `openai-responses`, `ollama`, `ollama-openai` and `gemini`; lint notes the providers it can't check yet);
+  `openai-chat`, `openai-responses`, `ollama`, `ollama-openai`, `gemini` and `anthropic`; lint notes the providers it can't check yet);
 - no file under `suite/` or `results/`, JSON or not, contains anything that looks like a key, a token, an
   organization or project id, or a credential header ([the secret scan](recording.md#the-secret-scan)).
 
@@ -156,7 +156,7 @@ cell it belongs to. Every field is present; fields the scenario leaves out are `
 | `tool_choice` | `"auto"`, `"required"`, `"none"`, `{"name": …}` or `null` | `null` | `{"name": …}` forces one tool |
 | `output_schema` | object or `null` | `null` | A JSON Schema for structured output |
 | `reasoning` | `{"effort": …}` or `null` | `null` | `effort` is `none`, `minimal`, `low`, `medium`, `high`, `xhigh` or `max`. `null` sends nothing, so the provider's default applies |
-| `extra` | object | `{}` | Hints for one scenario, such as `{"include_usage": true}` |
+| `extra` | object | `{}` | Hints for one scenario, such as `{"include_usage": true}`; Anthropic uses `{"anthropic": {"cache": true}}` for top-level ephemeral `cache_control`, or `{"anthropic": {"eager_input_streaming": true}}` for fine-grained streaming on the supplied tools |
 
 ## Fixture — `wiretruth.fixture/v1`
 

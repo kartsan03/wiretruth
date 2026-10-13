@@ -1,0 +1,94 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "anthropic/truncation.reasoning-only",
+  "scenario": "truncation.reasoning-only",
+  "provider": "anthropic",
+  "tier": "documented",
+  "provenance": {
+    "requested_model": "claude-sonnet-5-5",
+    "returned_model": "claude-sonnet-5-5",
+    "source_url": "https://platform.claude.com/docs/en/build-with-claude/thinking#controlling-thinking-display",
+    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. ASSUMED max_tokens envelope with exactly one omitted thinking block and no text. Empty thinking plus signature follows omitted display; signature is the literal streaming placeholder. The docs do not print this complete truncated response. The output_tokens_details.thinking_tokens breakdown follows thinking-steering.md (https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost#pricing); the thinking count of 64 is filled in, not measured.",
+    "request": {
+      "model": "claude-sonnet-5-5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Find the smallest positive whole number that leaves a remainder of 1 when divided by 2, 3, 4, 5 or 6 and is divisible by 7. Check your answer before replying."
+        }
+      ],
+      "max_tokens": 64,
+      "thinking": {
+        "type": "adaptive"
+      },
+      "output_config": {
+        "effort": "medium"
+      }
+    }
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/messages"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "msg_01Aq9w938a90dw8q",
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "thinking",
+                "thinking": "",
+                "signature": "EqQBCgIYAhIM1gbcDa9GJwZA2b3hGgxBdjrkzLoky3dl1pkiMOYds..."
+              }
+            ],
+            "model": "claude-sonnet-5-5",
+            "stop_reason": "max_tokens",
+            "stop_sequence": null,
+            "stop_details": null,
+            "usage": {
+              "input_tokens": 25,
+              "output_tokens": 64,
+              "output_tokens_details": {
+                "thinking_tokens": 64
+              }
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "max_tokens",
+    "text": null,
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 25,
+      "cached_input": null,
+      "output": 64,
+      "reasoning": 64,
+      "total": 89,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 25,
+        "output_tokens": 64,
+        "output_tokens_details": {
+          "thinking_tokens": 64
+        }
+      }
+    },
+    "error": null
+  }
+}

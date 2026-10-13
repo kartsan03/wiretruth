@@ -226,6 +226,7 @@ if call["provider"] not in (
     "ollama",
     "ollama-openai",
     "gemini",
+    "anthropic",
 ) or (call["provider"] != os.environ["WIRETRUTH_PROVIDER"]):
     sys.exit("any-llm: provider not mapped yet")
 responses = call["provider"] == "openai-responses"
@@ -265,6 +266,16 @@ obs = {
     "notes": [],
 }
 tool_calls = {}
+if (
+    call["provider"] == "anthropic"
+    and call["scenario"] == "truncation.structured-output-forced-tool"
+):
+    entry = next(item for item in manifest["unsupported"] if item["scenario"] == call["scenario"])
+    obs.update(outcome="unsupported", unsupported_reason=entry["reason"] + " " + entry["docs"])
+    obs["structured"]["attempted"] = False
+    obs["elapsed_ms"] = (time.monotonic() - started) * 1000
+    print(json.dumps(obs, ensure_ascii=True, allow_nan=False))
+    sys.exit(0)
 kwargs = {}
 if call.get("tools"):
     kwargs["tools"] = [{"type": "function", "function": tool} for tool in call["tools"]]
@@ -289,6 +300,23 @@ if call.get("reasoning") is not None:
         kwargs["reasoning_effort"] = call["reasoning"]["effort"]
 if call.get("extra", {}).get("include_usage"):
     kwargs["stream_options"] = {"include_usage": True}
+if call["provider"] == "anthropic":
+    hints = call.get("extra", {}).get("anthropic", {})
+    if hints.get("cache"):
+        kwargs["cache_control"] = {"type": "ephemeral"}
+    if hints.get("eager_input_streaming"):
+        # any-llm drops native tool options; the SDK documents extra_body for them.
+        kwargs["extra_body"] = {
+            "tools": [
+                {
+                    "name": tool["name"],
+                    "description": tool["description"],
+                    "input_schema": tool["parameters"],
+                    "eager_input_streaming": True,
+                }
+                for tool in call["tools"]
+            ]
+        }
 if responses:
     kwargs = responses_kwargs()
 threading.excepthook = lambda args: observe_error(args.exc_value)
@@ -318,7 +346,9 @@ try:
             # https://docs.mozilla.ai/api-reference/completion (Basic completion and Streaming)
             result = any_llm.completion(
                 model=call["model"],
-                provider=call["provider"] if call["provider"] in ("ollama", "gemini") else "openai",
+                provider=call["provider"]
+                if call["provider"] in ("ollama", "gemini", "anthropic")
+                else "openai",
                 messages=call["messages"],
                 api_base=os.environ[
                     "WIRETRUTH_BASE_URL_" + call["provider"].upper().replace("-", "_")

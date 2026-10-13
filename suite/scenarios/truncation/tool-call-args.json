@@ -31,7 +31,18 @@
     ],
     "tool_choice": "required"
   },
-  "providers": ["openai-chat", "openai-responses"],
+  "call_overrides": {
+    "anthropic": {
+      "tool_choice": "auto",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Call create_event. Create an event for a weekend pottery workshop in Málaga on 2026-11-14 with 30 attendees. Invent their full names, mixing Spanish, Greek and Japanese names written in their own scripts."
+        }
+      ]
+    }
+  },
+  "providers": ["openai-chat", "openai-responses", "anthropic"],
   "requirements": [
     {
       "id": "no-complete-partial-call",
@@ -46,5 +57,5 @@
       "text": "The caller can tell that the output stopped at the token limit."
     }
   ],
-  "grading_notes": "Effort none keeps the 20-token limit for the tool arguments. Returning unparsed partial arguments satisfies the first requirement; the caller must also be told that the output stopped at the token limit. Repairing the arguments into a complete parsed call contradicts what the wire carried. Ollama providers are not listed because they emit whole calls or no call at the token limit, so the partial-argument requirement cannot be exercised. Gemini is not listed for the same reason: it sends whole functionCall parts, and a cut at the token limit sends MAX_TOKENS with no call part, the shape truncation.reasoning-only already covers."
+  "grading_notes": "Effort none keeps the 20-token limit for the tool arguments. Returning unparsed partial arguments satisfies the first requirement; the caller must also be told that the output stopped at the token limit. Repairing the arguments into a complete parsed call contradicts what the wire carried. Ollama providers are not listed because they emit whole calls or no call at the token limit, so the partial-argument requirement cannot be exercised. Gemini is not listed for the same reason: it sends whole functionCall parts, and a cut at the token limit sends MAX_TOKENS with no call part, the shape truncation.reasoning-only already covers. Anthropic uses auto and a prompt naming create_event because Sonnet 5.5 rejects forced tool choice. Effort none leaves adaptive thinking enabled. Its documented fixture assumes an incomplete input object with missing required fields at max_tokens; the docs require object-valued input and do not show this exact response. The partial-JSON check cannot detect missing schema fields in that object, so only the truncation requirement is exercised for this cell; the stream variant tests partial JSON directly."
 }

@@ -1,0 +1,87 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "anthropic/stream.utf8-split",
+  "scenario": "stream.utf8-split",
+  "provider": "anthropic",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "claude-sonnet-5-5",
+    "returned_model": "claude-sonnet-5-5",
+    "request": {
+      "model": "claude-sonnet-5-5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Reply exactly with: Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉"
+        }
+      ],
+      "max_tokens": 64,
+      "stream": true
+    }
+  },
+  "derived_from": {
+    "fixture": "anthropic/stream.utf8",
+    "transform": "rechunk_inside_utf8",
+    "args": {
+      "points": [
+        560,
+        698,
+        716,
+        717,
+        744,
+        745,
+        746
+      ]
+    },
+    "rationale": "A network chunk boundary splits a multi-byte UTF-8 character.",
+    "evidence_url": "https://github.com/langchain-ai/langchainjs/issues/5285"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/messages"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "chunks_b64": [
+            "ZXZlbnQ6IG1lc3NhZ2Vfc3RhcnQKZGF0YTogeyJ0eXBlIjogIm1lc3NhZ2Vfc3RhcnQiLCAibWVzc2FnZSI6IHsiaWQiOiAibXNnXzAxQXE5dzkzOGE5MGR3OHEiLCAidHlwZSI6ICJtZXNzYWdlIiwgInJvbGUiOiAiYXNzaXN0YW50IiwgImNvbnRlbnQiOiBbXSwgIm1vZGVsIjogImNsYXVkZS1zb25uZXQtNS01IiwgInN0b3BfcmVhc29uIjogbnVsbCwgInN0b3Bfc2VxdWVuY2UiOiBudWxsLCAidXNhZ2UiOiB7ImlucHV0X3Rva2VucyI6IDI1LCAib3V0cHV0X3Rva2VucyI6IDF9fX0KCmV2ZW50OiBjb250ZW50X2Jsb2NrX3N0YXJ0CmRhdGE6IHsidHlwZSI6ICJjb250ZW50X2Jsb2NrX3N0YXJ0IiwgImluZGV4IjogMCwgImNvbnRlbnRfYmxvY2siOiB7InR5cGUiOiAidGV4dCIsICJ0ZXh0IjogIiJ9fQoKZXZlbnQ6IHBpbmcKZGF0YTogeyJ0eXBlIjogInBpbmcifQoKZXZlbnQ6IGNvbnRlbnRfYmxvY2tfZGVsdGEKZGF0YTogeyJ0eXBlIjogImNvbnRlbnRfYmxvY2tfZGVsdGEiLCAiaW5kZXgiOiAwLCAiZGVsdGEiOiB7InR5cGUiOiAidGV4dF9kZWx0YSIsICJ0ZXh0IjogIkNhZsM=",
+            "qSAifX0KCmV2ZW50OiBjb250ZW50X2Jsb2NrX2RlbHRhCmRhdGE6IHsidHlwZSI6ICJjb250ZW50X2Jsb2NrX2RlbHRhIiwgImluZGV4IjogMCwgImRlbHRhIjogeyJ0eXBlIjogInRleHRfZGVsdGEiLCAidGV4dCI6ICJaw7xyaWNoIOKAlCDO",
+            "us6xzrvOt868zq3Pgc6xISDm",
+            "nQ==",
+            "seS6rOOBp+S8muOBhOOBvuOBl+OCh+OBhiDw",
+            "nw==",
+            "jA==",
+            "uPCfjokifX0KCmV2ZW50OiBjb250ZW50X2Jsb2NrX3N0b3AKZGF0YTogeyJ0eXBlIjogImNvbnRlbnRfYmxvY2tfc3RvcCIsICJpbmRleCI6IDB9CgpldmVudDogbWVzc2FnZV9kZWx0YQpkYXRhOiB7InR5cGUiOiJtZXNzYWdlX2RlbHRhIiwiZGVsdGEiOnsic3RvcF9yZWFzb24iOiJlbmRfdHVybiIsInN0b3Bfc2VxdWVuY2UiOm51bGx9LCJ1c2FnZSI6eyJvdXRwdXRfdG9rZW5zIjo0MH19CgpldmVudDogbWVzc2FnZV9zdG9wCmRhdGE6IHsidHlwZSI6ICJtZXNzYWdlX3N0b3AifQoK"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "end_turn",
+    "text": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 25,
+      "cached_input": null,
+      "output": 40,
+      "reasoning": null,
+      "total": 65,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 25,
+        "output_tokens": 40
+      }
+    },
+    "error": null
+  }
+}

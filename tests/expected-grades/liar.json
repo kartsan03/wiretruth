@@ -2,6 +2,15 @@
   "cells": [
     {
       "scenario": "finish.stop-sequence",
+      "provider": "anthropic",
+      "grade": "PASS",
+      "requirements": {
+        "finish-is-stop": "SATISFIED",
+        "text-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "finish.stop-sequence",
       "provider": "gemini",
       "grade": "PASS",
       "requirements": {
@@ -25,6 +34,17 @@
       "requirements": {
         "finish-is-stop": "SATISFIED",
         "text-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "response-returned": "SATISFIED",
+        "finish-is-other": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "raw-finish-reported": "NOT_OBSERVABLE"
       }
     },
     {
@@ -119,6 +139,14 @@
     },
     {
       "scenario": "stream.error-midstream",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "error-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.error-midstream",
       "provider": "gemini",
       "grade": "WRONG",
       "requirements": {
@@ -151,6 +179,15 @@
     },
     {
       "scenario": "stream.missing-finish",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish",
       "provider": "gemini",
       "grade": "WRONG",
       "requirements": {
@@ -196,6 +233,15 @@
     },
     {
       "scenario": "stream.missing-finish-abort",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
       "provider": "gemini",
       "grade": "WRONG",
       "requirements": {
@@ -241,6 +287,15 @@
     },
     {
       "scenario": "stream.utf8",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "text-reported": "CONTRADICTED",
+        "no-replacement-chars": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.utf8",
       "provider": "gemini",
       "grade": "WRONG",
       "requirements": {
@@ -286,6 +341,15 @@
     },
     {
       "scenario": "stream.utf8-split",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "text-reported": "CONTRADICTED",
+        "no-replacement-chars": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "stream.utf8-split",
       "provider": "gemini",
       "grade": "WRONG",
       "requirements": {
@@ -331,6 +395,14 @@
     },
     {
       "scenario": "tools.parallel-calls",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "calls-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls",
       "provider": "gemini",
       "grade": "WRONG",
       "requirements": {
@@ -371,6 +443,14 @@
     },
     {
       "scenario": "tools.parallel-calls-stream",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "calls-reported": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
       "provider": "gemini",
       "grade": "WRONG",
       "requirements": {
@@ -411,6 +491,16 @@
     },
     {
       "scenario": "truncation.reasoning-only",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.reasoning-only",
       "provider": "gemini",
       "grade": "WRONG",
       "requirements": {
@@ -456,6 +546,17 @@
       "requirements": {
         "cause-is-truncation": "CONTRADICTED",
         "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.structured-output",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "no-partial-success": "CONTRADICTED",
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "CONTRADICTED",
         "usage-reported": "NOT_OBSERVABLE"
       }
     },
@@ -515,6 +616,27 @@
       }
     },
     {
+      "scenario": "truncation.structured-output-forced-tool",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "no-partial-success": "CONTRADICTED",
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.text",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
       "scenario": "truncation.text",
       "provider": "gemini",
       "grade": "WRONG",
@@ -557,6 +679,16 @@
     {
       "scenario": "truncation.text",
       "provider": "openai-responses",
+      "grade": "WRONG",
+      "requirements": {
+        "cause-is-truncation": "CONTRADICTED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "anthropic",
       "grade": "WRONG",
       "requirements": {
         "cause-is-truncation": "CONTRADICTED",
@@ -636,6 +768,15 @@
     },
     {
       "scenario": "truncation.tool-call-args",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "no-complete-partial-call": "SATISFIED",
+        "cause-is-truncation": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "truncation.tool-call-args",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -654,6 +795,15 @@
     },
     {
       "scenario": "truncation.tool-call-args-stream",
+      "provider": "anthropic",
+      "grade": "WRONG",
+      "requirements": {
+        "no-complete-partial-call": "CONTRADICTED",
+        "cause-is-truncation": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "truncation.tool-call-args-stream",
       "provider": "openai-chat",
       "grade": "WRONG",
       "requirements": {
@@ -668,6 +818,15 @@
       "requirements": {
         "no-complete-partial-call": "CONTRADICTED",
         "cause-is-truncation": "CONTRADICTED"
+      }
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "provider": "anthropic",
+      "grade": "LOSSY",
+      "requirements": {
+        "total-reconciles": "NOT_OBSERVABLE",
+        "cached-input-reported": "NOT_OBSERVABLE"
       }
     },
     {
@@ -677,6 +836,14 @@
       "requirements": {
         "total-reconciles": "NOT_OBSERVABLE",
         "reasoning-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "provider": "anthropic",
+      "grade": "LOSSY",
+      "requirements": {
+        "usage-reported": "NOT_OBSERVABLE"
       }
     },
     {

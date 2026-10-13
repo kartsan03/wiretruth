@@ -42,5 +42,5 @@
       "text": "Token usage is reported, and matches the provider's counts."
     }
   ],
-  "grading_notes": "A finish reason of length satisfies the first requirement, and so does a dedicated truncation error, which some libraries raise instead of returning the partial text. Such a library gets a note for the text requirement, a SHOULD, and keeps its grade. Effort none disables reasoning where supported. Gemini maps it to MINIMAL, which may still consume some of the limit on thoughts. The openai-chat fixture was recorded with an earlier prompt, which the override keeps; every other provider uses the current one."
+  "grading_notes": "A finish reason of length satisfies the first requirement, and so does a dedicated truncation error, which some libraries raise instead of returning the partial text. Such a library gets a note for the text requirement, a SHOULD, and keeps its grade. Effort none disables reasoning where supported. Gemini maps it to MINIMAL, which may still consume some of the limit on thoughts. The openai-chat fixture was recorded with an earlier prompt, which the override keeps; every other provider uses the current one. Anthropic effort none sends no thinking configuration: Sonnet 5.5 keeps adaptive thinking enabled."
 }

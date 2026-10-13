@@ -7,8 +7,8 @@
     "language": "python"
   },
   "run": {
-    "at": "2026-10-13T10:41:22Z",
-    "git_sha": "d059a76d66c1f7c96a2b06bcceb8090ce2cee717",
+    "at": "2026-10-13T13:51:38Z",
+    "git_sha": "f96d2277e657a44397b75b5b6940cbf583c3acbf",
     "ci_run": null,
     "runner": "wiretruth 0.2.0.dev0",
     "packages": {
@@ -54,6 +54,78 @@
     }
   },
   "cells": [
+    {
+      "scenario": "finish.stop-sequence",
+      "provider": "anthropic",
+      "fixture": "anthropic/finish.stop-sequence",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "finish-is-stop",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"stop\" (primary: choices[0].finish_reason); truth.finish=\"stop\"; required finish=\"stop\""
+        },
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"1, 2, 3, 4, 5, 6, 7, 8, 9, 10\" (primary); truth.text=\"1, 2, 3, 4, 5, 6, 7, 8, 9, 10\""
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 25,
+          "cached_input": null,
+          "output": 30,
+          "reasoning": null,
+          "total": 55,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 356.1120198573917
+      },
+      "request_count": 1
+    },
     {
       "scenario": "finish.stop-sequence",
       "provider": "gemini",
@@ -124,7 +196,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 721.3688031770289
+        "elapsed_ms": 1176.327196182683
       },
       "request_count": 1
     },
@@ -196,7 +268,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 231.5824879333377
+        "elapsed_ms": 236.06384405866265
       },
       "request_count": 1
     },
@@ -268,7 +340,94 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 150.81236511468887
+        "elapsed_ms": 222.42138092406094
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "provider": "anthropic",
+      "fixture": "anthropic/finish.unknown-value",
+      "fixture_tier": "derived",
+      "grade": "WRONG",
+      "requirements": [
+        {
+          "id": "response-returned",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "outcome=returned; error.category=null; truth.error=null"
+        },
+        {
+          "id": "finish-is-other",
+          "level": "MUST",
+          "status": "CONTRADICTED",
+          "evidence": "finish.value=\"stop\" (primary: choices[0].finish_reason); truth.finish=\"other\"; required finish=\"other\""
+        },
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Octopuses change colour by\" (primary); truth.text=\"Octopuses change colour by\""
+        },
+        {
+          "id": "raw-finish-reported",
+          "level": "SHOULD",
+          "status": "CONTRADICTED",
+          "evidence": "finish.raw=\"stop\"; truth.raw_finish=\"WIRETRUTH_UNKNOWN_REASON\""
+        }
+      ],
+      "notes": [
+        "MUST finish-is-other: CONTRADICTED: finish.value=\"stop\" (primary: choices[0].finish_reason); truth.finish=\"other\"; required finish=\"other\"",
+        "SHOULD raw-finish-reported: CONTRADICTED: finish.raw=\"stop\"; truth.raw_finish=\"WIRETRUTH_UNKNOWN_REASON\""
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Octopuses change colour by",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 25,
+          "cached_input": null,
+          "output": 16,
+          "reasoning": null,
+          "total": 41,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 246.33929994888604
       },
       "request_count": 1
     },
@@ -357,7 +516,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 701.734920963645
+        "elapsed_ms": 1008.8255500886589
       },
       "request_count": 1
     },
@@ -444,7 +603,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 187.80811200849712
+        "elapsed_ms": 412.8401419147849
       },
       "request_count": 1
     },
@@ -539,7 +698,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 150.0023170374334
+        "elapsed_ms": 268.0676900781691
       },
       "request_count": 1
     },
@@ -634,7 +793,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 155.78632708638906
+        "elapsed_ms": 334.34340404346585
       },
       "request_count": 1
     },
@@ -718,7 +877,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 271.52723213657737
+        "elapsed_ms": 353.2958519645035
       },
       "request_count": 1
     },
@@ -796,7 +955,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 147.27512886747718
+        "elapsed_ms": 171.98891402222216
       },
       "request_count": 1
     },
@@ -864,7 +1023,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 146.14629815332592
+        "elapsed_ms": 298.16379002295434
       },
       "request_count": 1
     },
@@ -936,7 +1095,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 202.87665002979338
+        "elapsed_ms": 401.76695212721825
       },
       "request_count": 1
     },
@@ -1008,7 +1167,79 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 137.78036506846547
+        "elapsed_ms": 134.77256195619702
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.error-midstream",
+      "provider": "anthropic",
+      "fixture": "anthropic/stream.error-midstream",
+      "fixture_tier": "derived",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "error-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "outcome=raised; error.category=\"api\"; finish.value=null (absent); truth.finish=\"error\""
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "raised",
+        "unsupported_reason": null,
+        "error": {
+          "type": "anthropic.APIStatusError",
+          "message": "{'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}",
+          "category": "api",
+          "retry_after": null,
+          "stack_top": "anthropic/_streaming.py:332"
+        },
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": "Octopuses ",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": false,
+          "chunks_seen": 10
+        },
+        "notes": [],
+        "elapsed_ms": 367.7358780987561
       },
       "request_count": 1
     },
@@ -1082,7 +1313,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 689.1943560913205
+        "elapsed_ms": 1006.5127129200846
       },
       "request_count": 1
     },
@@ -1154,7 +1385,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 224.11286202259362
+        "elapsed_ms": 260.0756569299847
       },
       "request_count": 1
     },
@@ -1226,7 +1457,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 174.96828408911824
+        "elapsed_ms": 191.0240340512246
       },
       "request_count": 1
     },
@@ -1298,7 +1529,81 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 244.9354398995638
+        "elapsed_ms": 352.4902279023081
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.missing-finish",
+      "provider": "anthropic",
+      "fixture": "anthropic/stream.missing-finish",
+      "fixture_tier": "derived",
+      "grade": "LOSSY",
+      "requirements": [
+        {
+          "id": "no-normal-stop",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "outcome=returned; finish.value=null (absent); truth.finish=\"none\"; forbidden finish=\"stop\""
+        },
+        {
+          "id": "stream-incomplete",
+          "level": "MUST",
+          "status": "NOT_OBSERVABLE",
+          "evidence": "stream.completed=null; outcome=returned; truth.stream_completed=false"
+        }
+      ],
+      "notes": [
+        "MUST stream-incomplete: NOT_OBSERVABLE: stream.completed=null; outcome=returned; truth.stream_completed=false"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": "Octopuses change colour by",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 13
+        },
+        "notes": [],
+        "elapsed_ms": 276.5827300027013
       },
       "request_count": 1
     },
@@ -1374,7 +1679,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 695.503466995433
+        "elapsed_ms": 994.6613139472902
       },
       "request_count": 1
     },
@@ -1448,7 +1753,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 242.30104591697454
+        "elapsed_ms": 413.0107439123094
       },
       "request_count": 1
     },
@@ -1522,7 +1827,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 210.38243104703724
+        "elapsed_ms": 230.99500080570579
       },
       "request_count": 1
     },
@@ -1596,7 +1901,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 193.07414209470153
+        "elapsed_ms": 346.86048002913594
       },
       "request_count": 1
     },
@@ -1668,7 +1973,85 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 260.5816691648215
+        "elapsed_ms": 369.8523931670934
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
+      "provider": "anthropic",
+      "fixture": "anthropic/stream.missing-finish-abort",
+      "fixture_tier": "derived",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "no-normal-stop",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "outcome=raised; finish.value=null (absent); truth.finish=\"none\"; forbidden finish=\"stop\""
+        },
+        {
+          "id": "stream-incomplete",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "stream.completed=false; outcome=raised; truth.stream_completed=false"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "raised",
+        "unsupported_reason": null,
+        "error": {
+          "type": "httpx.RemoteProtocolError",
+          "message": "peer closed connection without sending complete message body (incomplete chunked read)",
+          "category": "network",
+          "retry_after": null,
+          "stack_top": "httpx/_transports/default.py:118"
+        },
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": "Octopuses ",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": false,
+          "chunks_seen": 10
+        },
+        "notes": [],
+        "elapsed_ms": 214.51885998249054
       },
       "request_count": 1
     },
@@ -1748,7 +2131,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 668.9538948703557
+        "elapsed_ms": 1246.4310238137841
       },
       "request_count": 1
     },
@@ -1826,7 +2209,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 221.49056801572442
+        "elapsed_ms": 280.5211159866303
       },
       "request_count": 1
     },
@@ -1904,7 +2287,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 165.27852602303028
+        "elapsed_ms": 191.92481809295714
       },
       "request_count": 1
     },
@@ -1982,7 +2365,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 168.43942692503333
+        "elapsed_ms": 193.20237287320197
       },
       "request_count": 1
     },
@@ -2060,7 +2443,79 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 248.08125686831772
+        "elapsed_ms": 407.15666115283966
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.utf8",
+      "provider": "anthropic",
+      "fixture": "anthropic/stream.utf8",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); truth.text=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\""
+        },
+        {
+          "id": "no-replacement-chars",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); U+FFFD count=0"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 25,
+          "cached_input": null,
+          "output": 40,
+          "reasoning": null,
+          "total": 65,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 9
+        },
+        "notes": [],
+        "elapsed_ms": 272.66232296824455
       },
       "request_count": 1
     },
@@ -2134,7 +2589,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 708.1453769933432
+        "elapsed_ms": 1250.3314670175314
       },
       "request_count": 1
     },
@@ -2206,7 +2661,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 252.47507193125784
+        "elapsed_ms": 314.4764890894294
       },
       "request_count": 1
     },
@@ -2278,7 +2733,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 218.94272393546999
+        "elapsed_ms": 272.2076680511236
       },
       "request_count": 1
     },
@@ -2350,7 +2805,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 220.9932750556618
+        "elapsed_ms": 354.94118207134306
       },
       "request_count": 1
     },
@@ -2422,7 +2877,79 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 268.1085451040417
+        "elapsed_ms": 317.25330417975783
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "stream.utf8-split",
+      "provider": "anthropic",
+      "fixture": "anthropic/stream.utf8-split",
+      "fixture_tier": "derived",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); truth.text=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\""
+        },
+        {
+          "id": "no-replacement-chars",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉\" (primary); U+FFFD count=0"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 25,
+          "cached_input": null,
+          "output": 40,
+          "reasoning": null,
+          "total": 65,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 9
+        },
+        "notes": [],
+        "elapsed_ms": 286.9906281121075
       },
       "request_count": 1
     },
@@ -2496,7 +3023,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 688.06889699772
+        "elapsed_ms": 1119.29049808532
       },
       "request_count": 1
     },
@@ -2568,7 +3095,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 205.51730110310018
+        "elapsed_ms": 301.82195687666535
       },
       "request_count": 1
     },
@@ -2640,7 +3167,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 158.26087002642453
+        "elapsed_ms": 305.3915079217404
       },
       "request_count": 1
     },
@@ -2712,7 +3239,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 157.167678931728
+        "elapsed_ms": 247.97873198986053
       },
       "request_count": 1
     },
@@ -2784,7 +3311,92 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 256.4173471182585
+        "elapsed_ms": 424.9481619335711
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "tools.parallel-calls",
+      "provider": "anthropic",
+      "fixture": "anthropic/tools.parallel-calls",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "calls-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "tool_calls[0] id=\"toolu_01A09q90qw90lq917835lq9\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"toolu_01A09q90qw90lq917835lq9\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"toolu_01B09q90qw90lq917835lq9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"toolu_01B09q90qw90lq917835lq9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "tool_calls",
+          "raw": "tool_calls",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [
+          {
+            "id": "toolu_01A09q90qw90lq917835lq9",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "São Paulo"
+            }
+          },
+          {
+            "id": "toolu_01B09q90qw90lq917835lq9",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "Zürich"
+            }
+          }
+        ],
+        "usage": {
+          "input": 180,
+          "cached_input": null,
+          "output": 48,
+          "reasoning": null,
+          "total": 228,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 172.80806181952357
       },
       "request_count": 1
     },
@@ -2799,11 +3411,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"call_7188633667101404929_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_120847\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_7188633667101404929_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_120848\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"call_-5201471136765337120_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_120847\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_-5201471136765337120_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_120848\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"call_7188633667101404929_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_120847\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_7188633667101404929_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_120848\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"call_-5201471136765337120_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_120847\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_-5201471136765337120_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_120848\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -2833,7 +3445,7 @@
         },
         "tool_calls": [
           {
-            "id": "call_7188633667101404929_0",
+            "id": "call_-5201471136765337120_0",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -2842,7 +3454,7 @@
             }
           },
           {
-            "id": "call_7188633667101404929_1",
+            "id": "call_-5201471136765337120_1",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -2873,7 +3485,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 737.3857391066849
+        "elapsed_ms": 1120.9216571878642
       },
       "request_count": 1
     },
@@ -2888,11 +3500,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"2784738e-20e0-4c2a-9336-938d951b17a7\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"437867ad-56cb-4324-9a0f-da622a997dba\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"3972c760-858b-4728-a05a-279fc6e6a649\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"4d3747a6-5e75-4637-b82e-f269adbba01e\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"2784738e-20e0-4c2a-9336-938d951b17a7\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"437867ad-56cb-4324-9a0f-da622a997dba\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"3972c760-858b-4728-a05a-279fc6e6a649\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"4d3747a6-5e75-4637-b82e-f269adbba01e\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -2922,7 +3534,7 @@
         },
         "tool_calls": [
           {
-            "id": "2784738e-20e0-4c2a-9336-938d951b17a7",
+            "id": "3972c760-858b-4728-a05a-279fc6e6a649",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -2931,7 +3543,7 @@
             }
           },
           {
-            "id": "437867ad-56cb-4324-9a0f-da622a997dba",
+            "id": "4d3747a6-5e75-4637-b82e-f269adbba01e",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -2960,7 +3572,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 175.46160891652107
+        "elapsed_ms": 313.77986003644764
       },
       "request_count": 1
     },
@@ -3045,7 +3657,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 145.07909398525953
+        "elapsed_ms": 148.1160211842507
       },
       "request_count": 1
     },
@@ -3130,7 +3742,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 132.19856400974095
+        "elapsed_ms": 208.32229289226234
       },
       "request_count": 1
     },
@@ -3215,7 +3827,92 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 288.7987969443202
+        "elapsed_ms": 482.9054311849177
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
+      "provider": "anthropic",
+      "fixture": "anthropic/tools.parallel-calls-stream",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "calls-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "tool_calls[0] id=\"toolu_01A09q90qw90lq917835lq9\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"toolu_01A09q90qw90lq917835lq9\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"toolu_01B09q90qw90lq917835lq9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"toolu_01B09q90qw90lq917835lq9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "tool_calls",
+          "raw": "tool_calls",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [
+          {
+            "id": "toolu_01A09q90qw90lq917835lq9",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\": \"São Paulo\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "São Paulo"
+            }
+          },
+          {
+            "id": "toolu_01B09q90qw90lq917835lq9",
+            "name": "get_weather",
+            "arguments_raw": "{\"city\": \"Zürich\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "city": "Zürich"
+            }
+          }
+        ],
+        "usage": {
+          "input": 180,
+          "cached_input": null,
+          "output": 48,
+          "reasoning": null,
+          "total": 228,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 15
+        },
+        "notes": [],
+        "elapsed_ms": 293.1107459589839
       },
       "request_count": 1
     },
@@ -3230,11 +3927,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"call_6864038711552626911_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_89893\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_6864038711552626911_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_89896\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"call_-1615951408272134819_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_89893\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_-1615951408272134819_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_89896\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"call_6864038711552626911_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_89893\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_6864038711552626911_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_89896\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"call_-1615951408272134819_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_89893\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_-1615951408272134819_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_89896\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -3264,7 +3961,7 @@
         },
         "tool_calls": [
           {
-            "id": "call_6864038711552626911_0",
+            "id": "call_-1615951408272134819_0",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -3273,7 +3970,7 @@
             }
           },
           {
-            "id": "call_6864038711552626911_1",
+            "id": "call_-1615951408272134819_1",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -3304,7 +4001,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 650.8717720862478
+        "elapsed_ms": 1235.4458449408412
       },
       "request_count": 1
     },
@@ -3319,11 +4016,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"31d14b9f-9a5e-42da-8390-045f11767df5\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"ca11ad2e-5037-4bb5-86d4-58a430294312\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"8b75c529-6eb6-4a63-a375-4551bfe56f39\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"8e864d64-6145-4ca4-81ba-cbdbad0523e1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"31d14b9f-9a5e-42da-8390-045f11767df5\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"ca11ad2e-5037-4bb5-86d4-58a430294312\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"8b75c529-6eb6-4a63-a375-4551bfe56f39\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"8e864d64-6145-4ca4-81ba-cbdbad0523e1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -3353,7 +4050,7 @@
         },
         "tool_calls": [
           {
-            "id": "31d14b9f-9a5e-42da-8390-045f11767df5",
+            "id": "8b75c529-6eb6-4a63-a375-4551bfe56f39",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -3362,7 +4059,7 @@
             }
           },
           {
-            "id": "ca11ad2e-5037-4bb5-86d4-58a430294312",
+            "id": "8e864d64-6145-4ca4-81ba-cbdbad0523e1",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -3391,7 +4088,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 190.17267785966396
+        "elapsed_ms": 276.2141190469265
       },
       "request_count": 1
     },
@@ -3476,7 +4173,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 146.25270385295153
+        "elapsed_ms": 161.9037960190326
       },
       "request_count": 1
     },
@@ -3561,7 +4258,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 198.65408586338162
+        "elapsed_ms": 210.60630585998297
       },
       "request_count": 1
     },
@@ -3646,7 +4343,85 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 254.2079179547727
+        "elapsed_ms": 443.16510297358036
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "provider": "anthropic",
+      "fixture": "anthropic/truncation.reasoning-only",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"\" (primary); truth.text=null"
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.output=64 (primary); truth.usage.output=64"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 25,
+          "cached_input": null,
+          "output": 64,
+          "reasoning": null,
+          "total": 89,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 279.35842890292406
       },
       "request_count": 1
     },
@@ -3724,7 +4499,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 695.6437679473311
+        "elapsed_ms": 1092.622749041766
       },
       "request_count": 1
     },
@@ -3802,7 +4577,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 175.345818977803
+        "elapsed_ms": 257.3070840444416
       },
       "request_count": 1
     },
@@ -3880,7 +4655,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 146.67911804281175
+        "elapsed_ms": 203.97961209528148
       },
       "request_count": 1
     },
@@ -3958,7 +4733,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 141.76189294084907
+        "elapsed_ms": 262.8093329258263
       },
       "request_count": 1
     },
@@ -4036,7 +4811,97 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 272.61447301134467
+        "elapsed_ms": 427.9765139799565
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.structured-output",
+      "provider": "anthropic",
+      "fixture": "anthropic/truncation.structured-output",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "no-partial-success",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "structured.attempted=true; structured.returned_as_success=false"
+        },
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: error.completion.choices[0].finish_reason); truth.finish=\"length\"; error.category=\"truncation\"; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\" (primary); truth.text=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\""
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.input=25 (primary); truth.usage.input=25; usage.output=24 (primary); truth.usage.output=24"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "raised",
+        "unsupported_reason": null,
+        "error": {
+          "type": "any_llm.exceptions.LengthFinishReasonError",
+          "message": "Could not parse response content as the length limit was reached",
+          "category": "truncation",
+          "retry_after": null,
+          "stack_top": "any_llm/any_llm.py:872"
+        },
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "error.completion.choices[0].finish_reason"
+        },
+        "text": {
+          "value": "{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": true,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 25,
+          "cached_input": null,
+          "output": 24,
+          "reasoning": null,
+          "total": 49,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 247.27144418284297
       },
       "request_count": 1
     },
@@ -4128,7 +4993,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 678.9057271089405
+        "elapsed_ms": 1166.694973129779
       },
       "request_count": 1
     },
@@ -4218,7 +5083,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 193.2863660622388
+        "elapsed_ms": 299.37111400067806
       },
       "request_count": 1
     },
@@ -4308,7 +5173,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 122.84152302891016
+        "elapsed_ms": 256.820963928476
       },
       "request_count": 1
     },
@@ -4398,7 +5263,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 150.03958600573242
+        "elapsed_ms": 218.53812597692013
       },
       "request_count": 1
     },
@@ -4492,7 +5357,146 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 276.5520049724728
+        "elapsed_ms": 468.45007105730474
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.structured-output-forced-tool",
+      "provider": "anthropic",
+      "fixture": "anthropic/truncation.structured-output-forced-tool",
+      "fixture_tier": "documented",
+      "grade": "UNSUPPORTED",
+      "requirements": [],
+      "notes": [
+        "any-llm completion maps typed response_format to native output_config.format and has no structured parser for an explicitly forced tool. (https://github.com/mozilla-ai/any-llm/blob/1.33.0/src/any_llm/providers/anthropic/utils.py#L628-L655)"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "unsupported",
+        "unsupported_reason": "any-llm completion maps typed response_format to native output_config.format and has no structured parser for an explicitly forced tool. https://github.com/mozilla-ai/any-llm/blob/1.33.0/src/any_llm/providers/anthropic/utils.py#L628-L655",
+        "error": null,
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 1.3272829819470644
+      },
+      "request_count": 0
+    },
+    {
+      "scenario": "truncation.text",
+      "provider": "anthropic",
+      "fixture": "anthropic/truncation.text",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Octopuses change colour by\" (primary); truth.text=\"Octopuses change colour by\""
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.input=25 (primary); truth.usage.input=25; usage.output=16 (primary); truth.usage.output=16"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Octopuses change colour by",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 25,
+          "cached_input": null,
+          "output": 16,
+          "reasoning": null,
+          "total": 41,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 334.3856600113213
       },
       "request_count": 1
     },
@@ -4572,7 +5576,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 717.0415739528835
+        "elapsed_ms": 1151.8860519863665
       },
       "request_count": 1
     },
@@ -4650,7 +5654,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 189.55929903313518
+        "elapsed_ms": 274.788019945845
       },
       "request_count": 1
     },
@@ -4728,7 +5732,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 145.00132808461785
+        "elapsed_ms": 226.72611894086003
       },
       "request_count": 1
     },
@@ -4806,7 +5810,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 142.68409297801554
+        "elapsed_ms": 305.14218704774976
       },
       "request_count": 1
     },
@@ -4884,7 +5888,85 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 274.3892951402813
+        "elapsed_ms": 317.48132104985416
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "anthropic",
+      "fixture": "anthropic/truncation.text-stream",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        },
+        {
+          "id": "text-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "text.value=\"Octopuses change colour by\" (primary); truth.text=\"Octopuses change colour by\""
+        },
+        {
+          "id": "usage-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.output=16 (primary); truth.usage.output=16"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Octopuses change colour by",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 25,
+          "cached_input": null,
+          "output": 16,
+          "reasoning": null,
+          "total": 41,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 15
+        },
+        "notes": [],
+        "elapsed_ms": 333.41879514046013
       },
       "request_count": 1
     },
@@ -4964,7 +6046,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 694.6574130561203
+        "elapsed_ms": 1055.0559218972921
       },
       "request_count": 1
     },
@@ -5042,7 +6124,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 275.72828717529774
+        "elapsed_ms": 446.7745360452682
       },
       "request_count": 1
     },
@@ -5120,7 +6202,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 218.7282049562782
+        "elapsed_ms": 374.72004792653024
       },
       "request_count": 1
     },
@@ -5198,7 +6280,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 210.04192880354822
+        "elapsed_ms": 309.45029319263995
       },
       "request_count": 1
     },
@@ -5276,7 +6358,7 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 251.5322919934988
+        "elapsed_ms": 277.2862841375172
       },
       "request_count": 1
     },
@@ -5356,7 +6438,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 711.0327559057623
+        "elapsed_ms": 1229.2532839346677
       },
       "request_count": 1
     },
@@ -5434,7 +6516,89 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 214.39166204072535
+        "elapsed_ms": 278.9529380388558
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.tool-call-args",
+      "provider": "anthropic",
+      "fixture": "anthropic/truncation.tool-call-args",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "no-complete-partial-call",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "1 tool calls; no partial args made complete"
+        },
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [
+          {
+            "id": "toolu_01A09q90qw90lq917835lq9",
+            "name": "create_event",
+            "arguments_raw": "{\"title\": \"Pottery\"}",
+            "arguments_parsed_ok": true,
+            "arguments": {
+              "title": "Pottery"
+            }
+          }
+        ],
+        "usage": {
+          "input": 25,
+          "cached_input": null,
+          "output": 20,
+          "reasoning": null,
+          "total": 45,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 342.79785002581775
       },
       "request_count": 1
     },
@@ -5514,7 +6678,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 145.36688895896077
+        "elapsed_ms": 275.6936508230865
       },
       "request_count": 1
     },
@@ -5594,7 +6758,87 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 266.00754517130554
+        "elapsed_ms": 325.5553189665079
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "truncation.tool-call-args-stream",
+      "provider": "anthropic",
+      "fixture": "anthropic/truncation.tool-call-args-stream",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "no-complete-partial-call",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "1 tool calls; no partial args made complete"
+        },
+        {
+          "id": "cause-is-truncation",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "length",
+          "raw": "length",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [
+          {
+            "id": "toolu_01A09q90qw90lq917835lq9",
+            "name": "create_event",
+            "arguments_raw": "{\"title\": \"Pottery in Málaga",
+            "arguments_parsed_ok": false,
+            "arguments": null
+          }
+        ],
+        "usage": {
+          "input": 25,
+          "cached_input": null,
+          "output": 20,
+          "reasoning": null,
+          "total": 45,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 15
+        },
+        "notes": [],
+        "elapsed_ms": 348.11168094165623
       },
       "request_count": 1
     },
@@ -5674,7 +6918,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 185.16229488886893
+        "elapsed_ms": 274.42799299024045
       },
       "request_count": 1
     },
@@ -5754,7 +6998,79 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 234.01150410063565
+        "elapsed_ms": 328.300739871338
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "provider": "anthropic",
+      "fixture": "anthropic/usage.cached-tokens",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=1557 (primary); truth.usage.total=1557"
+        },
+        {
+          "id": "cached-input-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.cached_input=1536 (primary); truth.usage.cached_input=1536"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "A hot pan helps moisture evaporate so mushrooms brown.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 1536,
+          "cached_input": 1536,
+          "output": 21,
+          "reasoning": null,
+          "total": 1557,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 332.5854609720409
       },
       "request_count": 1
     },
@@ -5826,7 +7142,73 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 705.1061931997538
+        "elapsed_ms": 1173.9537930116057
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "provider": "anthropic",
+      "fixture": "anthropic/usage.stream-final-chunk",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "usage-reported",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.input=25 (primary); truth.usage.input=25; usage.output=12 (primary); truth.usage.output=12"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.33.0",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "Air scatters blue light more strongly.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 25,
+          "cached_input": null,
+          "output": 12,
+          "reasoning": null,
+          "total": 37,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": true,
+          "completed": null,
+          "chunks_seen": 9
+        },
+        "notes": [],
+        "elapsed_ms": 335.00618394464254
       },
       "request_count": 1
     },
@@ -5894,7 +7276,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 674.1542888339609
+        "elapsed_ms": 1279.8091860022396
       },
       "request_count": 1
     },
@@ -5960,7 +7342,7 @@
           "chunks_seen": 28
         },
         "notes": [],
-        "elapsed_ms": 329.99837095849216
+        "elapsed_ms": 498.55529493652284
       },
       "request_count": 1
     },
@@ -6026,7 +7408,7 @@
           "chunks_seen": 24
         },
         "notes": [],
-        "elapsed_ms": 246.85191898606718
+        "elapsed_ms": 344.7384680621326
       },
       "request_count": 1
     },
@@ -6092,7 +7474,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 176.91661999560893
+        "elapsed_ms": 177.97985719516873
       },
       "request_count": 1
     }

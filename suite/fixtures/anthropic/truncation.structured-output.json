@@ -1,0 +1,125 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "anthropic/truncation.structured-output",
+  "scenario": "truncation.structured-output",
+  "provider": "anthropic",
+  "tier": "documented",
+  "provenance": {
+    "requested_model": "claude-sonnet-5-5",
+    "returned_model": "claude-sonnet-5-5",
+    "source_url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs#invalid-outputs",
+    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. The native request uses output_config.format. ASSUMED partial Greek JSON prefix and thinking block at max_tokens; the docs describe incomplete structured output but do not print this exact envelope. The output_tokens_details.thinking_tokens breakdown follows thinking-steering.md (https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost#pricing); the thinking count of 4 is filled in, not measured.",
+    "request": {
+      "model": "claude-sonnet-5-5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "List ten Greek islands and the sea each one lies in. Write the names in Greek."
+        }
+      ],
+      "max_tokens": 24,
+      "output_config": {
+        "format": {
+          "type": "json_schema",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "islands": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "sea": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "sea"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "islands"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/messages"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "msg_01Aq9w938a90dw8q",
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "thinking",
+                "thinking": "",
+                "signature": "EqQBCgIYAhIM1gbcDa9GJwZA2b3hGgxBdjrkzLoky3dl1pkiMOYds..."
+              },
+              {
+                "type": "text",
+                "text": "{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":"
+              }
+            ],
+            "model": "claude-sonnet-5-5",
+            "stop_reason": "max_tokens",
+            "stop_sequence": null,
+            "stop_details": null,
+            "usage": {
+              "input_tokens": 25,
+              "output_tokens": 24,
+              "output_tokens_details": {
+                "thinking_tokens": 4
+              }
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "max_tokens",
+    "text": "{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 25,
+      "cached_input": null,
+      "output": 24,
+      "reasoning": 4,
+      "total": 49,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 25,
+        "output_tokens": 24,
+        "output_tokens_details": {
+          "thinking_tokens": 4
+        }
+      }
+    },
+    "error": null
+  }
+}

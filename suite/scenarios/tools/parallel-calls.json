@@ -27,9 +27,10 @@
   },
   "call_overrides": {
     "ollama": {"tool_choice": null},
-    "ollama-openai": {"tool_choice": null}
+    "ollama-openai": {"tool_choice": null},
+    "anthropic": {"max_output_tokens": 1024}
   },
-  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini"],
+  "providers": ["openai-chat", "openai-responses", "ollama", "ollama-openai", "gemini", "anthropic"],
   "requirements": [
     {
       "id": "calls-reported",
@@ -38,5 +39,5 @@
       "text": "Both tool calls are reported with the ids, names and arguments the provider sent."
     }
   ],
-  "grading_notes": "Both calls must be reported with their ids, names and parsed arguments in order. Ollama overrides omit tool_choice because neither endpoint supports it. Native tool calls arrive whole, and done_reason is stop even when calls are present. Gemini functionCall parts also arrive whole: STOP with any calls means tool_calls. Wire ids are optional; when absent, a library-generated id is accepted."
+  "grading_notes": "Both calls must be reported with their ids, names and parsed arguments in order. Ollama overrides omit tool_choice because neither endpoint supports it. Native tool calls arrive whole, and done_reason is stop even when calls are present. Gemini functionCall parts also arrive whole: STOP with any calls means tool_calls. Wire ids are optional; when absent, a library-generated id is accepted. Anthropic needs an explicit max_tokens, so its override supplies a 1024-token budget; auto requests both tools, and effort none leaves adaptive thinking enabled."
 }

@@ -1,0 +1,93 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "anthropic/usage.cached-tokens",
+  "scenario": "usage.cached-tokens",
+  "provider": "anthropic",
+  "tier": "documented",
+  "provenance": {
+    "requested_model": "claude-sonnet-5-5",
+    "returned_model": "claude-sonnet-5-5",
+    "source_url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching#tracking-cache-performance",
+    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. Cache field names and accounting are taken verbatim from Tracking cache performance. The original 916-word cooking guide exceeds the documented Sonnet 5.5 minimum of 512 tokens. ASSUMED warm cache covering the repeated request: input_tokens 0, cache_creation_input_tokens 0, cache_read_input_tokens 1536, output_tokens 21. Exact tokenization and this complete response are not documented. No request was sent twice; adaptive thinking is assumed skipped.",
+    "request": {
+      "model": "claude-sonnet-5-5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Why should a pan be hot before adding mushrooms?"
+        }
+      ],
+      "max_tokens": 64,
+      "system": "You edit Hearth and Compass, an invented cooking website for curious home cooks. Follow this original house style guide when answering questions. Our imaginary test kitchen values clear instructions, ordinary ingredients, and honest descriptions. Write for someone who enjoys food but may be making a dish for the first time. Explain an unfamiliar method before asking the reader to use it. Choose concrete verbs such as stir, fold, drain, roast, and rest. Keep the tone calm and helpful. Never imply that owning expensive equipment makes someone a better cook. Offer workable alternatives when the method allows them.\n\nBegin each recipe with a short description of the finished dish. Describe texture, aroma, and serving temperature using specific observations. A soup can be smooth, thick, or brothy; those words tell a cook more than extravagant praise. Mention whether a dish suits a leisurely meal or a quick lunch. Do not claim a recipe is traditional unless the supplied source establishes that history. When a recipe is an adaptation, explain the change in plain language. Use descriptive names instead of invented stories about the recipe's origin. Keep personal anecdotes out of technical instructions.\n\nList ingredients in the order they enter the pan or bowl. Put preparation details next to the ingredient: finely chopped onion, drained beans, or room temperature butter. Distinguish the amount measured before preparation from the amount measured afterward. A cup of chopped herbs differs from a cup of whole leaves. Use grams for flour and other baking ingredients when a precise quantity matters. Give approximate household measures only when they are useful. State whether a spoonful is level or heaped. Do not silently switch between weight and volume. Explain how to reserve a portion that will be used later.\n\nWrite steps in the order a person can perform them. Start by identifying equipment, then describe preparation, cooking, and serving. Combine actions only when they can happen together safely and naturally. Tell the reader to start heating water before a later step needs it. Name the pan size when crowding or evaporation affects the result. Give an observable sign alongside a suggested cooking time. An onion can turn translucent; a crust can become golden; a sauce can coat the back of a spoon. Treat time as guidance because burners, pans, and ingredient temperatures differ.\n\nFor vegetable dishes, explain how size affects cooking. Similar pieces soften at similar rates. If a recipe combines firm carrots and delicate peas, add them at different stages. Describe draining and drying when excess water would prevent browning. Suggest a way to use edible stems when appropriate, but never require a second recipe to finish the first. If a substitution changes cooking time, say so. A dense winter squash does not cook exactly like a tender courgette. Prefer one reliable alternative with a clear adjustment over a long list of guesses.\n\nFor baking, state the oven setting before mixing begins. Distinguish a conventional oven from a fan oven if the recipe provides both settings. Describe the intended dough or batter texture. Sticky, crumbly, and pourable are useful only when paired with an example or a handling instruction. Mention resting or chilling before the reader reaches that step. Explain that a pan's depth changes how heat reaches the centre. Give a visual sign of doneness and avoid promising identical results from every oven. If scaling a recipe changes the pan or timing, explain that separately.\n\nFor seasoning, build flavour in stages and leave a final tasting step. Explain what an acidic ingredient contributes instead of treating every seasoning as interchangeable. Lemon juice can brighten a rich sauce, while toasted seeds can add texture. Suggest adding a small amount first and tasting again. Do not describe a dish as objectively perfect. People differ in the salt, heat, and sweetness they enjoy. When an ingredient is optional, make sure omitting it does not break the method. Separate finishing garnishes from ingredients that are necessary for the dish to work.\n\nFor serving ideas, connect the suggestion to the dish. A crisp salad can balance a soft casserole; plain rice can accompany a strongly flavoured stew. Keep portion descriptions practical and avoid promises about nutrition that have not been calculated. If a reader asks about an unfamiliar ingredient, explain its role and describe a familiar comparison without claiming they are identical. Use seasonality as a suggestion rather than a rule. Frozen produce and tinned beans can be appropriate ingredients. Clearly distinguish a drained weight from the size printed on a tin.\n\nFor editing and layout, use short paragraphs and direct sentences. Keep headings descriptive and avoid slogans. Do not repeat the ingredient list inside every step, but repeat a quantity when it prevents confusion between divided portions. Check that every listed ingredient appears in the method and that no instruction introduces an unlisted ingredient. Read the recipe from the perspective of a person standing at a counter with wet hands. Place a warning or clarification before the action it qualifies. End with a concise serving suggestion when requested, without repeating the whole recipe.\n\nWhen answering a short cooking question, apply this guide without printing it. Give the practical answer first and one useful reason afterward. If the question leaves an important detail unspecified, state a reasonable assumption. Do not invent a test result, a source, or a precise measurement. Explain uncertainty briefly and keep the answer proportional to the question. The guide is original neutral fixture text for an imaginary publication, not a quotation from an existing cookbook.",
+      "cache_control": {
+        "type": "ephemeral"
+      }
+    }
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/messages"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "msg_01Aq9w938a90dw8q",
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "text",
+                "text": "A hot pan helps moisture evaporate so mushrooms brown."
+              }
+            ],
+            "model": "claude-sonnet-5-5",
+            "stop_reason": "end_turn",
+            "stop_sequence": null,
+            "stop_details": null,
+            "usage": {
+              "input_tokens": 0,
+              "cache_creation_input_tokens": 0,
+              "cache_read_input_tokens": 1536,
+              "output_tokens": 21
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "end_turn",
+    "text": "A hot pan helps moisture evaporate so mushrooms brown.",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 1536,
+      "cached_input": 1536,
+      "output": 21,
+      "reasoning": null,
+      "total": 1557,
+      "alternatives": {
+        "input": {
+          "uncached_input": 0
+        }
+      },
+      "raw": {
+        "input_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 1536,
+        "output_tokens": 21
+      }
+    },
+    "error": null
+  }
+}

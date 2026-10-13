@@ -1,0 +1,98 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "anthropic/finish.unknown-value",
+  "scenario": "finish.unknown-value",
+  "provider": "anthropic",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "claude-sonnet-5-5",
+    "returned_model": "claude-sonnet-5-5",
+    "request": {
+      "model": "claude-sonnet-5-5",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+        }
+      ],
+      "max_tokens": 16
+    }
+  },
+  "derived_from": {
+    "fixture": "anthropic/truncation.text",
+    "transform": "replace_finish_value",
+    "args": {
+      "value": "WIRETRUTH_UNKNOWN_REASON"
+    },
+    "rationale": "The provider sends a finish value that a library may not recognize.",
+    "evidence_url": "https://github.com/BerriAI/litellm/issues/21347"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/messages"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "msg_01Aq9w938a90dw8q",
+            "type": "message",
+            "role": "assistant",
+            "content": [
+              {
+                "type": "thinking",
+                "thinking": "",
+                "signature": "EqQBCgIYAhIM1gbcDa9GJwZA2b3hGgxBdjrkzLoky3dl1pkiMOYds..."
+              },
+              {
+                "type": "text",
+                "text": "Octopuses change colour by"
+              }
+            ],
+            "model": "claude-sonnet-5-5",
+            "stop_reason": "WIRETRUTH_UNKNOWN_REASON",
+            "stop_sequence": null,
+            "stop_details": null,
+            "usage": {
+              "input_tokens": 25,
+              "output_tokens": 16,
+              "output_tokens_details": {
+                "thinking_tokens": 8
+              }
+            }
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "other",
+    "raw_finish": "WIRETRUTH_UNKNOWN_REASON",
+    "text": "Octopuses change colour by",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 25,
+      "cached_input": null,
+      "output": 16,
+      "reasoning": 8,
+      "total": 41,
+      "alternatives": {},
+      "raw": {
+        "input_tokens": 25,
+        "output_tokens": 16,
+        "output_tokens_details": {
+          "thinking_tokens": 8
+        }
+      }
+    },
+    "error": null
+  }
+}

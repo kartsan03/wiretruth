@@ -10,7 +10,8 @@
     "openai-responses": "providers.openai_responses.build_request over raw HTTP to WIRETRUTH_BASE_URL_OPENAI_RESPONSES",
     "ollama": "providers.ollama.build_request over raw HTTP to WIRETRUTH_BASE_URL_OLLAMA",
     "ollama-openai": "providers.ollama_openai.build_request over raw HTTP to WIRETRUTH_BASE_URL_OLLAMA_OPENAI",
-    "gemini": "providers.gemini.build_request over raw HTTP to WIRETRUTH_BASE_URL_GEMINI"
+    "gemini": "providers.gemini.build_request over raw HTTP to WIRETRUTH_BASE_URL_GEMINI",
+    "anthropic": "providers.anthropic.build_request over raw HTTP to WIRETRUTH_BASE_URL_ANTHROPIC"
   },
   "surfaces": {
     "finish": {"primary": "truth.finish; completed Responses with function_call output map to tool_calls", "raw": "truth.raw_finish"},

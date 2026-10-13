@@ -485,7 +485,7 @@ def test_new_ollama_scenario_calls():
     assert body["max_tokens"] == 16
     assert "max_completion_tokens" not in body
     scenario = load_scenario(REPO / "suite/scenarios/finish/stop-sequence.json")
-    assert scenario.providers == ("ollama", "ollama-openai", "gemini")
+    assert scenario.providers == ("ollama", "ollama-openai", "gemini", "anthropic")
     assert scenario.call.stop == ("END",)
     assert scenario.call.max_output_tokens == 120
     assert scenario.call.reasoning.effort == "none"
