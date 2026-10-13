@@ -12,6 +12,13 @@ finding).
 ## [Unreleased]
 
 ### Added
+- `gemini` GenerateContent support for JSON and SSE: recording, truth extraction, transforms and shim
+  mapping, using `gemini-3.5-flash-lite` by default. Thinking usage includes thoughts and preserves the
+  candidates-only alternative. Empty candidates and optional function-call ids are handled.
+- Gemini scenario coverage, including `usage.reasoning-tokens`, with separate recording dispatches for
+  plain and thinking calls. The any-llm shim uses its native Gemini provider and pins `google-genai`.
+- Google `AQ.` credential detection, masked Gemini header and query credentials, and query-free fixture
+  match paths for streamed GenerateContent requests.
 - `ollama` and `ollama-openai` support recording, truth extraction, lint, transforms and shim mapping,
   using `qwen3.5:0.8b` by default. Native streams record as NDJSON lines, with byte chunks for irregular
   framing or aborted responses. Both providers record without an API key.

@@ -39,7 +39,7 @@ create scenarios. The examples below match the committed fixtures except where n
 | 1 | A fixture document is invalid |
 | 2 | A source or transform is unknown, arguments are invalid, the shape is unsupported, or the file cannot be written |
 
-Provider helpers support `openai-chat`, `openai-responses`, `ollama` and `ollama-openai`. Native Ollama
+Provider helpers support `openai-chat`, `openai-responses`, `ollama`, `ollama-openai` and `gemini`. Native Ollama
 NDJSON bodies work with every transform: the finish is the `done: true` line, error injection adds an
 `{"error":"message"}` line, and finish replacement changes `done_reason`. Stored lines omit the newline
 that replay appends. The other providers use SSE. A transform fails when the provider cannot read the
@@ -69,6 +69,10 @@ For Chat Completions, the finish event is the first chunk with a non-null `finis
 its tail also removes the usage-only chunk and `[DONE]`. For Responses, it is the first `response.completed`,
 `response.incomplete` or `response.failed` event.
 
+For Gemini, it is the first chunk carrying `candidates[0].finishReason`, even when that candidate has no
+content. Removing it and the following chunks removes completion evidence; clean EOF alone is insufficient.
+There is no required separate terminator.
+
 This simulates a clean HTTP ending without the provider's completion signal. A
 [missing-finish report](https://github.com/pydantic/pydantic-ai/issues/6610) describes a library accepting a partial
 Chat response as complete when both `finish_reason` and `[DONE]` are absent.
@@ -87,6 +91,14 @@ response cleanly. Both arguments are required: `after` is an integer from 1 to o
 Chat Completions uses `data: <json>` followed by a blank line. Responses also puts `event: <type>` before the data
 line, taking the type from `error.type`. These helpers require SSE for injection; native Ollama uses NDJSON.
 The output is rejected unless the provider's extractor reads an error from it.
+
+Gemini frames the supplied object as `data: {"error":{"code":503,"status":"UNAVAILABLE","message":"Generation interrupted."}}`
+followed by a blank line. The extractor also accepts a named `event: error` with that data. The
+[HTTP error envelope](https://ai.google.dev/gemini-api/docs/generate-content/api-errors) is documented, and
+the official client's
+[streaming code](https://github.com/googleapis/python-genai/blob/main/google/genai/_api_client.py) raises an
+API error for a streamed chunk that starts with `{"error":`; that file is the `evidence_url` of a derived
+fixture.
 
 This simulates an error inside an HTTP 200 stream. The
 [Responses error handling change](https://github.com/pydantic/pydantic-ai/pull/9321) covers `error` and
@@ -131,6 +143,9 @@ Replace the raw finish value in the last exchange with the required non-empty st
 Completions, replace every non-null `finish_reason` on a choice, in the finish chunks or the JSON body. For
 Responses, replace `incomplete_details.reason` in the final stream response or top-level JSON response.
 A completed Responses response without a reason cannot be changed this way.
+
+For Gemini, replace `candidates[0].finishReason` wherever present, in JSON or SSE. Content, other candidates,
+usage and event framing stay unchanged. Missing content or parts does not prevent finish replacement.
 
 The body must be `sse` or `json` for these providers; native Ollama accepts `ndjson` or `json`. The transform
 fails if no finish value changes, or if the recomputed `truth.raw_finish` does not equal `value`.
