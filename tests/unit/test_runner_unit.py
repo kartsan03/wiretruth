@@ -296,7 +296,7 @@ def test_discovery_sorts_multiple_providers_and_requires_their_modules(suite, mo
     fixtures = suite / "suite" / "fixtures"
     doc = json.loads((fixtures / "openai-chat" / "truncation.text.json").read_text())
     doc.update(id="gemini/truncation.text", provider="gemini")
-    (fixtures / "gemini").mkdir()
+    (fixtures / "gemini").mkdir(exist_ok=True)
     (fixtures / "gemini" / "truncation.text.json").write_text(json.dumps(doc))
     monkeypatch.delitem(runner.PROVIDERS, "gemini")
     with pytest.raises(RunError, match="no provider module for gemini"):
