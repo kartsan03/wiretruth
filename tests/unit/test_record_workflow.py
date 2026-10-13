@@ -92,8 +92,18 @@ def test_record_workflow_credentials_stay_in_record_step():
     text = WORKFLOW.read_text()
     record, push = text.split("\n  push:\n", 1)
     assert "timeout-minutes: ${{ startsWith(inputs.provider, 'ollama') && 40 || 20 }}" in record
-    assert "secrets." not in push and "OPENAI_API_KEY" not in push
-    assert record.count("secrets.") == 1
+    assert "secrets." not in push and "OPENAI_API_KEY" not in push and "GEMINI_API_KEY" not in push
+    assert record.count("secrets.") == 2
     assert "(inputs.provider == 'openai-chat' || inputs.provider == 'openai-responses')" in record
+    assert (
+        "GEMINI_API_KEY: ${{ inputs.provider == 'gemini' && secrets.GEMINI_API_KEY || '' }}"
+        in record
+    )
+    assert "environment: recording" in record
+    assert "options: [openai-chat, openai-responses, ollama, ollama-openai, gemini]" in text
+    before_record, record_step = record.split("      - name: Record\n", 1)
+    assert "secrets." not in before_record
+    assert "secrets." not in record_step.split("      - name: Lint the suite", 1)[1]
+    assert "if: ${{ startsWith(inputs.provider, 'ollama') }}" in before_record
     assert "${{ inputs." not in start_script()
     assert 'tail -n 100 "$RUNNER_TEMP/ollama.log"' in record

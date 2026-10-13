@@ -31,6 +31,7 @@ SECRETS = {
     "an OpenAI project key (sk-proj prefix)": "sk-proj-",
     "an Anthropic key (sk-ant prefix)": "sk-ant-",
     "a Google API key (AIza…)": "AIza" + "x" * 35,
+    "a Google API key (AQ.…)": "AQ." + "x_9-" * 13,
     "a bearer token": f"Bearer {ALNUM}",
     "an OpenAI organization id (org-…)": f"org-{ALNUM}",
     "an OpenAI project id (proj_…)": f"proj_{ALNUM}",
@@ -84,6 +85,7 @@ def test_layers_decode_one_level_of_escapes_at_a_time() -> None:
         rf'"s\u006B-{ALNUM}"',
         rf'"Bearer\u0020{ALNUM}"',
         rf'"\u0041Iza{"x" * 35}"',
+        rf'"\u0041Q.{"x" * 50}"',
         rf'"\u006frg-{ALNUM}"',
     ],
 )
@@ -143,6 +145,8 @@ def test_the_replay_log_leaves_out_the_same_headers() -> None:
         "task-specific-instructions-for-agents",
         "Bearer ***",  # how --dry-run prints the key
         "Bearer short",
+        "AQ. A short catalog label.",
+        "AQ." + "x" * 29,
         f"sk-{'a' * 15}",  # one character too short
         "chatcmpl-B9MBs8CjcvOU2jLn4n570S5qMJKcT",
         "fp_0123456789abcdef call_Ab3dEf6hIj9kLm2nOp5qRs8t resp_Ab3dEf6hIj9kLm2nOp5qRs8t",
