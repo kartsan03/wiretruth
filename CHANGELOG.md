@@ -91,7 +91,8 @@ finding).
 
 ### Results
 - any-llm 1.33.0: PASS on 16 of 18 `openai-chat` scenarios, 13 of 14 `openai-responses`, 11 of 15 `ollama`, 11
-  of 14 `ollama-openai` and 12 of 16 `gemini` ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)). LOSSY on `truncation.structured-output` over
+  of 14 `ollama-openai`, 12 of 16 `gemini` and 15 of 18 `anthropic`
+  ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)). LOSSY on `truncation.structured-output` over
   `openai-responses`: structured output raises a pydantic `ValidationError` on the cut-off JSON, with no sign that
   the token limit was hit, and without the partial text or usage.
 - any-llm 1.33.0: WRONG on `finish.unknown-value` over `openai-chat`: a finish value outside OpenAI's five raises
@@ -113,6 +114,11 @@ finding).
   ([mozilla-ai/any-llm#1472](https://github.com/mozilla-ai/any-llm/issues/1472)). WRONG on
   `finish.unknown-value`: a finish reason without an OpenAI counterpart is reported as `stop`, a fallback any-llm
   documents in its code. LOSSY on `stream.missing-finish`: no completion signal for streams.
+- any-llm 1.33.0 on Anthropic, from documented fixtures (transcribed from Anthropic's docs, not recorded).
+  WRONG on `finish.unknown-value`: an unfamiliar `stop_reason` is reported as `stop`, a fallback any-llm documents in
+  its code (`stop_sequence` and `pause_turn` become `stop` the same way). LOSSY on `stream.missing-finish`: no
+  completion signal for streams. UNSUPPORTED on `truncation.structured-output-forced-tool`: any-llm's structured
+  output always uses native `output_config.format`.
 
 ## [0.1.0] - 2026-10-11
 
