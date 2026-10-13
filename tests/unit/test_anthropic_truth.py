@@ -356,3 +356,121 @@ def test_anthropic_returned_model_and_requested_stream():
         ([], False),
     ]:
         assert anthropic.requested_stream("/v1/messages", body) is expected
+
+
+@pytest.mark.parametrize(
+    "details,expected",
+    [
+        ({"thinking_tokens": 312}, 312),
+        ({"thinking_tokens": 0}, 0),
+        ({"thinking_tokens": None}, None),
+        ({"thinking_tokens": True}, None),
+        ({"thinking_tokens": "312"}, None),
+        ({}, None),
+        (None, None),
+    ],
+)
+def test_anthropic_reasoning_usage_is_an_output_breakdown(details, expected):
+    # https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost#pricing
+    counts = {"input_tokens": 25, "output_tokens": 348, "output_tokens_details": details}
+    result = truth({**TEXT, "usage": counts})["usage"]
+    assert result["reasoning"] == expected
+    assert result["output"] == 348 and result["total"] == 373
+    assert result["raw"] == counts
+
+
+def test_anthropic_stream_reasoning_usage_arrives_only_in_final_delta():
+    final = event(
+        {
+            "type": "message_delta",
+            "delta": {"stop_reason": "end_turn", "stop_sequence": None},
+            "usage": {"output_tokens": 348, "output_tokens_details": {"thinking_tokens": 312}},
+        }
+    )
+    assert truth(STREAM[:-2])["usage"]["reasoning"] is None
+    result = truth([*STREAM[:-2], final, STREAM[-1]])["usage"]
+    assert result["reasoning"] == 312
+    assert result["output"] == 348 and result["total"] == 373
+    assert result["raw"]["output_tokens_details"] == {"thinking_tokens": 312}
+
+
+@pytest.mark.parametrize("details", [None, {"thinking_tokens": None}])
+def test_anthropic_null_usage_deltas_preserve_earlier_counts(details):
+    counts = {
+        "input_tokens": 25,
+        "cache_creation_input_tokens": 5,
+        "cache_read_input_tokens": 10,
+        "output_tokens": 15,
+        "output_tokens_details": {"thinking_tokens": 6},
+    }
+    events = [
+        event({"type": "message_start", "message": {**TEXT, "usage": counts}}),
+        event(
+            {
+                "type": "message_delta",
+                "delta": {"stop_reason": "end_turn"},
+                "usage": {
+                    "input_tokens": None,
+                    "cache_creation_input_tokens": None,
+                    "cache_read_input_tokens": None,
+                    "output_tokens": 20,
+                    "output_tokens_details": details,
+                },
+            }
+        ),
+        STREAM[-1],
+    ]
+    saved = deepcopy(events)
+    result = truth(events)["usage"]
+    assert result["raw"] == {**counts, "output_tokens": 20}
+    assert (result["input"], result["cached_input"], result["output"]) == (40, 10, 20)
+    assert result["reasoning"] == 6 and result["total"] == 60
+    assert events == saved
+    zeros = {key: 0 for key in counts if key != "output_tokens_details"}
+    zeros["output_tokens_details"] = {"thinking_tokens": 0}
+    result = truth(
+        [*events[:-1], event({"type": "message_delta", "delta": {}, "usage": zeros}), STREAM[-1]]
+    )["usage"]
+    assert result["raw"] == zeros
+    assert result["input"] == result["reasoning"] == result["output"] == result["total"] == 0
+
+
+@pytest.mark.parametrize(
+    "stop,closed,fragment,expected,ok",
+    [
+        ("tool_use", True, None, {}, True),
+        ("max_tokens", True, None, None, False),
+        ("model_context_window_exceeded", True, None, None, False),
+        (None, False, None, None, False),
+        ("tool_use", True, "", None, False),
+        ("max_tokens", True, '{"city":', None, False),
+        ("tool_use", True, '{"city":"Zürich"}', {"city": "Zürich"}, True),
+    ],
+)
+def test_anthropic_stream_empty_tool_input_requires_a_closed_untruncated_block(
+    stop, closed, fragment, expected, ok
+):
+    events = [
+        STREAM[0],
+        event({"type": "content_block_start", "index": 0, "content_block": {**TOOL, "input": {}}}),
+    ]
+    if fragment is not None:
+        events.append(
+            event(
+                {
+                    "type": "content_block_delta",
+                    "index": 0,
+                    "delta": {"type": "input_json_delta", "partial_json": fragment},
+                }
+            )
+        )
+    if closed:
+        events.append(event({"type": "content_block_stop", "index": 0}))
+    if stop is not None:
+        events.extend(
+            [event({"type": "message_delta", "delta": {"stop_reason": stop}}), STREAM[-1]]
+        )
+    call = truth(events)["tool_calls"][0]
+    assert call["id"] == TOOL["id"] and call["name"] == TOOL["name"]
+    assert call["arguments"] == expected and call["arguments_parsed_ok"] is ok
+    assert call["arguments_raw"] == ("{}" if ok and fragment is None else fragment)

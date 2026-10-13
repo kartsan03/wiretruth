@@ -8,7 +8,7 @@
     "requested_model": "claude-sonnet-5-5",
     "returned_model": "claude-sonnet-5-5",
     "source_url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/fine-grained-tool-streaming#handling-invalid-json-in-tool-responses",
-    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. eager_input_streaming and partial JSON at max_tokens are documented; the input fragments are original scenario text. ASSUMED composition with an omitted thinking block and a truncated tool block; the complete SSE transcript for this limit is not shown. The initial input: {} is only the documented placeholder, not the tool arguments. SSE names, JSON shapes, field order and spaced text/thinking events follow streaming examples; the compact message_delta follows Streaming request with tool use. Fragment boundaries and counts are filled in. Signature placeholder is copied literally from the signature_delta example; empty thinking_delta follows the documented omitted display flow.",
+    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. eager_input_streaming and partial JSON at max_tokens are documented; the input fragments are original scenario text. ASSUMED composition with an omitted thinking block and a truncated tool block; the complete SSE transcript for this limit is not shown. The initial input: {} is only the documented placeholder, not the tool arguments. SSE names, JSON shapes, field order and spaced text/thinking events follow streaming examples; the compact message_delta follows Streaming request with tool use. Fragment boundaries and counts are filled in. Signature placeholder is copied literally from the signature_delta example; empty thinking_delta follows the documented omitted display flow. The output_tokens_details.thinking_tokens breakdown follows thinking-steering.md (https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost#pricing); the thinking count of 6 is filled in, not measured. It appears only in the final message_delta usage.",
     "request": {
       "model": "claude-sonnet-5-5",
       "messages": [
@@ -83,7 +83,7 @@
             "event: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 1, \"delta\": {\"type\": \"input_json_delta\", \"partial_json\": \"{\\\"title\\\": \\\"Pot\"}}\n\n",
             "event: content_block_delta\ndata: {\"type\": \"content_block_delta\", \"index\": 1, \"delta\": {\"type\": \"input_json_delta\", \"partial_json\": \"tery in Málaga\"}}\n\n",
             "event: content_block_stop\ndata: {\"type\": \"content_block_stop\", \"index\": 1}\n\n",
-            "event: message_delta\ndata: {\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"max_tokens\",\"stop_sequence\":null},\"usage\":{\"output_tokens\":20}}\n\n",
+            "event: message_delta\ndata: {\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"max_tokens\",\"stop_sequence\":null},\"usage\":{\"output_tokens\":20,\"output_tokens_details\":{\"thinking_tokens\":6}}}\n\n",
             "event: message_stop\ndata: {\"type\": \"message_stop\"}\n\n"
           ]
         },
@@ -110,12 +110,15 @@
       "input": 25,
       "cached_input": null,
       "output": 20,
-      "reasoning": null,
+      "reasoning": 6,
       "total": 45,
       "alternatives": {},
       "raw": {
         "input_tokens": 25,
-        "output_tokens": 20
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "thinking_tokens": 6
+        }
       }
     },
     "error": null

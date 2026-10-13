@@ -4,7 +4,8 @@ Text excludes thinking and signatures. Tool inputs are objects in JSON and accum
 input_json_delta strings in SSE, including unparseable prefixes. Only message_stop completes
 a stream. Usage merges cumulative message_start/message_delta fields without summing snapshots;
 input includes cache reads and writes, with uncached input retained as an alternative. Thinking
-is billed inside output_tokens and has no separately reported count.
+is billed inside output_tokens; output_tokens_details.thinking_tokens gives its optional breakdown,
+reported only in the final message_delta for streams. Null delta counters preserve earlier values.
 """
 
 from __future__ import annotations
@@ -201,7 +202,9 @@ def _usage_truth(usage: JsonObject | None) -> JsonObject:
         "input": input_tokens,
         "cached_input": cached,
         "output": output,
-        "reasoning": None,
+        "reasoning": json_int(
+            json_object((usage or {}).get("output_tokens_details")), "thinking_tokens"
+        ),
         "total": None if input_tokens is None or output is None else input_tokens + output,
         "alternatives": {"input": {"uncached_input": uncached}}
         if uncached is not None and uncached != input_tokens
@@ -236,6 +239,8 @@ def extract_truth(exchanges: Sequence[Exchange], request: JsonObject | None) -> 
     raw_finish = None
     pieces: list[str] = []
     calls: dict[int, _ToolCall] = {}
+    tool_inputs: dict[int, JsonObject] = {}
+    closed_tools: set[int] = set()
     usage: JsonObject | None = None
     error: JsonObject | None = None
     completed = False
@@ -254,6 +259,13 @@ def extract_truth(exchanges: Sequence[Exchange], request: JsonObject | None) -> 
         if kind == "message_start":
             payload = json_object(payload.get("message")) or {}
         if (counts := json_object(payload.get("usage"))) is not None:
+            if kind == "message_delta":
+                counts = {key: value for key, value in counts.items() if value is not None}
+                if (details := json_object(counts.get("output_tokens_details"))) is not None:
+                    counts["output_tokens_details"] = {
+                        **(json_object((usage or {}).get("output_tokens_details")) or {}),
+                        **{key: value for key, value in details.items() if value is not None},
+                    }
             usage = {**(usage or {}), **counts}
         delta = json_object(payload.get("delta")) or {}
         if (
@@ -272,6 +284,7 @@ def extract_truth(exchanges: Sequence[Exchange], request: JsonObject | None) -> 
                 arguments = json_object(block.get("input"))
                 if arguments is None:
                     raise ValueError("Anthropic tool input is not a JSON object")
+                tool_inputs[index] = arguments
                 call = calls.setdefault(index, _ToolCall())
                 # Stream input: {} is a placeholder, not part of the JSON delta string.
                 raw = (
@@ -287,6 +300,22 @@ def extract_truth(exchanges: Sequence[Exchange], request: JsonObject | None) -> 
                 index = json_int(payload, "index") or 0
                 if index in calls:
                     calls[index].add(None, None, json_str(delta, "partial_json"))
+        if kind == "content_block_stop":
+            index = json_int(payload, "index") or 0
+            if index in calls:
+                closed_tools.add(index)
+    for index in closed_tools:
+        call = calls[index]
+        if not call.has_arguments and raw_finish not in (
+            "max_tokens",
+            "model_context_window_exceeded",
+        ):
+            # With no fragments, a completed tool retains its start input, usually {}.
+            call.add(
+                None,
+                None,
+                json.dumps(tool_inputs[index], ensure_ascii=False, separators=(",", ":")),
+            )
     if status is not None and error is None:
         error = {"message": f"HTTP {status}", "type": None, "code": None, "status": status}
     finish = "none" if raw_finish is None else FINISH.get(raw_finish, "other")

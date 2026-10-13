@@ -160,8 +160,10 @@ use `auto`, effort `none` omits thinking configuration, and other efforts use ad
 `output_config.effort` (`minimal` maps to `low`). Structured output uses `output_config.format`. Truth joins only
 text blocks, preserves tool JSON fragments, and requires `message_stop` for stream completion. Input usage adds
 uncached input, cache creation and cache reads; `alternatives.input.uncached_input` retains the uncached reading.
-Stream usage merges cumulative fields from `message_start` and `message_delta`; raw fields remain unchanged.
-`output_tokens` includes thinking, with no separate reasoning count. The documented
+Stream usage merges cumulative fields from `message_start` and `message_delta`, preserving earlier values
+when delta counters are null. The merged fields remain in `usage.raw`. `output_tokens` includes thinking;
+`usage.output_tokens_details.thinking_tokens` supplies the optional reasoning count, only on the final
+`message_delta` when streaming. The documented
 [cache minimum](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#cache-limitations) is 512 tokens
 for Sonnet 5.5; `extra.anthropic.cache` enables top-level ephemeral caching.
 

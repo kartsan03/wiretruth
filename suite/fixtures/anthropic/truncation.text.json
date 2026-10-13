@@ -8,7 +8,7 @@
     "requested_model": "claude-sonnet-5-5",
     "returned_model": "claude-sonnet-5-5",
     "source_url": "https://platform.claude.com/docs/en/build-with-claude/handling-stop-reasons#max-tokens",
-    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. ASSUMED composition: omitted thinking followed by a short text prefix at max_tokens; the docs do not show this exact small-budget response. Thinking is empty and the signature placeholder is copied literally from streaming#thinking-delta.",
+    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. ASSUMED composition: omitted thinking followed by a short text prefix at max_tokens; the docs do not show this exact small-budget response. Thinking is empty and the signature placeholder is copied literally from streaming#thinking-delta. The output_tokens_details.thinking_tokens breakdown follows thinking-steering.md (https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost#pricing); the thinking count of 8 is filled in, not measured.",
     "request": {
       "model": "claude-sonnet-5-5",
       "messages": [
@@ -54,7 +54,10 @@
             "stop_details": null,
             "usage": {
               "input_tokens": 25,
-              "output_tokens": 16
+              "output_tokens": 16,
+              "output_tokens_details": {
+                "thinking_tokens": 8
+              }
             }
           }
         },
@@ -73,12 +76,15 @@
       "input": 25,
       "cached_input": null,
       "output": 16,
-      "reasoning": null,
+      "reasoning": 8,
       "total": 41,
       "alternatives": {},
       "raw": {
         "input_tokens": 25,
-        "output_tokens": 16
+        "output_tokens": 16,
+        "output_tokens_details": {
+          "thinking_tokens": 8
+        }
       }
     },
     "error": null

@@ -60,7 +60,10 @@
             "stop_details": null,
             "usage": {
               "input_tokens": 25,
-              "output_tokens": 16
+              "output_tokens": 16,
+              "output_tokens_details": {
+                "thinking_tokens": 8
+              }
             }
           }
         },
@@ -79,12 +82,15 @@
       "input": 25,
       "cached_input": null,
       "output": 16,
-      "reasoning": null,
+      "reasoning": 8,
       "total": 41,
       "alternatives": {},
       "raw": {
         "input_tokens": 25,
-        "output_tokens": 16
+        "output_tokens": 16,
+        "output_tokens_details": {
+          "thinking_tokens": 8
+        }
       }
     },
     "error": null

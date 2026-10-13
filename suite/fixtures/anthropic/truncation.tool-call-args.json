@@ -8,7 +8,7 @@
     "requested_model": "claude-sonnet-5-5",
     "returned_model": "claude-sonnet-5-5",
     "source_url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls#handling-results-from-client-tools",
-    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. ASSUMED non-stream truncation: the documented input object contains only title and lacks date, city and attendees. No official example shows this particular max_tokens object. This preserves the documented object type; the partial-JSON check is not exercised by a parsed object. The finish check still applies.",
+    "notes": "Documented shapes, not a recording. Message envelope and stop fields follow handling-stop-reasons; content blocks follow thinking/streaming and handle-tool-calls. Model changed to claude-sonnet-5-5; IDs and scenario text are filled in. Token counts are illustrative, filled in to include thinking within the requested output limit, not measured. ASSUMED non-stream truncation: the documented input object contains only title and lacks date, city and attendees. No official example shows this particular max_tokens object. This preserves the documented object type; the partial-JSON check is not exercised by a parsed object. The finish check still applies. The output_tokens_details.thinking_tokens breakdown follows thinking-steering.md (https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost#pricing); the thinking count of 8 is filled in, not measured.",
     "request": {
       "model": "claude-sonnet-5-5",
       "messages": [
@@ -95,7 +95,10 @@
             "stop_details": null,
             "usage": {
               "input_tokens": 25,
-              "output_tokens": 20
+              "output_tokens": 20,
+              "output_tokens_details": {
+                "thinking_tokens": 8
+              }
             }
           }
         },
@@ -124,12 +127,15 @@
       "input": 25,
       "cached_input": null,
       "output": 20,
-      "reasoning": null,
+      "reasoning": 8,
       "total": 45,
       "alternatives": {},
       "raw": {
         "input_tokens": 25,
-        "output_tokens": 20
+        "output_tokens": 20,
+        "output_tokens_details": {
+          "thinking_tokens": 8
+        }
       }
     },
     "error": null
