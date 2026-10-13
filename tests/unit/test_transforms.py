@@ -379,7 +379,7 @@ def test_missing_or_first_finish(fixture):
         run("strip_finish", doc=doc)
 
 
-def test_source_and_output_validation():
+def test_source_and_output_validation(monkeypatch):
     with pytest.raises(FormatError):
         run("strip_finish", doc={})
     with pytest.raises(ValueError, match="not derived"):
@@ -389,6 +389,7 @@ def test_source_and_output_validation():
     doc = source()
     doc["provider"] = "anthropic"
     doc["id"] = "anthropic/truncation.text-stream-usage"
+    monkeypatch.delitem(PROVIDERS, "anthropic")
     with pytest.raises(ValueError, match="does not support transforms"):
         run("strip_finish", doc=doc)
     for options in (

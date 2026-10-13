@@ -2,7 +2,7 @@
 
 This page is for contributors who record provider responses into fixtures. It explains what the recorder sends and
 stores, how to record in CI or on your own machine, and the checks that keep credentials out of the repository.
-Running the suite needs no keys. Recording OpenAI or Gemini needs a key; Ollama needs none.
+Running the suite needs no keys. Recording OpenAI, Gemini or Anthropic needs a key; Ollama needs none.
 
 ## What the recorder does
 
@@ -12,7 +12,7 @@ fixture in `suite/fixtures/<provider>/<scenario>.json`.
 - **No SDK.** The provider module builds the native request, and Python's `http.client` sends it. No provider
   library sits between the API and the fixture, so a library bug can't leak into the recorded truth.
 - **The key stays in the request.** It is read from the provider's environment variable (`OPENAI_API_KEY` for
-  both OpenAI providers, `GEMINI_API_KEY` for Gemini) and sent only in a header. Request headers are never stored. A key with spaces or other
+  both OpenAI providers, `GEMINI_API_KEY` for Gemini, `ANTHROPIC_API_KEY` for Anthropic) and sent only in a header. Request headers are never stored. A key with spaces or other
   characters a header can't carry is rejected without being printed. If the key itself shows up in a response,
   nothing is written. Ollama providers use no key and send no Authorization header.
 - **One call, the scenario's call.** The request is built from the scenario's `call` (with its `call_overrides` for
@@ -142,6 +142,29 @@ The midstream error frame is a `data: {"error": {…}}` event, the form the offi
 chunk that starts with `{"error":` as an API error). Implicit-cache recordings are deferred until the
 recorder supports sending a prompt twice.
 
+## Anthropic documented fixtures
+
+Anthropic fixtures currently transcribe the official [Messages](https://platform.claude.com/docs/en/api/messages/create)
+and [streaming](https://platform.claude.com/docs/en/build-with-claude/streaming) examples: build the request with
+`providers.anthropic.build_request`, retain the documented response shapes, compute truth with `extract_truth`,
+and set tier `documented`, the exact `source_url`, and notes distinguishing copied fields from filled-in values
+and assumed combinations. They use `claude-sonnet-5-5`, except the forced-tool case on `claude-haiku-4-5`.
+They have no recording timestamp, CI run or raw hash. To upgrade an ordinary cell, set `ANTHROPIC_API_KEY` and run
+`wiretruth record --provider anthropic --scenario <id> --replace` (add `--model claude-haiku-4-5` for the legacy
+case), review the new bytes, then regenerate its derived fixtures. The CLI authenticates with `x-api-key` and
+`anthropic-version: 2023-06-01`; dry runs mask the key. The CI recording workflow has no Anthropic option yet.
+The cached-token cell assumes a warm cache; recording it requires a future repeat-request mechanism.
+
+Anthropic requires an output limit. Sonnet 5.5 rejects forced tool choice and disabled thinking, so tool calls
+use `auto`, effort `none` omits thinking configuration, and other efforts use adaptive thinking with
+`output_config.effort` (`minimal` maps to `low`). Structured output uses `output_config.format`. Truth joins only
+text blocks, preserves tool JSON fragments, and requires `message_stop` for stream completion. Input usage adds
+uncached input, cache creation and cache reads; `alternatives.input.uncached_input` retains the uncached reading.
+Stream usage merges cumulative fields from `message_start` and `message_delta`; raw fields remain unchanged.
+`output_tokens` includes thinking, with no separate reasoning count. The documented
+[cache minimum](https://platform.claude.com/docs/en/build-with-claude/prompt-caching#cache-limitations) is 512 tokens
+for Sonnet 5.5; `extra.anthropic.cache` enables top-level ephemeral caching.
+
 ## Record locally
 
 Export the key in your own shell, then run the recorder from the repository root:
@@ -205,9 +228,9 @@ wiretruth record --provider PROVIDER --scenario PATTERNS [--model MODEL] [--dry-
 
 | Option | Meaning |
 |---|---|
-| `--provider` | The wire API: `openai-chat`, `openai-responses`, `ollama`, `ollama-openai`, `gemini` |
+| `--provider` | The wire API: `openai-chat`, `openai-responses`, `ollama`, `ollama-openai`, `gemini`, `anthropic` |
 | `--scenario` | Comma-separated scenario ids or globs, such as `'tools.*,usage.*'`. Scenarios that don't list the provider are skipped, with a note |
-| `--model` | The model to request. Default: the provider's current model (`gpt-6-luna` for OpenAI, `qwen3.5:0.8b` for Ollama, `gemini-3.5-flash-lite` for Gemini) |
+| `--model` | The model to request. Default: the provider's current model (`gpt-6-luna` for OpenAI, `qwen3.5:0.8b` for Ollama, `gemini-3.5-flash-lite` for Gemini, `claude-sonnet-5-5` for Anthropic) |
 | `--dry-run` | Print each request and send nothing |
 | `--replace` | Overwrite `<scenario>.json` instead of keeping it as a dated variant |
 | `--keep-bytes` | Store the body as the chunks read |

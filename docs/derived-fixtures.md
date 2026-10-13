@@ -39,7 +39,7 @@ create scenarios. The examples below match the committed fixtures except where n
 | 1 | A fixture document is invalid |
 | 2 | A source or transform is unknown, arguments are invalid, the shape is unsupported, or the file cannot be written |
 
-Provider helpers support `openai-chat`, `openai-responses`, `ollama`, `ollama-openai` and `gemini`. Native Ollama
+Provider helpers support `openai-chat`, `openai-responses`, `ollama`, `ollama-openai`, `gemini` and `anthropic`. Native Ollama
 NDJSON bodies work with every transform: the finish is the `done: true` line, error injection adds an
 `{"error":"message"}` line, and finish replacement changes `done_reason`. Stored lines omit the newline
 that replay appends. The other providers use SSE. A transform fails when the provider cannot read the
@@ -73,6 +73,9 @@ For Gemini, it is the first chunk carrying `candidates[0].finishReason`, even wh
 content. Removing it and the following chunks removes completion evidence; clean EOF alone is insufficient.
 There is no required separate terminator.
 
+For Anthropic, the finish event is `message_delta` with a non-null `delta.stop_reason`. Removing its tail
+also removes `message_stop`, the stream completion signal.
+
 This simulates a clean HTTP ending without the provider's completion signal. A
 [missing-finish report](https://github.com/pydantic/pydantic-ai/issues/6610) describes a library accepting a partial
 Chat response as complete when both `finish_reason` and `[DONE]` are absent.
@@ -99,6 +102,9 @@ the official client's
 [streaming code](https://github.com/googleapis/python-genai/blob/main/google/genai/_api_client.py) raises an
 API error for a streamed chunk that starts with `{"error":`; that file is the `evidence_url` of a derived
 fixture.
+
+Anthropic uses `event: error` followed by `data: {"type": "error", "error": {"type": "overloaded_error", "message": "Overloaded"}}`.
+This is the literal payload from the [streaming error example](https://platform.claude.com/docs/en/build-with-claude/streaming#error-events).
 
 This simulates an error inside an HTTP 200 stream. The
 [Responses error handling change](https://github.com/pydantic/pydantic-ai/pull/9321) covers `error` and
@@ -146,6 +152,9 @@ A completed Responses response without a reason cannot be changed this way.
 
 For Gemini, replace `candidates[0].finishReason` wherever present, in JSON or SSE. Content, other candidates,
 usage and event framing stay unchanged. Missing content or parts does not prevent finish replacement.
+
+For Anthropic, replace `stop_reason` in the JSON response or `delta.stop_reason` in a `message_delta`
+event, retaining the other bytes, including the mixed spacing used in the documentation.
 
 The body must be `sse` or `json` for these providers; native Ollama accepts `ndjson` or `json`. The transform
 fails if no finish value changes, or if the recomputed `truth.raw_finish` does not equal `value`.
