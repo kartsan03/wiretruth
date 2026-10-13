@@ -11,6 +11,9 @@ finding).
 
 ## [Unreleased]
 
+### Fixed
+- Derived-fixture examples include `--replace` so they regenerate committed fixtures.
+
 ## [0.2.0] - 2026-10-13
 
 ### Added
