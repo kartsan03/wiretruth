@@ -12,6 +12,7 @@ finding).
 ## [Unreleased]
 
 ### Added
+- `wiretruth catalog` generates `docs/scenarios.md` from the suite data; CI fails when it is stale.
 - Anthropic Messages provider for JSON and SSE, with truth extraction, transforms and shim mapping.
 - Thirteen documented Anthropic fixtures and five derived stream/finish fixtures, with source links and assumptions.
 - Cached-token usage and legacy forced-tool structured-output truncation scenarios.
