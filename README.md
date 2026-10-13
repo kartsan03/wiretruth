@@ -9,9 +9,9 @@ happened.
 [![PyPI](https://img.shields.io/pypi/v/wiretruth?label=PyPI)](https://pypi.org/project/wiretruth/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
-So far wiretruth tests one library, any-llm, on four APIs: OpenAI Chat Completions and Responses, and Ollama's native
-and OpenAI-compatible endpoints. That is 21 scenarios and 61 cells. More providers and libraries follow, and a public
-results matrix arrives in v0.4. Until then, the grades are in
+So far wiretruth tests one library, any-llm, on five APIs: OpenAI Chat Completions and Responses, Ollama's native
+and OpenAI-compatible endpoints, and Gemini GenerateContent. That is 22 scenarios and 77 cells. More providers and
+libraries follow, and a public results matrix arrives in v0.4. Until then, the grades are in
 [`results/`](https://github.com/kartsan03/wiretruth/tree/main/results).
 
 ## Why
@@ -72,28 +72,37 @@ uv run wiretruth run --lib any-llm
 ```
 
 ```text
-scenario                           ollama   ollama-openai  openai-chat  openai-responses
-finish.stop-sequence               ✓ PASS   ✓ PASS
-finish.unknown-value               ✗ WRONG  ✗ WRONG        ✗ WRONG      ✓ PASS
-request.max-tokens-field                                   ✓ PASS
-request.max-tokens-ollama-openai            ✗ WRONG
-request.no-injected-options        ✓ PASS
-request.tools-with-reasoning-chat                          ✓ PASS
-stream.error-midstream             ✓ PASS                  ✓ PASS       ✓ PASS
-stream.missing-finish              ~ LOSSY  ~ LOSSY        ~ LOSSY      ✓ PASS
-stream.missing-finish-abort        ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-stream.utf8                        ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-stream.utf8-split                  ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-tools.parallel-calls               ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
-tools.parallel-calls-stream        ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
-truncation.reasoning-only          ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-truncation.structured-output       ✓ PASS   ✓ PASS         ✓ PASS       ~ LOSSY
-truncation.text                    ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-truncation.text-stream             ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-truncation.text-stream-usage                               ✓ PASS
-truncation.tool-call-args                                  ✓ PASS       ✓ PASS
-truncation.tool-call-args-stream                           ✓ PASS       ✓ PASS
-usage.stream-final-chunk           ✓ PASS   ✓ PASS         ✓ PASS
+scenario                           gemini   ollama   ollama-openai  openai-chat  openai-responses
+finish.stop-sequence               ✓ PASS   ✓ PASS   ✓ PASS
+finish.unknown-value               ✗ WRONG  ✗ WRONG  ✗ WRONG        ✗ WRONG      ✓ PASS
+request.max-tokens-field                                            ✓ PASS
+request.max-tokens-ollama-openai                     ✗ WRONG
+request.no-injected-options                 ✓ PASS
+request.tools-with-reasoning-chat                                   ✓ PASS
+stream.error-midstream             ✓ PASS   ✓ PASS                  ✓ PASS       ✓ PASS
+stream.missing-finish              ~ LOSSY  ~ LOSSY  ~ LOSSY        ~ LOSSY      ✓ PASS
+stream.missing-finish-abort        ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
+stream.utf8                        ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
+stream.utf8-split                  ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
+tools.parallel-calls               ✗ WRONG  ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
+tools.parallel-calls-stream        ✗ WRONG  ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
+truncation.reasoning-only          ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
+truncation.structured-output       ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ~ LOSSY
+truncation.text                    ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
+truncation.text-stream             ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
+truncation.text-stream-usage       ✓ PASS                           ✓ PASS
+truncation.tool-call-args                                           ✓ PASS       ✓ PASS
+truncation.tool-call-args-stream                                    ✓ PASS       ✓ PASS
+usage.reasoning-tokens             ✓ PASS
+usage.stream-final-chunk           ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS
+
+finish.stop-sequence gemini
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+
+finish.unknown-value gemini
+  MUST finish-is-other: CONTRADICTED: finish.value="stop" (primary: choices[0].finish_reason); truth.finish="other"; required finish="other"
+  SHOULD raw-finish-reported: CONTRADICTED: finish.raw="stop"; truth.raw_finish="WIRETRUTH_UNKNOWN_REASON"
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 finish.unknown-value ollama
   MUST finish-is-other: CONTRADICTED: finish.value="stop" (primary: choices[0].finish_reason); truth.finish="other"; required finish="other"
@@ -114,6 +123,13 @@ finish.unknown-value openai-chat
 request.max-tokens-ollama-openai ollama-openai
   MUST limit-field: CONTRADICTED: request[0].json_body.max_tokens=absent; required=16
 
+stream.error-midstream gemini
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+
+stream.missing-finish gemini
+  MUST stream-incomplete: NOT_OBSERVABLE: stream.completed=null; outcome=returned; truth.stream_completed=false
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+
 stream.missing-finish ollama
   MUST stream-incomplete: NOT_OBSERVABLE: stream.completed=null; outcome=returned; truth.stream_completed=false
 
@@ -123,19 +139,51 @@ stream.missing-finish ollama-openai
 stream.missing-finish openai-chat
   MUST stream-incomplete: NOT_OBSERVABLE: stream.completed=null; outcome=returned; truth.stream_completed=false
 
+stream.missing-finish-abort gemini
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+
+stream.utf8 gemini
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+
+stream.utf8-split gemini
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+
+tools.parallel-calls gemini
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="call_7188633667101404929_0", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_120847", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="call_7188633667101404929_1", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_120848", name="get_weather", args={"city": "Zürich"}, parsed=true
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+
 tools.parallel-calls ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="739da0a4-72e6-4899-aad4-07979883938c", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="1128b972-6f5d-4171-aa00-31c7b819c075", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="2784738e-20e0-4c2a-9336-938d951b17a7", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="437867ad-56cb-4324-9a0f-da622a997dba", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
+
+tools.parallel-calls-stream gemini
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="call_6864038711552626911_0", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_89893", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="call_6864038711552626911_1", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_89896", name="get_weather", args={"city": "Zürich"}, parsed=true
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls-stream ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="045103bb-d820-4b1f-8890-a0f3825b9419", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="b6b8e3fe-8bdc-4607-b7ea-fc8cda07b0d6", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="31d14b9f-9a5e-42da-8390-045f11767df5", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="ca11ad2e-5037-4bb5-86d4-58a430294312", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
+
+truncation.structured-output gemini
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 truncation.structured-output openai-responses
   MUST cause-is-truncation: NOT_OBSERVABLE: finish.value=null (absent); truth.finish="length"; error.category="validation"; structured.returned_as_success=false
   SHOULD text-reported: NOT_OBSERVABLE: text.value=null (absent); truth.text="{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ"
   SHOULD usage-reported: NOT_OBSERVABLE: usage.input=null (absent); truth.usage.input=68; usage.output=null (absent); truth.usage.output=24
 
-any-llm 1.33.0: 61 cells, 51 PASS, 4 LOSSY, 6 WRONG
-stderr: .wiretruth/runs/20261012T190416.368271Z
+truncation.text gemini
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+
+truncation.text-stream gemini
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+
+truncation.text-stream-usage gemini
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+
+usage.stream-final-chunk gemini
+  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+
+any-llm 1.33.0: 77 cells, 63 PASS, 5 LOSSY, 9 WRONG
+stderr: .wiretruth/runs/20261013T103934.766947Z
 ```
 
 No API keys are needed. Everything runs against recorded responses on `127.0.0.1`. The first run downloads any-llm

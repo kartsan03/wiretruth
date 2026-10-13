@@ -1,0 +1,113 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/truncation.text",
+  "scenario": "truncation.text",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:15:04Z",
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38381941285",
+    "raw_sha256": "3e416893a957f3e1529cd7bae2fd3f7c4a96aa0385eeb0e40947594a2f77d179",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 16,
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:generateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=UTF-8"
+        },
+        "body": {
+          "json": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "Octopuses are masters of disguise, utilizing an extraordinary biological",
+                      "thoughtSignature": "EmAKXgFpFH0Tm8qzVWNDFvDnBwobD+/9o7uFQz9+c2VcCrTB9RWT+X+x31DAAin+FtIl2C83hppDgmzNy1HB9PPsQ8rPuUnop8Dz511I6ZzJISG/duJhXlK9Qx4iq7WblXs="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "MAX_TOKENS",
+                "index": 0
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 22,
+              "candidatesTokenCount": 12,
+              "totalTokenCount": 34,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 22
+                }
+              ],
+              "serviceTier": "standard"
+            },
+            "modelVersion": "gemini-3.5-flash-lite",
+            "responseId": "qATOaqvbNv6NjMcPlvHCoA4"
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "MAX_TOKENS",
+    "text": "Octopuses are masters of disguise, utilizing an extraordinary biological",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 22,
+      "cached_input": null,
+      "output": 12,
+      "reasoning": null,
+      "total": 34,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 22,
+        "candidatesTokenCount": 12,
+        "totalTokenCount": 34,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 22
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}

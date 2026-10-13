@@ -1,0 +1,119 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/usage.reasoning-tokens",
+  "scenario": "usage.reasoning-tokens",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:16:09Z",
+    "requested_model": "gemini-3.8-flash",
+    "returned_model": "gemini-3.8-flash",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38381937993",
+    "raw_sha256": "870fbe7f29d59ebb98a69be80a06bbf5a8b7cf3899321f9b3c6359e1afe117a8",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "A greenhouse has 18 pots containing either two or three seedlings each, with 47 seedlings in total. How many pots contain three seedlings? Check the arithmetic and answer briefly."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 800,
+        "thinkingConfig": {
+          "thinkingLevel": "MEDIUM"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.8-flash:generateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=UTF-8"
+        },
+        "body": {
+          "json": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "There are **11** pots containing three seedlings.\n\n**Check:**\n* 11 pots with 3 seedlings: $11 \\times 3 = 33$ seedlings\n* 7 pots with 2 seedlings: $7 \\times 2 = 14$ seedlings\n* Total pots: $11 + 7 = 18$\n* Total seedlings: $33 + 14 = 47$",
+                      "thoughtSignature": "ErQICrEIAWkUfROzqHINc+6GqZic3chQbPkCTEtZFq2MxjgJAdg4cIMVKvYdN/iXWSnd2IQCu7fNEl27x6+hFs7V2qvNNlalzHXTh3Em3OtquaLydVpqgDDnnWiSnYiYj6nS4sDi/5Ubbvr3O2323JD9qfqNZV0R3McF06ga/SPCeA7d0H8Vd0I4lywrbwvDWGhJdjVxPc4vQGO2ugF0QFVQdhdmdOOo9qJVsNlA0+KcN1VswRzLY80rOqrr4lIFVpEnObG7s+NnrOWN76XueI9IqMg7qoM/kqUlv4V/LscRSGPeYJOBngD5Dd+00n+KaccF9/BV6OronZx+kcPgwPgl5H0fk1BtZfmnTZwU9NDgPAHreR5IujvcWzkjKffGJ7bhIGehJTTDkUapOmlOrveTStSQ7B8n6d8K4PuvbHLpFb72jKyb0X9ZshkcJTUnRaqLoxA+LIgufBzJq6HHa6VOiLicq4qveKqEcvirW7icMj5qnOTswg66atwQKrHUGYMG4Hn5XMXkLUdPRXUHol02eQSQp9W4RUSjCPUyCS4m+BSpkINsbt8gZt7ChwDtFLJIld3FhskaLkg2v8PA5EXYTsHBrD6qCj7M6pz4M3hZSvMvZmQYw/SQMJNUmkvi8ZoHJ7fON60C+9FtXeeg4lS/Jz+T5WUw/c3481oAxwiUzCqitsQsHHD9RI+9qNtF+qu+Nom3UE96FIdfjrC6SSCpu3YanEpBTk/H7IRNYEjZ289RhETaw35a9xSuIYq41YfiOiMCZ8vTyK3bFjjC2pI4i+ISHQd/SnISqK6flVFoPTCvGoZesrK2NSUlJTekZCRKetzMtBs4AI98H2wh+wYY7QTqBto7tvz2JHBwp1GG8tPTpUaqP4dBj+7ZD4Sn2xeTQEB3CrN0nxOc2/71jLZi6Ic0IWtB8v7t/RtLpPqDUI7YtLbLxg+INGy25m4K2OCuMGZIBzIyDc+wIISUYCaTb52Kvdfg2Zy+hppplHdH4nG8U2WqrFnQZfZxNDbU33ZF6mcp/+J6YgeEdH2mLWB9IaHhfIjg2o36NB24nhs7j98ieAJiPgrnvKO466JH0nqycSfTHPCfQY2hGB1PUJ5s23RbeaFlKobievvvTs8qaXsr9CN9QyjAuQ9t8UErKTw6dkpyl/cDd8nPOgtbsM2fG8BX+Seh+y90DEsXrZc8kY/l3N8jxYOt3XZkaoBKF/JXgQIygHvxm5KOcEYlieqUn0Jb316MPXEa+B2VFfQxvZ6KUEuwvIAybNgJg2ZYQ16ei6BWuDmHeYLJPONyNEzTqWR5R2CjhPrUTwhL6I2eViE1VQ0wI5X0eJ7Hl9UxTWXfTNMUTA4aj2/KoaY7yuIWImPjHPBYnh+OLi3n7GmFUWvHEs+GBIixqT2FJjLrHdEkO7CL+PqPs1EO9OsZdxG6lXjYG2A="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 38,
+              "candidatesTokenCount": 94,
+              "totalTokenCount": 520,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 38
+                }
+              ],
+              "thoughtsTokenCount": 388,
+              "serviceTier": "standard"
+            },
+            "modelVersion": "gemini-3.8-flash",
+            "responseId": "6QTOaqCSENz0jrEP_IzRiAs"
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "STOP",
+    "text": "There are **11** pots containing three seedlings.\n\n**Check:**\n* 11 pots with 3 seedlings: $11 \\times 3 = 33$ seedlings\n* 7 pots with 2 seedlings: $7 \\times 2 = 14$ seedlings\n* Total pots: $11 + 7 = 18$\n* Total seedlings: $33 + 14 = 47$",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 38,
+      "cached_input": null,
+      "output": 482,
+      "reasoning": 388,
+      "total": 520,
+      "alternatives": {
+        "output": {
+          "candidates_only": 94
+        }
+      },
+      "raw": {
+        "promptTokenCount": 38,
+        "candidatesTokenCount": 94,
+        "totalTokenCount": 520,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 38
+          }
+        ],
+        "thoughtsTokenCount": 388,
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}

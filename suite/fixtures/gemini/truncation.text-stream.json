@@ -1,0 +1,87 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/truncation.text-stream",
+  "scenario": "truncation.text-stream",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:15:02Z",
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38381941285",
+    "raw_sha256": "755329b6a27bcfc1689065d0f52dfb8daca99b02d13a7ad7067a5cd65b507496",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 16,
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"Octop\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 22,\"candidatesTokenCount\": 2,\"totalTokenCount\": 24,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 22}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"pgTOaonbKMuV_uMPvK7d4AE\"}\r\n\r\n",
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"uses are the ultimate masters of disguise, utilizing a\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 22,\"candidatesTokenCount\": 12,\"totalTokenCount\": 34,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 22}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"pgTOaonbKMuV_uMPvK7d4AE\"}\r\n\r\n",
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"\",\"thoughtSignature\": \"EmAKXgFpFH0TZDFrxNfmg9AEtzn2/Lx2X7T4rX3Pufmp9MeuUeV6QQ4IEIffogLQkVUdgUWJ+G4L48EXf5L/wtPCbXTOk+KphherC1msoBUGh/7uYYFRDFon0XDRetF/fVo=\"}],\"role\": \"model\"},\"finishReason\": \"MAX_TOKENS\",\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 22,\"candidatesTokenCount\": 12,\"totalTokenCount\": 34,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 22}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"pgTOaonbKMuV_uMPvK7d4AE\"}\r\n\r\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "length",
+    "raw_finish": "MAX_TOKENS",
+    "text": "Octopuses are the ultimate masters of disguise, utilizing a",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 22,
+      "cached_input": null,
+      "output": 12,
+      "reasoning": null,
+      "total": 34,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 22,
+        "candidatesTokenCount": 12,
+        "totalTokenCount": 34,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 22
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}

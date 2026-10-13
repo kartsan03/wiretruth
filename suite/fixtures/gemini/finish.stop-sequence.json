@@ -1,0 +1,116 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/finish.stop-sequence",
+  "scenario": "finish.stop-sequence",
+  "provider": "gemini",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-10-13T10:14:11Z",
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "recorder": "wiretruth 0.2.0.dev0",
+    "source_commit": "8b87862",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/38381941285",
+    "raw_sha256": "ccc4fe9211070db919a43d244dcab8712d139c719c840b4caa363c9c74cc2fd7",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Count from 1 to 10, then write END, then count to 20."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 120,
+        "stopSequences": [
+          "END"
+        ],
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      }
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:generateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json; charset=UTF-8"
+        },
+        "body": {
+          "json": {
+            "candidates": [
+              {
+                "content": {
+                  "parts": [
+                    {
+                      "text": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ",
+                      "thoughtSignature": "EmAKXgFpFH0TB9eX2mz0PdUqpfsOVm6XLVI/MPPB2Ivo9ftB5fI75Giv4DmlmP+aHnLKyj34VqanETM/hQNxKU9I4/c8YY5drmNJ39VIyE0P3GPCVDdf8KMeqzIe/hLpiss="
+                    }
+                  ],
+                  "role": "model"
+                },
+                "finishReason": "STOP",
+                "index": 0
+              }
+            ],
+            "usageMetadata": {
+              "promptTokenCount": 21,
+              "candidatesTokenCount": 30,
+              "totalTokenCount": 51,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 21
+                }
+              ],
+              "serviceTier": "standard"
+            },
+            "modelVersion": "gemini-3.5-flash-lite",
+            "responseId": "cwTOapKHHbPP_PUP3-KB6A4"
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "STOP",
+    "text": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 21,
+      "cached_input": null,
+      "output": 30,
+      "reasoning": null,
+      "total": 51,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 21,
+        "candidatesTokenCount": 30,
+        "totalTokenCount": 51,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 21
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}

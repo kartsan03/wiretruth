@@ -1,0 +1,100 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/stream.utf8-split",
+  "scenario": "stream.utf8-split",
+  "provider": "gemini",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Reply exactly with: Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉"
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 64,
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      }
+    }
+  },
+  "derived_from": {
+    "fixture": "gemini/stream.utf8",
+    "transform": "rechunk_inside_utf8",
+    "args": {
+      "points": [
+        59,
+        415,
+        422,
+        444,
+        472,
+        474
+      ]
+    },
+    "rationale": "A network chunk boundary splits a multi-byte UTF-8 character.",
+    "evidence_url": "https://github.com/langchain-ai/langchainjs/issues/5285"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "chunks_b64": [
+            "ZGF0YTogeyJjYW5kaWRhdGVzIjogW3siY29udGVudCI6IHsicGFydHMiOiBbeyJ0ZXh0IjogIkNhZsM=",
+            "qSJ9XSwicm9sZSI6ICJtb2RlbCJ9LCJpbmRleCI6IDB9XSwidXNhZ2VNZXRhZGF0YSI6IHsicHJvbXB0VG9rZW5Db3VudCI6IDIwLCJjYW5kaWRhdGVzVG9rZW5Db3VudCI6IDIsInRvdGFsVG9rZW5Db3VudCI6IDIyLCJwcm9tcHRUb2tlbnNEZXRhaWxzIjogW3sibW9kYWxpdHkiOiAiVEVYVCIsInRva2VuQ291bnQiOiAyMH1dLCJzZXJ2aWNlVGllciI6ICJzdGFuZGFyZCJ9LCJtb2RlbFZlcnNpb24iOiAiZ2VtaW5pLTMuNS1mbGFzaC1saXRlIiwicmVzcG9uc2VJZCI6ICJmZ1RPYXJpN05ZemdqTWNQM0p6cW9BMCJ9DQoNCmRhdGE6IHsiY2FuZGlkYXRlcyI6IFt7ImNvbnRlbnQiOiB7InBhcnRzIjogW3sidGV4dCI6ICIgWsM=",
+            "vHJpY2gg4g==",
+            "gJQgzrrOsc67zrfOvM6tz4HOsSEg5g==",
+            "nbHkuqzjgafkvJrjgYTjgb7jgZfjgofjgYYg8A==",
+            "n4w=",
+            "uPCfjokifV0sInJvbGUiOiAibW9kZWwifSwiaW5kZXgiOiAwfV0sInVzYWdlTWV0YWRhdGEiOiB7InByb21wdFRva2VuQ291bnQiOiAyMCwiY2FuZGlkYXRlc1Rva2VuQ291bnQiOiAxNiwidG90YWxUb2tlbkNvdW50IjogMzYsInByb21wdFRva2Vuc0RldGFpbHMiOiBbeyJtb2RhbGl0eSI6ICJURVhUIiwidG9rZW5Db3VudCI6IDIwfV0sInNlcnZpY2VUaWVyIjogInN0YW5kYXJkIn0sIm1vZGVsVmVyc2lvbiI6ICJnZW1pbmktMy41LWZsYXNoLWxpdGUiLCJyZXNwb25zZUlkIjogImZnVE9hcmk3Tll6Z2pNY1AzSnpxb0EwIn0NCg0KZGF0YTogeyJjYW5kaWRhdGVzIjogW3siY29udGVudCI6IHsicGFydHMiOiBbeyJ0ZXh0IjogIiIsInRob3VnaHRTaWduYXR1cmUiOiAiRW1BS1hnRnBGSDBUb0l6aVdEMFM2MncvY1F5UVRXL2NoUU1OYXRRU3d5cFlCckYyRVRqVkM1TzRoRjFpbVRPM1poakVzRXdVYUxPdWF3Q3BtbG1XMlpPeVZGQytVNXRYeWVxYUN5bnhYK09Ld0tPenQxeVh4VlNnSUNxTGNaMFVkeTQ9In1dLCJyb2xlIjogIm1vZGVsIn0sImZpbmlzaFJlYXNvbiI6ICJTVE9QIiwiaW5kZXgiOiAwfV0sInVzYWdlTWV0YWRhdGEiOiB7InByb21wdFRva2VuQ291bnQiOiAyMCwiY2FuZGlkYXRlc1Rva2VuQ291bnQiOiAxNiwidG90YWxUb2tlbkNvdW50IjogMzYsInByb21wdFRva2Vuc0RldGFpbHMiOiBbeyJtb2RhbGl0eSI6ICJURVhUIiwidG9rZW5Db3VudCI6IDIwfV0sInNlcnZpY2VUaWVyIjogInN0YW5kYXJkIn0sIm1vZGVsVmVyc2lvbiI6ICJnZW1pbmktMy41LWZsYXNoLWxpdGUiLCJyZXNwb25zZUlkIjogImZnVE9hcmk3Tll6Z2pNY1AzSnpxb0EwIn0NCg0K"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "STOP",
+    "text": "Café Zürich — καλημέρα! 東京で会いましょう 🌸🎉",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": true,
+    "usage": {
+      "input": 20,
+      "cached_input": null,
+      "output": 16,
+      "reasoning": null,
+      "total": 36,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 20,
+        "candidatesTokenCount": 16,
+        "totalTokenCount": 36,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 20
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}
