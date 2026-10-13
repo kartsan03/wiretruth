@@ -4,6 +4,7 @@ import base64
 import json
 
 from wiretruth.formats import build_exchange
+from wiretruth.providers import gemini
 
 MODEL = "gemini-3.5-flash-lite"
 PATH = f"/v1beta/models/{MODEL}:generateContent"
@@ -164,3 +165,33 @@ def exchange(payload=None, *, events=None, status=200, end="clean", kind=None):
             },
         }
     )
+
+
+def source():
+    return {
+        "format": "wiretruth.fixture/v1",
+        "id": "gemini/truncation.text-stream",
+        "scenario": "truncation.text-stream",
+        "provider": "gemini",
+        "tier": "documented",
+        "provenance": {
+            "source_url": "https://ai.google.dev/api/generate-content",
+            "notes": "Synthetic unit-test stream; repeated usage placement is assumed.",
+            "requested_model": MODEL,
+            "returned_model": MODEL,
+            "request": {},
+        },
+        "derived_from": None,
+        "exchanges": [
+            {
+                "match": {"method": "POST", "path": STREAM_PATH},
+                "response": {
+                    "status": 200,
+                    "headers": {"content-type": "text/event-stream"},
+                    "body": {"sse": STREAM},
+                    "end": "clean",
+                },
+            }
+        ],
+        "truth": gemini.extract_truth([exchange(events=STREAM)], None),
+    }

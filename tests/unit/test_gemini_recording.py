@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
-from gemini_samples import MODEL, PATH, STREAM, STREAM_PATH, THINKING
+from gemini_samples import MODEL, PATH, STREAM, STREAM_PATH, THINKING, source
 
 from wiretruth import recorder
 from wiretruth.cli import main
@@ -162,8 +162,6 @@ def test_gemini_send_failure_does_not_echo_query_credential(monkeypatch):
 
 
 def test_gemini_model_glob_and_colon_match_with_query_logged_separately(tmp_path):
-    from test_gemini_transforms import source
-
     doc = source()
     doc["exchanges"][0]["match"]["path"] = "/v1beta/models/*:streamGenerateContent"
     path = tmp_path / "fixture.json"

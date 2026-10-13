@@ -2,41 +2,11 @@ import json
 from copy import deepcopy
 
 import pytest
-from gemini_samples import MODEL, STREAM, STREAM_ERROR, STREAM_PATH, TEXT, event, exchange
+from gemini_samples import STREAM, STREAM_ERROR, TEXT, event, source
 
 from wiretruth.formats import Body, build_exchange, validate
 from wiretruth.providers import body_text, gemini
 from wiretruth.transforms import derive
-
-
-def source():
-    return {
-        "format": "wiretruth.fixture/v1",
-        "id": "gemini/truncation.text-stream",
-        "scenario": "truncation.text-stream",
-        "provider": "gemini",
-        "tier": "documented",
-        "provenance": {
-            "source_url": "https://ai.google.dev/api/generate-content",
-            "notes": "Synthetic unit-test stream; repeated usage placement is assumed.",
-            "requested_model": MODEL,
-            "returned_model": MODEL,
-            "request": {},
-        },
-        "derived_from": None,
-        "exchanges": [
-            {
-                "match": {"method": "POST", "path": STREAM_PATH},
-                "response": {
-                    "status": 200,
-                    "headers": {"content-type": "text/event-stream"},
-                    "body": {"sse": STREAM},
-                    "end": "clean",
-                },
-            }
-        ],
-        "truth": gemini.extract_truth([exchange(events=STREAM)], None),
-    }
 
 
 def run(transform, args, doc=None):
