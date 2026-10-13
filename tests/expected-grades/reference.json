@@ -2,6 +2,15 @@
   "cells": [
     {
       "scenario": "finish.stop-sequence",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "finish-is-stop": "SATISFIED",
+        "text-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "finish.stop-sequence",
       "provider": "ollama",
       "grade": "PASS",
       "requirements": {
@@ -16,6 +25,17 @@
       "requirements": {
         "finish-is-stop": "SATISFIED",
         "text-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "response-returned": "SATISFIED",
+        "finish-is-other": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "raw-finish-reported": "SATISFIED"
       }
     },
     {
@@ -99,6 +119,14 @@
     },
     {
       "scenario": "stream.error-midstream",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "error-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.error-midstream",
       "provider": "ollama",
       "grade": "PASS",
       "requirements": {
@@ -123,6 +151,15 @@
     },
     {
       "scenario": "stream.missing-finish",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish",
       "provider": "ollama",
       "grade": "PASS",
       "requirements": {
@@ -159,6 +196,15 @@
     },
     {
       "scenario": "stream.missing-finish-abort",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "no-normal-stop": "SATISFIED",
+        "stream-incomplete": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
       "provider": "ollama",
       "grade": "PASS",
       "requirements": {
@@ -195,6 +241,15 @@
     },
     {
       "scenario": "stream.utf8",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "text-reported": "SATISFIED",
+        "no-replacement-chars": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.utf8",
       "provider": "ollama",
       "grade": "PASS",
       "requirements": {
@@ -231,6 +286,15 @@
     },
     {
       "scenario": "stream.utf8-split",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "text-reported": "SATISFIED",
+        "no-replacement-chars": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "stream.utf8-split",
       "provider": "ollama",
       "grade": "PASS",
       "requirements": {
@@ -267,6 +331,14 @@
     },
     {
       "scenario": "tools.parallel-calls",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "calls-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls",
       "provider": "ollama",
       "grade": "PASS",
       "requirements": {
@@ -299,6 +371,14 @@
     },
     {
       "scenario": "tools.parallel-calls-stream",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "calls-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
       "provider": "ollama",
       "grade": "PASS",
       "requirements": {
@@ -331,6 +411,16 @@
     },
     {
       "scenario": "truncation.reasoning-only",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.reasoning-only",
       "provider": "ollama",
       "grade": "PASS",
       "requirements": {
@@ -371,6 +461,17 @@
     },
     {
       "scenario": "truncation.structured-output",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "no-partial-success": "SATISFIED",
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.structured-output",
       "provider": "ollama",
       "grade": "PASS",
       "requirements": {
@@ -415,6 +516,16 @@
     },
     {
       "scenario": "truncation.text",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.text",
       "provider": "ollama",
       "grade": "PASS",
       "requirements": {
@@ -446,6 +557,16 @@
     {
       "scenario": "truncation.text",
       "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "provider": "gemini",
       "grade": "PASS",
       "requirements": {
         "cause-is-truncation": "SATISFIED",
@@ -495,6 +616,16 @@
     },
     {
       "scenario": "truncation.text-stream-usage",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "cause-is-truncation": "SATISFIED",
+        "text-reported": "SATISFIED",
+        "usage-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.text-stream-usage",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -505,6 +636,15 @@
     },
     {
       "scenario": "truncation.tool-call-args",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "no-complete-partial-call": "SATISFIED",
+        "cause-is-truncation": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.tool-call-args",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -523,6 +663,15 @@
     },
     {
       "scenario": "truncation.tool-call-args-stream",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "no-complete-partial-call": "SATISFIED",
+        "cause-is-truncation": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "truncation.tool-call-args-stream",
       "provider": "openai-chat",
       "grade": "PASS",
       "requirements": {
@@ -537,6 +686,23 @@
       "requirements": {
         "no-complete-partial-call": "SATISFIED",
         "cause-is-truncation": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "total-reconciles": "SATISFIED",
+        "reasoning-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "usage-reported": "SATISFIED"
       }
     },
     {
