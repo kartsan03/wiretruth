@@ -15,11 +15,11 @@ finding).
 - `gemini` GenerateContent support for JSON and SSE: recording, truth extraction, transforms and shim
   mapping, using `gemini-3.5-flash-lite` by default. Thinking usage includes thoughts and preserves the
   candidates-only alternative. Empty candidates and optional function-call ids are handled.
-- Gemini scenario coverage, including `usage.reasoning-tokens`, with separate recording dispatches for
+- Gemini scenario coverage (the tool-argument truncation scenarios stay off: a cut sends no call part), including `usage.reasoning-tokens`, with separate recording dispatches for
   plain and thinking calls. The any-llm shim uses its native Gemini provider and pins `google-genai`.
 - Google `AQ.` credential detection, masked Gemini header and query credentials, and query-free fixture
   match paths for streamed GenerateContent requests.
-- Gemini fixtures: eleven scenarios recorded in CI against `gemini-3.5-flash-lite` (run
+- Gemini fixtures: nine scenarios recorded in CI against `gemini-3.5-flash-lite` (run
   [38381941285](https://github.com/kartsan03/wiretruth/actions/runs/38381941285)), `usage.reasoning-tokens` against
   `gemini-3.8-flash` (run [38381937993](https://github.com/kartsan03/wiretruth/actions/runs/38381937993)),
   `truncation.reasoning-only` on `gemini-3.5-flash-lite` at thinking level HIGH (run
@@ -88,7 +88,7 @@ finding).
 
 ### Results
 - any-llm 1.33.0: PASS on 16 of 18 `openai-chat` scenarios, 13 of 14 `openai-responses`, 11 of 15 `ollama`, 11
-  of 14 `ollama-openai` and 14 of 18 `gemini` ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)). LOSSY on `truncation.structured-output` over
+  of 14 `ollama-openai` and 12 of 16 `gemini` ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)). LOSSY on `truncation.structured-output` over
   `openai-responses`: structured output raises a pydantic `ValidationError` on the cut-off JSON, with no sign that
   the token limit was hit, and without the partial text or usage.
 - any-llm 1.33.0: WRONG on `finish.unknown-value` over `openai-chat`: a finish value outside OpenAI's five raises

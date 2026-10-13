@@ -10,8 +10,8 @@ happened.
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
 So far wiretruth tests one library, any-llm, on five APIs: OpenAI Chat Completions and Responses, and Ollama's native
-and OpenAI-compatible endpoints, and Gemini GenerateContent. That is 22 scenarios and 79 cells. More providers and libraries follow, and a public
-results matrix arrives in v0.4. Until then, the grades are in
+and OpenAI-compatible endpoints, and Gemini GenerateContent. That is 22 scenarios and 77 cells. More providers and
+libraries follow, and a public results matrix arrives in v0.4. Until then, the grades are in
 [`results/`](https://github.com/kartsan03/wiretruth/tree/main/results).
 
 ## Why
@@ -91,8 +91,8 @@ truncation.structured-output       ✓ PASS   ✓ PASS   ✓ PASS         ✓ PA
 truncation.text                    ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
 truncation.text-stream             ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
 truncation.text-stream-usage       ✓ PASS                           ✓ PASS
-truncation.tool-call-args          ✓ PASS                           ✓ PASS       ✓ PASS
-truncation.tool-call-args-stream   ✓ PASS                           ✓ PASS       ✓ PASS
+truncation.tool-call-args                                           ✓ PASS       ✓ PASS
+truncation.tool-call-args-stream                                    ✓ PASS       ✓ PASS
 usage.reasoning-tokens             ✓ PASS
 usage.stream-final-chunk           ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS
 
@@ -149,18 +149,18 @@ stream.utf8-split gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls gemini
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="call_652863599527796041_0", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_120847", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="call_652863599527796041_1", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_120848", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="call_7188633667101404929_0", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_120847", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="call_7188633667101404929_1", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_120848", name="get_weather", args={"city": "Zürich"}, parsed=true
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="ecdf831d-f6b6-4b0a-988d-7cfdfb64a002", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="923b4917-199a-46ea-bbe7-263638353569", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="2784738e-20e0-4c2a-9336-938d951b17a7", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="437867ad-56cb-4324-9a0f-da622a997dba", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
 
 tools.parallel-calls-stream gemini
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="call_-4621487615810391883_0", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_89893", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="call_-4621487615810391883_1", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_89896", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="call_6864038711552626911_0", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_89893", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="call_6864038711552626911_1", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_89896", name="get_weather", args={"city": "Zürich"}, parsed=true
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls-stream ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="7e1e6f49-8075-4b14-95cb-3c7922946cef", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="30d56fc4-bfdf-4d4c-88d2-0ba6fe8373db", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="31d14b9f-9a5e-42da-8390-045f11767df5", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="ca11ad2e-5037-4bb5-86d4-58a430294312", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
 
 truncation.structured-output gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
@@ -179,17 +179,11 @@ truncation.text-stream gemini
 truncation.text-stream-usage gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
-truncation.tool-call-args gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-truncation.tool-call-args-stream gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
 usage.stream-final-chunk gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
-any-llm 1.33.0: 79 cells, 65 PASS, 5 LOSSY, 9 WRONG
-stderr: .wiretruth/runs/20261013T102157.615314Z
+any-llm 1.33.0: 77 cells, 63 PASS, 5 LOSSY, 9 WRONG
+stderr: .wiretruth/runs/20261013T103934.766947Z
 ```
 
 No API keys are needed. Everything runs against recorded responses on `127.0.0.1`. The first run downloads any-llm

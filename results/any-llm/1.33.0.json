@@ -7,8 +7,8 @@
     "language": "python"
   },
   "run": {
-    "at": "2026-10-13T10:23:50Z",
-    "git_sha": "be9901c1a29e146c7d5d8acbd49e5ad385227cb5",
+    "at": "2026-10-13T10:41:22Z",
+    "git_sha": "d059a76d66c1f7c96a2b06bcceb8090ce2cee717",
     "ci_run": null,
     "runner": "wiretruth 0.2.0.dev0",
     "packages": {
@@ -124,7 +124,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 1253.9307931438088
+        "elapsed_ms": 721.3688031770289
       },
       "request_count": 1
     },
@@ -196,7 +196,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 387.6783719751984
+        "elapsed_ms": 231.5824879333377
       },
       "request_count": 1
     },
@@ -268,7 +268,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 257.9918329138309
+        "elapsed_ms": 150.81236511468887
       },
       "request_count": 1
     },
@@ -357,7 +357,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 715.4113189317286
+        "elapsed_ms": 701.734920963645
       },
       "request_count": 1
     },
@@ -444,7 +444,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 198.42374604195356
+        "elapsed_ms": 187.80811200849712
       },
       "request_count": 1
     },
@@ -539,7 +539,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 150.3686031792313
+        "elapsed_ms": 150.0023170374334
       },
       "request_count": 1
     },
@@ -634,7 +634,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 159.65495398268104
+        "elapsed_ms": 155.78632708638906
       },
       "request_count": 1
     },
@@ -718,7 +718,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 318.07806994765997
+        "elapsed_ms": 271.52723213657737
       },
       "request_count": 1
     },
@@ -796,7 +796,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 147.59382884949446
+        "elapsed_ms": 147.27512886747718
       },
       "request_count": 1
     },
@@ -864,7 +864,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 145.8179501350969
+        "elapsed_ms": 146.14629815332592
       },
       "request_count": 1
     },
@@ -936,7 +936,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 198.54934397153556
+        "elapsed_ms": 202.87665002979338
       },
       "request_count": 1
     },
@@ -1008,7 +1008,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 133.0010020174086
+        "elapsed_ms": 137.78036506846547
       },
       "request_count": 1
     },
@@ -1082,7 +1082,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 696.878446964547
+        "elapsed_ms": 689.1943560913205
       },
       "request_count": 1
     },
@@ -1154,7 +1154,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 221.20468504726887
+        "elapsed_ms": 224.11286202259362
       },
       "request_count": 1
     },
@@ -1226,7 +1226,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 178.65503602661192
+        "elapsed_ms": 174.96828408911824
       },
       "request_count": 1
     },
@@ -1298,7 +1298,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 247.82684119418263
+        "elapsed_ms": 244.9354398995638
       },
       "request_count": 1
     },
@@ -1374,7 +1374,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 734.7602488007396
+        "elapsed_ms": 695.503466995433
       },
       "request_count": 1
     },
@@ -1448,7 +1448,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 245.42506295256317
+        "elapsed_ms": 242.30104591697454
       },
       "request_count": 1
     },
@@ -1522,7 +1522,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 214.66646599583328
+        "elapsed_ms": 210.38243104703724
       },
       "request_count": 1
     },
@@ -1596,7 +1596,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 182.12730321101844
+        "elapsed_ms": 193.07414209470153
       },
       "request_count": 1
     },
@@ -1668,7 +1668,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 245.16241298988461
+        "elapsed_ms": 260.5816691648215
       },
       "request_count": 1
     },
@@ -1748,7 +1748,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 657.0184170268476
+        "elapsed_ms": 668.9538948703557
       },
       "request_count": 1
     },
@@ -1826,7 +1826,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 215.92544694431126
+        "elapsed_ms": 221.49056801572442
       },
       "request_count": 1
     },
@@ -1904,7 +1904,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 171.0249928291887
+        "elapsed_ms": 165.27852602303028
       },
       "request_count": 1
     },
@@ -1982,7 +1982,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 169.50807301327586
+        "elapsed_ms": 168.43942692503333
       },
       "request_count": 1
     },
@@ -2060,7 +2060,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 259.50128701515496
+        "elapsed_ms": 248.08125686831772
       },
       "request_count": 1
     },
@@ -2134,7 +2134,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 696.1853250395507
+        "elapsed_ms": 708.1453769933432
       },
       "request_count": 1
     },
@@ -2206,7 +2206,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 236.09545920044184
+        "elapsed_ms": 252.47507193125784
       },
       "request_count": 1
     },
@@ -2278,7 +2278,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 224.2162588518113
+        "elapsed_ms": 218.94272393546999
       },
       "request_count": 1
     },
@@ -2350,7 +2350,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 228.90670807100832
+        "elapsed_ms": 220.9932750556618
       },
       "request_count": 1
     },
@@ -2422,7 +2422,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 274.9470800627023
+        "elapsed_ms": 268.1085451040417
       },
       "request_count": 1
     },
@@ -2496,7 +2496,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 691.6137558873743
+        "elapsed_ms": 688.06889699772
       },
       "request_count": 1
     },
@@ -2568,7 +2568,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 205.10994596406817
+        "elapsed_ms": 205.51730110310018
       },
       "request_count": 1
     },
@@ -2640,7 +2640,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 157.4742440134287
+        "elapsed_ms": 158.26087002642453
       },
       "request_count": 1
     },
@@ -2712,7 +2712,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 156.72371699474752
+        "elapsed_ms": 157.167678931728
       },
       "request_count": 1
     },
@@ -2784,7 +2784,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 270.2601538039744
+        "elapsed_ms": 256.4173471182585
       },
       "request_count": 1
     },
@@ -2799,11 +2799,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"call_652863599527796041_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_120847\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_652863599527796041_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_120848\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"call_7188633667101404929_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_120847\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_7188633667101404929_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_120848\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"call_652863599527796041_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_120847\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_652863599527796041_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_120848\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"call_7188633667101404929_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_120847\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_7188633667101404929_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_120848\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -2833,7 +2833,7 @@
         },
         "tool_calls": [
           {
-            "id": "call_652863599527796041_0",
+            "id": "call_7188633667101404929_0",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -2842,7 +2842,7 @@
             }
           },
           {
-            "id": "call_652863599527796041_1",
+            "id": "call_7188633667101404929_1",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -2873,7 +2873,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 735.3672329336405
+        "elapsed_ms": 737.3857391066849
       },
       "request_count": 1
     },
@@ -2888,11 +2888,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"ecdf831d-f6b6-4b0a-988d-7cfdfb64a002\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"923b4917-199a-46ea-bbe7-263638353569\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"2784738e-20e0-4c2a-9336-938d951b17a7\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"437867ad-56cb-4324-9a0f-da622a997dba\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"ecdf831d-f6b6-4b0a-988d-7cfdfb64a002\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"923b4917-199a-46ea-bbe7-263638353569\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"2784738e-20e0-4c2a-9336-938d951b17a7\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"437867ad-56cb-4324-9a0f-da622a997dba\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -2922,7 +2922,7 @@
         },
         "tool_calls": [
           {
-            "id": "ecdf831d-f6b6-4b0a-988d-7cfdfb64a002",
+            "id": "2784738e-20e0-4c2a-9336-938d951b17a7",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -2931,7 +2931,7 @@
             }
           },
           {
-            "id": "923b4917-199a-46ea-bbe7-263638353569",
+            "id": "437867ad-56cb-4324-9a0f-da622a997dba",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -2960,7 +2960,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 177.19546612352133
+        "elapsed_ms": 175.46160891652107
       },
       "request_count": 1
     },
@@ -3045,7 +3045,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 143.49184092134237
+        "elapsed_ms": 145.07909398525953
       },
       "request_count": 1
     },
@@ -3130,7 +3130,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 134.0967658907175
+        "elapsed_ms": 132.19856400974095
       },
       "request_count": 1
     },
@@ -3215,7 +3215,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 272.3085831385106
+        "elapsed_ms": 288.7987969443202
       },
       "request_count": 1
     },
@@ -3230,11 +3230,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"call_-4621487615810391883_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_89893\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_-4621487615810391883_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_89896\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"call_6864038711552626911_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_89893\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_6864038711552626911_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_89896\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"call_-4621487615810391883_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_89893\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_-4621487615810391883_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_89896\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"call_6864038711552626911_0\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_89893\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"call_6864038711552626911_1\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_89896\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -3264,7 +3264,7 @@
         },
         "tool_calls": [
           {
-            "id": "call_-4621487615810391883_0",
+            "id": "call_6864038711552626911_0",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -3273,7 +3273,7 @@
             }
           },
           {
-            "id": "call_-4621487615810391883_1",
+            "id": "call_6864038711552626911_1",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -3304,7 +3304,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 707.7521798200905
+        "elapsed_ms": 650.8717720862478
       },
       "request_count": 1
     },
@@ -3319,11 +3319,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"7e1e6f49-8075-4b14-95cb-3c7922946cef\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"30d56fc4-bfdf-4d4c-88d2-0ba6fe8373db\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"31d14b9f-9a5e-42da-8390-045f11767df5\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"ca11ad2e-5037-4bb5-86d4-58a430294312\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"7e1e6f49-8075-4b14-95cb-3c7922946cef\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"30d56fc4-bfdf-4d4c-88d2-0ba6fe8373db\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"31d14b9f-9a5e-42da-8390-045f11767df5\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"ca11ad2e-5037-4bb5-86d4-58a430294312\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -3353,7 +3353,7 @@
         },
         "tool_calls": [
           {
-            "id": "7e1e6f49-8075-4b14-95cb-3c7922946cef",
+            "id": "31d14b9f-9a5e-42da-8390-045f11767df5",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -3362,7 +3362,7 @@
             }
           },
           {
-            "id": "30d56fc4-bfdf-4d4c-88d2-0ba6fe8373db",
+            "id": "ca11ad2e-5037-4bb5-86d4-58a430294312",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -3391,7 +3391,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 203.71552999131382
+        "elapsed_ms": 190.17267785966396
       },
       "request_count": 1
     },
@@ -3476,7 +3476,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 160.92728497460485
+        "elapsed_ms": 146.25270385295153
       },
       "request_count": 1
     },
@@ -3561,7 +3561,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 198.59682978130877
+        "elapsed_ms": 198.65408586338162
       },
       "request_count": 1
     },
@@ -3646,7 +3646,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 267.7742119412869
+        "elapsed_ms": 254.2079179547727
       },
       "request_count": 1
     },
@@ -3724,7 +3724,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 713.8595259748399
+        "elapsed_ms": 695.6437679473311
       },
       "request_count": 1
     },
@@ -3802,7 +3802,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 182.22518195398152
+        "elapsed_ms": 175.345818977803
       },
       "request_count": 1
     },
@@ -3880,7 +3880,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 144.94554209522903
+        "elapsed_ms": 146.67911804281175
       },
       "request_count": 1
     },
@@ -3958,7 +3958,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 130.97815308719873
+        "elapsed_ms": 141.76189294084907
       },
       "request_count": 1
     },
@@ -4036,7 +4036,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 272.4429809022695
+        "elapsed_ms": 272.61447301134467
       },
       "request_count": 1
     },
@@ -4128,7 +4128,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 678.4867718815804
+        "elapsed_ms": 678.9057271089405
       },
       "request_count": 1
     },
@@ -4218,7 +4218,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 199.4148998055607
+        "elapsed_ms": 193.2863660622388
       },
       "request_count": 1
     },
@@ -4308,7 +4308,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 148.25144899077713
+        "elapsed_ms": 122.84152302891016
       },
       "request_count": 1
     },
@@ -4398,7 +4398,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 153.1900849658996
+        "elapsed_ms": 150.03958600573242
       },
       "request_count": 1
     },
@@ -4492,7 +4492,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 275.2579338848591
+        "elapsed_ms": 276.5520049724728
       },
       "request_count": 1
     },
@@ -4572,7 +4572,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 691.2171531002969
+        "elapsed_ms": 717.0415739528835
       },
       "request_count": 1
     },
@@ -4650,7 +4650,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 181.7418730352074
+        "elapsed_ms": 189.55929903313518
       },
       "request_count": 1
     },
@@ -4728,7 +4728,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 172.60686890222132
+        "elapsed_ms": 145.00132808461785
       },
       "request_count": 1
     },
@@ -4806,7 +4806,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 138.13024200499058
+        "elapsed_ms": 142.68409297801554
       },
       "request_count": 1
     },
@@ -4884,7 +4884,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 267.8172520827502
+        "elapsed_ms": 274.3892951402813
       },
       "request_count": 1
     },
@@ -4964,7 +4964,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 660.0465311203152
+        "elapsed_ms": 694.6574130561203
       },
       "request_count": 1
     },
@@ -5042,7 +5042,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 262.0864489581436
+        "elapsed_ms": 275.72828717529774
       },
       "request_count": 1
     },
@@ -5120,7 +5120,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 213.43824290670455
+        "elapsed_ms": 218.7282049562782
       },
       "request_count": 1
     },
@@ -5198,7 +5198,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 211.82201011106372
+        "elapsed_ms": 210.04192880354822
       },
       "request_count": 1
     },
@@ -5276,7 +5276,7 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 253.70341609232128
+        "elapsed_ms": 251.5322919934988
       },
       "request_count": 1
     },
@@ -5356,7 +5356,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 711.0022129490972
+        "elapsed_ms": 711.0327559057623
       },
       "request_count": 1
     },
@@ -5434,81 +5434,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 210.1820029783994
-      },
-      "request_count": 1
-    },
-    {
-      "scenario": "truncation.tool-call-args",
-      "provider": "gemini",
-      "fixture": "gemini/truncation.tool-call-args",
-      "fixture_tier": "recorded",
-      "grade": "PASS",
-      "requirements": [
-        {
-          "id": "no-complete-partial-call",
-          "level": "MUST",
-          "status": "SATISFIED",
-          "evidence": "0 tool calls; no partial args made complete"
-        },
-        {
-          "id": "cause-is-truncation",
-          "level": "MUST",
-          "status": "SATISFIED",
-          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
-        }
-      ],
-      "notes": [],
-      "observation": {
-        "format": "wiretruth.observation/v1",
-        "library": {
-          "name": "any-llm",
-          "version": "1.33.0",
-          "language": "python",
-          "api": "any_llm.completion"
-        },
-        "outcome": "returned",
-        "unsupported_reason": null,
-        "error": null,
-        "finish": {
-          "value": "length",
-          "raw": "length",
-          "surface": "primary",
-          "source": "choices[0].finish_reason"
-        },
-        "text": {
-          "value": null,
-          "surface": "absent"
-        },
-        "structured": {
-          "attempted": false,
-          "returned_as_success": false,
-          "value": null
-        },
-        "tool_calls": [],
-        "usage": {
-          "input": 97,
-          "cached_input": null,
-          "output": 0,
-          "reasoning": null,
-          "total": 97,
-          "surface": {
-            "input": "primary",
-            "output": "primary",
-            "total": "primary",
-            "cached_input": "absent",
-            "reasoning": "absent"
-          }
-        },
-        "stream": {
-          "used": false,
-          "completed": null,
-          "chunks_seen": null
-        },
-        "notes": [
-          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
-        ],
-        "elapsed_ms": 718.9145521260798
+        "elapsed_ms": 214.39166204072535
       },
       "request_count": 1
     },
@@ -5588,7 +5514,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 146.57633611932397
+        "elapsed_ms": 145.36688895896077
       },
       "request_count": 1
     },
@@ -5668,81 +5594,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 281.7213609814644
-      },
-      "request_count": 1
-    },
-    {
-      "scenario": "truncation.tool-call-args-stream",
-      "provider": "gemini",
-      "fixture": "gemini/truncation.tool-call-args-stream",
-      "fixture_tier": "recorded",
-      "grade": "PASS",
-      "requirements": [
-        {
-          "id": "no-complete-partial-call",
-          "level": "MUST",
-          "status": "SATISFIED",
-          "evidence": "0 tool calls; no partial args made complete"
-        },
-        {
-          "id": "cause-is-truncation",
-          "level": "MUST",
-          "status": "SATISFIED",
-          "evidence": "finish.value=\"length\" (primary: choices[0].finish_reason); truth.finish=\"length\"; error.category=null; structured.returned_as_success=false"
-        }
-      ],
-      "notes": [],
-      "observation": {
-        "format": "wiretruth.observation/v1",
-        "library": {
-          "name": "any-llm",
-          "version": "1.33.0",
-          "language": "python",
-          "api": "any_llm.completion"
-        },
-        "outcome": "returned",
-        "unsupported_reason": null,
-        "error": null,
-        "finish": {
-          "value": "length",
-          "raw": "length",
-          "surface": "primary",
-          "source": "choices[0].finish_reason"
-        },
-        "text": {
-          "value": null,
-          "surface": "absent"
-        },
-        "structured": {
-          "attempted": false,
-          "returned_as_success": false,
-          "value": null
-        },
-        "tool_calls": [],
-        "usage": {
-          "input": 97,
-          "cached_input": null,
-          "output": 0,
-          "reasoning": null,
-          "total": 97,
-          "surface": {
-            "input": "primary",
-            "output": "primary",
-            "total": "primary",
-            "cached_input": "absent",
-            "reasoning": "absent"
-          }
-        },
-        "stream": {
-          "used": true,
-          "completed": null,
-          "chunks_seen": 1
-        },
-        "notes": [
-          "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
-        ],
-        "elapsed_ms": 714.7729580756277
+        "elapsed_ms": 266.00754517130554
       },
       "request_count": 1
     },
@@ -5822,7 +5674,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 193.60184599645436
+        "elapsed_ms": 185.16229488886893
       },
       "request_count": 1
     },
@@ -5902,7 +5754,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 266.89093792811036
+        "elapsed_ms": 234.01150410063565
       },
       "request_count": 1
     },
@@ -5974,7 +5826,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 696.278135990724
+        "elapsed_ms": 705.1061931997538
       },
       "request_count": 1
     },
@@ -6042,7 +5894,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 683.8536381255835
+        "elapsed_ms": 674.1542888339609
       },
       "request_count": 1
     },
@@ -6108,7 +5960,7 @@
           "chunks_seen": 28
         },
         "notes": [],
-        "elapsed_ms": 317.38709891214967
+        "elapsed_ms": 329.99837095849216
       },
       "request_count": 1
     },
@@ -6174,7 +6026,7 @@
           "chunks_seen": 24
         },
         "notes": [],
-        "elapsed_ms": 258.8544189929962
+        "elapsed_ms": 246.85191898606718
       },
       "request_count": 1
     },
@@ -6240,7 +6092,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 176.44021078012884
+        "elapsed_ms": 176.91661999560893
       },
       "request_count": 1
     }
