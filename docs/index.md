@@ -9,6 +9,7 @@ This is the map of wiretruth's documentation. Start with Concepts if you're new.
 
 ## Reference
 
+- [Scenario catalog](scenarios.md): scenarios, requirements and fixture tiers by provider.
 - [Grading](grading.md): requirement checks, evidence, surfaces and the ordered rules for cell grades.
 - [File formats](formats.md): every field of scenarios, fixtures, call specs, observations, shim manifests, results,
   upstream tracking and bug classes, and what `wiretruth lint` checks.

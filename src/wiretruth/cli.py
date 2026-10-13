@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import cast
 
 from wiretruth import __version__
+from wiretruth.catalog import render as render_catalog
 from wiretruth.envs import (
     RunError,
     find_library,
@@ -65,6 +66,7 @@ COMMANDS = {
     "record": "record provider responses into fixtures (needs API keys)",
     "derive": "derive a fixture by transforming recorded or documented responses",
     "lint": "validate suite data and results",
+    "catalog": "generate the scenario catalog from suite data",
     "envs": "list, build or prune per-library environments",
 }
 
@@ -84,6 +86,22 @@ def build_parser() -> argparse.ArgumentParser:
                 nargs="?",
                 default=".",
                 help="repository root that holds suite/ and results/ (default: current directory)",
+            )
+        elif name == "catalog":
+            subparser.add_argument(
+                "--root",
+                type=Path,
+                default=Path(),
+                help="repository root that holds suite/ (default: current directory)",
+            )
+            subparser.add_argument(
+                "--out",
+                default="docs/scenarios.md",
+                help="output path relative to the root, or - for stdout "
+                "(default: docs/scenarios.md)",
+            )
+            subparser.add_argument(
+                "--check", action="store_true", help="exit 1 if the output file is stale or missing"
             )
         elif name == "run":
             shim = subparser.add_mutually_exclusive_group(required=True)
@@ -212,6 +230,33 @@ def run_lint(root: Path) -> int:
         )
         return EXIT_CHECK
     print(f"wiretruth lint: {_plural(report.files, 'file')}, no errors")
+    return 0
+
+
+def run_catalog(args: argparse.Namespace) -> int:
+    if args.check and args.out == "-":
+        print("wiretruth catalog: --check requires an output file", file=sys.stderr)
+        return EXIT_USAGE
+    try:
+        text = render_catalog(args.root)
+        if args.out == "-":
+            sys.stdout.write(text)
+            return 0
+        path = args.root / args.out
+        if args.check:
+            if not path.is_file() or path.read_bytes() != text.encode("utf-8"):
+                print(f"{args.out} is stale: run `wiretruth catalog`", file=sys.stderr)
+                return EXIT_CHECK
+        else:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text, encoding="utf-8", newline="\n")
+            print(f"wrote {path}")
+    except FormatError as error:
+        print(error, file=sys.stderr)
+        return EXIT_CHECK
+    except (SetupError, OSError) as error:
+        print(f"wiretruth catalog: {error}", file=sys.stderr)
+        return EXIT_USAGE
     return 0
 
 
@@ -478,6 +523,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_USAGE
     if args.command == "lint":
         return run_lint(Path(args.path))
+    if args.command == "catalog":
+        return run_catalog(args)
     if args.command == "serve":
         return run_serve(args.fixture, args.port)
     if args.command == "record":

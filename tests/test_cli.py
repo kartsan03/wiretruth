@@ -18,7 +18,7 @@ from wiretruth.formats import load_document
 from wiretruth.lint import lint
 
 SAMPLES = Path(__file__).resolve().parent / "samples"
-EXPECTED_COMMANDS = ["run", "serve", "record", "derive", "lint", "envs"]
+EXPECTED_COMMANDS = ["run", "serve", "record", "derive", "lint", "catalog", "envs"]
 
 
 def test_help_lists_every_command(capsys: pytest.CaptureFixture[str]) -> None:

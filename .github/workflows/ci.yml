@@ -104,3 +104,4 @@ jobs:
           expected = {f'{kind}.schema.json' for kind in KINDS} | {'common.schema.json'};
           assert set(schema_names()) == expected, sorted(expected ^ set(schema_names()))"
       - run: .wheel-env/bin/wiretruth lint
+      - run: .wheel-env/bin/wiretruth catalog --check
