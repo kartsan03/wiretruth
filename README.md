@@ -9,7 +9,7 @@ happened.
 [![PyPI](https://img.shields.io/pypi/v/wiretruth?label=PyPI)](https://pypi.org/project/wiretruth/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
-So far wiretruth tests one library, any-llm, on five APIs: OpenAI Chat Completions and Responses, and Ollama's native
+So far wiretruth tests one library, any-llm, on five APIs: OpenAI Chat Completions and Responses, Ollama's native
 and OpenAI-compatible endpoints, and Gemini GenerateContent. That is 22 scenarios and 77 cells. More providers and
 libraries follow, and a public results matrix arrives in v0.4. Until then, the grades are in
 [`results/`](https://github.com/kartsan03/wiretruth/tree/main/results).
