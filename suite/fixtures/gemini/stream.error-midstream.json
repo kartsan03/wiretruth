@@ -1,0 +1,100 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/stream.error-midstream",
+  "scenario": "stream.error-midstream",
+  "provider": "gemini",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 16,
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      }
+    }
+  },
+  "derived_from": {
+    "fixture": "gemini/truncation.text-stream",
+    "transform": "inject_error_event",
+    "args": {
+      "after": 1,
+      "error": {
+        "error": {
+          "code": 503,
+          "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+          "status": "UNAVAILABLE"
+        }
+      }
+    },
+    "rationale": "The provider reports an error after starting a successful HTTP stream.",
+    "evidence_url": "https://github.com/googleapis/python-genai/blob/main/google/genai/_api_client.py"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"Octop\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 22,\"candidatesTokenCount\": 2,\"totalTokenCount\": 24,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 22}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"pgTOaonbKMuV_uMPvK7d4AE\"}\r\n\r\n",
+            "data: {\"error\":{\"code\":503,\"message\":\"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\"status\":\"UNAVAILABLE\"}}\n\n"
+          ]
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "error",
+    "raw_finish": null,
+    "text": "Octop",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": false,
+    "usage": {
+      "input": 22,
+      "cached_input": null,
+      "output": 2,
+      "reasoning": null,
+      "total": 24,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 22,
+        "candidatesTokenCount": 2,
+        "totalTokenCount": 24,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 22
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": {
+      "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+      "type": "UNAVAILABLE",
+      "code": "503",
+      "status": null
+    }
+  }
+}

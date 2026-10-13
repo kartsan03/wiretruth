@@ -1,0 +1,88 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "gemini/stream.missing-finish-abort",
+  "scenario": "stream.missing-finish-abort",
+  "provider": "gemini",
+  "tier": "derived",
+  "provenance": {
+    "requested_model": "gemini-3.5-flash-lite",
+    "returned_model": "gemini-3.5-flash-lite",
+    "request": {
+      "contents": [
+        {
+          "role": "user",
+          "parts": [
+            {
+              "text": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
+            }
+          ]
+        }
+      ],
+      "generationConfig": {
+        "maxOutputTokens": 16,
+        "thinkingConfig": {
+          "thinkingLevel": "MINIMAL"
+        }
+      }
+    }
+  },
+  "derived_from": {
+    "fixture": "gemini/truncation.text-stream",
+    "transform": "cut_stream_after",
+    "args": {
+      "n": 1,
+      "end": "abort"
+    },
+    "rationale": "The connection closes before the stream has delivered every event.",
+    "evidence_url": "https://github.com/openai/openai-python/issues/2065"
+  },
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1beta/models/gemini-3.5-flash-lite:streamGenerateContent"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "text/event-stream"
+        },
+        "body": {
+          "sse": [
+            "data: {\"candidates\": [{\"content\": {\"parts\": [{\"text\": \"Octop\"}],\"role\": \"model\"},\"index\": 0}],\"usageMetadata\": {\"promptTokenCount\": 22,\"candidatesTokenCount\": 2,\"totalTokenCount\": 24,\"promptTokensDetails\": [{\"modality\": \"TEXT\",\"tokenCount\": 22}],\"serviceTier\": \"standard\"},\"modelVersion\": \"gemini-3.5-flash-lite\",\"responseId\": \"pgTOaonbKMuV_uMPvK7d4AE\"}\r\n\r\n"
+          ]
+        },
+        "end": "abort"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "none",
+    "raw_finish": null,
+    "text": "Octop",
+    "tool_calls": [],
+    "structured": null,
+    "stream_completed": false,
+    "usage": {
+      "input": 22,
+      "cached_input": null,
+      "output": 2,
+      "reasoning": null,
+      "total": 24,
+      "alternatives": {},
+      "raw": {
+        "promptTokenCount": 22,
+        "candidatesTokenCount": 2,
+        "totalTokenCount": 24,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 22
+          }
+        ],
+        "serviceTier": "standard"
+      }
+    },
+    "error": null
+  }
+}
