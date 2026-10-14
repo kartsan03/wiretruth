@@ -680,6 +680,19 @@ def test_unparsed_tool_args_are_visibly_partial(finish, truth_calls) -> None:
     assert CHECKS["truncation_is_signalled"](obs, truth, (), {}).status == expected
 
 
+def test_unmatched_parsed_tool_call_against_partial_truth_is_contradicted() -> None:
+    invented = replace(CALL, id="tide-9")
+    obs = replace(OBS, tool_calls=(PARTIAL, invented))
+    result = CHECKS["no_complete_tool_call_from_partial_args"](
+        obs, replace(TRUTH, tool_calls=(PARTIAL,)), (), {}
+    )
+    assert result.status == "CONTRADICTED"
+    assert result.evidence == (
+        'tool_calls[1] id="tide-9" returned without error; '
+        "arguments_parsed_ok=true, truth.arguments_parsed_ok=null"
+    )
+
+
 def test_repaired_tool_args_match_truth_by_id_before_position() -> None:
     other = replace(CALL, id="tide-2")
     truth = replace(TRUTH, tool_calls=(other, PARTIAL))
