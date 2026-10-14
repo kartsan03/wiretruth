@@ -8,7 +8,14 @@ wiretruth run --shim shims/liar --check-grades tests/expected-grades/liar.json
 wiretruth run --lib any-llm
 wiretruth run --lib any-llm --write-results
 wiretruth run --lib any-llm --check-against
+wiretruth run --lib litellm
+wiretruth run --lib litellm --write-results
+wiretruth run --lib litellm --check-against
 ```
+
+The library shims are [any-llm](python/any-llm/) and [LiteLLM](python/litellm/), each covering OpenAI Chat
+Completions and Responses, native and OpenAI-compatible Ollama, Gemini GenerateContent and Anthropic Messages.
+Their manifests document the observed surfaces, exact package versions and unsupported features.
 
 The runner reads `wiretruth-shim.json` in the shim directory and starts its `entry` argv there. A Python entry
 starting with `python` uses a cached venv under `.wiretruth/envs/py/<name>-<version>/`, installed with uv from
@@ -33,6 +40,9 @@ before any request it grades HARNESS. The default timeout is 20 seconds. On time
 group: the cell grades HANG if the last response was fully served, otherwise HARNESS. Invalid stdout, a wrong
 endpoint or stream mode, or an observation with no request in the replay log (other than a `validation` or
 `internal` error) grades HARNESS. See [Grading](../docs/grading.md) for the complete precedence rules.
+
+Native Ollama's auxiliary `POST /api/show` lookup may receive replay's 404 after a matched `/api/chat` request.
+The lookup stays in the request log and count, but is not checked as an inference endpoint or stream.
 
 The environment inherits only `PATH`, `HOME`, `LANG`, `LC_ALL`, `LC_CTYPE`, `TMPDIR`, `TZ` and `SYSTEMROOT`, when
 set. The runner sets `WIRETRUTH_BASE_URL_<PROVIDER>` for every replay provider, uppercasing the id and replacing

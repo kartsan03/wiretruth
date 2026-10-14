@@ -11,6 +11,13 @@ finding).
 
 ## [Unreleased]
 
+### Added
+- LiteLLM 1.105.1 shim for OpenAI Chat Completions and Responses, native and OpenAI-compatible Ollama,
+  Gemini GenerateContent and Anthropic Messages.
+
+### Changed
+- Development version is now `0.3.0.dev0`.
+
 ### Fixed
 - Derived-fixture examples include `--replace` so they regenerate committed fixtures.
 - The partial tool-call arguments check rejects a complete parsed call that matches no call on the wire, so an
