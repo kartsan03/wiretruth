@@ -155,7 +155,20 @@ def process_to_run(
         except (ValueError, RecursionError) as error:
             invalid = (str(error).splitlines() or [type(error).__name__])[0][:300]
     mismatches = []
+    ollama_chat_received = provider == "ollama" and any(
+        request.method == "POST" and request.path == "/api/chat" and request.exchange is not None
+        for request in request_log
+    )
     for index, request in enumerate(request_log):
+        # Model discovery is not an inference call. Keep its 404 and request count visible,
+        # but only accept this auxiliary lookup when the actual chat reached its fixture.
+        if (
+            ollama_chat_received
+            and request.method == "POST"
+            and request.path == "/api/show"
+            and request.exchange is None
+        ):
+            continue
         if request.exchange is None:
             mismatches.append(f"request {index}: no fixture for {request.method} {request.path}")
         requested = PROVIDERS[provider].requested_stream(request.path, request.json_body)

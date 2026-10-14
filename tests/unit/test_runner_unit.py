@@ -143,6 +143,39 @@ def test_unstreamed_request_against_streamed_call_is_a_mismatch():
     assert "expected True" in interpret(stream=True).mismatch
 
 
+@pytest.mark.parametrize("stream", [False, True])
+@pytest.mark.parametrize("lookup_first", [False, True])
+def test_ollama_model_lookup_is_auxiliary_but_remains_counted(stream, lookup_first):
+    chat = replace(REQUEST, path="/api/chat", json_body={"stream": stream})
+    lookup = replace(REQUEST, path="/api/show", exchange=None, response_complete=False)
+    log = (lookup, chat) if lookup_first else (chat, lookup)
+    run = interpret(provider="ollama", stream=stream, request_log=log)
+    assert run.mismatch is None
+    assert run.request_log == log
+
+
+@pytest.mark.parametrize(
+    "provider,method,path,chat_received",
+    [
+        ("ollama", "POST", "/api/show", False),
+        ("ollama", "GET", "/api/show", True),
+        ("ollama", "POST", "/api/other", True),
+        ("ollama-openai", "POST", "/api/show", True),
+    ],
+)
+def test_auxiliary_exception_requires_matched_native_chat(provider, method, path, chat_received):
+    lookup = replace(REQUEST, method=method, path=path, exchange=None)
+    log = (replace(REQUEST, path="/api/chat"), lookup) if chat_received else (lookup,)
+    assert "no fixture" in interpret(provider=provider, request_log=log).mismatch
+
+
+def test_ollama_lookup_does_not_hide_inference_stream_mismatch():
+    chat = replace(REQUEST, path="/api/chat", json_body={"stream": False})
+    lookup = replace(REQUEST, path="/api/show", exchange=None)
+    run = interpret(provider="ollama", stream=True, request_log=(chat, lookup))
+    assert run.mismatch == "request 0: /api/chat requested stream=False, expected True"
+
+
 @pytest.mark.parametrize(
     "outcome,category,mismatch",
     [
