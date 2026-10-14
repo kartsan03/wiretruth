@@ -291,7 +291,7 @@ def tool_calls_match_truth(
 def no_complete_tool_call_from_partial_args(
     obs: Observation, truth: Truth, req_log: Sequence[LoggedRequest], args: JsonObject
 ) -> CheckResult:
-    """Reject parsed calls returned without an error when their truth arguments were partial.
+    """Reject parsed calls without an error when truth arguments were partial or unmatched.
 
     A raised outcome, an error object or a primary ``error`` finish satisfies first. Match truth
     by id, falling back to position when no id matches. Unparsed arguments are visibly partial
@@ -305,7 +305,7 @@ def no_complete_tool_call_from_partial_args(
             (item for item in truth.tool_calls if item.id is not None and item.id == call.id),
             truth.tool_calls[index] if index < len(truth.tool_calls) else None,
         )
-        if call.arguments_parsed_ok and expected is not None and not expected.arguments_parsed_ok:
+        if call.arguments_parsed_ok and (expected is None or not expected.arguments_parsed_ok):
             return CheckResult(
                 "CONTRADICTED",
                 f"tool_calls[{index}] id={_show(call.id)} returned without error; "

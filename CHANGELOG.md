@@ -13,6 +13,8 @@ finding).
 
 ### Fixed
 - Derived-fixture examples include `--replace` so they regenerate committed fixtures.
+- The partial tool-call arguments check rejects a complete parsed call that matches no call on the wire, so an
+  invented extra call no longer passes `truncation.tool-call-args` or `truncation.tool-call-args-stream`.
 
 ## [0.2.0] - 2026-10-13
 

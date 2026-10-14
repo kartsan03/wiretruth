@@ -16,9 +16,11 @@ from wiretruth.formats import (
     Scenario,
     StreamInfo,
     StructuredResult,
+    ToolCall,
     Truth,
     UnsupportedEntry,
     Usage,
+    load_scenario,
     load_schema,
 )
 from wiretruth.grading import RULES, CellGrade, Grade, ShimRun, grade_cell
@@ -207,6 +209,23 @@ def test_unsupported_must_match_scenario_and_provider(
 
 def test_manifest_entry_does_not_override_supported_observation() -> None:
     assert grade(unsupported=(UNSUPPORTED,)).grade == "PASS"
+
+
+@pytest.mark.parametrize("fabricated,expected", [(False, "PASS"), (True, "WRONG")])
+def test_partial_tool_args_with_fabricated_extra_call(fabricated: bool, expected: Grade) -> None:
+    partial = ToolCall("call-1", "tide_times", '{"port":"Bre', False, None)
+    calls = (partial,)
+    if fabricated:
+        calls += (ToolCall("invented", "tide_times", '{"port":"Brest"}', True, {"port": "Brest"}),)
+    scenario = load_scenario(REPO / "suite/scenarios/truncation/tool-call-args.json")
+    result = grade_cell(
+        replace(RUN, observation=replace(OBS, tool_calls=calls)),
+        scenario=scenario,
+        provider="openai-responses",
+        truth=replace(TRUTH, tool_calls=(partial,)),
+        unsupported=(),
+    )
+    assert result.grade == expected
 
 
 @pytest.mark.parametrize(
