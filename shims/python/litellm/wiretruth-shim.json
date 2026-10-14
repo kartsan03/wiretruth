@@ -1,0 +1,84 @@
+{
+  "format": "wiretruth.shim/v1",
+  "name": "litellm",
+  "language": "python",
+  "packages": {"litellm": "1.105.1", "openai": "2.54.0"},
+  "primary_package": "litellm",
+  "entry": ["python", "shim.py"],
+  "env": {"LITELLM_LOCAL_MODEL_COST_MAP": "True", "LITELLM_LOCAL_ANTHROPIC_BETA_HEADERS": "True"},
+  "providers": {
+    "openai-chat": "litellm.completion(model='openai/' + model, api_base=WIRETRUTH_BASE_URL_OPENAI_CHAT, api_key=WIRETRUTH_API_KEY)",
+    "openai-responses": "litellm.responses(model='openai/' + model, api_base=WIRETRUTH_BASE_URL_OPENAI_RESPONSES, api_key=WIRETRUTH_API_KEY)",
+    "ollama": "litellm.completion(model='ollama_chat/' + model, api_base=WIRETRUTH_BASE_URL_OLLAMA, api_key=WIRETRUTH_API_KEY); host root",
+    "ollama-openai": "litellm.completion(model='openai/' + model, api_base=WIRETRUTH_BASE_URL_OLLAMA_OPENAI, api_key=WIRETRUTH_API_KEY); /v1 base",
+    "gemini": "litellm.completion(model='gemini/' + model, api_base=WIRETRUTH_BASE_URL_GEMINI + '/v1beta', api_key=WIRETRUTH_API_KEY); the runner supplies the host root and LiteLLM appends /models/...",
+    "anthropic": "litellm.completion(model='anthropic/' + model, api_base=WIRETRUTH_BASE_URL_ANTHROPIC, api_key=WIRETRUTH_API_KEY); host root, LiteLLM appends /v1/messages"
+  },
+  "surfaces": {
+    "finish": {
+      "primary": "choices[0].finish_reason; Responses model_dump(mode='json') preserves nested mappings on the forward-compatible model_construct fallback; reads status and incomplete_details.reason, output[].type for function_call, output[].content[].type for refusal, and error. Streaming Responses event.type, event.response and event.part.type. Error objects expose message; exception class/MRO and traceback select error_map and stack_top. Error data keeps outcome returned.",
+      "raw": "choices[0].provider_specific_fields['native_finish_reason'] when present (Gemini native values and remapped OpenAI Chat values in 1.105.1); otherwise the primary finish_reason itself. Anthropic and native Ollama normalize before constructing the choice and expose no separate original. No reconstruction from provider payloads or _hidden_params. Responses incomplete_details.reason or status."
+    },
+    "text": {"primary": "choices[0].message.content or streamed choices[0].delta.content; Responses output[].content[].text on output_text parts, or event.delta on response.output_text.delta"},
+    "tool_calls": {"primary": "choices[0].message.tool_calls or streamed choices[0].delta.tool_calls: id, function.name, function.arguments, and stream index. Responses output function_call items: call_id, name, arguments. Streaming event.item.type, call_id and name on output_item.added, event.output_index and event.delta on function_call_arguments.delta. Argument fragments joined by index and parsed with json.loads; no repair. Gemini signature-bearing ids include LiteLLM's __thought__ suffix, which is reported unchanged."},
+    "usage": {"primary": "usage.prompt_tokens, completion_tokens, total_tokens, prompt_tokens_details.cached_tokens, completion_tokens_details.reasoning_tokens; Responses usage.input_tokens, output_tokens, total_tokens, input_tokens_details.cached_tokens, output_tokens_details.reasoning_tokens. Last usage-bearing chunk is a snapshot, not a delta."},
+    "structured": {"primary": "completion response_format=json_schema and Responses text.format=json_schema request the input schema. LiteLLM returns raw text, with no parsed structured value; the shim does not parse or validate that text. The forced named-tool parser is unsupported."},
+    "stream": {"primary": "Chat ModelResponseStream iterator: no independent completion signal, so completed is null on normal return, false on a raised error. Responses event.type response.created/response.in_progress signals incomplete; response.completed/response.incomplete signals terminal completion, response.failed or error signals failure. event.response.error or event.error/message is returned error data. Iteration ending alone never means completion."}
+  },
+  "finish_map": {
+    "stop": "stop", "length": "length", "tool_calls": "tool_calls",
+    "function_call": "tool_calls", "content_filter": "content_filter",
+    "completed": "stop", "max_output_tokens": "length", "failed": "error",
+    "refusal": "refusal", "guardrail_intervened": "content_filter", "eos": "stop",
+    "finish_reason_unspecified": "other", "malformed_function_call": "other"
+  },
+  "error_map": [
+    {"type": "litellm.exceptions.RateLimitError", "category": "rate_limit"},
+    {"type": "litellm.exceptions.ContextWindowExceededError", "category": "context_length"},
+    {"type": "litellm.exceptions.ContentPolicyViolationError", "category": "content_filter"},
+    {"type": "litellm.exceptions.UnsupportedParamsError", "category": "validation"},
+    {"type": "litellm.exceptions.JSONSchemaValidationError", "category": "validation"},
+    {"type": "litellm.exceptions.APIResponseValidationError", "category": "validation"},
+    {"type": "litellm.exceptions.Timeout", "category": "network"},
+    {"type": "litellm.exceptions.APIConnectionError", "category": "network"},
+    {"type": "litellm.exceptions.AuthenticationError", "category": "api"},
+    {"type": "litellm.exceptions.PermissionDeniedError", "category": "api"},
+    {"type": "litellm.exceptions.NotFoundError", "category": "api"},
+    {"type": "litellm.exceptions.BadRequestError", "category": "api"},
+    {"type": "litellm.exceptions.UnprocessableEntityError", "category": "api"},
+    {"type": "litellm.exceptions.ServiceUnavailableError", "category": "api"},
+    {"type": "litellm.exceptions.BadGatewayError", "category": "api"},
+    {"type": "litellm.exceptions.InternalServerError", "category": "api"},
+    {"type": "litellm.exceptions.APIError", "category": "api"},
+    {"type": "openai.RateLimitError", "category": "rate_limit"},
+    {"type": "openai.APIResponseValidationError", "category": "validation"},
+    {"type": "openai.APIConnectionError", "category": "network"},
+    {"type": "openai.APIError", "category": "api"},
+    {"type": "pydantic_core._pydantic_core.ValidationError", "category": "validation"},
+    {"type": "json.decoder.JSONDecodeError", "category": "parse"},
+    {"type": "httpx.TransportError", "category": "network"}
+  ],
+  "unsupported": [
+    {"scenario": "truncation.structured-output-forced-tool", "providers": ["anthropic"], "reason": "LiteLLM response_format selects native JSON output on claude-haiku-4-5; ordinary forced tool calls have no documented structured-result parser.", "docs": "https://docs.litellm.ai/docs/providers/anthropic#structured-outputs"}
+  ],
+  "config_notes": [
+    "LITELLM_LOCAL_MODEL_COST_MAP=True avoids an import-time network fetch. The 1.105.1 wheel's bundled map includes gpt-6-luna, gemini/gemini-3.8-flash, gemini/gemini-3.5-flash-lite, claude-sonnet-5-5 and claude-haiku-4-5. Compared with https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json fetched 2026-10-14, those entries differ only in prices, not capability flags, so request behavior matches the default remote map. Offline imports without the flag log a failed fetch and use the same bundled map.",
+    "litellm.suppress_debug_info=True suppresses the informational banner; all library stdout is redirected to stderr. No retries, sampling defaults, thinking settings or parsing options are overridden.",
+    "openai 2.54.0 is pinned because LiteLLM 1.105.1 requires openai<3.",
+    "Gemini receives the /v1beta API base required by LiteLLM, rather than the runner's host root. LiteLLM's own injected temperature and reasoning mappings are retained.",
+    "Anthropic cache_control and per-tool eager_input_streaming are passed only when requested by the scenario. reasoning_effort is passed unchanged.",
+    "LITELLM_LOCAL_ANTHROPIC_BETA_HEADERS=True keeps the Anthropic beta-header config local too. The structured-outputs-2025-11-13 and fine-grained-tool-streaming-2025-05-14 mappings used by these calls match https://raw.githubusercontent.com/BerriAI/litellm/main/litellm/anthropic_beta_headers_config.json checked 2026-10-14, so the switch changes no request.",
+    "Native Ollama also sends a POST /api/show model-info request; replay's 404 and LiteLLM's fallback are retained. The lookup counts toward request limits, so request.no-injected-options on ollama notes SHOULD one-request (2 requests) and still passes.",
+    "Structured output uses the documented JSON schema request form without enabling optional client-side JSON validation. Raw output text is not claimed as a parsed structured success."
+  ],
+  "docs": [
+    "https://docs.litellm.ai/docs/completion",
+    "https://docs.litellm.ai/docs/completion/input",
+    "https://docs.litellm.ai/docs/completion/json_mode",
+    "https://docs.litellm.ai/docs/response_api",
+    "https://docs.litellm.ai/docs/exception_mapping",
+    "https://docs.litellm.ai/docs/providers/anthropic",
+    "https://docs.litellm.ai/docs/providers/gemini",
+    "https://docs.litellm.ai/docs/providers/ollama"
+  ]
+}

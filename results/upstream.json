@@ -75,5 +75,60 @@
     "fixed_in": null,
     "opened": "2026-10-13",
     "notes": "any-llm documents the fallback: Anthropic stop reasons without an OpenAI counterpart (stop_sequence, pause_turn) fall through to stop, and the lookup defaults to stop for any unfamiliar value (https://github.com/mozilla-ai/any-llm/blob/1.33.0/src/any_llm/providers/anthropic/utils.py#L40-L50, unchanged on main at 18ed82b). The caller cannot tell such a stop from a normal one."
+  },
+  {
+    "library": "litellm",
+    "scenarios": ["finish.unknown-value"],
+    "providers": ["anthropic", "gemini", "ollama", "ollama-openai", "openai-chat"],
+    "issue": "https://github.com/BerriAI/litellm/issues/21348",
+    "pr": null,
+    "status": "documented-behavior",
+    "fixed_in": null,
+    "opened": "2026-02-16",
+    "notes": "LiteLLM deliberately normalizes unfamiliar finish reasons to stop with a warning. The upstream issue requested that fallback and is closed as completed; 1.105.1 implements it in https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/litellm_core_utils/core_helpers.py#L253-L258. Gemini and the OpenAI Chat path retain the original in choices[0].provider_specific_fields.native_finish_reason; Anthropic and native Ollama normalize before assigning the choice and lose the original. A raw original does not change the contradictory primary stop."
+  },
+  {
+    "library": "litellm",
+    "scenarios": ["tools.parallel-calls", "tools.parallel-calls-stream"],
+    "providers": ["gemini"],
+    "issue": "https://github.com/BerriAI/litellm/issues/37849",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-08-21",
+    "notes": "Existing upstream issue, not opened by wiretruth. LiteLLM deliberately appends __thought__ and the thought signature to the provider's tool-call id for OpenAI client compatibility (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/litellm_core_utils/prompt_templates/factory.py#L1163-L1179). Both suite cells preserve names, arguments and the second id, but the first id differs from the wire. The issue tracks interoperability failures caused by this encoding; the shim reports the exposed id unchanged."
+  },
+  {
+    "library": "litellm",
+    "scenarios": ["tools.parallel-calls-stream"],
+    "providers": ["ollama"],
+    "issue": "https://github.com/BerriAI/litellm/issues/33678",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-07-17",
+    "notes": "Existing upstream issue, not opened by wiretruth. Native Ollama sends function.index 0 and 1 in separate chunks; LiteLLM does not lift that field to the delta tool-call index. Delta resets its default index to zero for each chunk, so ordinary index-based assembly merges two argument objects into one unparseable call (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/types/utils.py#L1555-L1573). The Ollama parser also replaces the wire ids with UUIDs, reported separately as https://github.com/BerriAI/litellm/issues/46543."
+  },
+  {
+    "library": "litellm",
+    "scenarios": ["stream.missing-finish"],
+    "providers": ["anthropic", "gemini", "ollama", "ollama-openai", "openai-chat"],
+    "issue": "https://github.com/BerriAI/litellm/issues/46542",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-14",
+    "notes": "A stream that ends cleanly without any finish reason is reported with finish_reason stop. CustomStreamWrapper.finish_reason_handler falls back to stop when no finish reason was received (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/litellm_core_utils/streaming_handler.py#L1715-L1727). The Responses path keeps the missing finish and passes."
+  },
+  {
+    "library": "litellm",
+    "scenarios": ["tools.parallel-calls-stream"],
+    "providers": ["ollama"],
+    "issue": "https://github.com/BerriAI/litellm/issues/46543",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-14",
+    "notes": "The native Ollama streaming parser replaces each tool-call id that Ollama sends with a random UUID once the arguments look complete (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/llms/ollama/chat/transformation.py#L480-L489). Separate from the index-0 merge in https://github.com/BerriAI/litellm/issues/33678; fixing that one alone leaves the ids wrong."
   }
 ]

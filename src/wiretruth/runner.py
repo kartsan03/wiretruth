@@ -33,7 +33,7 @@ from wiretruth.formats import (
     parse_json,
     read_json,
 )
-from wiretruth.grading import CellGrade, Grade, ShimRun, grade_cell
+from wiretruth.grading import CellGrade, Grade, ShimRun, grade_cell, is_model_lookup
 from wiretruth.providers import PROVIDERS
 from wiretruth.recorder import find_scenarios
 from wiretruth.replay import BASE_PATHS, HOST, LoggedRequest, ReplayServer
@@ -156,6 +156,8 @@ def process_to_run(
             invalid = (str(error).splitlines() or [type(error).__name__])[0][:300]
     mismatches = []
     for index, request in enumerate(request_log):
+        if is_model_lookup(provider, request, request_log):
+            continue
         if request.exchange is None:
             mismatches.append(f"request {index}: no fixture for {request.method} {request.path}")
         requested = PROVIDERS[provider].requested_stream(request.path, request.json_body)

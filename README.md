@@ -9,8 +9,9 @@ happened.
 [![PyPI](https://img.shields.io/pypi/v/wiretruth?label=PyPI)](https://pypi.org/project/wiretruth/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
-So far wiretruth tests one library, any-llm, on six APIs: OpenAI Chat Completions and Responses, Ollama's native
-and OpenAI-compatible endpoints, Gemini GenerateContent and Anthropic Messages. That is 24 scenarios and 95 cells.
+wiretruth tests any-llm and LiteLLM on six APIs: OpenAI Chat Completions and Responses, Ollama's native
+and OpenAI-compatible endpoints, Gemini GenerateContent and Anthropic Messages. That is 24 scenarios and 95 cells
+per library.
 The Anthropic responses are transcribed from Anthropic's documentation rather than recorded: each of those fixtures
 is marked `documented` and links the page it comes from. More providers and libraries follow, and a public
 results matrix arrives in v0.4. Until then, the grades are in
@@ -23,11 +24,12 @@ A model hits its output token limit halfway through a JSON object. The provider 
 parse error, nothing tells you that a higher limit would fix it. If it returns the partial object as a success,
 your pipeline stores an incomplete record.
 
-wiretruth has this case recorded as `truncation.structured-output` on `openai-chat`. Replayed through any-llm:
+wiretruth has this case recorded as `truncation.structured-output` on `openai-chat`. Replayed through both libraries:
 
 | Library | What the caller gets | Grade |
 |---|---|---|
 | any-llm 1.33.0 | Raises `openai.LengthFinishReasonError`. Its `completion` has `finish_reason: "length"` and the token usage. | ✓ PASS |
+| LiteLLM 1.105.1 | Returns the cut-off JSON as text in `message.content` with `finish_reason: "length"` and parses none of it. | ✓ PASS |
 
 wiretruth runs the same recorded edge cases through every library it supports and grades each one against what the
 provider sent.
@@ -72,7 +74,10 @@ You need Python 3.11 or newer and [uv](https://docs.astral.sh/uv/), which builds
 ```bash
 git clone https://github.com/kartsan03/wiretruth && cd wiretruth
 uv run wiretruth run --lib any-llm
+uv run wiretruth run --lib litellm
 ```
+
+The any-llm run reports:
 
 ```text
 scenario                                  anthropic      gemini   ollama   ollama-openai  openai-chat  openai-responses
@@ -201,10 +206,13 @@ any-llm 1.33.0: 95 cells, 78 PASS, 6 LOSSY, 10 WRONG, 1 UNSUPPORTED
 stderr: .wiretruth/runs/20261013T134918.993664Z
 ```
 
-No API keys are needed. Everything runs against stored responses on `127.0.0.1`. The first run downloads any-llm
-into `.wiretruth/envs/`; later runs work offline. `uv run wiretruth run --shim shims/reference` runs the
-built-in reference client, which must pass every cell. The scenarios, fixtures and shims live in this repository,
-so wiretruth runs from a clone.
+The LiteLLM run grades its 95 cells 81 PASS, 13 WRONG and 1 UNSUPPORTED. Every cell, with its evidence, is in
+[`results/litellm/1.105.1.json`](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.105.1.json).
+
+No API keys are needed. Everything runs against stored responses on `127.0.0.1`. The first run downloads the
+selected library into `.wiretruth/envs/`; later runs work offline. `uv run wiretruth run --shim shims/reference`
+runs the built-in reference client, which must pass every cell. The scenarios, fixtures and shims live in this
+repository, so wiretruth runs from a clone.
 
 Releases are also on [PyPI](https://pypi.org/project/wiretruth/) (`pip install wiretruth`). The package is the
 command only, so run it inside a checkout of the matching release tag (for example `v0.2.0`); on `main`, use
@@ -214,7 +222,8 @@ command only, so run it inside a checkout of the matching release tag (for examp
 
 A shim is a small program. It reads a call spec as JSON on stdin, calls your library the way its docs show, and
 prints what the library reported as JSON on stdout. The
-[any-llm shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/any-llm/shim.py) is 150 lines. The
+[any-llm shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/any-llm/shim.py) and
+[LiteLLM shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/litellm/shim.py) are examples. The
 protocol is in [shims/README.md](https://github.com/kartsan03/wiretruth/blob/main/shims/README.md); to propose a
 library, [open a new-library issue](https://github.com/kartsan03/wiretruth/issues/new?template=new-library.yml).
 
