@@ -37,9 +37,9 @@ Logs go to stderr; the runner keeps them under `.wiretruth/runs/<UTC timestamp>/
 
 A plain non-zero exit is a shim bug and grades HARNESS. A signal after a request reaches the replay server grades CRASH;
 before any request it grades HARNESS. The default timeout is 20 seconds. On timeout the runner kills the process
-group: the cell grades HANG if the last response was fully served, otherwise HARNESS. Invalid stdout, a wrong
-endpoint or stream mode, or an observation with no request in the replay log (other than a `validation` or
-`internal` error) grades HARNESS. See [Grading](../docs/grading.md) for the complete precedence rules.
+group: the cell grades HANG if the last inference response was fully served (the Ollama model lookup above
+doesn't count), otherwise HARNESS. Invalid stdout, a wrong endpoint or stream mode, or an observation with no
+request in the replay log (other than a `validation` or `internal` error) grades HARNESS. See [Grading](../docs/grading.md) for the complete precedence rules.
 
 Native Ollama's auxiliary `POST /api/show` lookup may receive replay's 404 after a matched `/api/chat` request.
 The lookup stays in the request log and count, but is not checked as an inference endpoint or stream.

@@ -133,7 +133,9 @@ error definition and the reasons for this order are in [decision 0004](adr/0004-
 7. A MUST requirement is NOT_OBSERVABLE: LOSSY.
 8. Otherwise: PASS.
 
-"Served" is the last logged request's `response_complete`, including a fixture's deliberate early close.
+"Served" is the last logged request's `response_complete`, including a fixture's deliberate early close. On
+`ollama`, an unmatched `POST /api/show` (a model lookup, such as LiteLLM's) is skipped when `/api/chat` reached its
+fixture: it is neither the served request nor a mismatch, and it still counts toward request limits.
 "Received" means at least one request reached replay. A signal after receipt can grade CRASH before the response
 is complete. A timeout before the response is served grades HARNESS.
 

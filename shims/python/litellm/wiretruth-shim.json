@@ -5,7 +5,7 @@
   "packages": {"litellm": "1.105.1", "openai": "2.54.0"},
   "primary_package": "litellm",
   "entry": ["python", "shim.py"],
-  "env": {"LITELLM_LOCAL_MODEL_COST_MAP": "True"},
+  "env": {"LITELLM_LOCAL_MODEL_COST_MAP": "True", "LITELLM_LOCAL_ANTHROPIC_BETA_HEADERS": "True"},
   "providers": {
     "openai-chat": "litellm.completion(model='openai/' + model, api_base=WIRETRUTH_BASE_URL_OPENAI_CHAT, api_key=WIRETRUTH_API_KEY)",
     "openai-responses": "litellm.responses(model='openai/' + model, api_base=WIRETRUTH_BASE_URL_OPENAI_RESPONSES, api_key=WIRETRUTH_API_KEY)",
@@ -67,8 +67,8 @@
     "openai 2.54.0 is pinned because LiteLLM 1.105.1 requires openai<3.",
     "Gemini receives the /v1beta API base required by LiteLLM, rather than the runner's host root. LiteLLM's own injected temperature and reasoning mappings are retained.",
     "Anthropic cache_control and per-tool eager_input_streaming are passed only when requested by the scenario. reasoning_effort is passed unchanged.",
-    "Anthropic beta-header configuration also attempts a remote fetch and falls back to its bundled file offline. The structured-outputs-2025-11-13 and fine-grained-tool-streaming-2025-05-14 mappings used by these calls match https://raw.githubusercontent.com/BerriAI/litellm/main/litellm/anthropic_beta_headers_config.json checked 2026-10-14. Its default fetch/fallback behavior is retained.",
-    "Native Ollama may make an additional POST /api/show model-info request; replay's 404 and LiteLLM's fallback are retained.",
+    "LITELLM_LOCAL_ANTHROPIC_BETA_HEADERS=True keeps the Anthropic beta-header config local too. The structured-outputs-2025-11-13 and fine-grained-tool-streaming-2025-05-14 mappings used by these calls match https://raw.githubusercontent.com/BerriAI/litellm/main/litellm/anthropic_beta_headers_config.json checked 2026-10-14, so the switch changes no request.",
+    "Native Ollama also sends a POST /api/show model-info request; replay's 404 and LiteLLM's fallback are retained. The lookup counts toward request limits, so request.no-injected-options on ollama notes SHOULD one-request (2 requests) and still passes.",
     "Structured output uses the documented JSON schema request form without enabling optional client-side JSON validation. Raw output text is not claimed as a parsed structured success."
   ],
   "docs": [

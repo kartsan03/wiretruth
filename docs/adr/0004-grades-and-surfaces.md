@@ -30,7 +30,8 @@ project avoids.
   7. A MUST requirement is NOT_OBSERVABLE: LOSSY.
   8. Otherwise: PASS.
 - "Served" means the replay server finished sending its response to the library's last request, including the
-  deliberate early close of an aborted-connection fixture. The server records this for every request.
+  deliberate early close of an aborted-connection fixture. The server records this for every request. (Amended
+  2026-10-14: native Ollama's `/api/show` model lookup next to a matched `/api/chat` is not the last request.)
 - The error category in an observation comes from the library's manifest. A builtin raised from a frame inside the
   library's code is `internal`.
 - SHOULD requirements add notes, saying whether the requirement was NOT_OBSERVABLE or CONTRADICTED, and never change

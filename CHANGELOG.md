@@ -22,6 +22,22 @@ finding).
 - Derived-fixture examples include `--replace` so they regenerate committed fixtures.
 - The partial tool-call arguments check rejects a complete parsed call that matches no call on the wire, so an
   invented extra call no longer passes `truncation.tool-call-args` or `truncation.tool-call-args-stream`.
+- Native Ollama cells no longer grade HARNESS when the library also sends a `POST /api/show` model lookup. The
+  lookup stays in the request log and counts toward request limits.
+
+### Results
+- LiteLLM 1.105.1, the second library: 81 PASS, 13 WRONG and 1 UNSUPPORTED of 95 cells
+  ([results/litellm/1.105.1.json](results/litellm/1.105.1.json)). All 14 `openai-responses` cells pass. WRONG on
+  `finish.unknown-value` over the five Chat-style APIs: an unfamiliar finish value is reported as `stop`, a fallback
+  LiteLLM adds on purpose ([BerriAI/litellm#21348](https://github.com/BerriAI/litellm/issues/21348)). WRONG on
+  `stream.missing-finish` over the same five: a stream that ends without any finish reason is reported as `stop`
+  ([BerriAI/litellm#46542](https://github.com/BerriAI/litellm/issues/46542)). WRONG on `tools.parallel-calls` and
+  `tools.parallel-calls-stream` over `gemini`: the first tool-call id carries an appended thought signature
+  ([BerriAI/litellm#37849](https://github.com/BerriAI/litellm/issues/37849)). WRONG on `tools.parallel-calls-stream`
+  over `ollama`: both streamed calls arrive with index 0, and their ids are replaced with UUIDs
+  ([BerriAI/litellm#33678](https://github.com/BerriAI/litellm/issues/33678),
+  [BerriAI/litellm#46543](https://github.com/BerriAI/litellm/issues/46543)). UNSUPPORTED on
+  `truncation.structured-output-forced-tool`: LiteLLM's structured output uses native JSON output there.
 
 ## [0.2.0] - 2026-10-13
 

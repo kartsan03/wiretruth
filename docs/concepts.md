@@ -130,7 +130,8 @@ The grade comes from the first rule that applies:
 7. A MUST requirement is NOT_OBSERVABLE: LOSSY.
 8. Otherwise: PASS.
 
-"Served" means the replay server finished sending its response to the last request the library made, including the
+"Served" means the replay server finished sending its response to the last request the library made (native
+Ollama's `/api/show` model lookup doesn't count, see [grading](grading.md)), including the
 deliberate early close of a fixture that ends with an aborted connection. A fixture with several exchanges, such as
 a rate-limit error and then the real response, answers them in order, and the last one repeats if the library asks
 again. The server records every request and whether its response was sent in full, so a slow start-up is never
