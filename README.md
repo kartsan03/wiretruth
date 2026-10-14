@@ -24,11 +24,12 @@ A model hits its output token limit halfway through a JSON object. The provider 
 parse error, nothing tells you that a higher limit would fix it. If it returns the partial object as a success,
 your pipeline stores an incomplete record.
 
-wiretruth has this case recorded as `truncation.structured-output` on `openai-chat`. Replayed through any-llm:
+wiretruth has this case recorded as `truncation.structured-output` on `openai-chat`. Replayed through both libraries:
 
 | Library | What the caller gets | Grade |
 |---|---|---|
 | any-llm 1.33.0 | Raises `openai.LengthFinishReasonError`. Its `completion` has `finish_reason: "length"` and the token usage. | ✓ PASS |
+| LiteLLM 1.105.1 | Returns the cut-off JSON as text in `message.content` with `finish_reason: "length"` and parses none of it. | ✓ PASS |
 
 wiretruth runs the same recorded edge cases through every library it supports and grades each one against what the
 provider sent.
@@ -205,10 +206,13 @@ any-llm 1.33.0: 95 cells, 78 PASS, 6 LOSSY, 10 WRONG, 1 UNSUPPORTED
 stderr: .wiretruth/runs/20261013T134918.993664Z
 ```
 
+The LiteLLM run grades its 95 cells 81 PASS, 13 WRONG and 1 UNSUPPORTED. Every cell, with its evidence, is in
+[`results/litellm/1.105.1.json`](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.105.1.json).
+
 No API keys are needed. Everything runs against stored responses on `127.0.0.1`. The first run downloads the
-selected library into `.wiretruth/envs/`; later runs work offline. `uv run wiretruth run --shim shims/reference` runs the
-built-in reference client, which must pass every cell. The scenarios, fixtures and shims live in this repository,
-so wiretruth runs from a clone.
+selected library into `.wiretruth/envs/`; later runs work offline. `uv run wiretruth run --shim shims/reference`
+runs the built-in reference client, which must pass every cell. The scenarios, fixtures and shims live in this
+repository, so wiretruth runs from a clone.
 
 Releases are also on [PyPI](https://pypi.org/project/wiretruth/) (`pip install wiretruth`). The package is the
 command only, so run it inside a checkout of the matching release tag (for example `v0.2.0`); on `main`, use
