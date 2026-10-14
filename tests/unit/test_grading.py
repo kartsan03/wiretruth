@@ -139,6 +139,15 @@ def test_timeout_uses_last_request(completed: tuple[bool, ...], expected: Grade)
     assert "timed out" in result.notes[0]
 
 
+@pytest.mark.parametrize("provider,expected", [("ollama", "HANG"), ("openai-chat", "HARNESS")])
+def test_timeout_after_ollama_model_lookup(provider: str, expected: Grade) -> None:
+    chat = replace(REQUEST, path="/api/chat", exchange=0)
+    lookup = replace(REQUEST, path="/api/show", exchange=None, response_complete=False)
+    scenario = replace(SCENARIO, providers=("openai-chat", "ollama"))
+    run = replace(RUN, timed_out=True, request_log=(chat, lookup))
+    assert grade(run, scenario=scenario, provider=provider).grade == expected
+
+
 @pytest.mark.parametrize(
     "signal,log,expected",
     [

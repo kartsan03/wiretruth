@@ -98,6 +98,26 @@ def _requirements(
     return tuple(results)
 
 
+def is_model_lookup(
+    provider: str, request: LoggedRequest, request_log: Sequence[LoggedRequest]
+) -> bool:
+    """Native Ollama's unmatched ``POST /api/show`` beside a ``/api/chat`` that reached its fixture.
+
+    Model discovery is not an inference call. It stays in the request log and its count, but
+    neither the mismatch check nor the timeout rule treats it as the inference request.
+    """
+    return (
+        provider == "ollama"
+        and request.method == "POST"
+        and request.path == "/api/show"
+        and request.exchange is None
+        and any(
+            item.method == "POST" and item.path == "/api/chat" and item.exchange is not None
+            for item in request_log
+        )
+    )
+
+
 def grade_cell(
     run: ShimRun,
     *,
@@ -117,7 +137,8 @@ def grade_cell(
     """
     applicable = _applicable(scenario, provider)
     received = bool(run.request_log)
-    served = received and run.request_log[-1].response_complete
+    inference = [r for r in run.request_log if not is_model_lookup(provider, r, run.request_log)]
+    served = bool(inference) and inference[-1].response_complete
     if run.timed_out:
         if served:
             return CellGrade("HANG", 1, (), ("timed out after the response was served",))

@@ -33,7 +33,7 @@ from wiretruth.formats import (
     parse_json,
     read_json,
 )
-from wiretruth.grading import CellGrade, Grade, ShimRun, grade_cell
+from wiretruth.grading import CellGrade, Grade, ShimRun, grade_cell, is_model_lookup
 from wiretruth.providers import PROVIDERS
 from wiretruth.recorder import find_scenarios
 from wiretruth.replay import BASE_PATHS, HOST, LoggedRequest, ReplayServer
@@ -155,19 +155,8 @@ def process_to_run(
         except (ValueError, RecursionError) as error:
             invalid = (str(error).splitlines() or [type(error).__name__])[0][:300]
     mismatches = []
-    ollama_chat_received = provider == "ollama" and any(
-        request.method == "POST" and request.path == "/api/chat" and request.exchange is not None
-        for request in request_log
-    )
     for index, request in enumerate(request_log):
-        # Model discovery is not an inference call. Keep its 404 and request count visible,
-        # but only accept this auxiliary lookup when the actual chat reached its fixture.
-        if (
-            ollama_chat_received
-            and request.method == "POST"
-            and request.path == "/api/show"
-            and request.exchange is None
-        ):
+        if is_model_lookup(provider, request, request_log):
             continue
         if request.exchange is None:
             mismatches.append(f"request {index}: no fixture for {request.method} {request.path}")
