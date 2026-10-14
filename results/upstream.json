@@ -108,5 +108,16 @@
     "fixed_in": null,
     "opened": "2026-07-17",
     "notes": "Existing upstream issue, not opened by wiretruth. Native Ollama sends function.index 0 and 1 in separate chunks; LiteLLM does not lift that field to the delta tool-call index. Delta resets its default index to zero for each chunk, so ordinary index-based assembly merges two argument objects into one unparseable call (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/types/utils.py#L1555-L1573). The Ollama parser also replaces the wire ids with UUIDs; that separate behavior is not claimed to be covered by this issue."
+  },
+  {
+    "library": "litellm",
+    "scenarios": ["stream.missing-finish"],
+    "providers": ["anthropic", "gemini", "ollama", "ollama-openai", "openai-chat"],
+    "issue": "https://github.com/BerriAI/litellm/issues/46542",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-14",
+    "notes": "A stream that ends cleanly without any finish reason is reported with finish_reason stop. CustomStreamWrapper.finish_reason_handler falls back to stop when no finish reason was received (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/litellm_core_utils/streaming_handler.py#L1715-L1727). The Responses path keeps the missing finish and passes."
   }
 ]
