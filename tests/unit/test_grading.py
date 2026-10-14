@@ -213,10 +213,11 @@ def test_manifest_entry_does_not_override_supported_observation() -> None:
 
 @pytest.mark.parametrize("fabricated,expected", [(False, "PASS"), (True, "WRONG")])
 def test_partial_tool_args_with_fabricated_extra_call(fabricated: bool, expected: Grade) -> None:
-    partial = ToolCall("call-1", "tide_times", '{"port":"Bre', False, None)
+    partial = ToolCall("call-1", "create_event", '{"title":"Lunar ecl', False, None)
     calls = (partial,)
     if fabricated:
-        calls += (ToolCall("invented", "tide_times", '{"port":"Brest"}', True, {"port": "Brest"}),)
+        complete = '{"title":"Lunar eclipse"}'
+        calls += (ToolCall("invented", "create_event", complete, True, {"title": "Lunar eclipse"}),)
     scenario = load_scenario(REPO / "suite/scenarios/truncation/tool-call-args.json")
     result = grade_cell(
         replace(RUN, observation=replace(OBS, tool_calls=calls)),
