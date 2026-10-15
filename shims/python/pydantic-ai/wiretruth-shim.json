@@ -66,14 +66,6 @@
       "category": "parse"
     },
     {
-      "type": "pydantic_ai.exceptions.UsageLimitExceeded",
-      "category": "validation"
-    },
-    {
-      "type": "pydantic_ai.exceptions.ConcurrencyLimitExceeded",
-      "category": "validation"
-    },
-    {
       "type": "pydantic_ai.exceptions.UserError",
       "category": "validation"
     },
@@ -84,10 +76,6 @@
     {
       "type": "pydantic_ai.exceptions.ModelAPIError",
       "category": "api"
-    },
-    {
-      "type": "pydantic_ai.exceptions.RunCancelled",
-      "category": "network"
     },
     {
       "type": "pydantic_ai.exceptions.AgentRunError",

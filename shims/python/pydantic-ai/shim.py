@@ -211,6 +211,8 @@ async def run():
     with capture_run_messages() as messages:
         try:
             if call["stream"]:
+                # Only the final AgentRunResultEvent can mark the stream complete.
+                obs["stream"]["completed"] = False
                 # https://ai.pydantic.dev/agents/#streaming-all-events
                 async with agent.run_stream_events(message_history=history) as events:
                     async for event in events:
