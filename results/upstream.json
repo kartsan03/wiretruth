@@ -130,5 +130,49 @@
     "fixed_in": null,
     "opened": "2026-10-14",
     "notes": "The native Ollama streaming parser replaces each tool-call id that Ollama sends with a random UUID once the arguments look complete (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/llms/ollama/chat/transformation.py#L480-L489). Separate from the index-0 merge in https://github.com/BerriAI/litellm/issues/33678; fixing that one alone leaves the ids wrong."
+  },
+  {
+    "library": "pydantic-ai",
+    "scenarios": ["stream.missing-finish"],
+    "providers": ["openai-chat", "ollama-openai"],
+    "issue": "https://github.com/pydantic/pydantic-ai/issues/6610",
+    "pr": "https://github.com/pydantic/pydantic-ai/pull/7096",
+    "status": "documented-behavior",
+    "fixed_in": null,
+    "opened": "2026-07-20",
+    "notes": "Existing upstream issue, not opened by wiretruth. PR #7096 added opt-in openai_chat_streaming_requires_finish_reason, deliberately retaining the default stop fallback for OpenAI-compatible APIs. In 2.56.0 the suite's default OpenAIProvider and OllamaProvider paths leave that flag false; clean EOF without a finish reason returns stop and a complete ModelResponse. The shim reads the library's response.state, without enabling the optional profile flag. See https://github.com/pydantic/pydantic-ai/blob/v2.56.0/pydantic_ai_slim/pydantic_ai/profiles/openai.py#L244-L249 and models/openai.py:4502-4513. This is not a default-path fix; the issue was opened on July 20 and the opt-in PR merged on September 2, 2026."
+  },
+  {
+    "library": "pydantic-ai",
+    "scenarios": ["request.max-tokens-ollama-openai"],
+    "providers": ["ollama-openai"],
+    "issue": "https://github.com/ollama/ollama/issues/7125",
+    "pr": "https://github.com/ollama/ollama/pull/18604",
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2024-10-08",
+    "notes": "Existing upstream issue, not opened by wiretruth. Ollama's OpenAI-compatible endpoint ignores max_completion_tokens (v0.40.3), and OllamaModel sends only that name (OllamaProvider keeps the OpenAI profile default, openai_chat_supports_max_completion_tokens=True), so the limit never applies. The root cause is in Ollama, as for any-llm; the check reads the request, so retire or rewrite the scenario when Ollama ships the fix."
+  },
+  {
+    "library": "pydantic-ai",
+    "scenarios": ["finish.unknown-value"],
+    "providers": ["openai-chat", "ollama-openai"],
+    "issue": "https://github.com/pydantic/pydantic-ai/issues/10381",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-15",
+    "notes": "OpenAIChatModel re-validates the response with the strict ChatCompletion model (_validate_completion, models/openai.py), so a finish_reason outside OpenAI's five values raises UnexpectedModelBehavior and the text and usage are lost. OllamaModel inherits it. AnthropicModel, GoogleModel and OpenAIResponsesModel keep the raw value in provider_details and report finish_reason None (LOSSY there)."
+  },
+  {
+    "library": "pydantic-ai",
+    "scenarios": ["stream.missing-finish"],
+    "providers": ["anthropic", "gemini", "openai-responses"],
+    "issue": "https://github.com/pydantic/pydantic-ai/issues/10382",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-15",
+    "notes": "A stream that ends cleanly before the provider's terminal event finishes with ModelResponse.state 'complete' and finish_reason None, although the docs define 'incomplete' as a streamed response stopped before completion. Responses marks the response incomplete, but _ContinuationStreamedResponse.get() replaces it with complete once iteration ends; the Anthropic and Google adapters never set incomplete. The Chat Completions case is #6610 (documented-behavior)."
   }
 ]

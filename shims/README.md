@@ -11,10 +11,14 @@ wiretruth run --lib any-llm --check-against
 wiretruth run --lib litellm
 wiretruth run --lib litellm --write-results
 wiretruth run --lib litellm --check-against
+wiretruth run --lib pydantic-ai
+wiretruth run --lib pydantic-ai --write-results
+wiretruth run --lib pydantic-ai --check-against
 ```
 
 The library shims are [any-llm](python/any-llm/) and [LiteLLM](python/litellm/), each covering OpenAI Chat
 Completions and Responses, native and OpenAI-compatible Ollama, Gemini GenerateContent and Anthropic Messages.
+[pydantic-ai](python/pydantic-ai/) covers the same APIs except native Ollama, which its client does not support.
 Their manifests document the observed surfaces, exact package versions and unsupported features.
 
 The runner reads `wiretruth-shim.json` in the shim directory and starts its `entry` argv there. A Python entry
