@@ -141,5 +141,16 @@
     "fixed_in": null,
     "opened": "2026-07-20",
     "notes": "Existing upstream issue, not opened by wiretruth. PR #7096 added opt-in openai_chat_streaming_requires_finish_reason, deliberately retaining the default stop fallback for OpenAI-compatible APIs. In 2.56.0 the suite's default OpenAIProvider and OllamaProvider paths leave that flag false; clean EOF without a finish reason returns stop and a complete ModelResponse. The shim reads the library's response.state, without enabling the optional profile flag. See https://github.com/pydantic/pydantic-ai/blob/v2.56.0/pydantic_ai_slim/pydantic_ai/profiles/openai.py#L244-L249 and models/openai.py:4502-4513. This is not a default-path fix; the issue was opened on July 20 and the opt-in PR merged on September 2, 2026."
+  },
+  {
+    "library": "pydantic-ai",
+    "scenarios": ["request.max-tokens-ollama-openai"],
+    "providers": ["ollama-openai"],
+    "issue": "https://github.com/ollama/ollama/issues/7125",
+    "pr": "https://github.com/ollama/ollama/pull/18604",
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2024-10-08",
+    "notes": "Existing upstream issue, not opened by wiretruth. Ollama's OpenAI-compatible endpoint ignores max_completion_tokens (v0.40.3), and OllamaModel sends only that name (OllamaProvider keeps the OpenAI profile default, openai_chat_supports_max_completion_tokens=True), so the limit never applies. The root cause is in Ollama, as for any-llm; the check reads the request, so retire or rewrite the scenario when Ollama ships the fix."
   }
 ]
