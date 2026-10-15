@@ -38,6 +38,7 @@ from pydantic_ai.providers.ollama import OllamaProvider
 from pydantic_ai.providers.openai import OpenAIProvider
 from pydantic_ai.tools import ToolDefinition
 from pydantic_ai.toolsets import ExternalToolset
+from pydantic_core import to_jsonable_python
 
 
 def schema_type(schema, name="output"):
@@ -201,6 +202,9 @@ async def run():
     # https://ai.pydantic.dev/message-history/ (reuse messages; inspect failed runs)
     history = []
     for message in call["messages"]:
+        if message["role"] == "assistant":
+            history.append(ModelResponse(parts=[TextPart(message["content"])]))
+            continue
         part_class = SystemPromptPart if message["role"] == "system" else UserPromptPart
         history.append(ModelRequest(parts=[part_class(message["content"])]))
     result = None
@@ -235,7 +239,7 @@ async def run():
             obs["notes"].append(f"retries: {requests - 1} ({requests} model requests)")
         if result is not None and schema is not None:
             obs["structured"].update(
-                returned_as_success=True, value=result.output.model_dump(mode="json")
+                returned_as_success=True, value=to_jsonable_python(result.output)
             )
 
 
