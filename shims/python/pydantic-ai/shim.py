@@ -61,17 +61,17 @@ def schema_type(schema, name="output"):
     return create_model(name, __config__={"extra": "forbid"}, **fields)
 
 
-def text(value):
-    obs["text"].update(value=value, surface="primary")
+def text(value, surface="primary"):
+    obs["text"].update(value=value, surface=surface)
 
 
-def observe(response):
+def observe(response, surface="primary"):
     reason = response.finish_reason
     raw = (response.provider_details or {}).get("finish_reason")
     obs["finish"].update(
         value=manifest["finish_map"].get(reason) if reason is not None else None,
         raw=raw,
-        surface="primary" if reason is not None else "raw" if raw is not None else "absent",
+        surface=surface if reason is not None else "raw" if raw is not None else "absent",
         source="ModelResponse.finish_reason"
         if reason is not None
         else "provider_details.finish_reason"
@@ -79,8 +79,8 @@ def observe(response):
         else None,
     )
     values = [part.content for part in response.parts if isinstance(part, TextPart)]
-    if values:
-        text("".join(values))
+    if values and (surface == "primary" or obs["text"]["surface"] != "primary"):
+        text("".join(values), surface)
     obs["tool_calls"] = []
     for part in response.parts:
         if not isinstance(part, ToolCallPart):
@@ -103,7 +103,7 @@ def observe(response):
     for name, attr in usage_fields.items():
         value = getattr(response.usage, attr, None)
         obs["usage"][name] = value
-        obs["usage"]["surface"][name] = "primary" if value is not None else "absent"
+        obs["usage"]["surface"][name] = surface if value is not None else "absent"
 
 
 def observe_error(error):
@@ -225,8 +225,11 @@ async def run():
         except Exception as error:
             observe_error(error)
         responses = [message for message in messages if isinstance(message, ModelResponse)]
-        if responses:
-            observe(responses[-1])
+        if result is not None:
+            observe(result.response)
+        elif responses:
+            # After an error, captured messages are a diagnostic, neither the result nor the error.
+            observe(responses[-1], "raw")
         requests = result.usage.requests if result is not None else len(responses)
         if requests > 1:
             obs["notes"].append(f"retries: {requests - 1} ({requests} model requests)")
