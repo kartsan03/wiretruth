@@ -1,0 +1,295 @@
+{
+  "format": "wiretruth.shim/v1",
+  "name": "pydantic-ai",
+  "language": "python",
+  "packages": {
+    "pydantic-ai-slim": "2.56.0",
+    "openai": "3.31.0",
+    "anthropic": "1.14.0",
+    "google-genai": "2.31.0"
+  },
+  "primary_package": "pydantic-ai-slim",
+  "entry": [
+    "python",
+    "shim.py"
+  ],
+  "env": {
+    "PYDANTIC_AI_NO_BANNER": "1"
+  },
+  "providers": {
+    "openai-chat": "OpenAIChatModel(model, provider=OpenAIProvider(base_url=WIRETRUTH_BASE_URL_OPENAI_CHAT, api_key=WIRETRUTH_API_KEY))",
+    "openai-responses": "OpenAIResponsesModel(model, provider=OpenAIProvider(base_url=WIRETRUTH_BASE_URL_OPENAI_RESPONSES, api_key=WIRETRUTH_API_KEY))",
+    "anthropic": "AnthropicModel(model, provider=AnthropicProvider(base_url=WIRETRUTH_BASE_URL_ANTHROPIC, api_key=WIRETRUTH_API_KEY)); host root",
+    "gemini": "GoogleModel(model, provider=GoogleProvider(base_url=WIRETRUTH_BASE_URL_GEMINI, api_key=WIRETRUTH_API_KEY)); host root",
+    "ollama-openai": "OllamaModel(model, provider=OllamaProvider(base_url=WIRETRUTH_BASE_URL_OLLAMA_OPENAI, api_key=WIRETRUTH_API_KEY)); /v1 base",
+    "ollama": "Unsupported: OllamaModel uses only the OpenAI-compatible /v1 API, not native /api/chat."
+  },
+  "surfaces": {
+    "finish": {
+      "primary": "ModelResponse.finish_reason (FinishReason literal: stop, length, content_filter, tool_call, error). Last ModelResponse from capture_run_messages() on return and error; isinstance selects response/part/event types. Exception class/MRO, __cause__ class name and traceback select error_map and stack_top; explicit Model token limit messages select truncation; a ValidationError cause selects validation.",
+      "raw": "ModelResponse.provider_details['finish_reason'] when exposed; no fallback to inferred primary finish. When primary is absent but raw exists, value stays null and surface is raw."
+    },
+    "text": {
+      "primary": "ModelResponse.parts TextPart.content concatenated; streamed PartStartEvent.part TextPart.content and PartDeltaEvent.delta TextPartDelta.content_delta retain text on failure."
+    },
+    "tool_calls": {
+      "primary": "ExternalToolset(ToolDefinition(name, description, parameters_json_schema)) with output_type=[str, DeferredToolRequests] stops the run for caller-managed execution. https://ai.pydantic.dev/toolsets/#external-toolset ; chosen because it returns calls without executing them or entering a repeat-last agent loop. ModelResponse.parts ToolCallPart.tool_call_id, tool_name, args_as_json_str(); json.loads reports parse success without repairing arguments. DeferredToolRequests output is not re-executed. Required function calls use documented AgentModelSettings(ctx), with RunContext.run_step selecting required on step one and auto thereafter; this expresses a forced first response without an endlessly forced agent loop."
+    },
+    "usage": {
+      "primary": "Last ModelResponse.usage.input_tokens, output_tokens, total_tokens, cache_read_tokens, output_reasoning_tokens (public RequestUsage). Per-response usage avoids summing replay retries into the fixture counts. AgentRunResult.usage.requests on success and captured ModelResponse count on failure add retry notes. Defaults including zero counts are retained. output_reasoning_tokens is an optional extra attribute, absent when the provider did not expose it."
+    },
+    "structured": {
+      "primary": "Pydantic create_model recursively implements the scenario schema with required fields and extra=forbid. NativeOutput(model) requests native schema output, matching the recorded requests. The Anthropic forced-tool scenario uses ToolOutput(model, name=structured_output), not an external tool. AgentRunResult.output.model_dump(mode=json) is successful structured output only on return."
+    },
+    "stream": {
+      "primary": "Agent.run_stream_events() async context manager; AgentRunResultEvent.result.response.state is the model lifecycle signal: complete means completed=true; incomplete/interrupted/suspended mean false. The final agent event alone is not a provider completion signal. Any raised error sets false. Iteration ending alone is not completion. chunks_seen counts public events, not transport frames. capture_run_messages() retains interrupted ModelResponse parts."
+    }
+  },
+  "finish_map": {
+    "stop": "stop",
+    "length": "length",
+    "content_filter": "content_filter",
+    "tool_call": "tool_calls",
+    "error": "error"
+  },
+  "error_map": [
+    {
+      "type": "pydantic_ai.exceptions.ContentFilterError",
+      "category": "content_filter"
+    },
+    {
+      "type": "pydantic_ai.exceptions.IncompleteToolCall",
+      "category": "truncation"
+    },
+    {
+      "type": "pydantic_ai.exceptions.UnexpectedModelBehavior",
+      "category": "parse"
+    },
+    {
+      "type": "pydantic_ai.exceptions.UsageLimitExceeded",
+      "category": "validation"
+    },
+    {
+      "type": "pydantic_ai.exceptions.ConcurrencyLimitExceeded",
+      "category": "validation"
+    },
+    {
+      "type": "pydantic_ai.exceptions.UserError",
+      "category": "validation"
+    },
+    {
+      "type": "pydantic_ai.exceptions.ModelHTTPError",
+      "category": "api"
+    },
+    {
+      "type": "pydantic_ai.exceptions.ModelAPIError",
+      "category": "api"
+    },
+    {
+      "type": "pydantic_ai.exceptions.RunCancelled",
+      "category": "network"
+    },
+    {
+      "type": "pydantic_ai.exceptions.AgentRunError",
+      "category": "other"
+    },
+    {
+      "type": "openai.RateLimitError",
+      "category": "rate_limit"
+    },
+    {
+      "type": "openai.APIResponseValidationError",
+      "category": "validation"
+    },
+    {
+      "type": "openai.APIConnectionError",
+      "category": "network"
+    },
+    {
+      "type": "openai.APIError",
+      "category": "api"
+    },
+    {
+      "type": "anthropic.RateLimitError",
+      "category": "rate_limit"
+    },
+    {
+      "type": "anthropic.APIResponseValidationError",
+      "category": "validation"
+    },
+    {
+      "type": "anthropic.APIConnectionError",
+      "category": "network"
+    },
+    {
+      "type": "anthropic.APIError",
+      "category": "api"
+    },
+    {
+      "type": "google.genai.errors.APIError",
+      "category": "api"
+    },
+    {
+      "type": "pydantic_core._pydantic_core.ValidationError",
+      "category": "validation"
+    },
+    {
+      "type": "httpx.TransportError",
+      "category": "network"
+    },
+    {
+      "type": "httpx2.TransportError",
+      "category": "network"
+    },
+    {
+      "type": "json.decoder.JSONDecodeError",
+      "category": "parse"
+    }
+  ],
+  "unsupported": [
+    {
+      "scenario": "finish.stop-sequence",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "request.no-injected-options",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "stream.error-midstream",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "stream.missing-finish",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "stream.utf8-split",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "stream.utf8",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "tools.parallel-calls",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "truncation.structured-output",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "truncation.text",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "docs": "https://ai.pydantic.dev/models/ollama/"
+    }
+  ],
+  "config_notes": [
+    "PYDANTIC_AI_NO_BANNER=1 suppresses the first-run banner. All library stdout is redirected to stderr. No retry budgets, model profiles, sampling defaults or provider SDK retry settings are overridden.",
+    "NativeOutput is selected explicitly to express the fixture request: response_format.json_schema (Chat/Ollama-compatible), text.format (Responses), output_config.format (Anthropic), and responseJsonSchema/responseMimeType (Gemini). https://ai.pydantic.dev/output/#native-output . Default bare model output uses tool mode on OpenAI Chat, Responses, Gemini and Ollama, and native mode on current thinking-enabled Anthropic models. Default OpenAI Chat tool mode sends no reasoning effort; gpt-6-luna rejects that combination with HTTP 400 unless effort none is requested or native output is used (verified real error in the design research).",
+    "Output retries remain enabled. Failed runs are inspected through the documented capture_run_messages context; the final response, not an earlier successful-looking attempt, supplies the observed surfaces. https://ai.pydantic.dev/message-history/#capturing-messages-from-runs",
+    "Scenario reasoning effort none maps to the documented unified thinking=False setting; other efforts pass as thinking levels. Unsupported disable requests on always-thinking models are handled by the library profile, without shim overrides. https://ai.pydantic.dev/api/settings/#pydantic_ai.settings.ModelSettings",
+    "External tools are represented by the provided JSON schemas without executing them. Forced structured output uses the separate documented ToolOutput parser. https://ai.pydantic.dev/output/#tool-output",
+    "genai-prices get_snapshot loads bundled data; remote updates require an explicit UpdatePrices context, which this shim does not start. pydantic-ai only preloads that snapshot at model construction. logfire-api is a no-op proxy without explicit configuration; no instrumentation/configure call is made. No extra offline setting is needed. https://github.com/pydantic/genai-prices#updating-prices ; https://ai.pydantic.dev/logfire/",
+    "A static tool_choice=required is rejected by Agent. The documented per-step model_settings callable uses required only for ctx.run_step == 1 and auto thereafter; deferred calls end the run after that first response. https://ai.pydantic.dev/api/agent/#pydantic_ai.agent.AgentModelSettings",
+    "Anthropic ToolOutput with the sole structured_output tool and tool_choice=[structured_output] simplifies to tool_choice type any, rather than the fixture's named tool; both force the same sole tool. The typed parser and output retries remain active. models/_tool_choice.py and models/anthropic.py perform this library normalization.",
+    "In 2.56.0 a foreground Responses stream can retain state incomplete in its adapter but the public continuation wrapper replaces it with complete at EOF. The shim reports result.response.state unchanged, so stream.missing-finish remains WRONG on all five supported APIs. Default Chat clean-EOF stop is explicitly retained by upstream #7096; strict finish detection is opt-in and is not enabled here.",
+    "Anthropic Sonnet 5.5 default and thinking=False send no thinking field; the model profile ignores disable on always-thinking models. Explicit anthropic_thinking disabled passes through but is not used by this shim. Gemini adds responseModalities TEXT and upgrades auto function calling to VALIDATED; it does not inject temperature in these calls."
+  ],
+  "docs": [
+    "https://ai.pydantic.dev/agents/",
+    "https://ai.pydantic.dev/models/openai/",
+    "https://ai.pydantic.dev/models/anthropic/",
+    "https://ai.pydantic.dev/models/google/",
+    "https://ai.pydantic.dev/models/ollama/",
+    "https://ai.pydantic.dev/toolsets/#external-toolset",
+    "https://ai.pydantic.dev/output/",
+    "https://ai.pydantic.dev/message-history/",
+    "https://ai.pydantic.dev/api/exceptions/",
+    "https://ai.pydantic.dev/api/settings/"
+  ]
+}

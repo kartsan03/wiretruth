@@ -9,9 +9,9 @@ happened.
 [![PyPI](https://img.shields.io/pypi/v/wiretruth?label=PyPI)](https://pypi.org/project/wiretruth/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
-wiretruth tests any-llm and LiteLLM on six APIs: OpenAI Chat Completions and Responses, Ollama's native
+wiretruth tests any-llm, LiteLLM and pydantic-ai across six APIs: OpenAI Chat Completions and Responses, Ollama's native
 and OpenAI-compatible endpoints, Gemini GenerateContent and Anthropic Messages. That is 24 scenarios and 95 cells
-per library.
+per library. pydantic-ai supports the OpenAI-compatible Ollama endpoint; its native Ollama cells are UNSUPPORTED.
 The Anthropic responses are transcribed from Anthropic's documentation rather than recorded: each of those fixtures
 is marked `documented` and links the page it comes from. More providers and libraries follow, and a public
 results matrix arrives in v0.4. Until then, the grades are in
@@ -24,7 +24,8 @@ A model hits its output token limit halfway through a JSON object. The provider 
 parse error, nothing tells you that a higher limit would fix it. If it returns the partial object as a success,
 your pipeline stores an incomplete record.
 
-wiretruth has this case recorded as `truncation.structured-output` on `openai-chat`. Replayed through both libraries:
+wiretruth has this case recorded as `truncation.structured-output` on `openai-chat`. Replayed through any-llm
+and LiteLLM:
 
 | Library | What the caller gets | Grade |
 |---|---|---|
@@ -75,6 +76,7 @@ You need Python 3.11 or newer and [uv](https://docs.astral.sh/uv/), which builds
 git clone https://github.com/kartsan03/wiretruth && cd wiretruth
 uv run wiretruth run --lib any-llm
 uv run wiretruth run --lib litellm
+uv run wiretruth run --lib pydantic-ai
 ```
 
 The any-llm run reports:
@@ -222,8 +224,9 @@ command only, so run it inside a checkout of the matching release tag (for examp
 
 A shim is a small program. It reads a call spec as JSON on stdin, calls your library the way its docs show, and
 prints what the library reported as JSON on stdout. The
-[any-llm shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/any-llm/shim.py) and
-[LiteLLM shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/litellm/shim.py) are examples. The
+[any-llm shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/any-llm/shim.py),
+[LiteLLM shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/litellm/shim.py) and
+[pydantic-ai shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/pydantic-ai/shim.py) are examples. The
 protocol is in [shims/README.md](https://github.com/kartsan03/wiretruth/blob/main/shims/README.md); to propose a
 library, [open a new-library issue](https://github.com/kartsan03/wiretruth/issues/new?template=new-library.yml).
 

@@ -130,5 +130,16 @@
     "fixed_in": null,
     "opened": "2026-10-14",
     "notes": "The native Ollama streaming parser replaces each tool-call id that Ollama sends with a random UUID once the arguments look complete (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/llms/ollama/chat/transformation.py#L480-L489). Separate from the index-0 merge in https://github.com/BerriAI/litellm/issues/33678; fixing that one alone leaves the ids wrong."
+  },
+  {
+    "library": "pydantic-ai",
+    "scenarios": ["stream.missing-finish"],
+    "providers": ["openai-chat", "ollama-openai"],
+    "issue": "https://github.com/pydantic/pydantic-ai/issues/6610",
+    "pr": "https://github.com/pydantic/pydantic-ai/pull/7096",
+    "status": "documented-behavior",
+    "fixed_in": null,
+    "opened": "2026-07-20",
+    "notes": "Existing upstream issue, not opened by wiretruth. PR #7096 added opt-in openai_chat_streaming_requires_finish_reason, deliberately retaining the default stop fallback for OpenAI-compatible APIs. In 2.56.0 the suite's default OpenAIProvider and OllamaProvider paths leave that flag false; clean EOF without a finish reason returns stop and a complete ModelResponse. The shim reads the library's response.state, without enabling the optional profile flag. See https://github.com/pydantic/pydantic-ai/blob/v2.56.0/pydantic_ai_slim/pydantic_ai/profiles/openai.py#L244-L249 and models/openai.py:4502-4513. This is not a default-path fix; the issue was opened on July 20 and the opt-in PR merged on September 2, 2026."
   }
 ]
