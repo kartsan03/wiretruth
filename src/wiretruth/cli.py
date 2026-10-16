@@ -18,7 +18,9 @@ from wiretruth import __version__
 from wiretruth.catalog import render as render_catalog
 from wiretruth.envs import (
     RunError,
+    build_javascript_env,
     find_library,
+    installed_javascript_packages,
     installed_packages,
     list_envs,
     prune_envs,
@@ -147,8 +149,12 @@ def build_parser() -> argparse.ArgumentParser:
             )
         elif name == "envs":
             action = subparser.add_mutually_exclusive_group()
-            action.add_argument("--list", action="store_true", help="list environments (default)")
-            action.add_argument("--prune", action="store_true", help="remove stale environments")
+            action.add_argument(
+                "--list", action="store_true", help="list Python environments (default)"
+            )
+            action.add_argument(
+                "--prune", action="store_true", help="remove stale Python environments"
+            )
             action.add_argument(
                 "--build", metavar="NAME", help="build or reuse a library environment"
             )
@@ -478,8 +484,13 @@ def run_shim(args: argparse.Namespace) -> int:
     if saved is not None:
         try:
             interpreter = resolve_interpreter(Path(), manifest)
-            if interpreter is not None:
-                changes = package_changes(saved.packages, installed_packages(interpreter))
+            if manifest.language == "javascript" or interpreter is not None:
+                packages = (
+                    installed_javascript_packages(shim_dir)
+                    if manifest.language == "javascript"
+                    else installed_packages(cast(str, interpreter))
+                )
+                changes = package_changes(saved.packages, packages)
                 if changes:
                     print(f"packages differ from {path}: {', '.join(changes)}")
         except (RunError, OSError) as error:
@@ -499,6 +510,9 @@ def run_envs(args: argparse.Namespace) -> int:
         if args.build is not None:
             shim_dir = find_library(Path(), args.build)
             manifest = load_shim_manifest(shim_dir / "wiretruth-shim.json")
+            if manifest.language == "javascript":
+                print(build_javascript_env(shim_dir))
+                return 0
             interpreter = resolve_interpreter(Path(), manifest)
             if interpreter is None:
                 raise RunError("only Python library environments can be built")

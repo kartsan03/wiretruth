@@ -1,0 +1,260 @@
+{
+  "format": "wiretruth.shim/v1",
+  "name": "vercel-ai",
+  "language": "javascript",
+  "packages": {
+    "@ai-sdk/anthropic": "4.0.81",
+    "@ai-sdk/google": "4.0.98",
+    "@ai-sdk/openai": "4.0.95",
+    "@ai-sdk/openai-compatible": "3.0.70",
+    "ai": "7.0.142"
+  },
+  "primary_package": "ai",
+  "entry": [
+    "node",
+    "shim.mjs"
+  ],
+  "providers": {
+    "openai-chat": "createOpenAI({ baseURL: WIRETRUTH_BASE_URL_OPENAI_CHAT, apiKey }).chat(model)",
+    "openai-responses": "createOpenAI({ baseURL: WIRETRUTH_BASE_URL_OPENAI_RESPONSES, apiKey })(model); default Responses entry point",
+    "anthropic": "createAnthropic({ baseURL: WIRETRUTH_BASE_URL_ANTHROPIC + '/v1', apiKey })(model)",
+    "gemini": "createGoogleGenerativeAI({ baseURL: WIRETRUTH_BASE_URL_GEMINI + '/v1beta', apiKey })(model)",
+    "ollama-openai": "createOpenAICompatible({ name: 'ollama', baseURL: WIRETRUTH_BASE_URL_OLLAMA_OPENAI })(model)",
+    "ollama": "Unsupported: no first-party native Ollama provider; community providers are separate packages."
+  },
+  "surfaces": {
+    "finish": {
+      "primary": "result.finishReason; fullStream finish-step/finish parts: finishReason. NoObjectGeneratedError.finishReason is a documented error field. Error name, message, stack and prototype constructor names select error_map and the library-relative top stack frame. No raw-to-primary inference.",
+      "raw": "result.rawFinishReason and fullStream finish-step/finish.rawFinishReason. No private response fields are read."
+    },
+    "text": {
+      "primary": "result.text; fullStream text-delta.text concatenated, including deltas before a later error. NoObjectGeneratedError.text is documented generated text."
+    },
+    "usage": {
+      "primary": "result.usage; fullStream finish-step.usage; NoObjectGeneratedError.usage. Fields: inputTokens, outputTokens, totalTokens, inputTokenDetails.cacheReadTokens, outputTokenDetails.reasoningTokens. Null/undefined values stay absent; defaults exposed by the SDK are retained."
+    },
+    "tool_calls": {
+      "primary": "result.toolCalls and fullStream tool-call parts: toolCallId, toolName, input, invalid, error. Valid input is already parsed by the SDK and is serialized only for arguments_raw; invalid string input is kept verbatim as arguments_raw, with null arguments and parsed=false. Invalid calls retain their error. Tools use tool({ description, inputSchema: jsonSchema(parameters) }) without execute, so no agent continuation runs."
+    },
+    "structured": {
+      "primary": "Output.object({ schema: jsonSchema(output_schema) }) with generateText / streamText. result.output is read only after the call/stream completes; a thrown getter is an error, never structured success. No post-error diagnostic side channel is promoted to primary."
+    },
+    "stream": {
+      "primary": "result.fullStream; part.type selects text-delta, tool-call, finish-step, finish, error and abort. A finish part sets completed=true unless an error or abort part came first; those set false, and EOF alone leaves null. Yielded errors are outcome=returned with error filled. chunks_seen counts public parts, not HTTP frames."
+    }
+  },
+  "finish_map": {
+    "stop": "stop",
+    "length": "length",
+    "tool-calls": "tool_calls",
+    "content-filter": "content_filter",
+    "error": "error",
+    "other": "other"
+  },
+  "error_map": [
+    {
+      "type": "AI_NoObjectGeneratedError",
+      "category": "validation",
+      "note": "Documented finishReason === length is the truncation signal; the shim reports it on primary. https://ai-sdk.dev/docs/reference/ai-sdk-errors/ai-no-object-generated-error"
+    },
+    {
+      "type": "AI_APICallError",
+      "category": "api"
+    },
+    {
+      "type": "AI_StreamProviderError",
+      "category": "api"
+    },
+    {
+      "type": "AI_RetryError",
+      "category": "api"
+    },
+    {
+      "type": "AI_JSONParseError",
+      "category": "parse"
+    },
+    {
+      "type": "AI_TypeValidationError",
+      "category": "validation"
+    },
+    {
+      "type": "AI_InvalidToolInputError",
+      "category": "validation"
+    },
+    {
+      "type": "AI_InvalidArgumentError",
+      "category": "validation"
+    },
+    {
+      "type": "AI_InvalidPromptError",
+      "category": "validation"
+    },
+    {
+      "type": "AI_NoSuchToolError",
+      "category": "validation"
+    },
+    {
+      "type": "AI_NoOutputGeneratedError",
+      "category": "parse"
+    },
+    {
+      "type": "AI_InvalidResponseDataError",
+      "category": "validation"
+    },
+    {
+      "type": "AI_UnsupportedFunctionalityError",
+      "category": "validation"
+    }
+  ],
+  "unsupported": [
+    {
+      "scenario": "finish.stop-sequence",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "request.no-injected-options",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "stream.error-midstream",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "stream.missing-finish-abort",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "stream.missing-finish",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "stream.utf8-split",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "stream.utf8",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "tools.parallel-calls-stream",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "tools.parallel-calls",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "truncation.structured-output",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "truncation.text-stream",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "truncation.text",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "usage.stream-final-chunk",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "The SDK has no first-party native Ollama provider; community providers are separate packages outside this shim.",
+      "docs": "https://ai-sdk.dev/providers/community-providers/ollama"
+    },
+    {
+      "scenario": "truncation.structured-output-forced-tool",
+      "providers": [
+        "anthropic"
+      ],
+      "reason": "On claude-haiku-4-5 (and claude-sonnet-5-5) the default structured output is native output_config.format, not a forced tool. The documented jsonTool opt-in forces a tool named json, so no supported path sends the fixture's forced structured_output call.",
+      "docs": "https://ai-sdk.dev/providers/ai-sdk-providers/anthropic#structured-outputs"
+    }
+  ],
+  "config_notes": [
+    "maxRetries and all SDK retry defaults are unchanged. A documented provider fetch callback delegates to the global fetch unchanged and counts model HTTP requests for retry notes. Tools have no execute callback and use the default single-step stopping behavior. Logs remain on stderr.",
+    "Scenario reasoning.effort maps to the documented unified reasoning option. Null reasoning leaves the provider default untouched. https://ai-sdk.dev/docs/ai-sdk-core/reasoning",
+    "Structured output uses each provider default: OpenAI Chat response_format.json_schema; Responses text.format.json_schema; Anthropic output_config.format for both claude-haiku-4-5 and claude-sonnet-5-5; Gemini generationConfig.responseJsonSchema with responseMimeType application/json. https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data",
+    "OpenAI-compatible defaults to response_format.json_object (supportsStructuredOutputs=false). For the Ollama-compatible schema fixture, the documented supportsStructuredOutputs=true opts into response_format.json_schema. includeUsage is set only from the scenario include_usage hint. https://ai-sdk.dev/providers/openai-compatible-providers",
+    "Anthropic structuredOutputMode=jsonTool uses the fixed special tool name json; it cannot select the fixture named structured_output. The forced-tool structured parser scenario is unsupported. Sonnet 5.5 also replaces jsonTool with outputFormat and downgrades required tool choice to auto with a warning. No thinking field is sent without an explicit reasoning/thinking option. https://ai-sdk.dev/providers/ai-sdk-providers/anthropic",
+    "Anthropic scenario cache/eager_input_streaming hints map to documented cacheControl and tool providerOptions.anthropic.eagerInputStreaming. Default tool streaming and all other provider defaults are retained. https://ai-sdk.dev/providers/ai-sdk-providers/anthropic",
+    "Unknown wire finish values normalize to other on all supported APIs in these pins; rawFinishReason retains the provider string unchanged. The public v7 FinishReason union is stop | length | content-filter | tool-calls | error | other, with no unknown member.",
+    "System messages map to the documented instructions array; the remaining messages preserve their roles and order. The current core API rejects system roles in messages by default. https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text"
+  ],
+  "docs": [
+    "https://ai-sdk.dev/docs/ai-sdk-core/generating-text",
+    "https://ai-sdk.dev/docs/ai-sdk-core/generating-structured-data",
+    "https://ai-sdk.dev/docs/ai-sdk-core/tools-and-tool-calling",
+    "https://ai-sdk.dev/docs/ai-sdk-core/reasoning",
+    "https://ai-sdk.dev/providers/ai-sdk-providers/openai",
+    "https://ai-sdk.dev/providers/ai-sdk-providers/anthropic",
+    "https://ai-sdk.dev/providers/ai-sdk-providers/google-generative-ai",
+    "https://ai-sdk.dev/providers/openai-compatible-providers",
+    "https://ai-sdk.dev/providers/community-providers/ollama"
+  ]
+}

@@ -18,7 +18,7 @@ from typing import cast, get_args
 
 from wiretruth.checks import Status
 from wiretruth.envs import RunError as RunError
-from wiretruth.envs import resolve_interpreter
+from wiretruth.envs import build_javascript_env, resolve_interpreter
 from wiretruth.formats import (
     CallSpec,
     Fixture,
@@ -265,6 +265,8 @@ def run_suite(
     shim_dir = shim_dir.resolve()
     manifest = load_shim_manifest(shim_dir / "wiretruth-shim.json")
     cells = find_cells(root, pattern, provider)
+    if manifest.language == "javascript":
+        build_javascript_env(shim_dir)
     interpreter = resolve_interpreter(root, manifest)
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S.%fZ")
     stderr_dir = root / ".wiretruth" / "runs" / stamp

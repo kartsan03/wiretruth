@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import shutil
@@ -5,9 +6,56 @@ from pathlib import Path
 
 import pytest
 
+from wiretruth.envs import MARKER
 from wiretruth.runner import closed_port, run_suite
 
 REPO = Path(__file__).resolve().parents[2]
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="node is not on PATH")
+def test_dependency_free_javascript_shim_runs_in_its_directory(tmp_path):
+    shutil.copytree(REPO / "suite", tmp_path / "suite")
+    shim = tmp_path / "shims/js/sample"
+    modules = shim / "node_modules"
+    modules.mkdir(parents=True)
+    manifest = json.loads((REPO / "tests/samples/valid/shim-manifest/vercel-ai.json").read_text())
+    manifest.update(
+        name="sample",
+        packages={"sample-sdk": "1.0"},
+        primary_package="sample-sdk",
+        env={},
+        unsupported=[],
+    )
+    (shim / "wiretruth-shim.json").write_text(json.dumps(manifest))
+    (shim / "package.json").write_text('{"private":true,"type":"module","dependencies":{}}')
+    lock = b'{"lockfileVersion":3,"packages":{"":{"dependencies":{}}}}'
+    (shim / "package-lock.json").write_bytes(lock)
+    (modules / MARKER).write_text(hashlib.sha256(lock).hexdigest())
+    observation = json.loads((REPO / "tests/samples/valid/observation/returned.json").read_text())
+    observation.update(
+        library={"name": "sample", "version": "1.0", "language": "javascript", "api": "fetch"},
+        tool_calls=[],
+        text={"value": None, "surface": "absent"},
+        stream={"used": False, "completed": None, "chunks_seen": None},
+    )
+    (shim / "observation.json").write_text(json.dumps(observation))
+    (shim / "shim.mjs").write_text("""
+import { readFileSync } from 'node:fs';
+const call = JSON.parse(readFileSync(0, 'utf8'));
+const response = await fetch(`${process.env.WIRETRUTH_BASE_URL_OPENAI_CHAT}/chat/completions`, {
+  method: 'POST', headers: { 'content-type': 'application/json' },
+  body: JSON.stringify({ model: call.model, messages: call.messages,
+    max_completion_tokens: call.max_output_tokens }),
+});
+const result = await response.json();
+const observation = JSON.parse(readFileSync('observation.json', 'utf8'));
+observation.finish.value = result.choices[0].finish_reason;
+console.log(JSON.stringify(observation));
+""")
+    report = run_suite(tmp_path, shim, pattern="request.max-tokens-field", jobs=1)
+    (cell,) = report.cells
+    assert (cell.grade.grade, cell.request_count) == ("PASS", 1)
+    assert cell.observation.library.language == "javascript"
 
 
 @pytest.mark.parametrize(

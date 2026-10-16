@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import subprocess
@@ -11,7 +12,9 @@ import pytest
 from wiretruth import cli, envs
 from wiretruth.envs import (
     RunError,
+    build_javascript_env,
     find_library,
+    installed_javascript_packages,
     installed_packages,
     list_envs,
     parse_installed_packages,
@@ -139,6 +142,105 @@ def test_javascript_is_untouched(tmp_path, library, uv):
     assert resolve_interpreter(tmp_path, replace(library, language="javascript")) is None
     uv.assert_not_called()
     assert not (tmp_path / ".wiretruth").exists()
+
+
+@pytest.fixture
+def javascript(tmp_path):
+    shim = tmp_path / "shims/js/sample"
+    shim.mkdir(parents=True)
+    (shim / "package-lock.json").write_text('{"lockfileVersion":3}')
+    return shim
+
+
+@pytest.mark.parametrize("change", [None, "lockfile", "marker", "missing-marker", "modules"])
+def test_javascript_install_marker_skip_and_rebuild(change, javascript, monkeypatch):
+    run = MagicMock(return_value=subprocess.CompletedProcess([], 0))
+    monkeypatch.setattr(envs.subprocess, "run", run)
+    modules = build_javascript_env(javascript)
+    command = ["npm", "ci", "--ignore-scripts", "--prefix", str(javascript)]
+    run.assert_called_once_with(command, stdout=sys.stderr, check=False)
+    marker = modules / envs.MARKER
+    assert (
+        marker.read_text()
+        == hashlib.sha256((javascript / "package-lock.json").read_bytes()).hexdigest()
+    )
+    if change == "lockfile":
+        (javascript / "package-lock.json").write_text('{"lockfileVersion":3,"name":"café"}')
+    elif change == "marker":
+        marker.write_text("partial installation")
+    elif change == "missing-marker":
+        marker.unlink()
+    elif change == "modules":
+        marker.unlink()
+        modules.rmdir()
+    assert build_javascript_env(javascript) == modules
+    assert run.call_count == (1 if change is None else 2)
+
+
+@pytest.mark.parametrize("failure", [7, FileNotFoundError("npm")])
+def test_javascript_failed_install_is_not_marked_and_can_retry(failure, javascript, monkeypatch):
+    run = MagicMock(return_value=subprocess.CompletedProcess([], 0))
+    monkeypatch.setattr(envs.subprocess, "run", run)
+    modules = build_javascript_env(javascript)
+    (javascript / "package-lock.json").write_text('{"name":"京都"}')
+    if isinstance(failure, int):
+        run.return_value = subprocess.CompletedProcess([], failure)
+    else:
+        run.side_effect = failure
+    with pytest.raises(RunError, match=r"exited with code 7|JavaScript environment"):
+        build_javascript_env(javascript)
+    assert not (modules / envs.MARKER).exists()
+    run.side_effect = None
+    run.return_value = subprocess.CompletedProcess([], 0)
+    assert build_javascript_env(javascript) == modules
+
+
+def test_javascript_packages_include_only_top_level_scoped_and_unscoped(javascript):
+    modules = javascript / "node_modules"
+    modules.mkdir()
+    (modules / ".package-lock.json").write_text(
+        json.dumps(
+            {
+                "packages": {
+                    "": {"name": "café"},
+                    "node_modules/ai": {"version": "7.0.142"},
+                    "node_modules/@ai-sdk/openai": {"version": "4.0.95"},
+                    "node_modules/ai/node_modules/zod": {"version": "3.0.0"},
+                    "node_modules/@ai-sdk/openai/node_modules/ai": {"version": "1.0.0"},
+                }
+            }
+        )
+    )
+    assert installed_javascript_packages(javascript) == {
+        "ai": "7.0.142",
+        "@ai-sdk/openai": "4.0.95",
+    }
+
+
+@pytest.mark.parametrize(
+    "document",
+    [None, "{", "[]", "{}", '{"packages":[]}', '{"packages":{"node_modules/ai":{"version":null}}}'],
+)
+def test_javascript_package_read_errors_are_run_errors(document, javascript):
+    modules = javascript / "node_modules"
+    modules.mkdir()
+    if document is not None:
+        (modules / ".package-lock.json").write_text(document)
+    with pytest.raises(RunError, match="cannot read installed packages"):
+        installed_javascript_packages(javascript)
+
+
+def test_envs_cli_builds_javascript(tmp_path, javascript, monkeypatch, capsys):
+    doc = json.loads((REPO / "tests/samples/valid/shim-manifest/vercel-ai.json").read_text())
+    doc["name"] = "sample"
+    (javascript / "wiretruth-shim.json").write_text(json.dumps(doc))
+    run = MagicMock(return_value=subprocess.CompletedProcess([], 0))
+    monkeypatch.setattr(envs.subprocess, "run", run)
+    monkeypatch.chdir(tmp_path)
+    assert cli.main(["envs", "--build", "sample"]) == 0
+    assert capsys.readouterr().out == f"{javascript / 'node_modules'}\n"
+    assert list_envs(tmp_path) == prune_envs(tmp_path) == ()
+    run.assert_called_once()
 
 
 def test_freeze_parser_keeps_resolved_names_and_versions():

@@ -73,6 +73,9 @@ jobs:
           version: "0.12.21"
           enable-cache: true
           python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
       - run: uv sync --locked --extra dev
       # Replay, grading and transforms keep 100% branch coverage. --cov-fail-under checks the
       # total of every --cov module, so one run measures the package and each module's report

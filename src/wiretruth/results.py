@@ -11,7 +11,13 @@ from typing import NamedTuple, cast
 
 from wiretruth import __version__
 from wiretruth.checks import Status
-from wiretruth.envs import RunError, installed_packages, resolve_interpreter
+from wiretruth.envs import (
+    RunError,
+    find_library,
+    installed_javascript_packages,
+    installed_packages,
+    resolve_interpreter,
+)
 from wiretruth.formats import (
     FormatError,
     JsonObject,
@@ -106,16 +112,20 @@ def collect_results(root: Path, report: RunReport, manifest: ShimManifest) -> Js
         if all((server, repository, run_id))
         else None
     )
-    interpreter = resolve_interpreter(root, manifest)
-    if interpreter is None:
-        raise RunError("--write-results needs a Python shim environment")
+    if manifest.language == "javascript":
+        packages = installed_javascript_packages(find_library(root, manifest.name))
+    else:
+        interpreter = resolve_interpreter(root, manifest)
+        if interpreter is None:
+            raise RunError("--write-results needs a Python shim environment")
+        packages = installed_packages(interpreter)
     return results_document(
         report,
         manifest,
         at=datetime.now(UTC),
         git_sha=git_sha,
         ci_run=ci_run,
-        packages=installed_packages(interpreter),
+        packages=packages,
     )
 
 

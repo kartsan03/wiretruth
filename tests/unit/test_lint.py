@@ -63,6 +63,20 @@ def test_the_repository_passes() -> None:
     assert report.files >= 1
 
 
+@pytest.mark.parametrize("dependencies", [None, {}, {"ai": "7.0.1"}, {"ai": "^7.0.124"}])
+def test_javascript_manifest_packages_must_equal_dependencies(root, dependencies):
+    shim = root / "shims/js/vercel-ai"
+    manifest = _sample("shim-manifest/vercel-ai.json")
+    _write(shim / "wiretruth-shim.json", manifest)
+    _write(shim / "package.json", {"dependencies": manifest["packages"]})
+    assert _lines(root) == []
+    _write(shim / "package.json", {"dependencies": dependencies})
+    assert _lines(root) == [
+        "shims/js/vercel-ai/wiretruth-shim.json: $.packages: "
+        "must equal package.json dependencies exactly"
+    ]
+
+
 def test_a_consistent_suite_passes(root: Path) -> None:
     report = lint(root)
     assert report.problems == []

@@ -14,16 +14,23 @@ wiretruth run --lib litellm --check-against
 wiretruth run --lib pydantic-ai
 wiretruth run --lib pydantic-ai --write-results
 wiretruth run --lib pydantic-ai --check-against
+wiretruth run --lib vercel-ai
 ```
 
 The library shims are [any-llm](python/any-llm/) and [LiteLLM](python/litellm/), each covering OpenAI Chat
 Completions and Responses, native and OpenAI-compatible Ollama, Gemini GenerateContent and Anthropic Messages.
 [pydantic-ai](python/pydantic-ai/) covers the same APIs except native Ollama, which its client does not support.
+[Vercel AI SDK](js/vercel-ai/) covers OpenAI Chat Completions and Responses, OpenAI-compatible Ollama,
+Gemini GenerateContent and Anthropic Messages. Native Ollama requires a community provider and is unsupported.
 Their manifests document the observed surfaces, exact package versions and unsupported features.
 
 The runner reads `wiretruth-shim.json` in the shim directory and starts its `entry` argv there. A Python entry
 starting with `python` uses a cached venv under `.wiretruth/envs/py/<name>-<version>/`, installed with uv from
 the manifest's package pins. The built-in reference and liar shims keep the runner's interpreter.
+JavaScript entries use Node.js from PATH. The runner builds dependencies in the shim directory with
+`npm ci --ignore-scripts --prefix <shim-directory>` and reuses them while the lockfile digest matches its
+marker in `node_modules`. Never use `npx` or `npm exec`. ESM imports resolve the adjacent `node_modules`;
+per-version JavaScript environments are not supported.
 `--lib NAME` selects `shims/*/NAME/`; use either `--lib` or `--shim`.
 
 `--write-results` runs every cell and writes `results/<name>/<version>.json`, including the resolved packages;
@@ -31,9 +38,16 @@ it requires `--lib` and a checkout clean outside `results/`, and refuses runs wi
 `--check-against [FILE]` runs every cell and exits 1 if a grade or requirement status differs, using that
 library version's results file by default; package drift is reported as a note without changing the exit code.
 
-`wiretruth envs` lists current and stale environments. `--prune` removes stale ones; `--build NAME` builds or
-reuses an environment and prints its interpreter path. Build before running without network access. Builds
-are not locked, so don't build the same environment from two commands at once.
+`wiretruth envs` lists current and stale Python environments. `--prune` removes stale Python environments;
+`--build NAME` builds or reuses either language's environment and prints its interpreter or `node_modules` path.
+Build before running without network access. Builds are not locked, so don't build the same environment from two
+commands at once.
+
+Vercel structured output uses `Output.object({ schema: jsonSchema(...) })`. Defaults send native JSON schema
+on OpenAI Chat and Responses, Anthropic and Gemini. The Ollama-compatible provider defaults to JSON-object
+mode; the shim opts into its documented `supportsStructuredOutputs` setting to match the schema fixture.
+On Anthropic, `claude-haiku-4-5` and `claude-sonnet-5-5` both default to native `output_config.format`, so the
+forced-tool fixture is unsupported. Provider options and documentation links are in the manifest.
 
 The shim reads one `wiretruth.call/v1` document from stdin, prints exactly one `wiretruth.observation/v1` document
 to stdout and exits 0, including when its library raises. Unexpected exceptions belong in the observation too.
