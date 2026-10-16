@@ -67,7 +67,8 @@ function usage(value) {
 function observeError(error, outcome = 'raised') {
   obs.outcome = outcome;
   obs.error = classifyError(error, manifest.error_map);
-  if (call.stream && outcome === 'raised') obs.stream.completed = false;
+  // A raise after the finish part (e.g. from result.output) doesn't undo the completion signal.
+  if (call.stream && outcome === 'raised') obs.stream.completed ??= false;
   // https://ai-sdk.dev/docs/reference/ai-sdk-errors/ai-no-object-generated-error
   if (NoObjectGeneratedError.isInstance(error)) {
     finish(error.finishReason, null, 'NoObjectGeneratedError.finishReason');

@@ -142,7 +142,11 @@ export function streamText() {
       });
       await new Promise(() => {});
     }
-  })() };
+  })(),
+  get output() {
+    if (sample.outputError) return Promise.reject(new Error(sample.outputError));
+    return Promise.resolve(null);
+  } };
 }
 """,
         "@ai-sdk/openai": """
@@ -167,9 +171,10 @@ export function createOpenAI() { const model = id => id; model.chat = model; ret
         )
         (path / "index.mjs").write_text(source)
 
-    def run(sample, stream=True):
+    def run(sample, stream=True, output_schema=None):
         call = call_spec_document(find_cells(REPO, "stream.utf8", "gemini")[0].call_spec)
         call["stream"] = stream
+        call["output_schema"] = output_schema
         result = subprocess.run(
             ["node", "shim.mjs"],
             cwd=shim,
@@ -211,6 +216,16 @@ def test_vercel_stream_completion_and_yielded_error_contract(vercel, terminal, c
     assert observation.stream.completed is completed
     assert observation.text.value == "Café 🌕"
     assert (observation.error.category if observation.error else None) == error
+
+
+def test_vercel_output_error_after_finish_keeps_the_stream_complete(vercel):
+    observation = vercel(
+        {"parts": [{"type": "finish", "finishReason": "length"}], "outputError": "JSON tronqué"},
+        output_schema={"type": "object"},
+    )
+    assert observation.outcome == "raised"
+    assert observation.stream.completed is True
+    assert not observation.structured.returned_as_success
 
 
 @pytest.mark.parametrize("documented", [False, True])

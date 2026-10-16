@@ -231,13 +231,13 @@ def test_collect_results_captures_checkout_time_ci_and_packages(
 
 
 @pytest.mark.parametrize(
-    "problem", ["exit", "missing-git", "status-exit", "status-oserror", "javascript"]
+    "problem", ["exit", "missing-git", "status-exit", "status-oserror", "javascript-shim-missing"]
 )
 def test_collect_results_setup_errors(problem, tmp_path, report, manifest, monkeypatch):
     run = MagicMock(return_value=subprocess.CompletedProcess([], 128, "", "not a checkout"))
     if problem == "missing-git":
         run.side_effect = FileNotFoundError("git")
-    elif problem in {"status-exit", "status-oserror", "javascript"}:
+    elif problem in {"status-exit", "status-oserror", "javascript-shim-missing"}:
         status = subprocess.CompletedProcess([], 0, "", "")
         if problem == "status-exit":
             status = subprocess.CompletedProcess([], 128, "", "not a checkout")
@@ -247,7 +247,9 @@ def test_collect_results_setup_errors(problem, tmp_path, report, manifest, monke
             manifest = replace(manifest, language="javascript")
         run.side_effect = [subprocess.CompletedProcess([], 0, SHA, ""), status]
     monkeypatch.setattr(results.subprocess, "run", run)
-    match = "no library shim named" if problem == "javascript" else "needs a git checkout"
+    match = (
+        "no library shim named" if problem == "javascript-shim-missing" else "needs a git checkout"
+    )
     with pytest.raises(RunError, match=match):
         collect_results(tmp_path, report, manifest)
 
