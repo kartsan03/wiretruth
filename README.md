@@ -9,9 +9,10 @@ happened.
 [![PyPI](https://img.shields.io/pypi/v/wiretruth?label=PyPI)](https://pypi.org/project/wiretruth/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
-wiretruth tests any-llm, LiteLLM and pydantic-ai across six APIs: OpenAI Chat Completions and Responses, Ollama's native
-and OpenAI-compatible endpoints, Gemini GenerateContent and Anthropic Messages. That is 24 scenarios and 95 cells
-per library. pydantic-ai supports the OpenAI-compatible Ollama endpoint; its native Ollama cells are UNSUPPORTED.
+wiretruth tests any-llm, LiteLLM, pydantic-ai and the Vercel AI SDK across six APIs: OpenAI Chat Completions and
+Responses, Ollama's native and OpenAI-compatible endpoints, Gemini GenerateContent and Anthropic Messages. That is 24
+scenarios and 95 cells per library. pydantic-ai and the Vercel AI SDK support only the OpenAI-compatible Ollama
+endpoint; their native Ollama cells are UNSUPPORTED.
 The Anthropic responses are transcribed from Anthropic's documentation rather than recorded: each of those fixtures
 is marked `documented` and links the page it comes from. More providers and libraries follow, and a public
 results matrix arrives in v0.4. Until then, the grades are in
@@ -31,11 +32,14 @@ wiretruth has this case recorded as `truncation.structured-output` on `openai-ch
 | any-llm 1.33.0 | Raises `openai.LengthFinishReasonError`. Its `completion` has `finish_reason: "length"` and the token usage. | ✓ PASS |
 | LiteLLM 1.105.1 | Returns the cut-off JSON as text in `message.content` with `finish_reason: "length"` and parses none of it. | ✓ PASS |
 | pydantic-ai 2.56.0 | Retries once, then raises `UnexpectedModelBehavior("Exceeded maximum output retries (1)")`. The `length` finish is only in the messages that `capture_run_messages()` keeps. | ~ LOSSY |
+| Vercel AI SDK 7.0.142 | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
 
 pydantic-ai's grades for structured output use `NativeOutput`, the provider's own JSON mode, because that is how
 the fixtures were recorded. It is opt-in: by default pydantic-ai asks for a forced tool call instead on every API
 here except Anthropic, and no scenario covers that path yet. On `gpt-6-luna` that default request is rejected with the same 400
-that `request.tools-with-reasoning-chat` replays (function tools without `reasoning_effort: "none"`).
+that `request.tools-with-reasoning-chat` replays (function tools without `reasoning_effort: "none"`). The Vercel AI
+SDK sends a JSON schema by default on every API here except OpenAI-compatible Ollama, where it defaults to JSON-object
+mode; its shim opts into the documented `supportsStructuredOutputs` setting there.
 
 wiretruth runs the same recorded edge cases through every library it supports and grades each one against what the
 provider sent.
@@ -221,6 +225,9 @@ The LiteLLM run grades its 95 cells 81 PASS, 13 WRONG and 1 UNSUPPORTED. Every c
 [`results/litellm/1.105.1.json`](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.105.1.json).
 The pydantic-ai run grades its 95 cells 58 PASS, 14 LOSSY, 8 WRONG and 15 UNSUPPORTED (native Ollama), in
 [`results/pydantic-ai/2.56.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.56.0.json).
+The Vercel AI SDK run grades its 95 cells 74 PASS, 5 WRONG and 16 UNSUPPORTED (native Ollama, and the Anthropic
+forced-tool fixture, since current Claude models get native structured output), in
+[`results/vercel-ai/7.0.142.json`](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.142.json).
 
 No API keys are needed. Everything runs against stored responses on `127.0.0.1`. The first run downloads the
 selected library into `.wiretruth/envs/`; later runs work offline. `uv run wiretruth run --shim shims/reference`
@@ -236,8 +243,9 @@ command only, so run it inside a checkout of the matching release tag (for examp
 A shim is a small program. It reads a call spec as JSON on stdin, calls your library the way its docs show, and
 prints what the library reported as JSON on stdout. The
 [any-llm shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/any-llm/shim.py),
-[LiteLLM shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/litellm/shim.py) and
-[pydantic-ai shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/pydantic-ai/shim.py) are examples. The
+[LiteLLM shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/litellm/shim.py),
+[pydantic-ai shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/pydantic-ai/shim.py) and
+[Vercel AI SDK shim](https://github.com/kartsan03/wiretruth/blob/main/shims/js/vercel-ai/shim.mjs) are examples. The
 protocol is in [shims/README.md](https://github.com/kartsan03/wiretruth/blob/main/shims/README.md); to propose a
 library, [open a new-library issue](https://github.com/kartsan03/wiretruth/issues/new?template=new-library.yml).
 
