@@ -38,7 +38,9 @@ from wiretruth.formats import (
     load_document,
     load_fixture,
     load_scenario,
+    load_shim_manifest,
     parse_json,
+    read_json,
 )
 from wiretruth.providers import PROVIDERS
 from wiretruth.secret_scan import scan_headers, scan_text
@@ -278,6 +280,18 @@ def lint(root: Path) -> Report:
             if library[key] != expected:
                 message = f"{library[key]!r} doesn't match the file path: expected {expected!r}"
                 problem(path, f"$.library.{key}", message)
+
+    for path in sorted((root / "shims").glob("*/*/wiretruth-shim.json")):
+        report.files += 1
+        _scan_secrets(path, report)
+        manifest = _load(load_shim_manifest, path, report)
+        if manifest is not None and manifest.language == "javascript":
+            package_path = path.with_name("package.json")
+            report.files += 1
+            _scan_secrets(package_path, report)
+            package = _load(read_json, package_path, report)
+            if not isinstance(package, dict) or package.get("dependencies") != manifest.packages:
+                problem(path, "$.packages", "must equal package.json dependencies exactly")
 
     report.problems = sorted(map(_quiet, report.problems), key=lambda found: found.file)
     return report

@@ -309,6 +309,9 @@ What a library reported. A shim prints exactly one observation to stdout. Every 
 ## Shim manifest — `wiretruth.shim/v1`
 
 `wiretruth-shim.json`, next to the shim. It says how to run the shim and how to read its library.
+For JavaScript, `entry: ["node", "shim.mjs"]` runs in that directory using Node.js from PATH.
+Manifest `packages` must equal the adjacent `package.json` `dependencies` exactly; lint rejects drift.
+The adjacent `package-lock.json` drives `npm ci --ignore-scripts --prefix <shim-directory>`.
 
 | Field | Type | Required | Meaning |
 |---|---|---|---|
@@ -336,7 +339,7 @@ Every graded cell for one library version.
 | `format` | `"wiretruth.results/v1"` | |
 | `suite_version` | string | The wiretruth version that ran the suite |
 | `library` | `{name, version, language}` | |
-| `run` | `{at, git_sha, ci_run, runner, packages}` | When and where the run happened; `ci_run` is a URL or `null`; `packages` maps every package installed in the shim's environment to its version |
+| `run` | `{at, git_sha, ci_run, runner, packages}` | When and where the run happened; `ci_run` is a URL or `null`; `packages` maps installed packages to versions (Python freeze; JavaScript top-level entries in `node_modules/.package-lock.json`, including scoped names) |
 | `cells` | list of [cells](#cell) | |
 
 ### Cell

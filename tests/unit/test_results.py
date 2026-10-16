@@ -247,9 +247,61 @@ def test_collect_results_setup_errors(problem, tmp_path, report, manifest, monke
             manifest = replace(manifest, language="javascript")
         run.side_effect = [subprocess.CompletedProcess([], 0, SHA, ""), status]
     monkeypatch.setattr(results.subprocess, "run", run)
-    match = "Python shim environment" if problem == "javascript" else "needs a git checkout"
+    match = "no library shim named" if problem == "javascript" else "needs a git checkout"
     with pytest.raises(RunError, match=match):
         collect_results(tmp_path, report, manifest)
+
+
+def test_collect_javascript_results_reads_installed_packages(tmp_path, report, monkeypatch):
+    doc = json.loads((REPO / "shims/js/vercel-ai/wiretruth-shim.json").read_text())
+    shim = tmp_path / "shims/js/vercel-ai"
+    modules = shim / "node_modules"
+    modules.mkdir(parents=True)
+    (shim / "wiretruth-shim.json").write_text(json.dumps(doc))
+    (modules / ".package-lock.json").write_text(
+        json.dumps(
+            {
+                "packages": {
+                    "node_modules/ai": {"version": doc["packages"]["ai"]},
+                    "node_modules/zod": {"version": "4.6.7"},
+                }
+            }
+        )
+    )
+    monkeypatch.setattr(results, "_git", lambda *args: SHA if args[1] == "rev-parse" else "")
+    document = collect_results(tmp_path, report, load_shim_manifest(shim / "wiretruth-shim.json"))
+    assert document["library"] == {
+        "name": "vercel-ai",
+        "version": doc["packages"]["ai"],
+        "language": "javascript",
+    }
+    assert document["run"]["packages"] == {"ai": doc["packages"]["ai"], "zod": "4.6.7"}
+
+
+def test_check_against_javascript_reports_package_drift(run_cli, document, tmp_path, capsys):
+    shim = tmp_path / "shims/python/sample"
+    path = shim / "wiretruth-shim.json"
+    manifest = json.loads(path.read_text())
+    manifest["language"] = "javascript"
+    path.write_text(json.dumps(manifest))
+    modules = shim / "node_modules"
+    modules.mkdir()
+    (modules / ".package-lock.json").write_text(
+        json.dumps(
+            {
+                "packages": {
+                    f"node_modules/{name}": {"version": version}
+                    for name, version in document["run"]["packages"].items()
+                }
+                | {"node_modules/zod": {"version": "4.6.7"}}
+            }
+        )
+    )
+    document["library"]["language"] = "javascript"
+    saved = write_results(tmp_path, document)
+    assert cli.main(["run", "--lib", "sample", "--check-against", str(saved)]) == 0
+    assert f"packages differ from {saved}: +zod 4.6.7" in capsys.readouterr().out
+    cli.installed_packages.assert_not_called()
 
 
 @pytest.mark.parametrize("changed", [None, "notes.txt", "results/sample/1.2.3.json"])

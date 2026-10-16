@@ -1,7 +1,9 @@
-"""Cached Python environments for pinned library shims."""
+"""Cached environments for pinned library shims."""
 
+import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -97,6 +99,44 @@ def installed_packages(interpreter: str) -> dict[str, str]:
     if result.returncode:
         raise RunError(f"{' '.join(command)} exited with code {result.returncode}")
     return parse_installed_packages(result.stdout)
+
+
+def build_javascript_env(shim_dir: Path) -> Path:
+    path = shim_dir.resolve() / "node_modules"
+    marker = path / MARKER
+    try:
+        digest = hashlib.sha256((shim_dir / "package-lock.json").read_bytes()).hexdigest()
+        if marker.is_file() and marker.read_bytes() == digest.encode():
+            return path
+        marker.unlink(missing_ok=True)
+        command = ["npm", "ci", "--ignore-scripts", "--prefix", str(shim_dir.resolve())]
+        result = subprocess.run(command, stdout=sys.stderr, check=False)
+        if result.returncode:
+            raise RunError(f"{' '.join(command)} exited with code {result.returncode}")
+        path.mkdir(exist_ok=True)
+        marker.write_text(digest)
+    except OSError as error:
+        raise RunError(f"JavaScript environment: {error}") from error
+    return path
+
+
+def installed_javascript_packages(shim_dir: Path) -> dict[str, str]:
+    path = shim_dir / "node_modules" / ".package-lock.json"
+    try:
+        packages = json.loads(path.read_text())["packages"]
+        if not isinstance(packages, dict):
+            raise ValueError("expected a packages object")
+        installed = {}
+        for name, entry in packages.items():
+            match = re.fullmatch(r"node_modules/((?:@[^/]+/)?[^/]+)", name)
+            if match is not None:
+                version = entry["version"]
+                if not isinstance(version, str) or not version:
+                    raise ValueError("expected a package version")
+                installed[match[1]] = version
+        return installed
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        raise RunError(f"{path}: cannot read installed packages: {error}") from error
 
 
 def list_envs(root: Path) -> tuple[tuple[Path, bool], ...]:
