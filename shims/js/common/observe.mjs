@@ -26,7 +26,8 @@ export function classifyError(error, errorMap) {
     (item.message_regex == null || new RegExp(item.message_regex).test(message)));
   return {
     type: error?.name ?? typeof error,
-    message: message.slice(0, 500),
+    // Code points, not UTF-16 units, so the cut never leaves a lone surrogate.
+    message: Array.from(message).slice(0, 500).join(''),
     category: entry?.category ?? (builtin && relative ? 'internal' : 'other'),
     retry_after: null,
     stack_top: relative ? `${relative[1]}:${relative[2]}` : null,

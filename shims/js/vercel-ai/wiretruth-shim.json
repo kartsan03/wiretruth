@@ -62,6 +62,10 @@
       "category": "api"
     },
     {
+      "type": "AI_StreamProviderError",
+      "category": "api"
+    },
+    {
       "type": "AI_RetryError",
       "category": "api"
     },

@@ -67,7 +67,7 @@ function usage(value) {
 function observeError(error, outcome = 'raised') {
   obs.outcome = outcome;
   obs.error = classifyError(error, manifest.error_map);
-  if (call.stream) obs.stream.completed = false;
+  if (call.stream && outcome === 'raised') obs.stream.completed = false;
   // https://ai-sdk.dev/docs/reference/ai-sdk-errors/ai-no-object-generated-error
   if (NoObjectGeneratedError.isInstance(error)) {
     finish(error.finishReason, null, 'NoObjectGeneratedError.finishReason');
@@ -174,7 +174,10 @@ async function run() {
         // The finish part also closes a stream that already yielded an error or abort part.
         obs.stream.completed ??= true;
       }
-      if (part.type === 'error') observeError(part.error, 'returned');
+      if (part.type === 'error') {
+        observeError(part.error, 'returned');
+        obs.stream.completed = false;
+      }
       if (part.type === 'abort') obs.stream.completed = false;
     }
     if (call.output_schema != null && obs.error == null) {

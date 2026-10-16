@@ -102,6 +102,14 @@ console.log(JSON.stringify({ name: classifyError(error, map),
     assert result["returned"]["category"] == "api"
 
 
+def test_javascript_error_message_cut_keeps_whole_code_points():
+    result = node("""
+const { classifyError } = await import(process.argv[1]);
+console.log(JSON.stringify(classifyError(new Error('x'.repeat(499) + '🌕 Mond'), [])));
+""")
+    assert result["message"] == "x" * 499 + "🌕"
+
+
 @pytest.fixture
 def vercel(tmp_path):
     shim = tmp_path / "vercel-ai"
@@ -234,10 +242,12 @@ def test_vercel_invalid_tool_input_stays_unparsed(vercel):
                     "input": partial,
                     "invalid": True,
                     "error": {"name": "AI_InvalidToolInputError", "message": "incomplete input"},
-                }
+                },
+                {"type": "finish", "finishReason": "length"},
             ]
         }
     )
+    assert observation.stream.completed is True
     (call,) = observation.tool_calls
     assert call.arguments_raw == partial
     assert call.arguments is None and not call.arguments_parsed_ok
