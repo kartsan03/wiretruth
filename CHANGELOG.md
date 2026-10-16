@@ -13,7 +13,8 @@ finding).
 
 ### Added
 - JavaScript shim runtime with lockfile-cached npm builds and installed-package reporting, plus a Vercel AI SDK
-  shim for OpenAI Chat Completions and Responses, OpenAI-compatible Ollama, Gemini and Anthropic.
+  7.0.142 shim for OpenAI Chat Completions and Responses, OpenAI-compatible Ollama, Gemini GenerateContent and
+  Anthropic Messages.
 - pydantic-ai 2.56.0 shim for OpenAI Chat Completions and Responses, OpenAI-compatible Ollama,
   Gemini GenerateContent and Anthropic Messages.
 - LiteLLM 1.105.1 shim for OpenAI Chat Completions and Responses, native and OpenAI-compatible Ollama,
@@ -42,6 +43,13 @@ finding).
   ([BerriAI/litellm#33678](https://github.com/BerriAI/litellm/issues/33678),
   [BerriAI/litellm#46543](https://github.com/BerriAI/litellm/issues/46543)). UNSUPPORTED on
   `truncation.structured-output-forced-tool`: LiteLLM's structured output uses native JSON output there.
+- Vercel AI SDK 7.0.142, the first JavaScript library: 74 PASS, 5 WRONG and 16 UNSUPPORTED of 95 cells
+  ([results/vercel-ai/7.0.142.json](results/vercel-ai/7.0.142.json)). WRONG on `stream.missing-finish` over
+  `openai-chat`, `openai-responses`, `anthropic` and `gemini`: a stream that ends before the provider's final event
+  finishes as `other` with no error, which the OpenAI-compatible provider already reports as an error
+  ([vercel/ai#23449](https://github.com/vercel/ai/issues/23449)). WRONG on `stream.error-midstream` over `gemini`: an error object in the stream is dropped
+  and the stream finishes as `other` ([vercel/ai#23450](https://github.com/vercel/ai/issues/23450)). UNSUPPORTED on native `ollama` (no first-party
+  provider) and on `truncation.structured-output-forced-tool` (current Claude models get native structured output).
 
 ## [0.2.0] - 2026-10-13
 

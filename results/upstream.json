@@ -174,5 +174,27 @@
     "fixed_in": null,
     "opened": "2026-10-15",
     "notes": "A stream that ends cleanly before the provider's terminal event finishes with ModelResponse.state 'complete' and finish_reason None, although the docs define 'incomplete' as a streamed response stopped before completion. Responses marks the response incomplete, but _ContinuationStreamedResponse.get() replaces it with complete once iteration ends; the Anthropic and Google adapters never set incomplete. The Chat Completions case is #6610 (documented-behavior)."
+  },
+  {
+    "library": "vercel-ai",
+    "scenarios": ["stream.missing-finish"],
+    "providers": ["openai-chat", "openai-responses", "anthropic", "gemini"],
+    "issue": "https://github.com/vercel/ai/issues/23449",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-16",
+    "notes": "A stream that ends cleanly before the provider's terminal event yields a normal finish part with finishReason 'other' and no error: the @ai-sdk/openai (Chat and Responses), @ai-sdk/anthropic and @ai-sdk/google adapters start from 'other' and emit it from flush(). vercel/ai#19165 fixed the same case in @ai-sdk/openai-compatible (an InvalidResponseDataError, then finish 'error'), so ollama-openai passes."
+  },
+  {
+    "library": "vercel-ai",
+    "scenarios": ["stream.error-midstream"],
+    "providers": ["gemini"],
+    "issue": "https://github.com/vercel/ai/issues/23450",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-16",
+    "notes": "@ai-sdk/google's stream chunk schema has no error field, so an {\"error\": ...} SSE event after some content parses as an empty chunk: no error part, and the stream finishes with 'other'. Google's python-genai raises on such a chunk."
   }
 ]
