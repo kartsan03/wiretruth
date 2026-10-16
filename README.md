@@ -82,7 +82,11 @@ git clone https://github.com/kartsan03/wiretruth && cd wiretruth
 uv run wiretruth run --lib any-llm
 uv run wiretruth run --lib litellm
 uv run wiretruth run --lib pydantic-ai
+uv run wiretruth run --lib vercel-ai
 ```
+
+The Vercel AI SDK shim also needs Node.js and npm. The runner builds its pinned dependencies automatically;
+see [Shims](shims/README.md) for supported providers and structured-output modes.
 
 The any-llm run reports:
 

@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shim: [any-llm, litellm, pydantic-ai]
+        shim: [any-llm, litellm, pydantic-ai, vercel-ai]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -34,6 +34,11 @@ jobs:
           version: "0.12.21"
           enable-cache: true
       - run: uv sync --locked
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: shims/js/*/package-lock.json
       - run: uv run wiretruth envs --build "${{ matrix.shim }}"
       # The install above needs the network; the run doesn't. Replay needs only loopback, and blocking
       # other networking prevents live provider requests. The runner, replay server and shim share this

@@ -12,6 +12,8 @@ finding).
 ## [Unreleased]
 
 ### Added
+- JavaScript shim runtime with lockfile-cached npm builds and installed-package reporting, plus a Vercel AI SDK
+  shim for OpenAI Chat Completions and Responses, OpenAI-compatible Ollama, Gemini and Anthropic.
 - pydantic-ai 2.56.0 shim for OpenAI Chat Completions and Responses, OpenAI-compatible Ollama,
   Gemini GenerateContent and Anthropic Messages.
 - LiteLLM 1.105.1 shim for OpenAI Chat Completions and Responses, native and OpenAI-compatible Ollama,
