@@ -172,13 +172,13 @@ tools.parallel-calls gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="75d4a13a-ba37-4a5d-a78d-0832884d56d6", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="79019919-af1d-4147-b6ac-8b8a3f970e1c", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="ac8e254a-9594-4406-8ae8-9c7031066041", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="9df84338-fa9e-4d94-af2f-df4a6baf2a87", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
 
 tools.parallel-calls-stream gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls-stream ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="bbd678ea-bdc9-4c8a-b753-e9a8b48b9c27", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="e8d9d217-772b-44e6-896c-594dbab4e33c", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="bdfc2ec0-f3ce-4b14-82ec-e8afb4ddbc52", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="9e8d5689-1f84-406a-a583-a4728a7baa65", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
 
 truncation.structured-output gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
@@ -204,6 +204,7 @@ usage.stream-final-chunk gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 any-llm 1.38.0: 95 cells, 82 PASS, 6 LOSSY, 6 WRONG, 1 UNSUPPORTED
+stderr: .wiretruth/runs/20261020T181725.745027Z
 ```
 
 The LiteLLM run grades its 95 cells 81 PASS, 13 WRONG and 1 UNSUPPORTED. Every cell, with its evidence, is in
