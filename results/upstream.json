@@ -191,10 +191,10 @@
     "scenarios": ["stream.error-midstream"],
     "providers": ["gemini"],
     "issue": "https://github.com/vercel/ai/issues/23450",
-    "pr": null,
-    "status": "reported",
-    "fixed_in": null,
+    "pr": "https://github.com/vercel/ai/pull/23459",
+    "status": "released",
+    "fixed_in": "@ai-sdk/google 4.0.99",
     "opened": "2026-10-16",
-    "notes": "@ai-sdk/google's stream chunk schema has no error field, so an {\"error\": ...} SSE event after some content parses as an empty chunk: no error part, and the stream finishes with 'other'. Google's python-genai raises on such a chunk."
+    "notes": "@ai-sdk/google's stream chunk schema has no error field, so an {\"error\": ...} SSE event after some content parses as an empty chunk: no error part, and the stream finishes with 'other'. Google's python-genai raises on such a chunk. Fixed by #23459 in @ai-sdk/google 4.0.99; the derived Gemini fixture passes on ai 7.0.146 (no live in-stream Gemini error has been observed)."
   }
 ]
