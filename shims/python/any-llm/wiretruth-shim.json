@@ -2,7 +2,7 @@
   "format": "wiretruth.shim/v1",
   "name": "any-llm",
   "language": "python",
-  "packages": {"any-llm-sdk": "1.33.0", "openai": "3.28.0", "ollama": "0.6.3", "google-genai": "2.26.0", "anthropic": "0.125.0"},
+  "packages": {"any-llm-sdk": "1.38.0", "openai": "3.28.0", "ollama": "0.6.3", "google-genai": "2.26.0", "anthropic": "0.125.0"},
   "primary_package": "any-llm-sdk",
   "entry": ["python", "shim.py"],
   "providers": {
