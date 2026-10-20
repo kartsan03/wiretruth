@@ -29,7 +29,7 @@ wiretruth has this case recorded as `truncation.structured-output` on `openai-ch
 
 | Library | What the caller gets | Grade |
 |---|---|---|
-| any-llm 1.33.0 | Raises `openai.LengthFinishReasonError`. Its `completion` has `finish_reason: "length"` and the token usage. | ✓ PASS |
+| any-llm 1.38.0 | Raises `openai.LengthFinishReasonError`. Its `completion` has `finish_reason: "length"` and the token usage. | ✓ PASS |
 | LiteLLM 1.105.1 | Returns the cut-off JSON as text in `message.content` with `finish_reason: "length"` and parses none of it. | ✓ PASS |
 | pydantic-ai 2.56.0 | Retries once, then raises `UnexpectedModelBehavior("Exceeded maximum output retries (1)")`. The `length` finish is only in the messages that `capture_run_messages()` keeps. | ~ LOSSY |
 | Vercel AI SDK 7.0.142 | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
@@ -92,12 +92,12 @@ uv run wiretruth run --lib vercel-ai
 The Vercel AI SDK shim also needs Node.js and npm. The runner builds its pinned dependencies automatically;
 see [Shims](shims/README.md) for supported providers and structured-output modes.
 
-The any-llm run reports:
+The any-llm run reports (see [`results/any-llm/1.38.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.38.0.json)):
 
 ```text
 scenario                                  anthropic      gemini   ollama   ollama-openai  openai-chat  openai-responses
 finish.stop-sequence                      ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS
-finish.unknown-value                      ✗ WRONG        ✗ WRONG  ✗ WRONG  ✗ WRONG        ✗ WRONG      ✓ PASS
+finish.unknown-value                      ✗ WRONG        ✗ WRONG  ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
 request.max-tokens-field                                                                  ✓ PASS
 request.max-tokens-ollama-openai                                           ✗ WRONG
 request.no-injected-options                                       ✓ PASS
@@ -107,8 +107,8 @@ stream.missing-finish                     ~ LOSSY        ~ LOSSY  ~ LOSSY  ~ LOS
 stream.missing-finish-abort               ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
 stream.utf8                               ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
 stream.utf8-split                         ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-tools.parallel-calls                      ✓ PASS         ✗ WRONG  ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
-tools.parallel-calls-stream               ✓ PASS         ✗ WRONG  ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
+tools.parallel-calls                      ✓ PASS         ✓ PASS   ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
+tools.parallel-calls-stream               ✓ PASS         ✓ PASS   ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
 truncation.reasoning-only                 ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
 truncation.structured-output              ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ~ LOSSY
 truncation.structured-output-forced-tool  – UNSUPPORTED
@@ -136,18 +136,6 @@ finish.unknown-value gemini
 finish.unknown-value ollama
   MUST finish-is-other: CONTRADICTED: finish.value="stop" (primary: choices[0].finish_reason); truth.finish="other"; required finish="other"
   SHOULD raw-finish-reported: CONTRADICTED: finish.raw="stop"; truth.raw_finish="wiretruth_unknown_reason"
-
-finish.unknown-value ollama-openai
-  MUST response-returned: CONTRADICTED: outcome=raised; error.category="validation"; truth.error=null
-  MUST finish-is-other: NOT_OBSERVABLE: finish.value=null (absent); truth.finish="other"; required finish="other"
-  MUST text-reported: NOT_OBSERVABLE: text.value=null (absent); truth.text="Octopuses, like many marine invertebrates, employ sophisticated methods to camouflage"
-  SHOULD raw-finish-reported: NOT_OBSERVABLE: finish.raw=null; truth.raw_finish="wiretruth_unknown_reason"
-
-finish.unknown-value openai-chat
-  MUST response-returned: CONTRADICTED: outcome=raised; error.category="validation"; truth.error=null
-  MUST finish-is-other: NOT_OBSERVABLE: finish.value=null (absent); truth.finish="other"; required finish="other"
-  MUST text-reported: NOT_OBSERVABLE: text.value=null (absent); truth.text="Io, Europa, and Ganymede."
-  SHOULD raw-finish-reported: NOT_OBSERVABLE: finish.raw=null; truth.raw_finish="wiretruth_unknown_reason"
 
 request.max-tokens-ollama-openai ollama-openai
   MUST limit-field: CONTRADICTED: request[0].json_body.max_tokens=absent; required=16
@@ -181,18 +169,16 @@ stream.utf8-split gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls gemini
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="call_-5201471136765337120_0", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_120847", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="call_-5201471136765337120_1", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_120848", name="get_weather", args={"city": "Zürich"}, parsed=true
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="3972c760-858b-4728-a05a-279fc6e6a649", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="4d3747a6-5e75-4637-b82e-f269adbba01e", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="ac8e254a-9594-4406-8ae8-9c7031066041", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="9df84338-fa9e-4d94-af2f-df4a6baf2a87", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
 
 tools.parallel-calls-stream gemini
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="call_-1615951408272134819_0", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_89893", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="call_-1615951408272134819_1", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_89896", name="get_weather", args={"city": "Zürich"}, parsed=true
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls-stream ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="8b75c529-6eb6-4a63-a375-4551bfe56f39", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="8e864d64-6145-4ca4-81ba-cbdbad0523e1", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="bdfc2ec0-f3ce-4b14-82ec-e8afb4ddbc52", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="9e8d5689-1f84-406a-a583-a4728a7baa65", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
 
 truncation.structured-output gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
@@ -203,7 +189,7 @@ truncation.structured-output openai-responses
   SHOULD usage-reported: NOT_OBSERVABLE: usage.input=null (absent); truth.usage.input=68; usage.output=null (absent); truth.usage.output=24
 
 truncation.structured-output-forced-tool anthropic
-  any-llm completion maps typed response_format to native output_config.format and has no structured parser for an explicitly forced tool. (https://github.com/mozilla-ai/any-llm/blob/1.33.0/src/any_llm/providers/anthropic/utils.py#L628-L655)
+  any-llm completion maps typed response_format to native output_config.format and has no structured parser for an explicitly forced tool. (https://github.com/mozilla-ai/any-llm/blob/1.38.0/src/any_llm/providers/anthropic/utils.py#L631-L666)
 
 truncation.text gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
@@ -217,8 +203,8 @@ truncation.text-stream-usage gemini
 usage.stream-final-chunk gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
-any-llm 1.33.0: 95 cells, 78 PASS, 6 LOSSY, 10 WRONG, 1 UNSUPPORTED
-stderr: .wiretruth/runs/20261013T134918.993664Z
+any-llm 1.38.0: 95 cells, 82 PASS, 6 LOSSY, 6 WRONG, 1 UNSUPPORTED
+stderr: .wiretruth/runs/20261020T181725.745027Z
 ```
 
 The LiteLLM run grades its 95 cells 81 PASS, 13 WRONG and 1 UNSUPPORTED. Every cell, with its evidence, is in
@@ -269,7 +255,8 @@ library, [open a new-library issue](https://github.com/kartsan03/wiretruth/issue
 ## Author note
 
 I've contributed fixes to libraries that wiretruth tests or will test:
-[mozilla-ai/any-llm#1389](https://github.com/mozilla-ai/any-llm/pull/1389) and
+[mozilla-ai/any-llm#1389](https://github.com/mozilla-ai/any-llm/pull/1389),
+[mozilla-ai/any-llm#1433](https://github.com/mozilla-ai/any-llm/pull/1433) and
 [TanStack/ai#1548](https://github.com/TanStack/ai/pull/1548). Grades are computed by the code in this repository.
 If you think a grade is wrong, please
 [open a grade dispute](https://github.com/kartsan03/wiretruth/issues/new?template=grade-dispute.yml).

@@ -4,11 +4,11 @@
     "scenarios": ["finish.unknown-value"],
     "providers": ["openai-chat", "ollama-openai"],
     "issue": "https://github.com/mozilla-ai/any-llm/issues/1471",
-    "pr": null,
-    "status": "reported",
-    "fixed_in": null,
+    "pr": "https://github.com/mozilla-ai/any-llm/pull/1504",
+    "status": "released",
+    "fixed_in": "1.38.0",
     "opened": "2026-10-12",
-    "notes": "A finish_reason outside OpenAI's five values raises a pydantic ValidationError (ChatCompletion.model_validate), so the response is lost. Also reproduced on 1.33.3. The same error reaches provider='openai' pointed at Ollama's OpenAI-compatible endpoint (ollama-openai)."
+    "notes": "A finish_reason outside OpenAI's five values raises a pydantic ValidationError (ChatCompletion.model_validate), so the response is lost. Also reproduced on 1.33.3. The same error reaches provider='openai' pointed at Ollama's OpenAI-compatible endpoint (ollama-openai). Fixed by a third-party PR (#1504); both cells PASS on 1.38.0."
   },
   {
     "library": "any-llm",
@@ -59,11 +59,11 @@
     "scenarios": ["tools.parallel-calls", "tools.parallel-calls-stream"],
     "providers": ["gemini"],
     "issue": "https://github.com/mozilla-ai/any-llm/issues/1472",
-    "pr": null,
-    "status": "reported",
-    "fixed_in": null,
+    "pr": "https://github.com/mozilla-ai/any-llm/pull/1514",
+    "status": "released",
+    "fixed_in": "1.38.0",
     "opened": "2026-10-13",
-    "notes": "any-llm's Gemini provider builds call_{hash(function_call.name)}_{n} ids (providers/gemini/utils.py, non-stream and stream converters) and never reads FunctionCall.id, which google-genai exposes and Gemini sends. The ids also differ between processes because str hash() is salted. Reproduced on 1.33.0 and on main at 18ed82b."
+    "notes": "any-llm's Gemini provider builds call_{hash(function_call.name)}_{n} ids (providers/gemini/utils.py, non-stream and stream converters) and never reads FunctionCall.id, which google-genai exposes and Gemini sends. The ids also differ between processes because str hash() is salted. Reproduced on 1.33.0 and on main at 18ed82b. PR #1514 fixed the ids in 1.38.0 without linking this issue, which is still open upstream."
   },
   {
     "library": "any-llm",
