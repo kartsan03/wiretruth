@@ -3,11 +3,11 @@
   "name": "vercel-ai",
   "language": "javascript",
   "packages": {
-    "@ai-sdk/anthropic": "4.0.81",
-    "@ai-sdk/google": "4.0.98",
-    "@ai-sdk/openai": "4.0.95",
-    "@ai-sdk/openai-compatible": "3.0.70",
-    "ai": "7.0.142"
+    "@ai-sdk/anthropic": "4.0.84",
+    "@ai-sdk/google": "4.0.101",
+    "@ai-sdk/openai": "4.0.98",
+    "@ai-sdk/openai-compatible": "3.0.74",
+    "ai": "7.0.146"
   },
   "primary_package": "ai",
   "entry": [

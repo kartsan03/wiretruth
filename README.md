@@ -32,7 +32,7 @@ wiretruth has this case recorded as `truncation.structured-output` on `openai-ch
 | any-llm 1.38.0 | Raises `openai.LengthFinishReasonError`. Its `completion` has `finish_reason: "length"` and the token usage. | ✓ PASS |
 | LiteLLM 1.105.1 | Returns the cut-off JSON as text in `message.content` with `finish_reason: "length"` and parses none of it. | ✓ PASS |
 | pydantic-ai 2.56.0 | Retries once, then raises `UnexpectedModelBehavior("Exceeded maximum output retries (1)")`. The `length` finish is only in the messages that `capture_run_messages()` keeps. | ~ LOSSY |
-| Vercel AI SDK 7.0.142 | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
+| Vercel AI SDK 7.0.146 | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
 
 pydantic-ai's grades for structured output use `NativeOutput`, the provider's own JSON mode, because that is how
 the fixtures were recorded. It is opt-in: by default pydantic-ai asks for a forced tool call instead on every API
@@ -211,9 +211,9 @@ The LiteLLM run grades its 95 cells 81 PASS, 13 WRONG and 1 UNSUPPORTED. Every c
 [`results/litellm/1.105.1.json`](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.105.1.json).
 The pydantic-ai run grades its 95 cells 58 PASS, 14 LOSSY, 8 WRONG and 15 UNSUPPORTED (native Ollama), in
 [`results/pydantic-ai/2.56.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.56.0.json).
-The Vercel AI SDK run grades its 95 cells 74 PASS, 5 WRONG and 16 UNSUPPORTED (native Ollama, and the Anthropic
+The Vercel AI SDK run grades its 95 cells 75 PASS, 4 WRONG and 16 UNSUPPORTED (native Ollama, and the Anthropic
 forced-tool fixture, since current Claude models get native structured output), in
-[`results/vercel-ai/7.0.142.json`](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.142.json).
+[`results/vercel-ai/7.0.146.json`](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.146.json).
 
 No API keys are needed. Everything runs against stored responses on `127.0.0.1`. The first run downloads the
 selected library into `.wiretruth/envs/`; later runs work offline. `uv run wiretruth run --shim shims/reference`
