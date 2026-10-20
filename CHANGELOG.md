@@ -21,6 +21,7 @@ finding).
   Gemini GenerateContent and Anthropic Messages.
 
 ### Changed
+- The any-llm shim pins any-llm-sdk 1.38.0.
 - Development version is now `0.3.0.dev0`.
 
 ### Fixed
@@ -31,6 +32,12 @@ finding).
   lookup stays in the request log and counts toward request limits.
 
 ### Results
+- any-llm 1.38.0: 82 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 95 cells
+  ([results/any-llm/1.38.0.json](results/any-llm/1.38.0.json)). `finish.unknown-value` over `openai-chat` and
+  `ollama-openai` moves WRONG → PASS: unfamiliar finish strings survive validation
+  ([mozilla-ai/any-llm#1504](https://github.com/mozilla-ai/any-llm/pull/1504)). `tools.parallel-calls` and
+  `tools.parallel-calls-stream` over `gemini` move WRONG → PASS: wire tool-call ids are preserved
+  ([mozilla-ai/any-llm#1514](https://github.com/mozilla-ai/any-llm/pull/1514)).
 - LiteLLM 1.105.1, the second library: 81 PASS, 13 WRONG and 1 UNSUPPORTED of 95 cells
   ([results/litellm/1.105.1.json](results/litellm/1.105.1.json)). All 14 `openai-responses` cells pass. WRONG on
   `finish.unknown-value` over the five Chat-style APIs: an unfamiliar finish value is reported as `stop`, a fallback
