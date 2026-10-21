@@ -63,6 +63,14 @@ finding).
   [7.0.142 results](results/vercel-ai/7.0.142.json) retain the earlier grade. UNSUPPORTED on native `ollama`
   (no first-party provider) and on `truncation.structured-output-forced-tool` (current Claude models get native
   structured output).
+- TanStack AI 0.71.0, the second JavaScript library: 47 PASS, 2 LOSSY, 3 WRONG and 43 UNSUPPORTED of 95 cells
+  ([results/tanstack-ai/0.71.0.json](results/tanstack-ai/0.71.0.json)). WRONG on `stream.error-midstream` over
+  `gemini`: `@google/genai` drops an error sent as a stream event, so the partial answer ends like a complete one.
+  WRONG on `truncation.text-stream` over `ollama`: a stream cut off by `done_reason: "length"` finishes as `stop`.
+  WRONG on `truncation.tool-call-args-stream` over `openai-chat`: a tool call cut off by the token limit finishes
+  as `tool_calls`, and the agent loop sends the request again. LOSSY on `stream.missing-finish` over `anthropic`
+  and `gemini`: a stream that ends early gives no completion signal. UNSUPPORTED on every non-streamed fixture,
+  because `chat()` always requests a streamed response, and on `truncation.structured-output-forced-tool`.
 
 ## [0.2.0] - 2026-10-13
 

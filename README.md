@@ -215,6 +215,9 @@ The pydantic-ai run grades its 95 cells 58 PASS, 14 LOSSY, 8 WRONG and 15 UNSUPP
 The Vercel AI SDK run grades its 95 cells 75 PASS, 4 WRONG and 16 UNSUPPORTED (native Ollama, and the Anthropic
 forced-tool fixture, since current Claude models get native structured output), in
 [`results/vercel-ai/7.0.146.json`](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.146.json).
+The TanStack AI run grades its 95 cells 47 PASS, 2 LOSSY, 3 WRONG and 43 UNSUPPORTED, in
+[`results/tanstack-ai/0.71.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/tanstack-ai/0.71.0.json).
+Its `chat()` always requests a streamed response, so the non-streamed fixtures don't apply to it.
 
 No API keys are needed. Everything runs against stored responses on `127.0.0.1`. The first run downloads the
 selected library into `.wiretruth/envs/`; later runs work offline. `uv run wiretruth run --shim shims/reference`
