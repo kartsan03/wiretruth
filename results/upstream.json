@@ -196,5 +196,38 @@
     "fixed_in": "@ai-sdk/google 4.0.99",
     "opened": "2026-10-16",
     "notes": "@ai-sdk/google's stream chunk schema has no error field, so an {\"error\": ...} SSE event after some content parses as an empty chunk: no error part, and the stream finishes with 'other'. Google's python-genai raises on such a chunk. Fixed by #23459 in @ai-sdk/google 4.0.99; the derived Gemini fixture passes on ai 7.0.146 (no live in-stream Gemini error has been observed)."
+  },
+  {
+    "library": "tanstack-ai",
+    "scenarios": ["stream.error-midstream"],
+    "providers": ["gemini"],
+    "issue": "https://github.com/googleapis/js-genai/issues/2087",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-21",
+    "notes": "The cause is in @google/genai, which @tanstack/ai-gemini streams through: processStreamResponse checks for an error object with JSON.parse on the raw network read, before the SSE data: prefix is removed, so an error event never matches; generateContentResponseFromMldev then drops the error field. chat() yields the partial text and ends with no RUN_ERROR or RUN_FINISHED. A bare JSON error body does throw ApiError."
+  },
+  {
+    "library": "tanstack-ai",
+    "scenarios": ["truncation.text-stream"],
+    "providers": ["ollama"],
+    "issue": "https://github.com/TanStack/ai/issues/1852",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-21",
+    "notes": "@tanstack/ai-ollama sets the streamed RUN_FINISHED finishReason from whether tool calls were emitted (packages/ai-ollama/src/adapters/text.ts) and never reads done_reason, so done_reason \"length\" finishes as stop. structuredOutput() already checks done_reason (TanStack/ai#1548)."
+  },
+  {
+    "library": "tanstack-ai",
+    "scenarios": ["truncation.tool-call-args-stream"],
+    "providers": ["openai-chat"],
+    "issue": "https://github.com/TanStack/ai/issues/1853",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-10-21",
+    "notes": "@tanstack/openai-base Chat Completions picks tool_calls over a pending finish_reason \"length\" once TOOL_CALL_END was emitted for the unfinished arguments. The core then treats the arguments as a parse failure and the agent loop sends the conversation back to the model: 5 requests in the fixture replay."
   }
 ]
