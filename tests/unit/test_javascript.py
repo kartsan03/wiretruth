@@ -199,6 +199,68 @@ export function createOpenAI() { const model = id => id; model.chat = model; ret
 YIELDED_ERROR = {"type": "error", "error": {"name": "AI_APICallError", "message": "busy"}}
 
 
+def test_tanstack_finish_after_run_error_stays_incomplete(tmp_path):
+    shim = tmp_path / "tanstack-ai"
+    shutil.copytree(REPO / "shims/js/common", tmp_path / "common")
+    shim.mkdir()
+    for name in ("shim.mjs", "wiretruth-shim.json"):
+        shutil.copy(REPO / "shims/js/tanstack-ai" / name, shim)
+    modules = {
+        "@tanstack/ai": """
+export const toolDefinition = value => value;
+export async function* chat() {
+  yield { type: 'TEXT_MESSAGE_CONTENT', delta: 'Café 🌕' };
+  yield { type: 'RUN_ERROR', code: 'max_tokens', message: 'Token limit reached' };
+  yield { type: 'RUN_FINISHED', metadata: { tanstack: { finishReason: 'stop' } } };
+}
+""",
+        "@tanstack/ai-openai": """
+export const createOpenaiChat = value => value;
+export const createOpenaiChatCompletions = value => value;
+export const openaiCompatible = () => value => value;
+""",
+        "@tanstack/ai-anthropic": "export const createAnthropicChat = value => value;",
+        "@tanstack/ai-gemini": "export const createGeminiChat = value => value;",
+        "@tanstack/ai-ollama": "export const createOllamaChat = value => value;",
+    }
+    for name, source in modules.items():
+        path = shim / "node_modules" / name
+        path.mkdir(parents=True)
+        (path / "package.json").write_text(
+            json.dumps(
+                {
+                    "name": name,
+                    "version": "1.0.0",
+                    "type": "module",
+                    "exports": {".": "./index.mjs", "./compatible": "./index.mjs"},
+                }
+            )
+        )
+        (path / "index.mjs").write_text(source)
+    call = call_spec_document(find_cells(REPO, "stream.utf8", "gemini")[0].call_spec)
+    result = subprocess.run(
+        ["node", "shim.mjs"],
+        cwd=shim,
+        env={
+            "PATH": os.environ["PATH"],
+            "WIRETRUTH_PROVIDER": "gemini",
+            "WIRETRUTH_BASE_URL_GEMINI": "http://127.0.0.1:1",
+        },
+        input=json.dumps(call),
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=True,
+    )
+    assert result.stderr == ""
+    observation = observation_from_document(json.loads(result.stdout))
+    assert observation.outcome == "returned"
+    assert observation.error.category == "truncation"
+    assert observation.stream.completed is False
+    assert observation.text.value == "Café 🌕"
+    assert observation.finish.value == "stop"
+
+
 @pytest.mark.parametrize(
     "terminal,completed,error",
     [

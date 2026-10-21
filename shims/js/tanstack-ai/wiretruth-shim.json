@@ -1,0 +1,282 @@
+{
+  "format": "wiretruth.shim/v1",
+  "name": "tanstack-ai",
+  "language": "javascript",
+  "packages": {
+    "@tanstack/ai": "0.71.0",
+    "@tanstack/ai-anthropic": "0.23.0",
+    "@tanstack/ai-gemini": "0.38.2",
+    "@tanstack/ai-ollama": "0.12.2",
+    "@tanstack/ai-openai": "0.31.0"
+  },
+  "primary_package": "@tanstack/ai",
+  "entry": [
+    "node",
+    "shim.mjs"
+  ],
+  "providers": {
+    "openai-chat": "createOpenaiChatCompletions(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_OPENAI_CHAT }); POST /v1/chat/completions. https://tanstack.com/ai/latest/docs/adapters/openai#chat-completions-api",
+    "openai-responses": "createOpenaiChat(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_OPENAI_RESPONSES }); POST /v1/responses (the default OpenAI text adapter). https://tanstack.com/ai/latest/docs/adapters/openai#createopenaichat-model-apikey-config",
+    "anthropic": "createAnthropicChat(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_ANTHROPIC }); SDK appends /v1/messages.",
+    "gemini": "createGeminiChat(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_GEMINI }); SDK appends /v1beta/models/<model>:streamGenerateContent or :generateContent.",
+    "ollama": "createOllamaChat(model, { host: WIRETRUTH_BASE_URL_OLLAMA }); POST /api/chat.",
+    "ollama-openai": "openaiCompatible({ name: 'ollama', baseURL: WIRETRUTH_BASE_URL_OLLAMA_OPENAI, apiKey, models: [model] })(model); Chat Completions is the documented default for Ollama /v1. https://tanstack.com/ai/latest/docs/adapters/openai-compatible"
+  },
+  "surfaces": {
+    "finish": {
+      "primary": "RUN_FINISHED.metadata.tanstack.finishReason is the documented normalized finish field (despite its metadata location). Unknown strings map to other. The provider's own finish string isn't exposed, so finish.raw stays null; nothing is reconstructed from error codes or provider payloads."
+    },
+    "text": {
+      "primary": "TEXT_MESSAGE_CONTENT.delta concatenated, including content before an error."
+    },
+    "usage": {
+      "primary": "RUN_FINISHED/RUN_ERROR.usage: promptTokens, completionTokens, totalTokens, promptTokensDetails.cachedTokens, completionTokensDetails.reasoningTokens. In-process chat() restores TanStack TokenUsage after AG-UI normalization. No absent counts are synthesized."
+    },
+    "tool_calls": {
+      "primary": "TOOL_CALL_START.toolCallId/toolCallName, TOOL_CALL_ARGS.toolCallId/delta, TOOL_CALL_END.toolCallId/metadata.tanstack.args. Final public argument strings are strictly JSON-decoded for comparison, without repair; unfinished calls retain unparsed deltas. Only toolDefinition metadata is supplied, with no server/execute implementation. TOOL_CALL_RESULT.metadata.tanstack.state=output-error exposes an error as data; content is retained as its message without parsing or repair. Tool failures do not override the run completion signal."
+    },
+    "structured": {
+      "primary": "chat({ outputSchema }) returns the parsed value or throws. Plain JSON Schema is accepted; no Standard Schema runtime validator is added. No error-side rawText is promoted to primary."
+    },
+    "stream": {
+      "primary": "part.type selects AG-UI events; RUN_FINISHED sets completed=true only if no RUN_ERROR preceded it. RUN_ERROR.message/code becomes a returned error (code used as the error type, or RUN_ERROR when absent). EOF alone leaves completion null; thrown errors set false. Error name/message/stack and prototype constructor names feed classifyError; no provider response internals are read."
+    }
+  },
+  "finish_map": {
+    "stop": "stop",
+    "length": "length",
+    "tool_calls": "tool_calls",
+    "content_filter": "content_filter",
+    "refusal": "refusal",
+    "error": "error",
+    "other": "other",
+    "none": "none"
+  },
+  "error_map": [
+    {
+      "type": "Error",
+      "category": "truncation",
+      "message_regex": "maximum token limit was reached|response was incomplete.*max_output_tokens",
+      "source": "https://github.com/TanStack/ai/blob/main/packages/ai-ollama/src/adapters/text.ts"
+    },
+    {
+      "type": "Error",
+      "category": "validation",
+      "message_regex": "[Vv]alidation failed|[Ss]chema validation",
+      "source": "https://github.com/TanStack/ai/blob/main/packages/ai/src/activities/chat/index.ts"
+    },
+    {
+      "type": "Error",
+      "category": "parse",
+      "message_regex": "[Ff]ailed to parse|[Ii]nvalid JSON|JSON content",
+      "source": "https://github.com/TanStack/ai/blob/main/packages/ai-ollama/src/adapters/text.ts"
+    },
+    {
+      "type": "TOOL_CALL_RESULT",
+      "category": "parse",
+      "message_regex": "Failed to parse tool arguments",
+      "source": "https://github.com/TanStack/ai/blob/main/packages/ai/src/activities/chat/tools/tool-calls.ts"
+    },
+    {
+      "type": "TOOL_CALL_RESULT",
+      "category": "validation",
+      "message_regex": "[Vv]alidation failed",
+      "source": "https://github.com/TanStack/ai/blob/main/packages/ai/src/activities/chat/tools/tool-calls.ts"
+    },
+    {
+      "type": "TOOL_CALL_RESULT",
+      "category": "other"
+    },
+    {
+      "type": "StandardSchemaValidationError",
+      "category": "validation"
+    },
+    {
+      "type": "max_tokens",
+      "category": "truncation"
+    },
+    {
+      "type": "incomplete",
+      "category": "truncation"
+    },
+    {
+      "type": "context_overflow",
+      "category": "context_length"
+    },
+    {
+      "type": "incomplete-stream",
+      "category": "network"
+    },
+    {
+      "type": "aborted",
+      "category": "network"
+    },
+    {
+      "type": "RUN_ERROR",
+      "category": "api"
+    }
+  ],
+  "unsupported": [
+    {
+      "scenario": "finish.stop-sequence",
+      "providers": [
+        "ollama",
+        "ollama-openai",
+        "gemini",
+        "anthropic"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "finish.unknown-value",
+      "providers": [
+        "openai-chat",
+        "openai-responses",
+        "ollama",
+        "ollama-openai",
+        "gemini",
+        "anthropic"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "request.max-tokens-field",
+      "providers": [
+        "openai-chat"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "request.max-tokens-ollama-openai",
+      "providers": [
+        "ollama-openai"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "request.no-injected-options",
+      "providers": [
+        "ollama"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "request.tools-with-reasoning-chat",
+      "providers": [
+        "openai-chat"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "tools.parallel-calls",
+      "providers": [
+        "openai-chat",
+        "openai-responses",
+        "ollama",
+        "ollama-openai",
+        "gemini",
+        "anthropic"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "truncation.reasoning-only",
+      "providers": [
+        "openai-chat",
+        "openai-responses",
+        "ollama",
+        "ollama-openai",
+        "gemini",
+        "anthropic"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "truncation.text",
+      "providers": [
+        "openai-chat",
+        "openai-responses",
+        "ollama",
+        "ollama-openai",
+        "gemini",
+        "anthropic"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "truncation.tool-call-args",
+      "providers": [
+        "openai-chat",
+        "openai-responses",
+        "anthropic"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "providers": [
+        "anthropic"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "providers": [
+        "gemini"
+      ],
+      "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
+    },
+    {
+      "scenario": "truncation.structured-output-forced-tool",
+      "providers": [
+        "anthropic"
+      ],
+      "reason": "Both claude-haiku-4-5 and claude-sonnet-5-5 get native structured output (output_config.format), so no supported path sends the fixture's forced structured_output tool call.",
+      "docs": "https://tanstack.com/ai/latest/docs/adapters/anthropic"
+    },
+    {
+      "scenario": "truncation.structured-output",
+      "providers": [
+        "openai-chat",
+        "openai-responses",
+        "anthropic",
+        "gemini",
+        "ollama-openai"
+      ],
+      "reason": "On these models chat({ outputSchema }) requests a streamed response, even without tools, so it never sends the non-streamed request this fixture replays.",
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#usage-examples"
+    }
+  ],
+  "config_notes": [
+    "All SDK retries and the default agent-loop strategy are retained. Tools have no execute/server implementation, so valid calls wait for external results. Malformed tool JSON can still trigger the default recovery loop. debug=false silences the default error logger, whose console.dir metadata would corrupt the stdout protocol. https://tanstack.com/ai/latest/docs/advanced/debug-logging https://tanstack.com/ai/latest/docs/api/ai",
+    "Only scenario token limits change modelOptions: OpenAI Chat max_tokens; Responses max_output_tokens; compatible max_tokens; Anthropic max_tokens; Gemini maxOutputTokens; native Ollama options.num_predict. Stop sequences aren't mapped: every stop fixture is non-streamed and unsupported. https://tanstack.com/ai/latest/docs/api/ai#chat-options",
+    "System messages become systemPrompts; other messages retain their order and roles. reasoning.effort=none maps to the documented off level; other levels pass through. Null leaves the default alone. Adapters clamp levels to each model catalog; off can become minimal for Gemini 3 models. https://tanstack.com/ai/latest/docs/adapters/gemini#reasoning",
+    "The Chat Completions and compatible adapters always send stream_options.include_usage=true, so the include_usage hint needs no option. Other stream usage defaults are retained. https://tanstack.com/ai/latest/docs/adapters/openai#model-options",
+    "There is no documented eager_input_streaming option in the Anthropic adapter; that hint is left to provider defaults. https://tanstack.com/ai/latest/docs/adapters/anthropic",
+    "In these pins, chat({ outputSchema }) selects streaming combined schema output on OpenAI Chat (response_format.json_schema), Responses (text.format.json_schema), Anthropic Haiku 4.5 and Sonnet 5.5 (output_config.format), Gemini 3.x (generationConfig.responseSchema/responseMimeType), and compatible Chat (response_format.json_schema). Native Ollama skips the text phase with no tools, invokes structuredOutput once, and sends stream=false with format=<schema>. The non-streamed schema fixtures for the streaming paths are unsupported. https://tanstack.com/ai/latest/docs/api/ai#usage-examples",
+    "Anthropic includes both claude-haiku-4-5 and claude-sonnet-5-5 in ANTHROPIC_COMBINED_TOOLS_AND_SCHEMA_MODELS and ANTHROPIC_NO_FORCED_TOOL_MODELS. Neither uses the legacy forced structured_output tool path. https://tanstack.com/ai/latest/docs/adapters/anthropic",
+    "finish.unknown-value has only non-streamed fixtures and is unsupported. On streams, unfamiliar Chat/compatible finish strings pass through; Responses maps unrecognized incomplete reasons to stop; Anthropic maps unrecognized nonempty stop_reason to stop; Gemini maps any non-MAX_TOKENS finish to stop (or tool_calls); native Ollama ignores done_reason and chooses stop/tool_calls. No shim correction is applied."
+  ],
+  "docs": [
+    "https://tanstack.com/ai/latest/docs/api/ai#chat-options",
+    "https://tanstack.com/ai/latest/docs/protocol/metadata",
+    "https://tanstack.com/ai/latest/docs/adapters/openai",
+    "https://tanstack.com/ai/latest/docs/adapters/openai-compatible",
+    "https://tanstack.com/ai/latest/docs/adapters/anthropic",
+    "https://tanstack.com/ai/latest/docs/adapters/gemini",
+    "https://tanstack.com/ai/latest/docs/adapters/ollama",
+    "https://tanstack.com/ai/latest/docs/advanced/debug-logging"
+  ]
+}
