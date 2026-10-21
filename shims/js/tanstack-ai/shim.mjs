@@ -133,7 +133,7 @@ async function run() {
     'ollama-openai': 'max_tokens', anthropic: 'max_tokens', gemini: 'maxOutputTokens', ollama: 'num_predict',
   }[call.provider];
   if (call.max_output_tokens != null) modelOptions[tokenKey] = call.max_output_tokens;
-  // https://tanstack.com/ai/latest/docs/api/ai#chatoptions
+  // https://tanstack.com/ai/latest/docs/api/ai#chat-options
   const options = {
     adapter, debug: false,
     modelOptions: call.provider === 'ollama' ? { options: modelOptions } : modelOptions,
@@ -141,14 +141,14 @@ async function run() {
     systemPrompts: call.messages.filter(message => message.role === 'system').map(message => message.content),
   };
   if (call.reasoning != null) options.reasoning = call.reasoning.effort === 'none' ? 'off' : call.reasoning.effort;
-  // https://tanstack.com/ai/latest/docs/api/ai#tooldefinition
+  // https://tanstack.com/ai/latest/docs/api/ai#tooldefinition-config
   if (call.tools?.length) options.tools = call.tools.map(value => toolDefinition({
     name: value.name, description: value.description, inputSchema: value.parameters,
   }));
   if (call.tool_choice != null) options.toolChoice = typeof call.tool_choice === 'string' ? call.tool_choice :
     { type: 'tool', name: call.tool_choice.name };
   if (call.stream) {
-    // https://tanstack.com/ai/latest/docs/api/ai#chatoptions
+    // https://tanstack.com/ai/latest/docs/api/ai#chat-options
     for await (const part of chat(options)) observe(part);
   } else {
     // https://tanstack.com/ai/latest/docs/api/ai#usage-examples

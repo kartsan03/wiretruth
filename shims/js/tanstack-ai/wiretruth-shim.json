@@ -16,7 +16,7 @@
   ],
   "providers": {
     "openai-chat": "createOpenaiChatCompletions(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_OPENAI_CHAT }); POST /v1/chat/completions. https://tanstack.com/ai/latest/docs/adapters/openai#chat-completions-api",
-    "openai-responses": "createOpenaiChat(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_OPENAI_RESPONSES }); POST /v1/responses (the default OpenAI text adapter). https://tanstack.com/ai/latest/docs/adapters/openai#chat-completions-api",
+    "openai-responses": "createOpenaiChat(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_OPENAI_RESPONSES }); POST /v1/responses (the default OpenAI text adapter). https://tanstack.com/ai/latest/docs/adapters/openai#createopenaichat-model-apikey-config",
     "anthropic": "createAnthropicChat(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_ANTHROPIC }); SDK appends /v1/messages.",
     "gemini": "createGeminiChat(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_GEMINI }); SDK appends /v1beta/models/<model>:streamGenerateContent or :generateContent.",
     "ollama": "createOllamaChat(model, { host: WIRETRUTH_BASE_URL_OLLAMA }); POST /api/chat.",
@@ -126,7 +126,7 @@
         "anthropic"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "finish.unknown-value",
@@ -139,7 +139,7 @@
         "anthropic"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "request.max-tokens-field",
@@ -147,7 +147,7 @@
         "openai-chat"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "request.max-tokens-ollama-openai",
@@ -155,7 +155,7 @@
         "ollama-openai"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "request.no-injected-options",
@@ -163,7 +163,7 @@
         "ollama"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "request.tools-with-reasoning-chat",
@@ -171,7 +171,7 @@
         "openai-chat"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "tools.parallel-calls",
@@ -184,7 +184,7 @@
         "anthropic"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "truncation.reasoning-only",
@@ -197,7 +197,7 @@
         "anthropic"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "truncation.text",
@@ -210,7 +210,7 @@
         "anthropic"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "truncation.tool-call-args",
@@ -220,7 +220,7 @@
         "anthropic"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "usage.cached-tokens",
@@ -228,7 +228,7 @@
         "anthropic"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "usage.reasoning-tokens",
@@ -236,7 +236,7 @@
         "gemini"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
-      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chatoptions"
+      "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"
     },
     {
       "scenario": "truncation.structured-output-forced-tool",
@@ -261,7 +261,7 @@
   ],
   "config_notes": [
     "All SDK retries and the default agent-loop strategy are retained. Tools have no execute/server implementation, so valid calls wait for external results. Malformed tool JSON can still trigger the default recovery loop. debug=false silences the default error logger, whose console.dir metadata would corrupt the stdout protocol. https://tanstack.com/ai/latest/docs/advanced/debug-logging https://tanstack.com/ai/latest/docs/api/ai",
-    "Only scenario token limits change modelOptions: OpenAI Chat max_tokens; Responses max_output_tokens; compatible max_tokens; Anthropic max_tokens; Gemini maxOutputTokens; native Ollama options.num_predict. Stop sequences aren't mapped: every stop fixture is non-streamed and unsupported. https://tanstack.com/ai/latest/docs/api/ai#chatoptions",
+    "Only scenario token limits change modelOptions: OpenAI Chat max_tokens; Responses max_output_tokens; compatible max_tokens; Anthropic max_tokens; Gemini maxOutputTokens; native Ollama options.num_predict. Stop sequences aren't mapped: every stop fixture is non-streamed and unsupported. https://tanstack.com/ai/latest/docs/api/ai#chat-options",
     "System messages become systemPrompts; other messages retain their order and roles. reasoning.effort=none maps to the documented off level; other levels pass through. Null leaves the default alone. Adapters clamp levels to each model catalog; off can become minimal for Gemini 3 models. https://tanstack.com/ai/latest/docs/adapters/gemini#reasoning",
     "The Chat Completions and compatible adapters always send stream_options.include_usage=true, so the include_usage hint needs no option. Other stream usage defaults are retained. https://tanstack.com/ai/latest/docs/adapters/openai#model-options",
     "There is no documented eager_input_streaming option in the Anthropic adapter; that hint is left to provider defaults. https://tanstack.com/ai/latest/docs/adapters/anthropic",
@@ -270,7 +270,7 @@
     "finish.unknown-value has only non-streamed fixtures and is unsupported. On streams, unfamiliar Chat/compatible finish strings pass through; Responses maps unrecognized incomplete reasons to stop; Anthropic maps unrecognized nonempty stop_reason to stop; Gemini maps any non-MAX_TOKENS finish to stop (or tool_calls); native Ollama ignores done_reason and chooses stop/tool_calls. No shim correction is applied."
   ],
   "docs": [
-    "https://tanstack.com/ai/latest/docs/api/ai#chatoptions",
+    "https://tanstack.com/ai/latest/docs/api/ai#chat-options",
     "https://tanstack.com/ai/latest/docs/protocol/metadata",
     "https://tanstack.com/ai/latest/docs/adapters/openai",
     "https://tanstack.com/ai/latest/docs/adapters/openai-compatible",
