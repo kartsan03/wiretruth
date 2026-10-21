@@ -9,9 +9,9 @@ happened.
 [![PyPI](https://img.shields.io/pypi/v/wiretruth?label=PyPI)](https://pypi.org/project/wiretruth/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
-wiretruth tests any-llm, LiteLLM, pydantic-ai and the Vercel AI SDK across six APIs: OpenAI Chat Completions and
-Responses, Ollama's native and OpenAI-compatible endpoints, Gemini GenerateContent and Anthropic Messages. That is 24
-scenarios and 95 cells per library. pydantic-ai and the Vercel AI SDK support only the OpenAI-compatible Ollama
+wiretruth tests any-llm, LiteLLM, pydantic-ai, the Vercel AI SDK and TanStack AI across six APIs: OpenAI Chat
+Completions and Responses, Ollama's native and OpenAI-compatible endpoints, Gemini GenerateContent and Anthropic
+Messages. That is 24 scenarios and 95 cells per library. pydantic-ai and the Vercel AI SDK support only the OpenAI-compatible Ollama
 endpoint; their native Ollama cells are UNSUPPORTED.
 The Anthropic responses are transcribed from Anthropic's documentation rather than recorded: each of those fixtures
 is marked `documented` and links the page it comes from. More providers and libraries follow, and a public
@@ -87,10 +87,11 @@ uv run wiretruth run --lib any-llm
 uv run wiretruth run --lib litellm
 uv run wiretruth run --lib pydantic-ai
 uv run wiretruth run --lib vercel-ai
+uv run wiretruth run --lib tanstack-ai
 ```
 
-The Vercel AI SDK shim also needs Node.js and npm. The runner builds its pinned dependencies automatically;
-see [Shims](shims/README.md) for supported providers and structured-output modes.
+The Vercel AI SDK and TanStack AI shims also need Node.js and npm. The runner builds their pinned dependencies
+automatically; see [Shims](shims/README.md) for supported providers and structured-output modes.
 
 The any-llm run reports (see [`results/any-llm/1.38.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.38.0.json)):
 
@@ -230,8 +231,9 @@ A shim is a small program. It reads a call spec as JSON on stdin, calls your lib
 prints what the library reported as JSON on stdout. The
 [any-llm shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/any-llm/shim.py),
 [LiteLLM shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/litellm/shim.py),
-[pydantic-ai shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/pydantic-ai/shim.py) and
-[Vercel AI SDK shim](https://github.com/kartsan03/wiretruth/blob/main/shims/js/vercel-ai/shim.mjs) are examples. The
+[pydantic-ai shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/pydantic-ai/shim.py),
+[Vercel AI SDK shim](https://github.com/kartsan03/wiretruth/blob/main/shims/js/vercel-ai/shim.mjs) and
+[TanStack AI shim](https://github.com/kartsan03/wiretruth/blob/main/shims/js/tanstack-ai/shim.mjs) are examples. The
 protocol is in [shims/README.md](https://github.com/kartsan03/wiretruth/blob/main/shims/README.md); to propose a
 library, [open a new-library issue](https://github.com/kartsan03/wiretruth/issues/new?template=new-library.yml).
 

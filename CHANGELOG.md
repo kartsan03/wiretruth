@@ -12,6 +12,9 @@ finding).
 ## [Unreleased]
 
 ### Added
+- TanStack AI 0.71.0 shim for OpenAI Chat Completions and Responses, native and OpenAI-compatible Ollama, Gemini
+  GenerateContent and Anthropic Messages. Its `chat()` always requests a streamed response, so the non-streamed
+  fixtures are UNSUPPORTED.
 - JavaScript shim runtime with lockfile-cached npm builds and installed-package reporting, plus a Vercel AI SDK
   7.0.146 shim for OpenAI Chat Completions and Responses, OpenAI-compatible Ollama, Gemini GenerateContent and
   Anthropic Messages.
