@@ -3,11 +3,11 @@
   "name": "tanstack-ai",
   "language": "javascript",
   "packages": {
-    "@tanstack/ai": "0.71.0",
-    "@tanstack/ai-anthropic": "0.23.0",
-    "@tanstack/ai-gemini": "0.38.2",
-    "@tanstack/ai-ollama": "0.12.2",
-    "@tanstack/ai-openai": "0.31.0"
+    "@tanstack/ai": "1.0.0",
+    "@tanstack/ai-anthropic": "1.0.0",
+    "@tanstack/ai-gemini": "1.0.0",
+    "@tanstack/ai-ollama": "1.0.0",
+    "@tanstack/ai-openai": "1.0.0"
   },
   "primary_package": "@tanstack/ai",
   "entry": [
@@ -260,7 +260,7 @@
     }
   ],
   "config_notes": [
-    "All SDK retries and the default agent-loop strategy are retained. Tools have no execute/server implementation, so valid calls wait for external results. Malformed tool JSON can still trigger the default recovery loop. debug=false silences the default error logger, whose console.dir metadata would corrupt the stdout protocol. https://tanstack.com/ai/latest/docs/advanced/debug-logging https://tanstack.com/ai/latest/docs/api/ai",
+    "chat() requires a threadId since 1.0; the shim passes 'wiretruth'. https://tanstack.com/ai/latest/docs/migration/v1 All SDK retries and the default agent-loop strategy are retained. Tools have no execute/server implementation, so valid calls wait for external results. Malformed tool JSON can still trigger the default recovery loop. debug=false silences the default error logger, whose console.dir metadata would corrupt the stdout protocol. https://tanstack.com/ai/latest/docs/advanced/debug-logging https://tanstack.com/ai/latest/docs/api/ai",
     "Only scenario token limits change modelOptions: OpenAI Chat max_tokens; Responses max_output_tokens; compatible max_tokens; Anthropic max_tokens; Gemini maxOutputTokens; native Ollama options.num_predict. Stop sequences aren't mapped: every stop fixture is non-streamed and unsupported. https://tanstack.com/ai/latest/docs/api/ai#chat-options",
     "System messages become systemPrompts; other messages retain their order and roles. reasoning.effort=none maps to the documented off level; other levels pass through. Null leaves the default alone. Adapters clamp levels to each model catalog; off can become minimal for Gemini 3 models. https://tanstack.com/ai/latest/docs/adapters/gemini#reasoning",
     "The Chat Completions and compatible adapters always send stream_options.include_usage=true, so the include_usage hint needs no option. Other stream usage defaults are retained. https://tanstack.com/ai/latest/docs/adapters/openai#model-options",
@@ -270,6 +270,7 @@
     "finish.unknown-value has only non-streamed fixtures and is unsupported. On streams, unfamiliar Chat/compatible finish strings pass through; Responses maps unrecognized incomplete reasons to stop; Anthropic maps unrecognized nonempty stop_reason to stop; Gemini maps any non-MAX_TOKENS finish to stop (or tool_calls); native Ollama ignores done_reason and chooses stop/tool_calls. No shim correction is applied."
   ],
   "docs": [
+    "https://tanstack.com/ai/latest/docs/migration/v1",
     "https://tanstack.com/ai/latest/docs/api/ai#chat-options",
     "https://tanstack.com/ai/latest/docs/protocol/metadata",
     "https://tanstack.com/ai/latest/docs/adapters/openai",
