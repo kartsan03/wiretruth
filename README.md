@@ -29,10 +29,10 @@ wiretruth has this case recorded as `truncation.structured-output` on `openai-ch
 
 | Library | What the caller gets | Grade |
 |---|---|---|
-| any-llm 1.38.0 | Raises `openai.LengthFinishReasonError`. Its `completion` has `finish_reason: "length"` and the token usage. | ✓ PASS |
-| LiteLLM 1.105.1 | Returns the cut-off JSON as text in `message.content` with `finish_reason: "length"` and parses none of it. | ✓ PASS |
-| pydantic-ai 2.56.0 | Retries once, then raises `UnexpectedModelBehavior("Exceeded maximum output retries (1)")`. The `length` finish is only in the messages that `capture_run_messages()` keeps. | ~ LOSSY |
-| Vercel AI SDK 7.0.146 | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
+| any-llm 1.40.2 | Raises `openai.LengthFinishReasonError`. Its `completion` has `finish_reason: "length"` and the token usage. | ✓ PASS |
+| LiteLLM 1.105.5 | Returns the cut-off JSON as text in `message.content` with `finish_reason: "length"` and parses none of it. | ✓ PASS |
+| pydantic-ai 2.61.0 | Retries once, then raises `UnexpectedModelBehavior("Exceeded maximum output retries (1)")`. The `length` finish is only in the messages that `capture_run_messages()` keeps. | ~ LOSSY |
+| Vercel AI SDK 7.0.153 | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
 
 pydantic-ai's grades for structured output use `NativeOutput`, the provider's own JSON mode, because that is how
 the fixtures were recorded. It is opt-in: by default pydantic-ai asks for a forced tool call instead on every API
@@ -93,7 +93,7 @@ uv run wiretruth run --lib tanstack-ai
 The Vercel AI SDK and TanStack AI shims also need Node.js and npm. The runner builds their pinned dependencies
 automatically; see [Shims](shims/README.md) for supported providers and structured-output modes.
 
-The any-llm run reports (see [`results/any-llm/1.38.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.38.0.json)):
+The any-llm run reports (see [`results/any-llm/1.40.2.json`](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.40.2.json)):
 
 ```text
 scenario                                  anthropic      gemini   ollama   ollama-openai  openai-chat  openai-responses
@@ -173,13 +173,13 @@ tools.parallel-calls gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="ac8e254a-9594-4406-8ae8-9c7031066041", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="9df84338-fa9e-4d94-af2f-df4a6baf2a87", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="8beb704a-c37e-4125-ad51-03f1f1a1648f", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="a07c2b3f-7d0f-426b-aa7e-5e6cea2fccc8", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
 
 tools.parallel-calls-stream gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls-stream ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="bdfc2ec0-f3ce-4b14-82ec-e8afb4ddbc52", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="9e8d5689-1f84-406a-a583-a4728a7baa65", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="4de4a1a8-89a5-45c4-afe7-d4b57db603f6", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="dd4a3f63-e341-4969-ae0f-528b27222290", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
 
 truncation.structured-output gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
@@ -190,7 +190,7 @@ truncation.structured-output openai-responses
   SHOULD usage-reported: NOT_OBSERVABLE: usage.input=null (absent); truth.usage.input=68; usage.output=null (absent); truth.usage.output=24
 
 truncation.structured-output-forced-tool anthropic
-  any-llm completion maps typed response_format to native output_config.format and has no structured parser for an explicitly forced tool. (https://github.com/mozilla-ai/any-llm/blob/1.38.0/src/any_llm/providers/anthropic/utils.py#L631-L666)
+  any-llm completion maps typed response_format to native output_config.format and has no structured parser for an explicitly forced tool. (https://github.com/mozilla-ai/any-llm/blob/1.40.2/src/any_llm/providers/anthropic/utils.py#L660-L686)
 
 truncation.text gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
@@ -204,19 +204,19 @@ truncation.text-stream-usage gemini
 usage.stream-final-chunk gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
-any-llm 1.38.0: 95 cells, 82 PASS, 6 LOSSY, 6 WRONG, 1 UNSUPPORTED
-stderr: .wiretruth/runs/20261020T181725.745027Z
+any-llm 1.40.2: 95 cells, 82 PASS, 6 LOSSY, 6 WRONG, 1 UNSUPPORTED
+stderr: .wiretruth/runs/20261026T160347.945900Z
 ```
 
 The LiteLLM run grades its 95 cells 81 PASS, 13 WRONG and 1 UNSUPPORTED. Every cell, with its evidence, is in
-[`results/litellm/1.105.1.json`](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.105.1.json).
-The pydantic-ai run grades its 95 cells 58 PASS, 14 LOSSY, 8 WRONG and 15 UNSUPPORTED (native Ollama), in
-[`results/pydantic-ai/2.56.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.56.0.json).
-The Vercel AI SDK run grades its 95 cells 75 PASS, 4 WRONG and 16 UNSUPPORTED (native Ollama, and the Anthropic
+[`results/litellm/1.105.5.json`](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.105.5.json).
+The pydantic-ai run grades its 95 cells 58 PASS, 16 LOSSY, 6 WRONG and 15 UNSUPPORTED (native Ollama), in
+[`results/pydantic-ai/2.61.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.61.0.json).
+The Vercel AI SDK run grades its 95 cells 79 PASS and 16 UNSUPPORTED (native Ollama, and the Anthropic
 forced-tool fixture, since current Claude models get native structured output), in
-[`results/vercel-ai/7.0.146.json`](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.146.json).
-The TanStack AI run grades its 95 cells 47 PASS, 2 LOSSY, 3 WRONG and 43 UNSUPPORTED, in
-[`results/tanstack-ai/0.71.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/tanstack-ai/0.71.0.json).
+[`results/vercel-ai/7.0.153.json`](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.153.json).
+The TanStack AI run grades its 95 cells 48 PASS, 2 LOSSY, 2 WRONG and 43 UNSUPPORTED, in
+[`results/tanstack-ai/1.0.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/tanstack-ai/1.0.0.json).
 Its `chat()` always requests a streamed response, so the non-streamed fixtures don't apply to it.
 
 No API keys are needed. Everything runs against stored responses on `127.0.0.1`. The first run downloads the

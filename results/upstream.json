@@ -157,12 +157,12 @@
     "library": "pydantic-ai",
     "scenarios": ["finish.unknown-value"],
     "providers": ["openai-chat", "ollama-openai"],
-    "issue": "https://github.com/pydantic/pydantic-ai/issues/10381",
-    "pr": null,
-    "status": "reported",
-    "fixed_in": null,
-    "opened": "2026-10-15",
-    "notes": "OpenAIChatModel re-validates the response with the strict ChatCompletion model (_validate_completion, models/openai.py), so a finish_reason outside OpenAI's five values raises UnexpectedModelBehavior and the text and usage are lost. OllamaModel inherits it. AnthropicModel, GoogleModel and OpenAIResponsesModel keep the raw value in provider_details and report finish_reason None (LOSSY there)."
+    "issue": "https://github.com/pydantic/pydantic-ai/issues/7816",
+    "pr": "https://github.com/pydantic/pydantic-ai/pull/11119",
+    "status": "released",
+    "fixed_in": "2.61.0",
+    "opened": "2026-08-27",
+    "notes": "Existing upstream issue, not opened by wiretruth; wiretruth's report, #10381, was closed as its duplicate. Up to 2.60.0, OpenAIChatModel re-validated the response with the strict ChatCompletion model (_validate_completion, models/openai.py), so a finish_reason outside OpenAI's five values raised UnexpectedModelBehavior and the text and usage were lost. OllamaModel inherits it. Since #11119 (2.61.0) the response is kept with finish_reason None and the raw value in provider_details['finish_reason'], so both cells move WRONG → LOSSY, the same as AnthropicModel, GoogleModel and OpenAIResponsesModel."
   },
   {
     "library": "pydantic-ai",
@@ -170,21 +170,21 @@
     "providers": ["anthropic", "gemini", "openai-responses"],
     "issue": "https://github.com/pydantic/pydantic-ai/issues/10382",
     "pr": null,
-    "status": "reported",
+    "status": "confirmed",
     "fixed_in": null,
     "opened": "2026-10-15",
-    "notes": "A stream that ends cleanly before the provider's terminal event finishes with ModelResponse.state 'complete' and finish_reason None, although the docs define 'incomplete' as a streamed response stopped before completion. Responses marks the response incomplete, but _ContinuationStreamedResponse.get() replaces it with complete once iteration ends; the Anthropic and Google adapters never set incomplete. The Chat Completions case is #6610 (documented-behavior)."
+    "notes": "A stream that ends cleanly before the provider's terminal event finishes with ModelResponse.state 'complete' and finish_reason None, although the docs define 'incomplete' as a streamed response stopped before completion. Responses marks the response incomplete, but _ContinuationStreamedResponse.get() replaces it with complete once iteration ends; the Anthropic and Google adapters never set incomplete. The Chat Completions case is #6610 (documented-behavior). pydantic-ai's triage bot reproduced all three adapters and labelled the issue p:2-high and needs-maintainer-discussion (2026-10-25): the open question is whether a stream that ends before the provider's terminal event should report state 'incomplete'."
   },
   {
     "library": "vercel-ai",
     "scenarios": ["stream.missing-finish"],
     "providers": ["openai-chat", "openai-responses", "anthropic", "gemini"],
     "issue": "https://github.com/vercel/ai/issues/23449",
-    "pr": null,
-    "status": "reported",
-    "fixed_in": null,
+    "pr": "https://github.com/vercel/ai/pull/23814",
+    "status": "released",
+    "fixed_in": "@ai-sdk/openai 4.0.100, @ai-sdk/anthropic 4.0.86, @ai-sdk/google 4.0.103 (ai 7.0.149)",
     "opened": "2026-10-16",
-    "notes": "A stream that ends cleanly before the provider's terminal event yields a normal finish part with finishReason 'other' and no error: the @ai-sdk/openai (Chat and Responses), @ai-sdk/anthropic and @ai-sdk/google adapters start from 'other' and emit it from flush(). vercel/ai#19165 fixed the same case in @ai-sdk/openai-compatible (an InvalidResponseDataError, then finish 'error'), so ollama-openai passes."
+    "notes": "A stream that ends cleanly before the provider's terminal event yields a normal finish part with finishReason 'other' and no error: the @ai-sdk/openai (Chat and Responses), @ai-sdk/anthropic and @ai-sdk/google adapters start from 'other' and emit it from flush(). vercel/ai#19165 fixed the same case in @ai-sdk/openai-compatible (an InvalidResponseDataError, then finish 'error'), so ollama-openai passes. Fixed by #23778, which adds an 'interrupted' finish reason in ai 7.0.149, and #23814, which makes the four adapters emit it when the stream ends without the provider's completion signal. The shim maps 'interrupted' to finish none and stream.completed false; all four cells pass on ai 7.0.153."
   },
   {
     "library": "vercel-ai",
@@ -202,11 +202,11 @@
     "scenarios": ["stream.error-midstream"],
     "providers": ["gemini"],
     "issue": "https://github.com/googleapis/js-genai/issues/2087",
-    "pr": null,
-    "status": "reported",
+    "pr": "https://github.com/googleapis/js-genai/pull/2094",
+    "status": "confirmed",
     "fixed_in": null,
     "opened": "2026-10-21",
-    "notes": "The cause is in @google/genai, which @tanstack/ai-gemini streams through: processStreamResponse checks for an error object with JSON.parse on the raw network read, before the SSE data: prefix is removed, so an error event never matches; generateContentResponseFromMldev then drops the error field. chat() yields the partial text and ends with no RUN_ERROR or RUN_FINISHED. A bare JSON error body does throw ApiError."
+    "notes": "The cause is in @google/genai, which @tanstack/ai-gemini streams through: processStreamResponse checks for an error object with JSON.parse on the raw network read, before the SSE data: prefix is removed, so an error event never matches; generateContentResponseFromMldev then drops the error field. chat() yields the partial text and ends with no RUN_ERROR or RUN_FINISHED. A bare JSON error body does throw ApiError. Google reproduced it on 2026-10-22 and opened #2094. The Gemini error-event fixture is derived (an error object injected into a recorded stream); no live mid-stream Gemini error has been observed."
   },
   {
     "library": "tanstack-ai",
@@ -224,10 +224,10 @@
     "scenarios": ["truncation.tool-call-args-stream"],
     "providers": ["openai-chat"],
     "issue": "https://github.com/TanStack/ai/issues/1853",
-    "pr": null,
-    "status": "reported",
-    "fixed_in": null,
+    "pr": "https://github.com/TanStack/ai/pull/1874",
+    "status": "released",
+    "fixed_in": "@tanstack/openai-base 1.0.0 (@tanstack/ai-openai 1.0.0)",
     "opened": "2026-10-21",
-    "notes": "@tanstack/openai-base Chat Completions picks tool_calls over a pending finish_reason \"length\" once TOOL_CALL_END was emitted for the unfinished arguments. The core then treats the arguments as a parse failure and the agent loop sends the conversation back to the model: 5 requests in the fixture replay."
+    "notes": "@tanstack/openai-base Chat Completions picks tool_calls over a pending finish_reason \"length\" once TOOL_CALL_END was emitted for the unfinished arguments. The core then treats the arguments as a parse failure and the agent loop sends the conversation back to the model: 5 requests in the fixture replay. Fixed by #1874: a pending 'length' now wins over the tool-call flag, so 1.0.0 reports length and sends one request."
   }
 ]

@@ -173,7 +173,8 @@ async function run() {
       if (part.type === 'finish') {
         finish(part.finishReason, part.rawFinishReason, 'fullStream.finish.finishReason');
         // The finish part also closes a stream that already yielded an error or abort part.
-        obs.stream.completed ??= true;
+        // 'interrupted': the provider stream ended without its completion signal.
+        obs.stream.completed ??= part.finishReason !== 'interrupted';
       }
       if (part.type === 'error') {
         observeError(part.error, 'returned');

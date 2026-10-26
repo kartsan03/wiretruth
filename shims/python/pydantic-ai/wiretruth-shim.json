@@ -3,7 +3,7 @@
   "name": "pydantic-ai",
   "language": "python",
   "packages": {
-    "pydantic-ai-slim": "2.56.0",
+    "pydantic-ai-slim": "2.61.0",
     "openai": "3.31.0",
     "anthropic": "1.14.0",
     "google-genai": "2.31.0"
@@ -140,7 +140,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -148,7 +148,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -156,7 +156,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -164,7 +164,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -172,7 +172,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -180,7 +180,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -188,7 +188,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -196,7 +196,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -204,7 +204,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -212,7 +212,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -220,7 +220,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -228,7 +228,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -236,7 +236,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -244,7 +244,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     },
     {
@@ -252,7 +252,7 @@
       "providers": [
         "ollama"
       ],
-      "reason": "pydantic-ai 2.56.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
+      "reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client.",
       "docs": "https://ai.pydantic.dev/models/ollama/"
     }
   ],
@@ -265,8 +265,8 @@
     "genai-prices get_snapshot loads bundled data; remote updates require an explicit UpdatePrices context, which this shim does not start. pydantic-ai only preloads that snapshot at model construction. logfire-api is a no-op proxy without explicit configuration; no instrumentation/configure call is made. No extra offline setting is needed. https://github.com/pydantic/genai-prices#updating-prices ; https://ai.pydantic.dev/logfire/",
     "A static tool_choice=required is rejected by Agent. The documented per-step model_settings callable uses required only for ctx.run_step == 1 and auto thereafter; deferred calls end the run after that first response. https://ai.pydantic.dev/api/agent/#pydantic_ai.agent.AgentModelSettings",
     "Anthropic ToolOutput with the sole structured_output tool and tool_choice=[structured_output] simplifies to tool_choice type any, rather than the fixture's named tool; both force the same sole tool. The typed parser and output retries remain active. models/_tool_choice.py and models/anthropic.py perform this library normalization.",
-    "In 2.56.0 a foreground Responses stream can retain state incomplete in its adapter but the public continuation wrapper replaces it with complete at EOF. The shim reports result.response.state unchanged, so stream.missing-finish remains WRONG on all five supported APIs. Default Chat clean-EOF stop is explicitly retained by upstream #7096; strict finish detection is opt-in and is not enabled here.",
-    "Anthropic Sonnet 5.5 default and thinking=False send no thinking field; the model profile ignores disable on always-thinking models. Explicit anthropic_thinking disabled passes through but is not used by this shim. Gemini adds responseModalities TEXT and upgrades auto function calling to VALIDATED; it does not inject temperature in these calls."
+    "In 2.61.0 a foreground Responses stream retains state incomplete in its adapter but the public continuation wrapper still replaces it with complete at EOF. The shim reports result.response.state unchanged, so stream.missing-finish remains WRONG on all five supported APIs. Default Chat clean-EOF stop is explicitly retained by upstream #7096; strict finish detection is opt-in and is not enabled here.",
+    "Anthropic Sonnet 5.5 default sends no thinking field; thinking=False sends thinking.type=between_tools. Its 2.61.0 profile no longer marks Sonnet 5.5 as always-thinking. Explicit anthropic_thinking disabled passes through but is not used by this shim. Gemini adds responseModalities TEXT and upgrades auto function calling to VALIDATED; it does not inject temperature in these calls."
   ],
   "docs": [
     "https://ai.pydantic.dev/agents/",

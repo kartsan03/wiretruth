@@ -12,19 +12,20 @@ finding).
 ## [Unreleased]
 
 ### Added
-- TanStack AI 0.71.0 shim for OpenAI Chat Completions and Responses, native and OpenAI-compatible Ollama, Gemini
+- TanStack AI 1.0.0 shim for OpenAI Chat Completions and Responses, native and OpenAI-compatible Ollama, Gemini
   GenerateContent and Anthropic Messages. Its `chat()` always requests a streamed response, so the non-streamed
   fixtures are UNSUPPORTED.
 - JavaScript shim runtime with lockfile-cached npm builds and installed-package reporting, plus a Vercel AI SDK
-  7.0.146 shim for OpenAI Chat Completions and Responses, OpenAI-compatible Ollama, Gemini GenerateContent and
-  Anthropic Messages.
-- pydantic-ai 2.56.0 shim for OpenAI Chat Completions and Responses, OpenAI-compatible Ollama,
+  7.0.153 shim for OpenAI Chat Completions and Responses, OpenAI-compatible Ollama, Gemini GenerateContent and
+  Anthropic Messages. It reads the `interrupted` finish reason (`ai` 7.0.149 and later) as a stream that did not
+  complete.
+- pydantic-ai 2.61.0 shim for OpenAI Chat Completions and Responses, OpenAI-compatible Ollama,
   Gemini GenerateContent and Anthropic Messages.
-- LiteLLM 1.105.1 shim for OpenAI Chat Completions and Responses, native and OpenAI-compatible Ollama,
+- LiteLLM 1.105.5 shim for OpenAI Chat Completions and Responses, native and OpenAI-compatible Ollama,
   Gemini GenerateContent and Anthropic Messages.
 
 ### Changed
-- The any-llm shim pins any-llm-sdk 1.38.0.
+- The any-llm shim pins any-llm-sdk 1.40.2.
 - Development version is now `0.3.0.dev0`.
 
 ### Fixed
@@ -35,14 +36,14 @@ finding).
   lookup stays in the request log and counts toward request limits.
 
 ### Results
-- any-llm 1.38.0: 82 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 95 cells
-  ([results/any-llm/1.38.0.json](results/any-llm/1.38.0.json)). `finish.unknown-value` over `openai-chat` and
-  `ollama-openai` moves WRONG → PASS: unfamiliar finish strings survive validation
-  ([mozilla-ai/any-llm#1504](https://github.com/mozilla-ai/any-llm/pull/1504)). `tools.parallel-calls` and
-  `tools.parallel-calls-stream` over `gemini` move WRONG → PASS: wire tool-call ids are preserved
-  ([mozilla-ai/any-llm#1514](https://github.com/mozilla-ai/any-llm/pull/1514)).
-- LiteLLM 1.105.1, the second library: 81 PASS, 13 WRONG and 1 UNSUPPORTED of 95 cells
-  ([results/litellm/1.105.1.json](results/litellm/1.105.1.json)). All 14 `openai-responses` cells pass. WRONG on
+- any-llm 1.40.2: 82 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 95 cells
+  ([results/any-llm/1.40.2.json](results/any-llm/1.40.2.json)), the same grades as 1.38.0. Since 1.33.0,
+  `finish.unknown-value` over `openai-chat` and `ollama-openai` moves WRONG → PASS: unfamiliar finish strings survive
+  validation ([mozilla-ai/any-llm#1504](https://github.com/mozilla-ai/any-llm/pull/1504), 1.38.0).
+  `tools.parallel-calls` and `tools.parallel-calls-stream` over `gemini` move WRONG → PASS: wire tool-call ids are
+  preserved ([mozilla-ai/any-llm#1514](https://github.com/mozilla-ai/any-llm/pull/1514), 1.38.0).
+- LiteLLM 1.105.5, the second library: 81 PASS, 13 WRONG and 1 UNSUPPORTED of 95 cells
+  ([results/litellm/1.105.5.json](results/litellm/1.105.5.json)). All 14 `openai-responses` cells pass. WRONG on
   `finish.unknown-value` over the five Chat-style APIs: an unfamiliar finish value is reported as `stop`, a fallback
   LiteLLM adds on purpose ([BerriAI/litellm#21348](https://github.com/BerriAI/litellm/issues/21348)). WRONG on
   `stream.missing-finish` over the same five: a stream that ends without any finish reason is reported as `stop`
@@ -52,25 +53,45 @@ finding).
   over `ollama`: both streamed calls arrive with index 0, and their ids are replaced with UUIDs
   ([BerriAI/litellm#33678](https://github.com/BerriAI/litellm/issues/33678),
   [BerriAI/litellm#46543](https://github.com/BerriAI/litellm/issues/46543)). UNSUPPORTED on
-  `truncation.structured-output-forced-tool`: LiteLLM's structured output uses native JSON output there.
-- Vercel AI SDK 7.0.146, the first JavaScript library: 75 PASS, 4 WRONG and 16 UNSUPPORTED of 95 cells
-  ([results/vercel-ai/7.0.146.json](results/vercel-ai/7.0.146.json)). WRONG on `stream.missing-finish` over
-  `openai-chat`, `openai-responses`, `anthropic` and `gemini`: a stream that ends before the provider's final event
-  finishes as `other` with no error, which the OpenAI-compatible provider already reports as an error
-  ([vercel/ai#23449](https://github.com/vercel/ai/issues/23449)).
-  `stream.error-midstream` over `gemini` moves WRONG → PASS: `@ai-sdk/google` 4.0.99 surfaces in-stream errors
-  ([vercel/ai#23450](https://github.com/vercel/ai/issues/23450), [#23459](https://github.com/vercel/ai/pull/23459));
-  [7.0.142 results](results/vercel-ai/7.0.142.json) retain the earlier grade. UNSUPPORTED on native `ollama`
-  (no first-party provider) and on `truncation.structured-output-forced-tool` (current Claude models get native
-  structured output).
-- TanStack AI 0.71.0, the second JavaScript library: 47 PASS, 2 LOSSY, 3 WRONG and 43 UNSUPPORTED of 95 cells
-  ([results/tanstack-ai/0.71.0.json](results/tanstack-ai/0.71.0.json)). WRONG on `stream.error-midstream` over
-  `gemini`: `@google/genai` drops an error sent as a stream event, so the partial answer ends like a complete one
+  `truncation.structured-output-forced-tool`: LiteLLM's structured output uses native JSON output there. LiteLLM
+  1.106.0 through 1.106.4 are not graded: without the `mcp` extra, every tool call and every `responses()` call raises
+  `ModuleNotFoundError` before sending a request
+  ([BerriAI/litellm#46045](https://github.com/BerriAI/litellm/issues/46045)).
+- pydantic-ai 2.61.0, the third library: 58 PASS, 16 LOSSY, 6 WRONG and 15 UNSUPPORTED of 95 cells
+  ([results/pydantic-ai/2.61.0.json](results/pydantic-ai/2.61.0.json)). WRONG on `stream.missing-finish` over
+  `openai-responses`, `anthropic` and `gemini`: a stream that ends before the provider's final event gives a response
+  with state `complete` ([pydantic/pydantic-ai#10382](https://github.com/pydantic/pydantic-ai/issues/10382)); over
+  `openai-chat` and `ollama-openai` it reports `stop`, a documented default with an opt-in strict mode
+  ([pydantic/pydantic-ai#6610](https://github.com/pydantic/pydantic-ai/issues/6610)). WRONG on
+  `request.max-tokens-ollama-openai`: Ollama's OpenAI-compatible endpoint ignores the `max_completion_tokens` field
+  that pydantic-ai sends ([ollama/ollama#7125](https://github.com/ollama/ollama/issues/7125)). LOSSY on
+  `finish.unknown-value` over five APIs: the response is kept, with no finish reason and the provider's value in
+  `provider_details`. Over `openai-chat` and `ollama-openai` that moves WRONG → LOSSY in 2.61.0, which no longer
+  raises on the value ([pydantic/pydantic-ai#7816](https://github.com/pydantic/pydantic-ai/issues/7816),
+  [#11119](https://github.com/pydantic/pydantic-ai/pull/11119)); [2.56.0 results](results/pydantic-ai/2.56.0.json)
+  retain the earlier grade. LOSSY on the 11 truncated structured-output and tool-call cells: pydantic-ai retries, then
+  raises a generic error, and the `length` finish is only in the messages that `capture_run_messages()` keeps.
+  UNSUPPORTED on native `ollama`: pydantic-ai's Ollama model uses only the OpenAI-compatible API.
+- Vercel AI SDK 7.0.153, the first JavaScript library: 79 PASS and 16 UNSUPPORTED of 95 cells
+  ([results/vercel-ai/7.0.153.json](results/vercel-ai/7.0.153.json)): every supported cell passes.
+  `stream.missing-finish` over `openai-chat`, `openai-responses`, `anthropic` and `gemini` moves WRONG → PASS: a stream
+  that ends before the provider's final event now finishes as `interrupted`
+  ([vercel/ai#23449](https://github.com/vercel/ai/issues/23449), [#23814](https://github.com/vercel/ai/pull/23814)).
+  `stream.error-midstream` over `gemini` moved WRONG → PASS in `@ai-sdk/google` 4.0.99, which surfaces in-stream
+  errors ([vercel/ai#23450](https://github.com/vercel/ai/issues/23450), [#23459](https://github.com/vercel/ai/pull/23459)).
+  [7.0.142](results/vercel-ai/7.0.142.json) and [7.0.146](results/vercel-ai/7.0.146.json) results retain the earlier
+  grades. UNSUPPORTED on native `ollama` (no first-party provider) and on `truncation.structured-output-forced-tool`
+  (current Claude models get native structured output).
+- TanStack AI 1.0.0, the second JavaScript library: 48 PASS, 2 LOSSY, 2 WRONG and 43 UNSUPPORTED of 95 cells
+  ([results/tanstack-ai/1.0.0.json](results/tanstack-ai/1.0.0.json)). `truncation.tool-call-args-stream` over
+  `openai-chat` moves WRONG → PASS: a tool call cut off by the token limit now finishes as `length`, and the agent loop
+  no longer sends the request again ([TanStack/ai#1853](https://github.com/TanStack/ai/issues/1853),
+  [#1874](https://github.com/TanStack/ai/pull/1874)); [0.71.0 results](results/tanstack-ai/0.71.0.json) retain the
+  earlier grade. WRONG on `stream.error-midstream` over `gemini`: `@google/genai` drops an error sent as a stream
+  event, so the partial answer ends like a complete one
   ([googleapis/js-genai#2087](https://github.com/googleapis/js-genai/issues/2087)). WRONG on `truncation.text-stream`
   over `ollama`: a stream cut off by `done_reason: "length"` finishes as `stop`
-  ([TanStack/ai#1852](https://github.com/TanStack/ai/issues/1852)). WRONG on `truncation.tool-call-args-stream` over
-  `openai-chat`: a tool call cut off by the token limit finishes as `tool_calls`, and the agent loop sends the request
-  again ([TanStack/ai#1853](https://github.com/TanStack/ai/issues/1853)). LOSSY on `stream.missing-finish` over `anthropic`
+  ([TanStack/ai#1852](https://github.com/TanStack/ai/issues/1852)). LOSSY on `stream.missing-finish` over `anthropic`
   and `gemini`: a stream that ends early gives no completion signal. UNSUPPORTED on every non-streamed fixture,
   because `chat()` always requests a streamed response, and on `truncation.structured-output-forced-tool`.
 

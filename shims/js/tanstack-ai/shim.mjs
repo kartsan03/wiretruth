@@ -135,7 +135,7 @@ async function run() {
   if (call.max_output_tokens != null) modelOptions[tokenKey] = call.max_output_tokens;
   // https://tanstack.com/ai/latest/docs/api/ai#chat-options
   const options = {
-    adapter, debug: false,
+    adapter, debug: false, threadId: 'wiretruth',
     modelOptions: call.provider === 'ollama' ? { options: modelOptions } : modelOptions,
     messages: call.messages.filter(message => message.role !== 'system'),
     systemPrompts: call.messages.filter(message => message.role === 'system').map(message => message.content),
