@@ -24,7 +24,7 @@
   },
   "surfaces": {
     "finish": {
-      "primary": "result.finishReason; fullStream finish-step/finish parts: finishReason, including interrupted mapped to none. (https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text#returns). NoObjectGeneratedError.finishReason is a documented error field. Error name, message, stack and prototype constructor names select error_map and the library-relative top stack frame. No raw-to-primary inference.",
+      "primary": "result.finishReason; fullStream finish-step/finish parts: finishReason, including interrupted mapped to none. NoObjectGeneratedError.finishReason is a documented error field. Error name, message, stack and prototype constructor names select error_map and the library-relative top stack frame. No raw-to-primary inference. https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text#returns",
       "raw": "result.rawFinishReason and fullStream finish-step/finish.rawFinishReason. No private response fields are read."
     },
     "text": {
@@ -40,7 +40,7 @@
       "primary": "Output.object({ schema: jsonSchema(output_schema) }) with generateText / streamText. result.output is read only after the call/stream completes; a thrown getter is an error, never structured success. No post-error diagnostic side channel is promoted to primary."
     },
     "stream": {
-      "primary": "result.fullStream; part.type selects text-delta, tool-call, finish-step, finish, error and abort. A finish part with finishReason interrupted sets completed=false; other finish parts set true unless an error or abort part already set false. finish-step records finish and usage without asserting completion; EOF alone leaves null. (https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text#returns). Yielded errors are outcome=returned with error filled. chunks_seen counts public parts, not HTTP frames."
+      "primary": "result.fullStream; part.type selects text-delta, tool-call, finish-step, finish, error and abort. A finish part with finishReason interrupted sets completed=false; other finish parts set true unless an error or abort part already set false. finish-step records finish and usage without asserting completion; EOF alone leaves null. Yielded errors are outcome=returned with error filled. chunks_seen counts public parts, not HTTP frames. https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text#returns"
     }
   },
   "finish_map": {
