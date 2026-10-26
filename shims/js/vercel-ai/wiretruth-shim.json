@@ -3,11 +3,11 @@
   "name": "vercel-ai",
   "language": "javascript",
   "packages": {
-    "@ai-sdk/anthropic": "4.0.84",
-    "@ai-sdk/google": "4.0.101",
-    "@ai-sdk/openai": "4.0.98",
-    "@ai-sdk/openai-compatible": "3.0.74",
-    "ai": "7.0.146"
+    "@ai-sdk/anthropic": "4.0.88",
+    "@ai-sdk/google": "4.0.105",
+    "@ai-sdk/openai": "4.0.102",
+    "@ai-sdk/openai-compatible": "3.0.78",
+    "ai": "7.0.153"
   },
   "primary_package": "ai",
   "entry": [
@@ -24,7 +24,7 @@
   },
   "surfaces": {
     "finish": {
-      "primary": "result.finishReason; fullStream finish-step/finish parts: finishReason. NoObjectGeneratedError.finishReason is a documented error field. Error name, message, stack and prototype constructor names select error_map and the library-relative top stack frame. No raw-to-primary inference.",
+      "primary": "result.finishReason; fullStream finish-step/finish parts: finishReason, including interrupted mapped to none. (https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text#returns). NoObjectGeneratedError.finishReason is a documented error field. Error name, message, stack and prototype constructor names select error_map and the library-relative top stack frame. No raw-to-primary inference.",
       "raw": "result.rawFinishReason and fullStream finish-step/finish.rawFinishReason. No private response fields are read."
     },
     "text": {
@@ -40,7 +40,7 @@
       "primary": "Output.object({ schema: jsonSchema(output_schema) }) with generateText / streamText. result.output is read only after the call/stream completes; a thrown getter is an error, never structured success. No post-error diagnostic side channel is promoted to primary."
     },
     "stream": {
-      "primary": "result.fullStream; part.type selects text-delta, tool-call, finish-step, finish, error and abort. A finish part sets completed=true unless an error or abort part came first; those set false, and EOF alone leaves null. Yielded errors are outcome=returned with error filled. chunks_seen counts public parts, not HTTP frames."
+      "primary": "result.fullStream; part.type selects text-delta, tool-call, finish-step, finish, error and abort. A finish part with finishReason interrupted sets completed=false; other finish parts set true unless an error or abort part already set false. finish-step records finish and usage without asserting completion; EOF alone leaves null. (https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text#returns). Yielded errors are outcome=returned with error filled. chunks_seen counts public parts, not HTTP frames."
     }
   },
   "finish_map": {
@@ -49,7 +49,8 @@
     "tool-calls": "tool_calls",
     "content-filter": "content_filter",
     "error": "error",
-    "other": "other"
+    "other": "other",
+    "interrupted": "none"
   },
   "error_map": [
     {
@@ -243,7 +244,7 @@
     "OpenAI-compatible defaults to response_format.json_object (supportsStructuredOutputs=false). For the Ollama-compatible schema fixture, the documented supportsStructuredOutputs=true opts into response_format.json_schema. includeUsage is set only from the scenario include_usage hint. https://ai-sdk.dev/providers/openai-compatible-providers",
     "Anthropic structuredOutputMode=jsonTool uses the fixed special tool name json; it cannot select the fixture named structured_output. The forced-tool structured parser scenario is unsupported. Sonnet 5.5 also replaces jsonTool with outputFormat and downgrades required tool choice to auto with a warning. No thinking field is sent without an explicit reasoning/thinking option. https://ai-sdk.dev/providers/ai-sdk-providers/anthropic",
     "Anthropic scenario cache/eager_input_streaming hints map to documented cacheControl and tool providerOptions.anthropic.eagerInputStreaming. Default tool streaming and all other provider defaults are retained. https://ai-sdk.dev/providers/ai-sdk-providers/anthropic",
-    "Unknown wire finish values normalize to other on all supported APIs in these pins; rawFinishReason retains the provider string unchanged. The public v7 FinishReason union is stop | length | content-filter | tool-calls | error | other, with no unknown member.",
+    "Unknown wire finish values normalize to other on all supported APIs in these pins; rawFinishReason retains the provider string unchanged. The public v7 FinishReason union is stop | length | content-filter | tool-calls | error | interrupted | other, with no unknown member. Clean EOF without a provider completion signal reports interrupted on OpenAI Chat, Responses, Anthropic and Google; OpenAI-compatible retains its missing-finish error. https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text#returns",
     "System messages map to the documented instructions array; the remaining messages preserve their roles and order. The current core API rejects system roles in messages by default. https://ai-sdk.dev/docs/reference/ai-sdk-core/generate-text"
   ],
   "docs": [
