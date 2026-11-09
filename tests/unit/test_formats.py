@@ -56,6 +56,16 @@ def test_valid_sample_loads(path: Path) -> None:
     LOADERS[path.parent.name](path)
 
 
+@pytest.mark.parametrize("recording", [{"warm_up": "true"}, {"repeat": 2}, True])
+def test_scenario_rejects_invalid_recording_options(tmp_path, recording):
+    doc = json.loads((REPO / "suite/scenarios/usage/reasoning-tokens.json").read_text())
+    doc["recording"] = recording
+    path = tmp_path / "scenario.json"
+    path.write_text(json.dumps(doc))
+    with pytest.raises(FormatError, match="recording"):
+        load_scenario(path)
+
+
 @pytest.mark.parametrize("path", _samples("invalid"), ids=_id)
 def test_invalid_sample_reports_every_problem(path: Path) -> None:
     with pytest.raises(FormatError) as exc:

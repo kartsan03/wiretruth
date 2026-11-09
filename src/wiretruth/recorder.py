@@ -451,6 +451,10 @@ def record_scenario(
     target = destination(
         root, provider.ID, scenario.id, replace=replace
     )  # before paying for a call
+    if scenario.warm_up:
+        warm_up = send(provider, request, base_url, key)
+        if not 200 <= warm_up.status < 300:
+            raise RecordError(f"warm-up returned HTTP {warm_up.status}; nothing was written")
     recorded_at = datetime.now(UTC)
     response = send(provider, request, base_url, key)
     raw = b"".join(response.pieces)
@@ -464,6 +468,14 @@ def record_scenario(
         truth = provider.extract_truth([build_exchange(exchange)], request.body)
     except ValueError as error:
         raise RecordError(f"can't compute the truth: {error}") from None
+    if scenario.warm_up:  # a warm-up exists to get a cache hit; a fixture without one tests nothing
+        usage = truth.get("usage")
+        cached = usage.get("cached_input") if isinstance(usage, dict) else None
+        if not isinstance(cached, int) or cached <= 0:
+            raise RecordError(
+                f"the response after the warm-up reports no cached input tokens "
+                f"(HTTP {response.status}, cached input {cached}); nothing was written"
+            )
     path = target.path
     fixture: JsonObject = {
         "format": "wiretruth.fixture/v1",

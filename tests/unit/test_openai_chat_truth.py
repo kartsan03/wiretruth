@@ -99,6 +99,26 @@ def test_a_length_finish_with_usage() -> None:
     }
 
 
+def test_cached_input_and_reasoning_are_inclusive_usage_breakdowns() -> None:
+    usage = {
+        "prompt_tokens": 1500,
+        "prompt_tokens_details": {"cached_tokens": 1024, "cache_write_tokens": 128},
+        "completion_tokens": 100,
+        "completion_tokens_details": {"reasoning_tokens": 80},
+        "total_tokens": 1600,
+    }
+    truth = _truth(_message({"role": "assistant", "content": "11 pots."}, usage=usage))
+    assert truth["usage"] == {
+        "input": 1500,
+        "cached_input": 1024,
+        "output": 100,
+        "reasoning": 80,
+        "total": 1600,
+        "alternatives": {},
+        "raw": usage,
+    }
+
+
 @pytest.mark.parametrize(
     ("raw", "finish"),
     [

@@ -119,6 +119,7 @@ One edge case: the call to make, and the requirements a library must meet.
 | `call_overrides` | object | no | Provider id → call fields that replace the neutral ones for that provider. Each provider must be in `providers` |
 | `grading_notes` | string | when `call_overrides` is set | How edge cases grade, and why each override exists |
 | `references` | list of URLs | no | Issues and docs that show the bug class in the wild |
+| `recording` | object | no | `{"warm_up": true}` sends the identical request twice and records only the second exchange, which must report cached input tokens; `warm_up` defaults to `false`. Replay is unchanged |
 
 ### Requirement
 

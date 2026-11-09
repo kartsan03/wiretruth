@@ -58,6 +58,6 @@ Fixture tiers: `recorded` = real provider bytes; `documented` = transcribed from
 
 | id | title | bug class | priority | providers | requirements |
 |---|---|---|---|---|---|
-| `usage.cached-tokens` | Cached input is included in total token usage | usage-accounting | P1 | anthropic `documented` | MUST `total-reconciles` (usage_total_reconciles)<br>SHOULD `cached-input-reported` (usage_matches_truth) |
-| `usage.reasoning-tokens` | Token usage accounts for thinking and answer tokens | usage-accounting | P0 | gemini `recorded` | MUST `total-reconciles` (usage_total_reconciles)<br>SHOULD `reasoning-reported` (usage_matches_truth) |
+| `usage.cached-tokens` | Cached input is included in total token usage | usage-accounting | P1 | anthropic `documented`<br>gemini `no fixture`<br>openai-chat `no fixture`<br>openai-responses `no fixture` | MUST `total-reconciles` (usage_total_reconciles)<br>SHOULD `cached-input-reported` (usage_matches_truth) |
+| `usage.reasoning-tokens` | Token usage accounts for thinking and answer tokens | usage-accounting | P0 | anthropic `no fixture`<br>gemini `recorded`<br>openai-chat `no fixture`<br>openai-responses `no fixture` | MUST `total-reconciles` (usage_total_reconciles)<br>SHOULD `reasoning-reported` (usage_matches_truth) |
 | `usage.stream-final-chunk` | Streamed usage in a final chunk with no choices | usage-accounting | P0 | anthropic `documented`<br>gemini `recorded`<br>ollama `recorded`<br>ollama-openai `recorded`<br>openai-chat `recorded` | MUST `usage-reported` (usage_matches_truth) |

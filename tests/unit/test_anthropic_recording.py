@@ -154,7 +154,7 @@ def test_anthropic_scenario_overrides_and_cache_hint():
         assert "output_config" not in body
     scenario = load_scenario(REPO / "suite/scenarios/usage/cached-tokens.json")
     assert len(scenario.call.messages[0].content.split()) > 800
-    assert anthropic.build_request(scenario.call, MODEL).body["cache_control"] == {
+    assert anthropic.build_request(scenario.call_for("anthropic"), MODEL).body["cache_control"] == {
         "type": "ephemeral"
     }
 

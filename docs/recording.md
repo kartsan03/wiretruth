@@ -15,9 +15,15 @@ fixture in `suite/fixtures/<provider>/<scenario>.json`.
   both OpenAI providers, `GEMINI_API_KEY` for Gemini, `ANTHROPIC_API_KEY` for Anthropic) and sent only in a header. Request headers are never stored. A key with spaces or other
   characters a header can't carry is rejected without being printed. If the key itself shows up in a response,
   nothing is written. Ollama providers use no key and send no Authorization header.
-- **One call, the scenario's call.** The request is built from the scenario's `call` (with its `call_overrides` for
+- **The scenario's call.** The request is built from the scenario's `call` (with its `call_overrides` for
   the provider) and the provider's current model, or `--model`. The request doesn't set a temperature or a seed:
   the call format has no such fields. Library defaults remain observable in the replay request log.
+
+A scenario can set `"recording": {"warm_up": true}` to warm a prompt cache. The recorder sends the identical
+request twice, discards the first response and stores only the second exchange. A non-2xx warm-up stops the
+recording before the second request, and nothing is written if the second response reports no cached input
+tokens. This doubles the number of paid calls; caching discounts may change the combined token cost. Dry runs say
+when warm-up is enabled.
 
 ## What a fixture stores
 
@@ -139,8 +145,9 @@ optional `[DONE]` adds no completion evidence.
 The remaining stream scenarios are derived from these recordings; see [derived fixtures](derived-fixtures.md).
 The midstream error frame is a `data: {"error": {…}}` event, the form the official client raises on (its
 [streaming code](https://github.com/googleapis/python-genai/blob/main/google/genai/_api_client.py) treats a
-chunk that starts with `{"error":` as an API error). Implicit-cache recordings are deferred until the
-recorder supports sending a prompt twice.
+chunk that starts with `{"error":` as an API error). `usage.cached-tokens` uses the warm-up for Gemini's implicit
+cache. Cache hits are best effort on the free tier and the minimum prompt size for 3.5 Flash-Lite isn't documented,
+so record it with `--model gemini-3.5-flash-lite`; the recorder writes nothing when the cache wasn't hit.
 
 ## Anthropic documented fixtures
 
@@ -153,7 +160,7 @@ They have no recording timestamp, CI run or raw hash. To upgrade an ordinary cel
 `wiretruth record --provider anthropic --scenario <id> --replace` (add `--model claude-haiku-4-5` for the legacy
 case), review the new bytes, then regenerate its derived fixtures. The CLI authenticates with `x-api-key` and
 `anthropic-version: 2023-06-01`; dry runs mask the key. The CI recording workflow has no Anthropic option yet.
-The cached-token cell assumes a warm cache; recording it requires a future repeat-request mechanism.
+The cached-token cell enables warm-up so the stored response can report cache reads.
 
 Anthropic requires an output limit. Sonnet 5.5 rejects forced tool choice and disabled thinking, so tool calls
 use `auto`, effort `none` omits thinking configuration, and other efforts use adaptive thinking with

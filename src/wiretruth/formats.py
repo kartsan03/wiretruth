@@ -575,6 +575,7 @@ class Scenario:
     call_overrides: Mapping[str, Call]  # the full call, override applied, per overridden provider
     grading_notes: str | None
     references: tuple[str, ...]
+    warm_up: bool = False
 
     def call_for(self, provider: str) -> Call:
         return self.call_overrides.get(provider, self.call)
@@ -610,6 +611,7 @@ def load_scenario(path: Path | str) -> Scenario:
         ),
         grading_notes=_opt_str(doc, "grading_notes"),
         references=_strings(doc, "references"),
+        warm_up=cast(bool, _object(doc, "recording").get("warm_up", False)),
     )
 
 

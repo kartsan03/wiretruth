@@ -323,6 +323,8 @@ def run_record(args: argparse.Namespace) -> int:
         if args.dry_run:
             for scenario, request in zip(scenarios, requests, strict=True):
                 print(f"# {scenario.id}")
+                if scenario.warm_up:
+                    print("# Warm-up: send this request twice; keep only the second response.")
                 print(describe_request(provider, request, provider.API_BASE))
             return 0
         key = api_key(provider, os.environ)
