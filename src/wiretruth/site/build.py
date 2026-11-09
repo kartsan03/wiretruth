@@ -773,9 +773,15 @@ def build(root: Path, out: Path) -> int:
         for pair, cell in sorted(library.cells.items()):
             if pair not in pairs:
                 continue
+            fixture = fixtures.get(_text(cell, "fixture"))
+            if fixture is None:
+                raise SetupError(
+                    f"results/{library.name}: {pair[0]} {pair[1]} uses fixture "
+                    f"{_text(cell, 'fixture')}, which is not in suite/fixtures"
+                )
             pages[_cell_path(library.name, *pair)] = _page(
                 f"{_label(cell)} · {library.name} · {pair[0]} · {pair[1]}",
-                _cell(library, cell, fixtures[_text(cell, "fixture")], upstream),
+                _cell(library, cell, fixture, upstream),
                 "../../../",
             )
     if out.exists():

@@ -9,6 +9,7 @@ from urllib.parse import unquote, urlsplit
 import pytest
 
 from wiretruth.cli import main
+from wiretruth.lint import SetupError
 from wiretruth.site.build import _compare_versions, _evidence, build
 
 REPO = Path(__file__).resolve().parents[2]
@@ -355,3 +356,12 @@ def test_grade_status_and_fact_rendering(built: Path) -> None:
         ("NOT_OBSERVABLE", "lossy"),
     ]:
         assert f'<span class="status grade {grade}">{status}</span>' in rendered
+
+
+def test_a_cell_whose_fixture_is_gone_is_a_setup_error(root: Path) -> None:
+    (root / "suite" / "fixtures" / "openai-chat" / "truncation.text.json").unlink()
+    with pytest.raises(
+        SetupError, match=re.escape("openai-chat/truncation.text, which is not in suite/fixtures")
+    ):
+        build(root, root / "_site")
+    assert not (root / "_site").exists()
