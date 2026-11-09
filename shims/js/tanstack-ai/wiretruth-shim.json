@@ -3,11 +3,11 @@
   "name": "tanstack-ai",
   "language": "javascript",
   "packages": {
-    "@tanstack/ai": "1.0.0",
-    "@tanstack/ai-anthropic": "1.0.0",
-    "@tanstack/ai-gemini": "1.0.0",
-    "@tanstack/ai-ollama": "1.0.0",
-    "@tanstack/ai-openai": "1.0.0"
+    "@tanstack/ai": "1.4.0",
+    "@tanstack/ai-anthropic": "1.1.1",
+    "@tanstack/ai-gemini": "1.2.1",
+    "@tanstack/ai-ollama": "1.1.1",
+    "@tanstack/ai-openai": "1.1.1"
   },
   "primary_package": "@tanstack/ai",
   "entry": [
