@@ -46,9 +46,10 @@ Replaying fixtures recorded on today's models is fine: the wire shape is what ma
   (`qwen3.5:0.8b`, recorded 2026-10-12).
 
 The other consecutive result comparisons add no fixed-bug rows: LiteLLM 1.105.1 → 1.105.5 and any-llm
-1.38.0 → 1.40.2 have unchanged grades. The Vercel comparisons change only the cells listed above. TanStack 1.0.0 → 1.4.0 also moves
-`stream.missing-finish` over `anthropic` LOSSY → PASS ([#2042](https://github.com/TanStack/ai/pull/2042),
-`@tanstack/ai-anthropic` 1.1.1); wiretruth graded that gap but filed no issue for it, so it has no row above.
+1.38.0 → 1.40.2 have unchanged grades. The Vercel comparisons change only the cells listed above.
+TanStack 1.0.0 → 1.4.0 also moves `stream.missing-finish` over `anthropic` LOSSY → PASS
+([#2042](https://github.com/TanStack/ai/pull/2042), `@tanstack/ai-anthropic` 1.1.1); wiretruth graded that gap but
+filed no issue for it, so it has no row above.
 
 ## Not checked yet
 
