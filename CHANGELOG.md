@@ -14,8 +14,8 @@ finding).
 ### Added
 - Validation page with committed grades before and after upstream bug fixes and links to the reproducing fixtures.
 - Recorder warm-up for cached prompts: a scenario with `"recording": {"warm_up": true}` sends its request twice
-  and keeps the second response. `usage.cached-tokens` adds OpenAI Chat Completions, OpenAI Responses and Gemini,
-  and `usage.reasoning-tokens` adds both OpenAI APIs and Anthropic.
+  and keeps the second response. `usage.cached-tokens` adds OpenAI Chat Completions and OpenAI Responses, and
+  `usage.reasoning-tokens` adds both OpenAI APIs and Anthropic.
 - TanStack AI 1.0.0 shim for OpenAI Chat Completions and Responses, native and OpenAI-compatible Ollama, Gemini
   GenerateContent and Anthropic Messages. Its `chat()` always requests a streamed response, so the non-streamed
   fixtures are UNSUPPORTED.

@@ -145,9 +145,9 @@ optional `[DONE]` adds no completion evidence.
 The remaining stream scenarios are derived from these recordings; see [derived fixtures](derived-fixtures.md).
 The midstream error frame is a `data: {"error": {…}}` event, the form the official client raises on (its
 [streaming code](https://github.com/googleapis/python-genai/blob/main/google/genai/_api_client.py) treats a
-chunk that starts with `{"error":` as an API error). `usage.cached-tokens` uses the warm-up for Gemini's implicit
-cache. Cache hits are best effort on the free tier and the minimum prompt size for 3.5 Flash-Lite isn't documented,
-so record it with `--model gemini-3.5-flash-lite`; the recorder writes nothing when the cache wasn't hit.
+chunk that starts with `{"error":` as an API error). Gemini isn't in `usage.cached-tokens`: implicit caching is best effort,
+and on 2026-11-09 3.5 Flash-Lite on the free tier returned no cached tokens for an immediate repeat of the
+request, so the recorder wrote nothing.
 
 ## Anthropic documented fixtures
 

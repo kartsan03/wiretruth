@@ -540,7 +540,6 @@ def test_all_gemini_scenarios_build_and_thinking_override_is_effective():
         "tools.parallel-calls",
         "tools.parallel-calls-stream",
         "usage.stream-final-chunk",
-        "usage.cached-tokens",
         "usage.reasoning-tokens",
         "finish.stop-sequence",
         "finish.unknown-value",
