@@ -1,0 +1,7 @@
+<header class="intro"><h1>Method</h1><p>Recorded provider responses are replayed through each library. Requirements compare the library's observation with the fixture's truth.</p></header>
+<section><h2>Grades</h2>$legend<h3>Ordered rules</h3><ol class="rules">$rules</ol></section>
+<section><h2>Surfaces</h2><p>A primary surface is the library's normal result; a raw surface is provider metadata available outside that result. An absent surface means the information is unavailable; requirements decide whether a raw or absent value changes the grade.</p></section>
+<section><h2>Fixture tiers</h2><dl class="tier-definitions"><dt>recorded</dt><dd>Provider response bytes captured from a real request, with recording provenance.</dd><dt>documented</dt><dd>A response transcribed from provider documentation, with a source link.</dd><dt>derived</dt><dd>A named transform of a source fixture, with a rationale and evidence.</dd></dl></section>
+<section><h2>Limitations</h2><p>Recorded responses replay one moment of a provider. Documented fixtures are transcribed from documentation. A grade covers one library version and the call the shim makes.</p></section>
+<section><h2>Disclosure</h2><p>Findings and upstream status are tracked in <a href="$upstream">upstream.json</a>, with issue and PR links when present. Some entries cite documented behavior rather than an upstream issue.</p></section>
+<section><h2>Further reading</h2><p><a href="$docs/concepts.md">Concepts</a> · <a href="$docs/grading.md">Grading</a> · <a href="$docs/formats.md">File formats</a></p></section>

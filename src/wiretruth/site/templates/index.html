@@ -1,0 +1,69 @@
+<header class="intro">
+  <h1>Does your LLM SDK tell you the truth?</h1>
+  <p>Each cell grades one library version against one scenario and provider response.</p>
+  <p class="muted metadata">Updated $updated <span>Suite $suite</span></p>
+</header>
+<section aria-labelledby="libraries-heading">
+  <h2 id="libraries-heading">Libraries</h2>
+  <div class="summaries">$summaries</div>
+</section>
+<section aria-labelledby="results-heading">
+  <h2 id="results-heading">Results</h2>
+  <form class="filters" data-ui-container hidden aria-label="Filter results">$filters</form>
+  <div class="matrix-wrap" tabindex="0" role="region" aria-label="Results matrix, scroll horizontally">
+    <table class="matrix">
+      <thead><tr><th scope="col">Provider</th>$columns</tr></thead>
+      <tbody>$rows</tbody>
+    </table>
+  </div>
+</section>
+<section aria-labelledby="grades-heading"><h2 id="grades-heading">Grades</h2>$legend</section>
+<script>
+const filters = document.querySelector('.filters');
+filters.hidden = false;
+filters.addEventListener('change', () => {
+  const values = Object.fromEntries(new FormData(filters));
+  document.querySelectorAll('.matrix-row').forEach(row => {
+    row.hidden = ['provider', 'family', 'tier'].some(key => values[key] && row.dataset[key] !== values[key]);
+  });
+  document.querySelectorAll('.family, .scenario').forEach(row => {
+    const key = row.classList.contains('scenario') ? 'scenario' : 'family';
+    row.hidden = !Array.from(document.querySelectorAll('.matrix-row')).some(item => !item.hidden && item.dataset[key] === row.dataset[key]);
+    row.firstElementChild.colSpan = values.library ? 2 : document.querySelectorAll('.meter').length + 1;
+  });
+  document.querySelectorAll('[data-library]').forEach(cell => {
+    cell.hidden = Boolean(values.library && cell.dataset.library !== values.library);
+  });
+});
+document.querySelectorAll('.meter').forEach(meter => {
+  const highlight = event => {
+    const pill = event.target.closest('.grade-pill');
+    meter.querySelectorAll('.segment').forEach(segment => {
+      segment.classList.toggle('dimmed', Boolean(pill && segment.dataset.grade !== pill.dataset.grade));
+    });
+  };
+  meter.addEventListener('pointerover', highlight);
+  meter.addEventListener('focusin', highlight);
+  meter.addEventListener('pointerleave', () => meter.querySelectorAll('.segment').forEach(s => s.classList.remove('dimmed')));
+  meter.addEventListener('focusout', () => meter.querySelectorAll('.segment').forEach(s => s.classList.remove('dimmed')));
+});
+const positionTip = event => {
+  const link = event.target.closest('.cell-link');
+  if (!link) return;
+  const tip = document.getElementById(link.getAttribute('aria-describedby'));
+  const box = link.getBoundingClientRect();
+  tip.parentElement.classList.remove('dismissed');
+  tip.style.left = Math.max(16, Math.min(box.left, innerWidth - tip.offsetWidth - 16)) + 'px';
+  tip.style.top = Math.max(16, Math.min(box.bottom + 8, innerHeight - tip.offsetHeight - 16)) + 'px';
+  tip.style.bottom = 'auto';
+};
+document.addEventListener('pointerover', positionTip);
+document.addEventListener('focusin', positionTip);
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') document.querySelectorAll('.result').forEach(cell => cell.classList.add('dismissed'));
+});
+document.querySelectorAll('.result').forEach(cell => {
+  cell.addEventListener('pointerleave', () => cell.classList.remove('dismissed'));
+  cell.addEventListener('focusout', () => cell.classList.remove('dismissed'));
+});
+</script>

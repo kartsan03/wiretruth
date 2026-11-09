@@ -1,0 +1,19 @@
+<header class="intro">
+  <p class="verdict grade $cls">$label</p>
+  <h1>$library $version</h1>
+  <p><code>$scenario</code> · $provider</p>
+  <p><a href="../../../index.html#$library/$scenario/$provider">Back to results</a> · <a href="../../../scenarios/$scenario.html">Scenario</a></p>
+</header>
+<section><h2>Requirements</h2>$requirements$notes</section>
+<div class="comparison">
+  <section class="comparison-panel"><h2>What the provider sent</h2>$sent
+    <details><summary>Wire excerpt</summary><pre>$wire</pre></details>
+  </section>
+  <section class="comparison-panel"><h2>What the library reported</h2>$reported
+    <details><summary>Full observation JSON</summary><pre>$observation</pre></details>
+  </section>
+</div>
+<section><h2>Fixture</h2>$provenance</section>
+$reproduce
+<section><h2>Upstream</h2>$upstream</section>
+<section><h2>History</h2>$history</section>
