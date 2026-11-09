@@ -12,6 +12,7 @@ finding).
 ## [Unreleased]
 
 ### Added
+- Validation page with committed grades before and after upstream bug fixes and links to the reproducing fixtures.
 - Recorder warm-up for cached prompts: a scenario with `"recording": {"warm_up": true}` sends its request twice
   and keeps the second response. `usage.cached-tokens` adds OpenAI Chat Completions, OpenAI Responses and Gemini,
   and `usage.reasoning-tokens` adds both OpenAI APIs and Anthropic.
