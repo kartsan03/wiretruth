@@ -11,6 +11,21 @@ finding).
 
 ## [Unreleased]
 
+### Changed
+- The TanStack AI shim pins `@tanstack/ai` 1.4.0, `@tanstack/ai-ollama` 1.1.1, `@tanstack/ai-gemini` 1.2.1,
+  `@tanstack/ai-anthropic` 1.1.1 and `@tanstack/ai-openai` 1.1.1.
+
+### Results
+- TanStack AI 1.4.0: 50 PASS, 1 LOSSY, 1 WRONG and 48 UNSUPPORTED of 100 cells
+  ([results/tanstack-ai/1.4.0.json](results/tanstack-ai/1.4.0.json)). `truncation.text-stream` over `ollama` moves
+  WRONG → PASS: a stream cut off by `done_reason: "length"` now finishes as `length`
+  ([TanStack/ai#1852](https://github.com/TanStack/ai/issues/1852), [#2077](https://github.com/TanStack/ai/pull/2077),
+  `@tanstack/ai-ollama` 1.1.1). `stream.missing-finish` over `anthropic` moves LOSSY → PASS: a stream that ends
+  before a stop reason now reports an incomplete stream ([TanStack/ai#2042](https://github.com/TanStack/ai/pull/2042),
+  `@tanstack/ai-anthropic` 1.1.1). Truncated `gemini` and `openai-responses` streams now report usage, which meets
+  the SHOULD usage requirement ([TanStack/ai#1974](https://github.com/TanStack/ai/pull/1974)).
+  [1.0.0 results](results/tanstack-ai/1.0.0.json) retain the earlier grades.
+
 ## [0.3.0] - 2026-11-09
 
 ### Added
