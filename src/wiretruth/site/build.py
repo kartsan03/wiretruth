@@ -245,10 +245,7 @@ def _summary(library: Library, pairs: list[tuple[str, str]]) -> str:
         )
     exclusions = []
     if counts["UNSUPPORTED"]:
-        exclusions.append(
-            f"{counts['UNSUPPORTED']} unsupported "
-            "(the library's docs say it can't make these calls)"
-        )
+        exclusions.append(f"{counts['UNSUPPORTED']} unsupported")
     if counts["not covered"]:
         exclusions.append(f"{counts['not covered']} not covered")
     return _html(

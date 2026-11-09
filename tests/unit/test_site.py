@@ -269,7 +269,7 @@ def test_summary_uses_applicable_cells_and_complete_header_counts(root: Path) ->
     assert summary is not None
     text = unescape(summary[1])
     assert "<strong data-ui-number>2</strong> <span>of 3 pass</span>" in text
-    assert "1 unsupported (the library's docs say it can't make these calls)" in text
+    assert "1 unsupported" in text
     assert "96 not covered" in text
     assert re.findall(r'class="segment (\S+)"', text) == ["pass", "wrong"]
     assert re.findall(r'class="grade-pill (\S+)"', text) == ["pass", "wrong"]
