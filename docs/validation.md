@@ -12,6 +12,7 @@ be later than the first release containing the fix.
 | Vercel AI SDK [#23450](https://github.com/vercel/ai/issues/23450): in-stream error ignored; fixed by [#23459](https://github.com/vercel/ai/pull/23459) in `@ai-sdk/google` 4.0.99 | wiretruth | `stream.error-midstream`: `gemini` | `ai` 7.0.142 (Google 4.0.98) → WRONG | `ai` 7.0.146 (Google 4.0.101) → PASS | [before](../results/vercel-ai/7.0.142.json), [after](../results/vercel-ai/7.0.146.json) |
 | Vercel AI SDK [#23449](https://github.com/vercel/ai/issues/23449): incomplete stream reported as finished; fixed by [#23814](https://github.com/vercel/ai/pull/23814) | wiretruth | `stream.missing-finish`: `openai-chat`, `openai-responses`, `anthropic`, `gemini` | `ai` 7.0.146 → WRONG | `ai` 7.0.153 → PASS | [before](../results/vercel-ai/7.0.146.json), [after](../results/vercel-ai/7.0.153.json) |
 | TanStack AI [#1853](https://github.com/TanStack/ai/issues/1853): truncated tool call loses the length finish and triggers retries; fixed by [#1874](https://github.com/TanStack/ai/pull/1874) | wiretruth | `truncation.tool-call-args-stream`: `openai-chat` | 0.71.0 → WRONG | 1.0.0 → PASS | [before](../results/tanstack-ai/0.71.0.json), [after](../results/tanstack-ai/1.0.0.json) |
+| TanStack AI [#1852](https://github.com/TanStack/ai/issues/1852): native Ollama stream cut by the token limit finishes as `stop`; fixed by [#2077](https://github.com/TanStack/ai/pull/2077) in `@tanstack/ai-ollama` 1.1.1 | wiretruth | `truncation.text-stream`: `ollama` | 1.0.0 → WRONG | 1.4.0 → PASS | [before](../results/tanstack-ai/1.0.0.json), [after](../results/tanstack-ai/1.4.0.json) |
 | pydantic-ai [#7816](https://github.com/pydantic/pydantic-ai/issues/7816): unfamiliar finish values rejected; fixed by [#11119](https://github.com/pydantic/pydantic-ai/pull/11119) | reported by others, confirmed by wiretruth | `finish.unknown-value`: `openai-chat`, `ollama-openai` | 2.56.0 → WRONG | 2.61.0 → LOSSY | [before](../results/pydantic-ai/2.56.0.json), [after](../results/pydantic-ai/2.61.0.json) |
 
 pydantic-ai keeps the response and the original value in `provider_details`, but exposes no finish reason.
@@ -41,9 +42,13 @@ Replaying fixtures recorded on today's models is fine: the wire shape is what ma
 - **TanStack #1853:** `openai-chat`
   [truncation.tool-call-args-stream](../suite/fixtures/openai-chat/truncation.tool-call-args-stream.json)
   (`gpt-6-luna`, recorded 2026-10-11). This is the only cell whose grade changed between these TanStack results.
+- **TanStack #1852:** `ollama` [truncation.text-stream](../suite/fixtures/ollama/truncation.text-stream.json)
+  (`qwen3.5:0.8b`, recorded 2026-10-12).
 
 The other consecutive result comparisons add no fixed-bug rows: LiteLLM 1.105.1 → 1.105.5 and any-llm
-1.38.0 → 1.40.2 have unchanged grades. The Vercel comparisons change only the cells listed above.
+1.38.0 → 1.40.2 have unchanged grades. The Vercel comparisons change only the cells listed above. TanStack 1.0.0 → 1.4.0 also moves
+`stream.missing-finish` over `anthropic` LOSSY → PASS ([#2042](https://github.com/TanStack/ai/pull/2042),
+`@tanstack/ai-anthropic` 1.1.1); wiretruth graded that gap but filed no issue for it, so it has no row above.
 
 ## Not checked yet
 

@@ -213,11 +213,11 @@
     "scenarios": ["truncation.text-stream"],
     "providers": ["ollama"],
     "issue": "https://github.com/TanStack/ai/issues/1852",
-    "pr": null,
-    "status": "reported",
-    "fixed_in": null,
+    "pr": "https://github.com/TanStack/ai/pull/2077",
+    "status": "released",
+    "fixed_in": "@tanstack/ai-ollama 1.1.1",
     "opened": "2026-10-21",
-    "notes": "@tanstack/ai-ollama sets the streamed RUN_FINISHED finishReason from whether tool calls were emitted (packages/ai-ollama/src/adapters/text.ts) and never reads done_reason, so done_reason \"length\" finishes as stop. structuredOutput() already checks done_reason (TanStack/ai#1548)."
+    "notes": "Before 1.1.1, @tanstack/ai-ollama set the streamed RUN_FINISHED finishReason from whether tool calls were emitted (packages/ai-ollama/src/adapters/text.ts) and never read done_reason, so done_reason \"length\" finishes as stop. structuredOutput() already checks done_reason (TanStack/ai#1548). Fixed by #2077 (@tanstack/ai-ollama 1.1.1): done_reason \"length\" now finishes as length; the cell is PASS on the 1.4.0 results."
   },
   {
     "library": "tanstack-ai",
