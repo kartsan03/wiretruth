@@ -52,6 +52,18 @@
       }
     },
     "grading_notes": { "$ref": "common.schema.json#/$defs/nonempty_string" },
+    "recording": {
+      "description": "Recorder options; these do not change the replayed call.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "warm_up": {
+          "description": "Send the identical request once first, discard its response, and record only the second exchange.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
     "references": {
       "type": "array",
       "items": { "$ref": "common.schema.json#/$defs/url" }

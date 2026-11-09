@@ -12,6 +12,7 @@ from contextlib import contextmanager
 from dataclasses import replace
 from pathlib import Path
 from types import MappingProxyType, SimpleNamespace
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -132,6 +133,100 @@ def _record(
 
 
 # --- Recording ------------------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("warm_up", [None, False, True])
+def test_warm_up_records_only_the_second_response(root, monkeypatch, warm_up):
+    path = root / "suite/scenarios/truncation/text.json"
+    doc = json.loads(path.read_text())
+    if warm_up is not None:
+        doc["recording"] = {"warm_up": warm_up}
+        path.write_text(json.dumps(doc))
+    scenario = load_scenario(path)
+    first = (
+        b'{"model":"gpt-6-luna","choices":[{"message":{"content":"First"},"finish_reason":"stop"}]}'
+    )
+    second = first.replace(b"First", b"Second")
+    send = MagicMock(
+        side_effect=[
+            recorder.Response(200, {"content-type": "application/json"}, [body], "clean")
+            for body in (first, second)
+        ]
+    )
+    monkeypatch.setattr(recorder, "send", send)
+    recording = record_scenario(
+        openai_chat,
+        scenario,
+        model="gpt-6-luna",
+        key=KEY,
+        root=root,
+        base_url=openai_chat.API_BASE,
+        env={},
+    )
+    assert send.call_count == (2 if warm_up else 1)
+    assert all(call == send.call_args_list[0] for call in send.call_args_list)
+    fixture = load_fixture(recording.path)
+    assert len(fixture.exchanges) == 1
+    assert fixture.truth.text == ("Second" if warm_up else "First")
+    assert fixture.provenance.request == send.call_args.args[1].body
+    assert fixture.provenance.raw_sha256 == hashlib.sha256(second if warm_up else first).hexdigest()
+    if warm_up:
+        assert "First" not in recording.path.read_text()
+
+
+@pytest.mark.parametrize("status", [302, 400, 429, 503])
+def test_failed_warm_up_stops_before_the_second_request(root, scenario, monkeypatch, status):
+    send = MagicMock(return_value=recorder.Response(status, {}, [b"Discarded error"], "clean"))
+    monkeypatch.setattr(recorder, "send", send)
+    with pytest.raises(
+        RecordError, match=rf"^warm-up returned HTTP {status}; nothing was written$"
+    ):
+        record_scenario(
+            openai_chat,
+            replace(scenario, warm_up=True),
+            model="gpt-6-luna",
+            key=KEY,
+            root=root,
+            base_url=openai_chat.API_BASE,
+            env={},
+        )
+    send.assert_called_once()
+    assert not (root / "suite/fixtures").exists()
+
+
+def test_warm_up_keeps_the_secret_scan_on_the_second_response(root, scenario, monkeypatch):
+    send = MagicMock(
+        side_effect=[
+            recorder.Response(200, {}, [b"Discarded"], "clean"),
+            recorder.Response(200, {}, [KEY.encode()], "clean"),
+        ]
+    )
+    monkeypatch.setattr(recorder, "send", send)
+    with pytest.raises(RecordError, match="the secret scan stopped the recording"):
+        record_scenario(
+            openai_chat,
+            replace(scenario, warm_up=True),
+            model="gpt-6-luna",
+            key=KEY,
+            root=root,
+            base_url=openai_chat.API_BASE,
+            env={},
+        )
+    assert send.call_count == 2
+    assert not (root / "suite/fixtures").exists()
+
+
+def test_dry_run_describes_warm_up(root, monkeypatch, capsys):
+    path = root / "suite/scenarios/truncation/text.json"
+    doc = json.loads(path.read_text())
+    doc["recording"] = {"warm_up": True}
+    path.write_text(json.dumps(doc))
+    monkeypatch.chdir(root)
+    send = MagicMock()
+    monkeypatch.setattr(recorder, "send", send)
+    assert main(["record", "--provider", "openai-chat", "--scenario", "*", "--dry-run"]) == 0
+    assert "send this request twice; keep only the second response" in capsys.readouterr().out
+    send.assert_not_called()
 
 
 def test_a_stream_is_recorded_event_by_event(

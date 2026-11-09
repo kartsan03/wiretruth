@@ -831,6 +831,15 @@
     },
     {
       "scenario": "usage.reasoning-tokens",
+      "provider": "anthropic",
+      "grade": "LOSSY",
+      "requirements": {
+        "total-reconciles": "NOT_OBSERVABLE",
+        "reasoning-reported": "NOT_OBSERVABLE"
+      }
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
       "provider": "gemini",
       "grade": "LOSSY",
       "requirements": {

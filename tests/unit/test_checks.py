@@ -23,9 +23,11 @@ from wiretruth.formats import (
     ToolCall,
     Truth,
     Usage,
+    build_exchange,
     load_fixture,
     load_scenario,
 )
+from wiretruth.providers import openai_chat, openai_responses
 from wiretruth.replay import LoggedRequest
 
 REPO = Path(__file__).resolve().parents[2]
@@ -64,6 +66,60 @@ def raised(category: ErrorCategory = "parse", **changes: object) -> Observation:
 def usage(**changes: object) -> Observation:
     assert OBS.usage is not None
     return replace(OBS, usage=replace(OBS.usage, **changes))
+
+
+@pytest.mark.parametrize("provider", [openai_chat, openai_responses])
+def test_openai_usage_checks_do_not_add_cached_input_or_reasoning_twice(provider):
+    input_field, output_field = (
+        ("prompt_tokens", "completion_tokens")
+        if provider is openai_chat
+        else ("input_tokens", "output_tokens")
+    )
+    exchange = build_exchange(
+        {
+            "match": {
+                "method": "POST",
+                "path": provider.build_request(
+                    load_scenario(REPO / "suite/scenarios/usage/reasoning-tokens.json").call,
+                    provider.DEFAULT_MODEL,
+                ).path,
+            },
+            "response": {
+                "status": 200,
+                "headers": {"content-type": "application/json"},
+                "end": "clean",
+                "body": {
+                    "json": {
+                        "usage": {
+                            input_field: 1500,
+                            f"{input_field}_details": {"cached_tokens": 1024},
+                            output_field: 100,
+                            f"{output_field}_details": {"reasoning_tokens": 80},
+                            "total_tokens": 1600,
+                        }
+                    }
+                },
+            },
+        }
+    )
+    truth = replace(TRUTH, usage=Usage(**provider.extract_truth([exchange], None)["usage"]))
+    obs = usage(input=1500, cached_input=1024, output=100, reasoning=80, total=1600)
+    for total in (1600, None):
+        assert (
+            CHECKS["usage_total_reconciles"](
+                replace(obs, usage=replace(obs.usage, total=total)), truth, (), {}
+            ).status
+            == "SATISFIED"
+        )
+    args = {"fields": ["cached_input", "reasoning"]}
+    assert CHECKS["usage_matches_truth"](obs, truth, (), args).status == "SATISFIED"
+    assert (
+        CHECKS["usage_total_reconciles"](usage(total=2704), truth, (), {}).status == "CONTRADICTED"
+    )
+    assert (
+        CHECKS["usage_matches_truth"](usage(cached_input=0), truth, (), args).status
+        == "CONTRADICTED"
+    )
 
 
 def request(body: JsonValue = None) -> LoggedRequest:

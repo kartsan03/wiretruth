@@ -831,6 +831,15 @@
     },
     {
       "scenario": "usage.reasoning-tokens",
+      "provider": "anthropic",
+      "grade": "PASS",
+      "requirements": {
+        "total-reconciles": "SATISFIED",
+        "reasoning-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
       "provider": "gemini",
       "grade": "PASS",
       "requirements": {

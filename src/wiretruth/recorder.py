@@ -451,6 +451,10 @@ def record_scenario(
     target = destination(
         root, provider.ID, scenario.id, replace=replace
     )  # before paying for a call
+    if scenario.warm_up:
+        warm_up = send(provider, request, base_url, key)
+        if not 200 <= warm_up.status < 300:
+            raise RecordError(f"warm-up returned HTTP {warm_up.status}; nothing was written")
     recorded_at = datetime.now(UTC)
     response = send(provider, request, base_url, key)
     raw = b"".join(response.pieces)

@@ -141,6 +141,18 @@ def _truth(exchange: Exchange, request: JsonObject | None = None) -> JsonObject:
 # --- Non-stream -----------------------------------------------------------------------------------
 
 
+@pytest.mark.parametrize("provider_id", ["openai-chat", "openai-responses"])
+@pytest.mark.parametrize("name", ["cached-tokens", "reasoning-tokens"])
+def test_openai_usage_scenarios_build_native_requests(provider_id, name):
+    scenario = load_scenario(REPO / f"suite/scenarios/usage/{name}.json")
+    assert provider_id in scenario.providers
+    provider = PROVIDERS[provider_id]
+    request = provider.build_request(scenario.call_for(provider_id), provider.DEFAULT_MODEL)
+    assert request.body["model"] == "gpt-6-luna"
+    assert "anthropic" not in request.body
+    assert scenario.warm_up == (name == "cached-tokens")
+
+
 def test_a_length_finish_with_usage() -> None:
     truth = _truth(
         _exchange(
