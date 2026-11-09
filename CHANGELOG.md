@@ -12,6 +12,7 @@ finding).
 ## [Unreleased]
 
 ### Added
+- Validation page with committed grades before and after upstream bug fixes and links to the reproducing fixtures.
 - TanStack AI 1.0.0 shim for OpenAI Chat Completions and Responses, native and OpenAI-compatible Ollama, Gemini
   GenerateContent and Anthropic Messages. Its `chat()` always requests a streamed response, so the non-streamed
   fixtures are UNSUPPORTED.
