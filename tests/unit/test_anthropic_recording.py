@@ -44,21 +44,6 @@ def test_anthropic_request_required_fields_and_registry():
         anthropic.build_request(replace(CALL, max_output_tokens=None), MODEL)
 
 
-def test_documented_reasoning_tokens_fixture_matches_the_scenario_request():
-    scenario = load_scenario(REPO / "suite/scenarios/usage/reasoning-tokens.json")
-    assert "anthropic" in scenario.providers
-    fixture = load_fixture(REPO / "suite/fixtures/anthropic/usage.reasoning-tokens.json")
-    request = anthropic.build_request(scenario.call_for("anthropic"), MODEL)
-    assert fixture.tier == "documented"
-    assert fixture.provenance.request == request.body
-    assert request.body["thinking"] == {"type": "adaptive"}
-    assert request.body["max_tokens"] == 800
-    assert request.body["output_config"] == {"effort": "medium"}
-    assert fixture.truth.usage.reasoning == 312
-    assert fixture.truth.usage.output == 348
-    assert fixture.truth.usage.total == 400
-
-
 @pytest.mark.parametrize("choice", [None, "auto", "none", ForcedTool("get_weather")])
 def test_anthropic_request_messages_tools_and_native_schema(choice):
     schema = {"type": "object", "properties": {"city": {"type": "string"}}}

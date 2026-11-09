@@ -6,7 +6,7 @@ A scenario is one edge case: the call to make and the requirements a library mus
 Fixture tiers: `recorded` = real provider bytes; `documented` = transcribed from official docs;
 `derived` = a named transform of one of those.
 
-24 scenarios; 6 providers; fixtures: 53 recorded, 14 documented, 29 derived.
+24 scenarios; 6 providers; fixtures: 53 recorded, 13 documented, 29 derived.
 
 ## finish
 
@@ -59,5 +59,5 @@ Fixture tiers: `recorded` = real provider bytes; `documented` = transcribed from
 | id | title | bug class | priority | providers | requirements |
 |---|---|---|---|---|---|
 | `usage.cached-tokens` | Cached input is included in total token usage | usage-accounting | P1 | anthropic `documented`<br>gemini `no fixture`<br>openai-chat `no fixture`<br>openai-responses `no fixture` | MUST `total-reconciles` (usage_total_reconciles)<br>SHOULD `cached-input-reported` (usage_matches_truth) |
-| `usage.reasoning-tokens` | Token usage accounts for thinking and answer tokens | usage-accounting | P0 | anthropic `documented`<br>gemini `recorded`<br>openai-chat `no fixture`<br>openai-responses `no fixture` | MUST `total-reconciles` (usage_total_reconciles)<br>SHOULD `reasoning-reported` (usage_matches_truth) |
+| `usage.reasoning-tokens` | Token usage accounts for thinking and answer tokens | usage-accounting | P0 | anthropic `no fixture`<br>gemini `recorded`<br>openai-chat `no fixture`<br>openai-responses `no fixture` | MUST `total-reconciles` (usage_total_reconciles)<br>SHOULD `reasoning-reported` (usage_matches_truth) |
 | `usage.stream-final-chunk` | Streamed usage in a final chunk with no choices | usage-accounting | P0 | anthropic `documented`<br>gemini `recorded`<br>ollama `recorded`<br>ollama-openai `recorded`<br>openai-chat `recorded` | MUST `usage-reported` (usage_matches_truth) |
