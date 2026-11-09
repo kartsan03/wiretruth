@@ -6,6 +6,8 @@ This is the map of wiretruth's documentation. Start with Concepts if you're new.
 
 - [Concepts](concepts.md): providers, scenarios, fixtures, truth, shims, observations, surfaces and grades, with one
   example followed from fixture to grade.
+- [Validation against fixed bugs](validation.md): committed grades before and after upstream fixes, with the
+  fixtures that reproduce them.
 
 ## Reference
 

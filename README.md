@@ -76,6 +76,7 @@ Each scenario lists its requirements. MUST requirements set the grade. SHOULD re
 partial text in the truncation scenarios, add a note when they aren't met. How grades are computed:
 [docs/grading.md](https://github.com/kartsan03/wiretruth/blob/main/docs/grading.md).
 Scenario catalog: [docs/scenarios.md](https://github.com/kartsan03/wiretruth/blob/main/docs/scenarios.md).
+Fixed-bug validation: [docs/validation.md](https://github.com/kartsan03/wiretruth/blob/main/docs/validation.md).
 
 ## Quickstart
 
