@@ -17,7 +17,7 @@
   "providers": {
     "openai-chat": "createOpenaiChatCompletions(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_OPENAI_CHAT }); POST /v1/chat/completions. https://tanstack.com/ai/latest/docs/adapters/openai#chat-completions-api",
     "openai-responses": "createOpenaiChat(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_OPENAI_RESPONSES }); POST /v1/responses (the default OpenAI text adapter). https://tanstack.com/ai/latest/docs/adapters/openai#createopenaichat-model-apikey-config",
-    "anthropic": "createAnthropicChat(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_ANTHROPIC }); SDK appends /v1/messages.",
+    "anthropic": "createAnthropicChat(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_ANTHROPIC }); its fetch client appends /v1/messages?beta=true.",
     "gemini": "createGeminiChat(model, apiKey, { baseURL: WIRETRUTH_BASE_URL_GEMINI }); SDK appends /v1beta/models/<model>:streamGenerateContent or :generateContent.",
     "ollama": "createOllamaChat(model, { host: WIRETRUTH_BASE_URL_OLLAMA }); POST /api/chat.",
     "ollama-openai": "openaiCompatible({ name: 'ollama', baseURL: WIRETRUTH_BASE_URL_OLLAMA_OPENAI, apiKey, models: [model] })(model); Chat Completions is the documented default for Ollama /v1. https://tanstack.com/ai/latest/docs/adapters/openai-compatible"
@@ -272,7 +272,7 @@
     "There is no documented eager_input_streaming option in the Anthropic adapter; that hint is left to provider defaults. https://tanstack.com/ai/latest/docs/adapters/anthropic",
     "In these pins, chat({ outputSchema }) selects streaming combined schema output on OpenAI Chat (response_format.json_schema), Responses (text.format.json_schema), Anthropic Haiku 4.5 and Sonnet 5.5 (output_config.format), Gemini 3.x (generationConfig.responseSchema/responseMimeType), and compatible Chat (response_format.json_schema). Native Ollama skips the text phase with no tools, invokes structuredOutput once, and sends stream=false with format=<schema>. The non-streamed schema fixtures for the streaming paths are unsupported. https://tanstack.com/ai/latest/docs/api/ai#usage-examples",
     "Anthropic includes both claude-haiku-4-5 and claude-sonnet-5-5 in ANTHROPIC_COMBINED_TOOLS_AND_SCHEMA_MODELS and ANTHROPIC_NO_FORCED_TOOL_MODELS. Neither uses the legacy forced structured_output tool path. https://tanstack.com/ai/latest/docs/adapters/anthropic",
-    "finish.unknown-value has only non-streamed fixtures and is unsupported. On streams, unfamiliar Chat/compatible finish strings pass through; Responses maps unrecognized incomplete reasons to stop; Anthropic maps unrecognized nonempty stop_reason to stop; Gemini maps any non-MAX_TOKENS finish to stop (or tool_calls); native Ollama ignores done_reason and chooses stop/tool_calls. No shim correction is applied."
+    "finish.unknown-value has only non-streamed fixtures and is unsupported. On streams, unfamiliar Chat/compatible finish strings pass through; Responses maps unrecognized incomplete reasons to stop; Anthropic maps unrecognized nonempty stop_reason to stop; Gemini maps MAX_TOKENS to length, content-filter reasons to content_filter and any other finish to stop (or tool_calls); native Ollama maps done_reason length to length and otherwise chooses stop/tool_calls. No shim correction is applied."
   ],
   "docs": [
     "https://tanstack.com/ai/latest/docs/migration/v1",
