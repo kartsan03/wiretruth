@@ -11,7 +11,7 @@ happened.
 
 wiretruth tests any-llm, LiteLLM, pydantic-ai, the Vercel AI SDK and TanStack AI across six APIs: OpenAI Chat
 Completions and Responses, Ollama's native and OpenAI-compatible endpoints, Gemini GenerateContent and Anthropic
-Messages. That is 24 scenarios and 95 cells per library. pydantic-ai and the Vercel AI SDK support only the OpenAI-compatible Ollama
+Messages. That is 24 scenarios and 100 cells per library. pydantic-ai and the Vercel AI SDK support only the OpenAI-compatible Ollama
 endpoint; their native Ollama cells are UNSUPPORTED.
 The Anthropic responses are transcribed from Anthropic's documentation rather than recorded: each of those fixtures
 is marked `documented` and links the page it comes from. More providers and libraries follow, and a public
@@ -119,8 +119,8 @@ truncation.text-stream                    ✓ PASS         ✓ PASS   ✓ PASS  
 truncation.text-stream-usage                             ✓ PASS                           ✓ PASS
 truncation.tool-call-args                 ✓ PASS                                          ✓ PASS       ✓ PASS
 truncation.tool-call-args-stream          ✓ PASS                                          ✓ PASS       ✓ PASS
-usage.cached-tokens                       ✓ PASS
-usage.reasoning-tokens                                   ✓ PASS
+usage.cached-tokens                       ✓ PASS                                          ✓ PASS       ✓ PASS
+usage.reasoning-tokens                    ✓ PASS         ✓ PASS                           ✓ PASS       ✓ PASS
 usage.stream-final-chunk                  ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS
 
 finish.stop-sequence gemini
@@ -174,13 +174,13 @@ tools.parallel-calls gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="8beb704a-c37e-4125-ad51-03f1f1a1648f", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="a07c2b3f-7d0f-426b-aa7e-5e6cea2fccc8", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="77ecdd8a-566d-4ba1-b098-d7a3b3082999", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="3a4cba16-a57a-4657-b28a-8ac89eaea7d9", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
 
 tools.parallel-calls-stream gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
 tools.parallel-calls-stream ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="4de4a1a8-89a5-45c4-afe7-d4b57db603f6", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="dd4a3f63-e341-4969-ae0f-528b27222290", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
+  MUST calls-reported: CONTRADICTED: tool_calls[0] id="fc700b93-a9ac-4907-8da1-a7b38a28658c", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="265e0a1f-ef64-4209-b6b9-e3b5c9e3a181", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
 
 truncation.structured-output gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
@@ -202,21 +202,24 @@ truncation.text-stream gemini
 truncation.text-stream-usage gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
+usage.reasoning-tokens anthropic
+  SHOULD reasoning-reported: NOT_OBSERVABLE: usage.reasoning=null (absent); truth.usage.reasoning=312
+
 usage.stream-final-chunk gemini
   shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
 
-any-llm 1.40.2: 95 cells, 82 PASS, 6 LOSSY, 6 WRONG, 1 UNSUPPORTED
-stderr: .wiretruth/runs/20261026T160347.945900Z
+any-llm 1.40.2: 100 cells, 87 PASS, 6 LOSSY, 6 WRONG, 1 UNSUPPORTED
+stderr: .wiretruth/runs/20261109T005301.682490Z
 ```
 
-The LiteLLM run grades its 95 cells 81 PASS, 13 WRONG and 1 UNSUPPORTED. Every cell, with its evidence, is in
+The LiteLLM run grades its 100 cells 86 PASS, 13 WRONG and 1 UNSUPPORTED. Every cell, with its evidence, is in
 [`results/litellm/1.105.5.json`](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.105.5.json).
-The pydantic-ai run grades its 95 cells 58 PASS, 16 LOSSY, 6 WRONG and 15 UNSUPPORTED (native Ollama), in
+The pydantic-ai run grades its 100 cells 63 PASS, 16 LOSSY, 6 WRONG and 15 UNSUPPORTED (native Ollama), in
 [`results/pydantic-ai/2.61.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.61.0.json).
-The Vercel AI SDK run grades its 95 cells 79 PASS and 16 UNSUPPORTED (native Ollama, and the Anthropic
+The Vercel AI SDK run grades its 100 cells 84 PASS and 16 UNSUPPORTED (native Ollama, and the Anthropic
 forced-tool fixture, since current Claude models get native structured output), in
 [`results/vercel-ai/7.0.153.json`](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.153.json).
-The TanStack AI run grades its 95 cells 48 PASS, 2 LOSSY, 2 WRONG and 43 UNSUPPORTED, in
+The TanStack AI run grades its 100 cells 48 PASS, 2 LOSSY, 2 WRONG and 48 UNSUPPORTED, in
 [`results/tanstack-ai/1.0.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/tanstack-ai/1.0.0.json).
 Its `chat()` always requests a streamed response, so the non-streamed fixtures don't apply to it.
 

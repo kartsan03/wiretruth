@@ -7,22 +7,22 @@
     "language": "python"
   },
   "run": {
-    "at": "2026-10-26T16:05:12Z",
-    "git_sha": "7d632a25413e0c2dcf91cda1f02855adec548a2c",
+    "at": "2026-11-09T00:54:25Z",
+    "git_sha": "f81137db01e3a0381fb8820c0cbf6659ed392f52",
     "ci_run": null,
     "runner": "wiretruth 0.3.0.dev0",
     "packages": {
       "annotated-types": "0.8.0",
       "anthropic": "0.125.0",
       "any-llm-sdk": "1.40.2",
-      "anyio": "4.15.1",
+      "anyio": "4.16.0",
       "certifi": "2026.10.23",
       "cffi": "2.1.1",
       "charset-normalizer": "3.5.2",
       "cryptography": "50.0.2",
       "distro": "1.9.0",
       "docstring-parser": "0.18.0",
-      "google-auth": "2.62.0",
+      "google-auth": "2.62.1",
       "google-genai": "2.26.0",
       "h11": "0.16.0",
       "httpcore": "1.0.9",
@@ -30,17 +30,17 @@
       "httpx": "0.28.1",
       "httpx2": "2.16.0",
       "idna": "3.20",
-      "jiter": "0.18.0",
+      "jiter": "0.19.0",
       "markdown-it-py": "4.2.0",
       "mdurl": "0.1.2",
       "ollama": "0.6.3",
       "openai": "3.28.0",
       "openresponses-types": "2.4.0",
-      "pyasn1": "0.6.4",
+      "pyasn1": "0.6.5",
       "pyasn1-modules": "0.4.2",
       "pycparser": "3.12",
-      "pydantic": "2.14.1",
-      "pydantic-core": "2.50.1",
+      "pydantic": "2.14.3",
+      "pydantic-core": "2.50.4",
       "pygments": "2.21.0",
       "requests": "2.34.2",
       "rich": "15.0.0",
@@ -48,7 +48,7 @@
       "tenacity": "9.1.4",
       "truststore": "0.10.5",
       "typing-extensions": "4.16.0",
-      "typing-inspection": "0.4.4",
+      "typing-inspection": "0.4.5",
       "urllib3": "2.8.0",
       "websockets": "16.1.1"
     }
@@ -122,7 +122,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 98.60575897619128
+        "elapsed_ms": 146.6367393732071
       },
       "request_count": 1
     },
@@ -196,7 +196,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 578.2991778105497
+        "elapsed_ms": 698.3995968475938
       },
       "request_count": 1
     },
@@ -268,7 +268,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 195.413613691926
+        "elapsed_ms": 144.8483057320118
       },
       "request_count": 1
     },
@@ -340,7 +340,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 131.27709412947297
+        "elapsed_ms": 147.1249870955944
       },
       "request_count": 1
     },
@@ -427,7 +427,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 133.65654507651925
+        "elapsed_ms": 141.9316092506051
       },
       "request_count": 1
     },
@@ -516,7 +516,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 800.4760020412505
+        "elapsed_ms": 558.9318973943591
       },
       "request_count": 1
     },
@@ -603,7 +603,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 125.1832409761846
+        "elapsed_ms": 182.80034139752388
       },
       "request_count": 1
     },
@@ -687,7 +687,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 105.45856598764658
+        "elapsed_ms": 149.9878680333495
       },
       "request_count": 1
     },
@@ -771,7 +771,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 145.08176734670997
+        "elapsed_ms": 119.6167441084981
       },
       "request_count": 1
     },
@@ -855,7 +855,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 176.129381172359
+        "elapsed_ms": 214.15238082408905
       },
       "request_count": 1
     },
@@ -933,7 +933,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 155.32022388651967
+        "elapsed_ms": 134.58038307726383
       },
       "request_count": 1
     },
@@ -1001,7 +1001,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 158.00384106114507
+        "elapsed_ms": 95.98380513489246
       },
       "request_count": 1
     },
@@ -1073,7 +1073,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 187.86752596497536
+        "elapsed_ms": 130.22314943373203
       },
       "request_count": 1
     },
@@ -1145,7 +1145,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 132.9702972434461
+        "elapsed_ms": 129.9385465681553
       },
       "request_count": 1
     },
@@ -1217,7 +1217,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 124.4993512518704
+        "elapsed_ms": 180.51131535321474
       },
       "request_count": 1
     },
@@ -1291,7 +1291,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 703.1898521818221
+        "elapsed_ms": 659.5151303336024
       },
       "request_count": 1
     },
@@ -1363,7 +1363,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 166.18599137291312
+        "elapsed_ms": 220.62334138900042
       },
       "request_count": 1
     },
@@ -1435,7 +1435,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 248.26280772686005
+        "elapsed_ms": 130.3717838600278
       },
       "request_count": 1
     },
@@ -1507,7 +1507,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 236.78248608484864
+        "elapsed_ms": 228.93124166876078
       },
       "request_count": 1
     },
@@ -1581,7 +1581,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 175.47329841181636
+        "elapsed_ms": 170.31778674572706
       },
       "request_count": 1
     },
@@ -1657,7 +1657,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 741.5086887776852
+        "elapsed_ms": 504.37754299491644
       },
       "request_count": 1
     },
@@ -1731,7 +1731,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 276.37052116915584
+        "elapsed_ms": 251.0053850710392
       },
       "request_count": 1
     },
@@ -1805,7 +1805,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 211.4231288433075
+        "elapsed_ms": 208.87405052781105
       },
       "request_count": 1
     },
@@ -1879,7 +1879,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 159.50336819514632
+        "elapsed_ms": 180.3080216050148
       },
       "request_count": 1
     },
@@ -1951,7 +1951,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 274.3858899921179
+        "elapsed_ms": 225.90834368020296
       },
       "request_count": 1
     },
@@ -2029,7 +2029,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 181.78777722641826
+        "elapsed_ms": 119.36899926513433
       },
       "request_count": 1
     },
@@ -2109,7 +2109,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 546.5975669212639
+        "elapsed_ms": 652.5316666811705
       },
       "request_count": 1
     },
@@ -2187,7 +2187,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 221.24675894156098
+        "elapsed_ms": 159.5854302868247
       },
       "request_count": 1
     },
@@ -2265,7 +2265,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 157.59492106735706
+        "elapsed_ms": 165.89463129639626
       },
       "request_count": 1
     },
@@ -2343,7 +2343,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 175.07925210520625
+        "elapsed_ms": 170.56790366768837
       },
       "request_count": 1
     },
@@ -2421,7 +2421,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 225.51626898348331
+        "elapsed_ms": 152.18951925635338
       },
       "request_count": 1
     },
@@ -2493,7 +2493,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 120.24084897711873
+        "elapsed_ms": 150.21921135485172
       },
       "request_count": 1
     },
@@ -2567,7 +2567,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 513.7255182489753
+        "elapsed_ms": 737.8454590216279
       },
       "request_count": 1
     },
@@ -2639,7 +2639,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 203.7374028004706
+        "elapsed_ms": 263.5606415569782
       },
       "request_count": 1
     },
@@ -2711,7 +2711,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 228.28077990561724
+        "elapsed_ms": 195.18830254673958
       },
       "request_count": 1
     },
@@ -2783,7 +2783,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 237.0197782292962
+        "elapsed_ms": 231.69916030019522
       },
       "request_count": 1
     },
@@ -2855,7 +2855,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 229.9417769536376
+        "elapsed_ms": 272.4015209823847
       },
       "request_count": 1
     },
@@ -2927,7 +2927,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 165.18652299419045
+        "elapsed_ms": 156.15584701299667
       },
       "request_count": 1
     },
@@ -3001,7 +3001,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 734.1398089192808
+        "elapsed_ms": 748.2101190835238
       },
       "request_count": 1
     },
@@ -3073,7 +3073,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 210.1822067052126
+        "elapsed_ms": 143.9576419070363
       },
       "request_count": 1
     },
@@ -3145,7 +3145,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 119.21309027820826
+        "elapsed_ms": 153.64213846623898
       },
       "request_count": 1
     },
@@ -3217,7 +3217,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 122.0581759698689
+        "elapsed_ms": 158.3502683788538
       },
       "request_count": 1
     },
@@ -3289,7 +3289,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 264.9686988443136
+        "elapsed_ms": 160.98933294415474
       },
       "request_count": 1
     },
@@ -3374,7 +3374,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 103.0108998529613
+        "elapsed_ms": 97.48469572514296
       },
       "request_count": 1
     },
@@ -3461,7 +3461,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 493.5801178216934
+        "elapsed_ms": 505.8228615671396
       },
       "request_count": 1
     },
@@ -3476,11 +3476,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"8beb704a-c37e-4125-ad51-03f1f1a1648f\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"a07c2b3f-7d0f-426b-aa7e-5e6cea2fccc8\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"77ecdd8a-566d-4ba1-b098-d7a3b3082999\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"3a4cba16-a57a-4657-b28a-8ac89eaea7d9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"8beb704a-c37e-4125-ad51-03f1f1a1648f\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"a07c2b3f-7d0f-426b-aa7e-5e6cea2fccc8\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"77ecdd8a-566d-4ba1-b098-d7a3b3082999\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"3a4cba16-a57a-4657-b28a-8ac89eaea7d9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -3510,7 +3510,7 @@
         },
         "tool_calls": [
           {
-            "id": "8beb704a-c37e-4125-ad51-03f1f1a1648f",
+            "id": "77ecdd8a-566d-4ba1-b098-d7a3b3082999",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -3519,7 +3519,7 @@
             }
           },
           {
-            "id": "a07c2b3f-7d0f-426b-aa7e-5e6cea2fccc8",
+            "id": "3a4cba16-a57a-4657-b28a-8ac89eaea7d9",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -3548,7 +3548,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 128.90665931627154
+        "elapsed_ms": 185.151144862175
       },
       "request_count": 1
     },
@@ -3633,7 +3633,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 147.68588077276945
+        "elapsed_ms": 151.89024060964584
       },
       "request_count": 1
     },
@@ -3718,7 +3718,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 160.70448188111186
+        "elapsed_ms": 145.98930440843105
       },
       "request_count": 1
     },
@@ -3803,7 +3803,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 184.39742922782898
+        "elapsed_ms": 177.13190335780382
       },
       "request_count": 1
     },
@@ -3888,7 +3888,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 143.48221383988857
+        "elapsed_ms": 185.3636708110571
       },
       "request_count": 1
     },
@@ -3975,7 +3975,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 733.5587530396879
+        "elapsed_ms": 745.5443628132343
       },
       "request_count": 1
     },
@@ -3990,11 +3990,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"4de4a1a8-89a5-45c4-afe7-d4b57db603f6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"dd4a3f63-e341-4969-ae0f-528b27222290\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"fc700b93-a9ac-4907-8da1-a7b38a28658c\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"265e0a1f-ef64-4209-b6b9-e3b5c9e3a181\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"4de4a1a8-89a5-45c4-afe7-d4b57db603f6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"dd4a3f63-e341-4969-ae0f-528b27222290\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"fc700b93-a9ac-4907-8da1-a7b38a28658c\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"265e0a1f-ef64-4209-b6b9-e3b5c9e3a181\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -4024,7 +4024,7 @@
         },
         "tool_calls": [
           {
-            "id": "4de4a1a8-89a5-45c4-afe7-d4b57db603f6",
+            "id": "fc700b93-a9ac-4907-8da1-a7b38a28658c",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -4033,7 +4033,7 @@
             }
           },
           {
-            "id": "dd4a3f63-e341-4969-ae0f-528b27222290",
+            "id": "265e0a1f-ef64-4209-b6b9-e3b5c9e3a181",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -4062,7 +4062,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 199.53494798392057
+        "elapsed_ms": 188.54450155049562
       },
       "request_count": 1
     },
@@ -4147,7 +4147,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 114.17640838772058
+        "elapsed_ms": 140.33599756658077
       },
       "request_count": 1
     },
@@ -4232,7 +4232,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 164.36185594648123
+        "elapsed_ms": 203.52622959762812
       },
       "request_count": 1
     },
@@ -4317,7 +4317,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 180.78661104664207
+        "elapsed_ms": 232.3213992640376
       },
       "request_count": 1
     },
@@ -4395,7 +4395,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 107.2093890979886
+        "elapsed_ms": 144.45974491536617
       },
       "request_count": 1
     },
@@ -4473,7 +4473,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 749.7296491637826
+        "elapsed_ms": 724.2791717872024
       },
       "request_count": 1
     },
@@ -4551,7 +4551,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 197.51012697815895
+        "elapsed_ms": 176.64509918540716
       },
       "request_count": 1
     },
@@ -4629,7 +4629,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 181.05921801179647
+        "elapsed_ms": 98.95375091582537
       },
       "request_count": 1
     },
@@ -4707,7 +4707,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 165.96467792987823
+        "elapsed_ms": 146.57384436577559
       },
       "request_count": 1
     },
@@ -4785,7 +4785,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 361.6577289067209
+        "elapsed_ms": 152.16816775500774
       },
       "request_count": 1
     },
@@ -4875,7 +4875,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 162.63264883309603
+        "elapsed_ms": 154.19873595237732
       },
       "request_count": 1
     },
@@ -4967,7 +4967,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 740.4849180020392
+        "elapsed_ms": 744.6671957150102
       },
       "request_count": 1
     },
@@ -5057,7 +5057,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 138.05374829098582
+        "elapsed_ms": 170.8577610552311
       },
       "request_count": 1
     },
@@ -5147,7 +5147,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 105.67943705245852
+        "elapsed_ms": 151.1901654303074
       },
       "request_count": 1
     },
@@ -5237,7 +5237,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 164.763405919075
+        "elapsed_ms": 161.60812508314848
       },
       "request_count": 1
     },
@@ -5293,7 +5293,7 @@
           "message": "1 validation error for output\n  Invalid JSON: EOF while parsing a string at line 1 column 59 [type=json_invalid, input_value='{\"islands\":[{\"name\":\"Κ...a\":\"Κρητικό Πέ', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.14/v/json_invalid",
           "category": "validation",
           "retry_after": null,
-          "stack_top": "pydantic/main.py:845"
+          "stack_top": "pydantic/main.py:847"
         },
         "finish": {
           "value": null,
@@ -5331,7 +5331,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 271.97103342041373
+        "elapsed_ms": 210.50405967980623
       },
       "request_count": 1
     },
@@ -5392,7 +5392,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.9225914254784584
+        "elapsed_ms": 0.8562076836824417
       },
       "request_count": 0
     },
@@ -5470,7 +5470,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 155.22099239751697
+        "elapsed_ms": 151.5681752935052
       },
       "request_count": 1
     },
@@ -5550,7 +5550,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 508.42941692098975
+        "elapsed_ms": 677.9063334688544
       },
       "request_count": 1
     },
@@ -5628,7 +5628,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 187.51748511567712
+        "elapsed_ms": 126.32177397608757
       },
       "request_count": 1
     },
@@ -5706,7 +5706,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 153.18537782877684
+        "elapsed_ms": 127.05528363585472
       },
       "request_count": 1
     },
@@ -5784,7 +5784,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 114.30028034374118
+        "elapsed_ms": 147.67837803810835
       },
       "request_count": 1
     },
@@ -5862,7 +5862,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 273.7577660009265
+        "elapsed_ms": 243.654016405344
       },
       "request_count": 1
     },
@@ -5940,7 +5940,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 175.1018539071083
+        "elapsed_ms": 137.50978000462055
       },
       "request_count": 1
     },
@@ -6020,7 +6020,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 732.9525309614837
+        "elapsed_ms": 697.0313107594848
       },
       "request_count": 1
     },
@@ -6098,7 +6098,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 208.51163612678647
+        "elapsed_ms": 235.5594364926219
       },
       "request_count": 1
     },
@@ -6176,7 +6176,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 221.57201915979385
+        "elapsed_ms": 225.819643586874
       },
       "request_count": 1
     },
@@ -6254,7 +6254,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 205.2518487907946
+        "elapsed_ms": 197.305909357965
       },
       "request_count": 1
     },
@@ -6332,7 +6332,7 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 205.2524359896779
+        "elapsed_ms": 209.3968903645873
       },
       "request_count": 1
     },
@@ -6412,7 +6412,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 758.4956986829638
+        "elapsed_ms": 725.1187153160572
       },
       "request_count": 1
     },
@@ -6490,7 +6490,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 233.44172071665525
+        "elapsed_ms": 201.938571408391
       },
       "request_count": 1
     },
@@ -6572,7 +6572,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 174.54311810433865
+        "elapsed_ms": 140.0197558104992
       },
       "request_count": 1
     },
@@ -6652,7 +6652,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 141.2804708816111
+        "elapsed_ms": 140.0891449302435
       },
       "request_count": 1
     },
@@ -6732,7 +6732,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 278.1554227694869
+        "elapsed_ms": 274.4183633476496
       },
       "request_count": 1
     },
@@ -6812,7 +6812,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 186.728211119771
+        "elapsed_ms": 169.92522962391376
       },
       "request_count": 1
     },
@@ -6892,7 +6892,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 194.12931520491838
+        "elapsed_ms": 187.93064262717962
       },
       "request_count": 1
     },
@@ -6972,7 +6972,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 181.30044220015407
+        "elapsed_ms": 202.5777120143175
       },
       "request_count": 1
     },
@@ -7044,7 +7044,225 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 103.81496837362647
+        "elapsed_ms": 96.58505953848362
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/usage.cached-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=1126 (primary); truth.usage.total=1126"
+        },
+        {
+          "id": "cached-input-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.cached_input=1080 (primary); truth.usage.cached_input=1080"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.40.2",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "A hot pan helps mushrooms brown instead of releasing water and turning soggy. Heat the pan first, then add the mushrooms in a single layer; if they crowd the pan, cook them in batches.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 1083,
+          "cached_input": 1080,
+          "output": 43,
+          "reasoning": 0,
+          "total": 1126,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 147.14306220412254
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/usage.cached-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=1130 (primary); truth.usage.total=1130"
+        },
+        {
+          "id": "cached-input-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.cached_input=1080 (primary); truth.usage.cached_input=1080"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.40.2",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "completed",
+          "surface": "primary",
+          "source": "status"
+        },
+        "text": {
+          "value": "A hot pan helps mushrooms brown instead of sitting in their released moisture and turning soggy. Heat the pan first, then add the mushrooms in a single layer; if they crowd the pan, cook them in batches.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 1083,
+          "cached_input": 1080,
+          "output": 47,
+          "reasoning": 0,
+          "total": 1130,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 230.33141437917948
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "anthropic",
+      "fixture": "anthropic/usage.reasoning-tokens",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=400 (primary); truth.usage.total=400"
+        },
+        {
+          "id": "reasoning-reported",
+          "level": "SHOULD",
+          "status": "NOT_OBSERVABLE",
+          "evidence": "usage.reasoning=null (absent); truth.usage.reasoning=312"
+        }
+      ],
+      "notes": [
+        "SHOULD reasoning-reported: NOT_OBSERVABLE: usage.reasoning=null (absent); truth.usage.reasoning=312"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.40.2",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "11 pots contain three seedlings: 11 times 3 plus 7 times 2 equals 47.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 52,
+          "cached_input": null,
+          "output": 348,
+          "reasoning": null,
+          "total": 400,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 111.78264021873474
       },
       "request_count": 1
     },
@@ -7116,7 +7334,151 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 698.5796471126378
+        "elapsed_ms": 720.7499416545033
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/usage.reasoning-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=135 (primary); truth.usage.total=135"
+        },
+        {
+          "id": "reasoning-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.reasoning=52 (primary); truth.usage.reasoning=52"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.40.2",
+          "language": "python",
+          "api": "any_llm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "11 pots contain three seedlings. Check: \\(11\\times3 + 7\\times2 = 47\\), and \\(11+7=18\\).",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 41,
+          "cached_input": 0,
+          "output": 94,
+          "reasoning": 52,
+          "total": 135,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 99.27442017942667
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/usage.reasoning-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=142 (primary); truth.usage.total=142"
+        },
+        {
+          "id": "reasoning-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.reasoning=58 (primary); truth.usage.reasoning=58"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "any-llm",
+          "version": "1.40.2",
+          "language": "python",
+          "api": "any_llm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "completed",
+          "surface": "primary",
+          "source": "status"
+        },
+        "text": {
+          "value": "**11 pots** contain three seedlings. Check: \\(11 \\times 3 + 7 \\times 2 = 47\\), and \\(11+7=18\\).",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 41,
+          "cached_input": 0,
+          "output": 101,
+          "reasoning": 58,
+          "total": 142,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 241.66841618716717
       },
       "request_count": 1
     },
@@ -7182,7 +7544,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 186.4138343371451
+        "elapsed_ms": 143.27719993889332
       },
       "request_count": 1
     },
@@ -7250,7 +7612,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 571.1820293217897
+        "elapsed_ms": 605.4824702441692
       },
       "request_count": 1
     },
@@ -7316,7 +7678,7 @@
           "chunks_seen": 28
         },
         "notes": [],
-        "elapsed_ms": 266.7007711715996
+        "elapsed_ms": 316.6811652481556
       },
       "request_count": 1
     },
@@ -7382,7 +7744,7 @@
           "chunks_seen": 24
         },
         "notes": [],
-        "elapsed_ms": 275.4198391921818
+        "elapsed_ms": 237.1761603280902
       },
       "request_count": 1
     },
@@ -7448,7 +7810,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 187.1095192618668
+        "elapsed_ms": 176.95381492376328
       },
       "request_count": 1
     }

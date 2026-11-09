@@ -40,13 +40,17 @@ finding).
   lookup stays in the request log and counts toward request limits.
 
 ### Results
-- any-llm 1.40.2: 82 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 95 cells
-  ([results/any-llm/1.40.2.json](results/any-llm/1.40.2.json)), the same grades as 1.38.0. Since 1.33.0,
+- The five new usage cells (`usage.cached-tokens` over both OpenAI APIs; `usage.reasoning-tokens` over both
+  OpenAI APIs and Anthropic) pass on any-llm, LiteLLM, pydantic-ai and the Vercel AI SDK. any-llm passes the
+  Anthropic reasoning cell with a note: it doesn't expose the thinking-token count. On TanStack AI they are
+  UNSUPPORTED, like its other non-streamed cells.
+- any-llm 1.40.2: 87 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 100 cells
+  ([results/any-llm/1.40.2.json](results/any-llm/1.40.2.json)), the same grades as 1.38.0 on the cells both share. Since 1.33.0,
   `finish.unknown-value` over `openai-chat` and `ollama-openai` moves WRONG → PASS: unfamiliar finish strings survive
   validation ([mozilla-ai/any-llm#1504](https://github.com/mozilla-ai/any-llm/pull/1504), 1.38.0).
   `tools.parallel-calls` and `tools.parallel-calls-stream` over `gemini` move WRONG → PASS: wire tool-call ids are
   preserved ([mozilla-ai/any-llm#1514](https://github.com/mozilla-ai/any-llm/pull/1514), 1.38.0).
-- LiteLLM 1.105.5, the second library: 81 PASS, 13 WRONG and 1 UNSUPPORTED of 95 cells
+- LiteLLM 1.105.5, the second library: 86 PASS, 13 WRONG and 1 UNSUPPORTED of 100 cells
   ([results/litellm/1.105.5.json](results/litellm/1.105.5.json)). All 14 `openai-responses` cells pass. WRONG on
   `finish.unknown-value` over the five Chat-style APIs: an unfamiliar finish value is reported as `stop`, a fallback
   LiteLLM adds on purpose ([BerriAI/litellm#21348](https://github.com/BerriAI/litellm/issues/21348)). WRONG on
@@ -61,7 +65,7 @@ finding).
   1.106.0 through 1.106.4 are not graded: without the `mcp` extra, every tool call and every `responses()` call raises
   `ModuleNotFoundError` before sending a request
   ([BerriAI/litellm#46045](https://github.com/BerriAI/litellm/issues/46045)).
-- pydantic-ai 2.61.0, the third library: 58 PASS, 16 LOSSY, 6 WRONG and 15 UNSUPPORTED of 95 cells
+- pydantic-ai 2.61.0, the third library: 63 PASS, 16 LOSSY, 6 WRONG and 15 UNSUPPORTED of 100 cells
   ([results/pydantic-ai/2.61.0.json](results/pydantic-ai/2.61.0.json)). WRONG on `stream.missing-finish` over
   `openai-responses`, `anthropic` and `gemini`: a stream that ends before the provider's final event gives a response
   with state `complete` ([pydantic/pydantic-ai#10382](https://github.com/pydantic/pydantic-ai/issues/10382)); over
@@ -76,7 +80,7 @@ finding).
   retain the earlier grade. LOSSY on the 11 truncated structured-output and tool-call cells: pydantic-ai retries, then
   raises a generic error, and the `length` finish is only in the messages that `capture_run_messages()` keeps.
   UNSUPPORTED on native `ollama`: pydantic-ai's Ollama model uses only the OpenAI-compatible API.
-- Vercel AI SDK 7.0.153, the first JavaScript library: 79 PASS and 16 UNSUPPORTED of 95 cells
+- Vercel AI SDK 7.0.153, the first JavaScript library: 84 PASS and 16 UNSUPPORTED of 100 cells
   ([results/vercel-ai/7.0.153.json](results/vercel-ai/7.0.153.json)): every supported cell passes.
   `stream.missing-finish` over `openai-chat`, `openai-responses`, `anthropic` and `gemini` moves WRONG → PASS: a stream
   that ends before the provider's final event now finishes as `interrupted`
@@ -86,7 +90,7 @@ finding).
   [7.0.142](results/vercel-ai/7.0.142.json) and [7.0.146](results/vercel-ai/7.0.146.json) results retain the earlier
   grades. UNSUPPORTED on native `ollama` (no first-party provider) and on `truncation.structured-output-forced-tool`
   (current Claude models get native structured output).
-- TanStack AI 1.0.0, the second JavaScript library: 48 PASS, 2 LOSSY, 2 WRONG and 43 UNSUPPORTED of 95 cells
+- TanStack AI 1.0.0, the second JavaScript library: 48 PASS, 2 LOSSY, 2 WRONG and 48 UNSUPPORTED of 100 cells
   ([results/tanstack-ai/1.0.0.json](results/tanstack-ai/1.0.0.json)). `truncation.tool-call-args-stream` over
   `openai-chat` moves WRONG → PASS: a tool call cut off by the token limit now finishes as `length`, and the agent loop
   no longer sends the request again ([TanStack/ai#1853](https://github.com/TanStack/ai/issues/1853),
