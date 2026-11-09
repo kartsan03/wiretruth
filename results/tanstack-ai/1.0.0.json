@@ -7,8 +7,8 @@
     "language": "javascript"
   },
   "run": {
-    "at": "2026-10-26T16:11:22Z",
-    "git_sha": "7d632a25413e0c2dcf91cda1f02855adec548a2c",
+    "at": "2026-11-09T01:00:41Z",
+    "git_sha": "f81137db01e3a0381fb8820c0cbf6659ed392f52",
     "ci_run": null,
     "runner": "wiretruth 0.3.0.dev0",
     "packages": {
@@ -138,7 +138,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8834530000000314
+        "elapsed_ms": 1.8466609999999264
       },
       "request_count": 0
     },
@@ -199,7 +199,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.1866560000000845
+        "elapsed_ms": 0.7939549999999826
       },
       "request_count": 0
     },
@@ -260,7 +260,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.1823049999999284
+        "elapsed_ms": 0.7728440000000774
       },
       "request_count": 0
     },
@@ -321,7 +321,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.3396450000000186
+        "elapsed_ms": 1.1251600000000508
       },
       "request_count": 0
     },
@@ -382,7 +382,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.2081309999999803
+        "elapsed_ms": 1.2287619999999606
       },
       "request_count": 0
     },
@@ -443,7 +443,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8252860000000055
+        "elapsed_ms": 1.2912680000000591
       },
       "request_count": 0
     },
@@ -504,7 +504,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8489770000001045
+        "elapsed_ms": 1.1892579999999953
       },
       "request_count": 0
     },
@@ -565,7 +565,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.7980330000000322
+        "elapsed_ms": 1.2635659999999689
       },
       "request_count": 0
     },
@@ -626,7 +626,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.801488000000063
+        "elapsed_ms": 0.9089340000000448
       },
       "request_count": 0
     },
@@ -687,7 +687,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.7884780000000546
+        "elapsed_ms": 1.2455710000000408
       },
       "request_count": 0
     },
@@ -748,7 +748,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.225176999999917
+        "elapsed_ms": 1.193035000000009
       },
       "request_count": 0
     },
@@ -809,7 +809,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8367120000000341
+        "elapsed_ms": 0.7922559999999521
       },
       "request_count": 0
     },
@@ -870,7 +870,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.1152100000000473
+        "elapsed_ms": 1.2436569999999847
       },
       "request_count": 0
     },
@@ -931,7 +931,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8737149999999474
+        "elapsed_ms": 1.2453989999999067
       },
       "request_count": 0
     },
@@ -1003,7 +1003,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 108.73833899999988
+        "elapsed_ms": 119.97693099999992
       },
       "request_count": 1
     },
@@ -1071,7 +1071,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 59.00027
+        "elapsed_ms": 51.77082200000007
       },
       "request_count": 1
     },
@@ -1143,7 +1143,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 67.70170299999995
+        "elapsed_ms": 68.58127400000001
       },
       "request_count": 1
     },
@@ -1215,7 +1215,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 82.57365700000003
+        "elapsed_ms": 78.42725199999995
       },
       "request_count": 1
     },
@@ -1287,7 +1287,7 @@
           "chunks_seen": 7
         },
         "notes": [],
-        "elapsed_ms": 92.033189
+        "elapsed_ms": 100.772783
       },
       "request_count": 1
     },
@@ -1361,7 +1361,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 83.62165700000003
+        "elapsed_ms": 84.06778600000007
       },
       "request_count": 1
     },
@@ -1435,7 +1435,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 47.049504999999954
+        "elapsed_ms": 46.080963999999994
       },
       "request_count": 1
     },
@@ -1513,7 +1513,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 106.11253899999997
+        "elapsed_ms": 112.68137100000001
       },
       "request_count": 1
     },
@@ -1591,7 +1591,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 114.64462900000001
+        "elapsed_ms": 114.4412299999999
       },
       "request_count": 1
     },
@@ -1669,7 +1669,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 102.91560200000004
+        "elapsed_ms": 104.13102700000002
       },
       "request_count": 1
     },
@@ -1747,7 +1747,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 150.86098299999992
+        "elapsed_ms": 155.847447
       },
       "request_count": 1
     },
@@ -1825,7 +1825,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 82.84560699999997
+        "elapsed_ms": 86.02653200000009
       },
       "request_count": 1
     },
@@ -1903,7 +1903,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 47.68997999999999
+        "elapsed_ms": 48.65692899999999
       },
       "request_count": 1
     },
@@ -1981,7 +1981,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 68.25048800000002
+        "elapsed_ms": 83.67220199999997
       },
       "request_count": 1
     },
@@ -2059,7 +2059,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 77.887968
+        "elapsed_ms": 92.90541299999995
       },
       "request_count": 1
     },
@@ -2137,7 +2137,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 75.97857800000008
+        "elapsed_ms": 112.48808599999995
       },
       "request_count": 1
     },
@@ -2215,7 +2215,7 @@
           "chunks_seen": 7
         },
         "notes": [],
-        "elapsed_ms": 78.24434999999994
+        "elapsed_ms": 104.95363499999996
       },
       "request_count": 1
     },
@@ -2287,7 +2287,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 72.43824800000004
+        "elapsed_ms": 87.15181999999993
       },
       "request_count": 1
     },
@@ -2359,7 +2359,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 48.70239200000003
+        "elapsed_ms": 47.27344300000004
       },
       "request_count": 1
     },
@@ -2431,7 +2431,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 133.29033700000002
+        "elapsed_ms": 153.22977100000003
       },
       "request_count": 1
     },
@@ -2503,7 +2503,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 131.91499699999997
+        "elapsed_ms": 134.51205200000004
       },
       "request_count": 1
     },
@@ -2575,7 +2575,7 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 135.11952799999995
+        "elapsed_ms": 148.37448900000004
       },
       "request_count": 1
     },
@@ -2647,7 +2647,7 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 189.82284000000004
+        "elapsed_ms": 223.90540199999998
       },
       "request_count": 1
     },
@@ -2719,7 +2719,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 109.09347200000002
+        "elapsed_ms": 92.53308800000002
       },
       "request_count": 1
     },
@@ -2791,7 +2791,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 67.724606
+        "elapsed_ms": 68.29233099999999
       },
       "request_count": 1
     },
@@ -2863,7 +2863,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 73.3169190000001
+        "elapsed_ms": 58.07025800000008
       },
       "request_count": 1
     },
@@ -2935,7 +2935,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 75.36104999999998
+        "elapsed_ms": 87.25298799999996
       },
       "request_count": 1
     },
@@ -3007,7 +3007,7 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 57.542748000000074
+        "elapsed_ms": 60.38889999999992
       },
       "request_count": 1
     },
@@ -3079,7 +3079,7 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 97.30280899999991
+        "elapsed_ms": 72.95598499999994
       },
       "request_count": 1
     },
@@ -3140,7 +3140,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.3100940000000492
+        "elapsed_ms": 1.2294140000000198
       },
       "request_count": 0
     },
@@ -3201,7 +3201,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.353195000000028
+        "elapsed_ms": 0.9165110000000141
       },
       "request_count": 0
     },
@@ -3262,7 +3262,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8602149999999256
+        "elapsed_ms": 1.32401799999991
       },
       "request_count": 0
     },
@@ -3323,7 +3323,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.3536759999999504
+        "elapsed_ms": 0.8368669999999838
       },
       "request_count": 0
     },
@@ -3384,7 +3384,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.2707940000000235
+        "elapsed_ms": 1.2579449999999497
       },
       "request_count": 0
     },
@@ -3445,7 +3445,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.040253000000007
+        "elapsed_ms": 1.3481020000001536
       },
       "request_count": 0
     },
@@ -3530,7 +3530,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 147.93413899999996
+        "elapsed_ms": 135.7005039999999
       },
       "request_count": 1
     },
@@ -3615,7 +3615,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 64.33547399999998
+        "elapsed_ms": 94.48530100000016
       },
       "request_count": 1
     },
@@ -3700,7 +3700,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 48.149275999999986
+        "elapsed_ms": 46.05611600000009
       },
       "request_count": 1
     },
@@ -3785,7 +3785,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 74.329522
+        "elapsed_ms": 93.61515000000009
       },
       "request_count": 1
     },
@@ -3870,7 +3870,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 123.71230200000002
+        "elapsed_ms": 144.98153100000002
       },
       "request_count": 1
     },
@@ -3955,7 +3955,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 105.79192799999998
+        "elapsed_ms": 101.30635200000006
       },
       "request_count": 1
     },
@@ -4016,7 +4016,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.7522330000000466
+        "elapsed_ms": 0.8077890000000707
       },
       "request_count": 0
     },
@@ -4077,7 +4077,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.293961999999965
+        "elapsed_ms": 1.1933239999999614
       },
       "request_count": 0
     },
@@ -4138,7 +4138,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8270370000000185
+        "elapsed_ms": 1.3589789999999766
       },
       "request_count": 0
     },
@@ -4199,7 +4199,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.2757689999998547
+        "elapsed_ms": 1.4034199999999828
       },
       "request_count": 0
     },
@@ -4260,7 +4260,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.222487000000001
+        "elapsed_ms": 1.1568660000000364
       },
       "request_count": 0
     },
@@ -4321,7 +4321,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8606929999999693
+        "elapsed_ms": 0.8027490000000626
       },
       "request_count": 0
     },
@@ -4382,7 +4382,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8543210000000272
+        "elapsed_ms": 1.2985230000001593
       },
       "request_count": 0
     },
@@ -4443,7 +4443,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.2620210000000043
+        "elapsed_ms": 1.3430949999999484
       },
       "request_count": 0
     },
@@ -4536,7 +4536,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 72.67697999999996
+        "elapsed_ms": 55.61674700000003
       },
       "request_count": 1
     },
@@ -4597,7 +4597,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8341279999999642
+        "elapsed_ms": 1.1870330000000422
       },
       "request_count": 0
     },
@@ -4658,7 +4658,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.260377999999946
+        "elapsed_ms": 1.2899170000000595
       },
       "request_count": 0
     },
@@ -4719,7 +4719,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.811888999999951
+        "elapsed_ms": 0.9125729999999521
       },
       "request_count": 0
     },
@@ -4780,7 +4780,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.9651680000000624
+        "elapsed_ms": 0.8268269999999802
       },
       "request_count": 0
     },
@@ -4841,7 +4841,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.2691310000000158
+        "elapsed_ms": 1.2396730000000389
       },
       "request_count": 0
     },
@@ -4902,7 +4902,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8997259999999869
+        "elapsed_ms": 0.8254900000000589
       },
       "request_count": 0
     },
@@ -4963,7 +4963,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.2239150000000336
+        "elapsed_ms": 1.1823229999999967
       },
       "request_count": 0
     },
@@ -5024,7 +5024,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.302383999999961
+        "elapsed_ms": 1.2662380000001576
       },
       "request_count": 0
     },
@@ -5085,7 +5085,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.3142420000000357
+        "elapsed_ms": 4.28761899999995
       },
       "request_count": 0
     },
@@ -5146,7 +5146,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.1766390000000229
+        "elapsed_ms": 1.1662069999999858
       },
       "request_count": 0
     },
@@ -5230,7 +5230,7 @@
           "chunks_seen": 12
         },
         "notes": [],
-        "elapsed_ms": 115.98962200000005
+        "elapsed_ms": 141.24102499999992
       },
       "request_count": 1
     },
@@ -5316,7 +5316,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 74.24589600000002
+        "elapsed_ms": 67.45899900000006
       },
       "request_count": 1
     },
@@ -5396,7 +5396,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 118.74082799999996
+        "elapsed_ms": 110.99998200000005
       },
       "request_count": 1
     },
@@ -5474,7 +5474,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 134.3965790000001
+        "elapsed_ms": 166.55045800000005
       },
       "request_count": 1
     },
@@ -5552,7 +5552,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 120.58450200000004
+        "elapsed_ms": 134.13534399999992
       },
       "request_count": 1
     },
@@ -5638,7 +5638,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 141.36502300000006
+        "elapsed_ms": 141.88784899999996
       },
       "request_count": 1
     },
@@ -5724,7 +5724,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 68.48068999999998
+        "elapsed_ms": 45.035737999999924
       },
       "request_count": 1
     },
@@ -5802,7 +5802,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 130.71721300000002
+        "elapsed_ms": 128.74159099999997
       },
       "request_count": 1
     },
@@ -5863,7 +5863,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.7870020000000295
+        "elapsed_ms": 0.7995329999999967
       },
       "request_count": 0
     },
@@ -5924,7 +5924,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.7707980000000134
+        "elapsed_ms": 0.844667999999956
       },
       "request_count": 0
     },
@@ -5985,7 +5985,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.9083090000000311
+        "elapsed_ms": 1.2022190000000137
       },
       "request_count": 0
     },
@@ -6071,7 +6071,7 @@
           "chunks_seen": 12
         },
         "notes": [],
-        "elapsed_ms": 133.45504999999991
+        "elapsed_ms": 104.965461
       },
       "request_count": 1
     },
@@ -6157,7 +6157,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 107.68273899999997
+        "elapsed_ms": 93.52411600000005
       },
       "request_count": 1
     },
@@ -6243,7 +6243,7 @@
           "chunks_seen": 12
         },
         "notes": [],
-        "elapsed_ms": 107.08619299999998
+        "elapsed_ms": 108.37787900000001
       },
       "request_count": 1
     },
@@ -6304,7 +6304,190 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.2778690000000097
+        "elapsed_ms": 0.7642999999999347
+      },
+      "request_count": 0
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/usage.cached-tokens",
+      "fixture_tier": "recorded",
+      "grade": "UNSUPPORTED",
+      "requirements": [],
+      "notes": [
+        "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays. (https://tanstack.com/ai/latest/docs/api/ai#chat-options)"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "tanstack-ai",
+          "version": "1.0.0",
+          "language": "javascript",
+          "api": "chat"
+        },
+        "outcome": "unsupported",
+        "unsupported_reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays. https://tanstack.com/ai/latest/docs/api/ai#chat-options",
+        "error": null,
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 1.288449999999898
+      },
+      "request_count": 0
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/usage.cached-tokens",
+      "fixture_tier": "recorded",
+      "grade": "UNSUPPORTED",
+      "requirements": [],
+      "notes": [
+        "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays. (https://tanstack.com/ai/latest/docs/api/ai#chat-options)"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "tanstack-ai",
+          "version": "1.0.0",
+          "language": "javascript",
+          "api": "chat"
+        },
+        "outcome": "unsupported",
+        "unsupported_reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays. https://tanstack.com/ai/latest/docs/api/ai#chat-options",
+        "error": null,
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 1.2375560000000405
+      },
+      "request_count": 0
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "anthropic",
+      "fixture": "anthropic/usage.reasoning-tokens",
+      "fixture_tier": "documented",
+      "grade": "UNSUPPORTED",
+      "requirements": [],
+      "notes": [
+        "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays. (https://tanstack.com/ai/latest/docs/api/ai#chat-options)"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "tanstack-ai",
+          "version": "1.0.0",
+          "language": "javascript",
+          "api": "chat"
+        },
+        "outcome": "unsupported",
+        "unsupported_reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays. https://tanstack.com/ai/latest/docs/api/ai#chat-options",
+        "error": null,
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 1.308037000000013
       },
       "request_count": 0
     },
@@ -6365,7 +6548,129 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8639630000000125
+        "elapsed_ms": 1.1928720000000794
+      },
+      "request_count": 0
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/usage.reasoning-tokens",
+      "fixture_tier": "recorded",
+      "grade": "UNSUPPORTED",
+      "requirements": [],
+      "notes": [
+        "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays. (https://tanstack.com/ai/latest/docs/api/ai#chat-options)"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "tanstack-ai",
+          "version": "1.0.0",
+          "language": "javascript",
+          "api": "chat"
+        },
+        "outcome": "unsupported",
+        "unsupported_reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays. https://tanstack.com/ai/latest/docs/api/ai#chat-options",
+        "error": null,
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 1.3067879999999832
+      },
+      "request_count": 0
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/usage.reasoning-tokens",
+      "fixture_tier": "recorded",
+      "grade": "UNSUPPORTED",
+      "requirements": [],
+      "notes": [
+        "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays. (https://tanstack.com/ai/latest/docs/api/ai#chat-options)"
+      ],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "tanstack-ai",
+          "version": "1.0.0",
+          "language": "javascript",
+          "api": "chat"
+        },
+        "outcome": "unsupported",
+        "unsupported_reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays. https://tanstack.com/ai/latest/docs/api/ai#chat-options",
+        "error": null,
+        "finish": {
+          "value": null,
+          "raw": null,
+          "surface": "absent",
+          "source": null
+        },
+        "text": {
+          "value": null,
+          "surface": "absent"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": null,
+          "cached_input": null,
+          "output": null,
+          "reasoning": null,
+          "total": null,
+          "surface": {
+            "input": "absent",
+            "output": "absent",
+            "total": "absent",
+            "cached_input": "absent",
+            "reasoning": "absent"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 1.1986699999999928
       },
       "request_count": 0
     },
@@ -6431,7 +6736,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 93.48747000000003
+        "elapsed_ms": 108.66618000000017
       },
       "request_count": 1
     },
@@ -6497,7 +6802,7 @@
           "chunks_seen": 7
         },
         "notes": [],
-        "elapsed_ms": 61.55397199999993
+        "elapsed_ms": 60.15121899999997
       },
       "request_count": 1
     },
@@ -6563,7 +6868,7 @@
           "chunks_seen": 31
         },
         "notes": [],
-        "elapsed_ms": 170.3065549999999
+        "elapsed_ms": 169.37019900000007
       },
       "request_count": 1
     },
@@ -6629,7 +6934,7 @@
           "chunks_seen": 26
         },
         "notes": [],
-        "elapsed_ms": 179.74662999999998
+        "elapsed_ms": 183.08696599999996
       },
       "request_count": 1
     },
@@ -6695,7 +7000,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 144.8464869999999
+        "elapsed_ms": 130.04698700000006
       },
       "request_count": 1
     }

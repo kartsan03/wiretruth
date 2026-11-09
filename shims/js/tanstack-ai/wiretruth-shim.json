@@ -225,6 +225,8 @@
     {
       "scenario": "usage.cached-tokens",
       "providers": [
+        "openai-chat",
+        "openai-responses",
         "anthropic"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
@@ -233,7 +235,10 @@
     {
       "scenario": "usage.reasoning-tokens",
       "providers": [
-        "gemini"
+        "openai-chat",
+        "openai-responses",
+        "gemini",
+        "anthropic"
       ],
       "reason": "TanStack AI's chat() always requests a streamed response (stream: false collects the stream), so it never sends the non-streamed request this fixture replays.",
       "docs": "https://tanstack.com/ai/latest/docs/api/ai#chat-options"

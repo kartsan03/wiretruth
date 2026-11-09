@@ -25,7 +25,6 @@
   "providers": [
     "openai-chat",
     "openai-responses",
-    "gemini",
     "anthropic"
   ],
   "requirements": [
@@ -47,12 +46,11 @@
       "text": "The library reports the number of input tokens served from cache."
     }
   ],
-  "grading_notes": "OpenAI prompt_tokens (Chat) and input_tokens (Responses) already include cached_tokens; canonical input keeps that inclusive count and total is input plus output, without adding cached input again. Gemini promptTokenCount already includes cachedContentTokenCount, like OpenAI. Anthropic input_tokens excludes cache reads and writes. Canonical input adds all three; uncached_input is an accepted input alternative, but the total must still reconcile. The original cooking style guide exceeds OpenAI's 1024-token cache minimum and the documented 512-token Sonnet 5.5 minimum; exact token counts are filled in for the documented fixture. The Anthropic override sets extra.anthropic.cache for top-level ephemeral cache_control; OpenAI caches automatically and sends no Anthropic options. recording.warm_up sends the same request twice and keeps the second response; confirm cached_tokens, cachedContentTokenCount or cache_read_input_tokens is greater than zero. Gemini implicit caching is best effort on the free tier: record it with gemini-3.5-flash-lite and keep the gemini cell only if the cache was hit.",
+  "grading_notes": "OpenAI prompt_tokens (Chat) and input_tokens (Responses) already include cached_tokens; canonical input keeps that inclusive count and total is input plus output, without adding cached input again. Anthropic input_tokens excludes cache reads and writes. Canonical input adds all three; uncached_input is an accepted input alternative, but the total must still reconcile. The original cooking style guide exceeds OpenAI's 1024-token cache minimum and the documented 512-token Sonnet 5.5 minimum; exact token counts are filled in for the documented fixture. The Anthropic override sets extra.anthropic.cache for top-level ephemeral cache_control; OpenAI caches automatically and sends no Anthropic options. recording.warm_up sends the same request twice and keeps the second response; the recorder writes nothing unless cached_tokens or cache_read_input_tokens is greater than zero. Gemini is not listed: on 2026-11-09 gemini-3.5-flash-lite's free-tier implicit cache did not hit on an immediate repeat.",
   "references": [
     "https://platform.claude.com/docs/en/build-with-claude/prompt-caching#tracking-cache-performance",
     "https://platform.claude.com/docs/en/build-with-claude/prompt-caching#cache-limitations",
-    "https://developers.openai.com/api/docs/guides/prompt-caching",
-    "https://ai.google.dev/gemini-api/docs/caching"
+    "https://developers.openai.com/api/docs/guides/prompt-caching"
   ],
   "recording": {
     "warm_up": true

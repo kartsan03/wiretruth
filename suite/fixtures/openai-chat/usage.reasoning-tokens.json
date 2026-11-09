@@ -1,0 +1,115 @@
+{
+  "format": "wiretruth.fixture/v1",
+  "id": "openai-chat/usage.reasoning-tokens",
+  "scenario": "usage.reasoning-tokens",
+  "provider": "openai-chat",
+  "tier": "recorded",
+  "provenance": {
+    "recorded_at": "2026-11-09T00:41:29Z",
+    "requested_model": "gpt-6-luna",
+    "returned_model": "gpt-6-luna",
+    "recorder": "wiretruth 0.3.0.dev0",
+    "source_commit": "b5d1f1c",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/42541525617",
+    "raw_sha256": "fb6c4d9676364f4383a1315bf19c9fcbf5fb645488ec1f89f000183a1f4fae5a",
+    "request": {
+      "model": "gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "A greenhouse has 18 pots containing either two or three seedlings each, with 47 seedlings in total. How many pots contain three seedlings? Check the arithmetic and answer briefly."
+        }
+      ],
+      "max_completion_tokens": 800,
+      "reasoning_effort": "medium"
+    },
+    "notes": ""
+  },
+  "derived_from": null,
+  "exchanges": [
+    {
+      "match": {
+        "method": "POST",
+        "path": "/v1/chat/completions"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "json": {
+            "id": "chatcmpl-Ei7juQVTCg3NuBUeT01Qphd8kpNxp",
+            "object": "chat.completion",
+            "created": 1794184890,
+            "model": "gpt-6-luna",
+            "choices": [
+              {
+                "index": 0,
+                "message": {
+                  "role": "assistant",
+                  "content": "11 pots contain three seedlings. Check: \\(11\\times3 + 7\\times2 = 47\\), and \\(11+7=18\\).",
+                  "refusal": null,
+                  "annotations": []
+                },
+                "finish_reason": "stop"
+              }
+            ],
+            "usage": {
+              "prompt_tokens": 41,
+              "completion_tokens": 94,
+              "total_tokens": 135,
+              "prompt_tokens_details": {
+                "cached_tokens": 0,
+                "cache_write_tokens": 0,
+                "audio_tokens": 0
+              },
+              "completion_tokens_details": {
+                "reasoning_tokens": 52,
+                "audio_tokens": 0,
+                "accepted_prediction_tokens": 0,
+                "rejected_prediction_tokens": 0
+              }
+            },
+            "service_tier": "default",
+            "system_fingerprint": null
+          }
+        },
+        "end": "clean"
+      }
+    }
+  ],
+  "truth": {
+    "finish": "stop",
+    "raw_finish": "stop",
+    "text": "11 pots contain three seedlings. Check: \\(11\\times3 + 7\\times2 = 47\\), and \\(11+7=18\\).",
+    "tool_calls": [],
+    "structured": null,
+    "error": null,
+    "stream_completed": null,
+    "usage": {
+      "input": 41,
+      "cached_input": 0,
+      "output": 94,
+      "reasoning": 52,
+      "total": 135,
+      "alternatives": {},
+      "raw": {
+        "prompt_tokens": 41,
+        "completion_tokens": 94,
+        "total_tokens": 135,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 52,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      }
+    }
+  }
+}

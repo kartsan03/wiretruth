@@ -7,8 +7,8 @@
     "language": "python"
   },
   "run": {
-    "at": "2026-10-26T16:08:02Z",
-    "git_sha": "7d632a25413e0c2dcf91cda1f02855adec548a2c",
+    "at": "2026-11-09T00:57:17Z",
+    "git_sha": "f81137db01e3a0381fb8820c0cbf6659ed392f52",
     "ci_run": null,
     "runner": "wiretruth 0.3.0.dev0",
     "packages": {
@@ -16,13 +16,13 @@
       "aiohttp": "3.14.5",
       "aiosignal": "1.4.0",
       "annotated-types": "0.8.0",
-      "anyio": "4.15.1",
+      "anyio": "4.16.0",
       "attrs": "26.1.0",
-      "boto3": "1.43.118",
-      "botocore": "1.43.118",
+      "boto3": "1.43.126",
+      "botocore": "1.43.126",
       "certifi": "2026.10.23",
       "charset-normalizer": "3.5.2",
-      "click": "8.5.0",
+      "click": "8.5.1",
       "distro": "1.9.0",
       "fastuuid": "0.14.0",
       "filelock": "3.32.7",
@@ -30,7 +30,7 @@
       "fsspec": "2026.9.0",
       "h11": "0.16.0",
       "h2": "4.4.1",
-      "hf-xet": "1.7.0",
+      "hf-xet": "1.8.0",
       "hpack": "4.2.0",
       "httpcore": "1.0.9",
       "httpx": "0.28.1",
@@ -39,7 +39,7 @@
       "idna": "3.20",
       "importlib-metadata": "8.9.0",
       "jinja2": "3.1.6",
-      "jiter": "0.18.0",
+      "jiter": "0.19.0",
       "jmespath": "1.1.0",
       "jsonschema": "4.26.0",
       "jsonschema-specifications": "2025.9.1",
@@ -49,14 +49,14 @@
       "openai": "2.54.0",
       "packaging": "26.3",
       "propcache": "0.5.4",
-      "pydantic": "2.14.1",
-      "pydantic-core": "2.50.1",
-      "pydantic-settings": "2.16.1",
+      "pydantic": "2.14.3",
+      "pydantic-core": "2.50.4",
+      "pydantic-settings": "2.16.2",
       "python-dateutil": "2.9.0.post0",
       "python-dotenv": "1.2.4",
       "pyyaml": "6.0.3",
       "referencing": "0.37.0",
-      "regex": "2026.9.29",
+      "regex": "2026.11.9",
       "requests": "2.34.2",
       "rpds-py": "2026.9.1",
       "s3transfer": "0.19.3",
@@ -66,7 +66,7 @@
       "tokenizers": "0.23.3",
       "tqdm": "4.70.1",
       "typing-extensions": "4.16.0",
-      "typing-inspection": "0.4.4",
+      "typing-inspection": "0.4.5",
       "urllib3": "2.8.0",
       "yarl": "1.25.1",
       "zipp": "4.1.2"
@@ -141,7 +141,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 209.05795879662037
+        "elapsed_ms": 232.68009535968304
       },
       "request_count": 1
     },
@@ -213,7 +213,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 337.51074271276593
+        "elapsed_ms": 343.6450809240341
       },
       "request_count": 1
     },
@@ -285,7 +285,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 221.30816197022796
+        "elapsed_ms": 358.3276430144906
       },
       "request_count": 2
     },
@@ -357,7 +357,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 609.9669928662479
+        "elapsed_ms": 548.739050514996
       },
       "request_count": 1
     },
@@ -444,7 +444,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 337.3495927080512
+        "elapsed_ms": 334.83307249844074
       },
       "request_count": 1
     },
@@ -530,7 +530,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 265.67730819806457
+        "elapsed_ms": 227.8488101437688
       },
       "request_count": 1
     },
@@ -617,7 +617,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 368.3545752428472
+        "elapsed_ms": 350.8198345080018
       },
       "request_count": 2
     },
@@ -703,7 +703,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 615.6446659006178
+        "elapsed_ms": 446.31072599440813
       },
       "request_count": 1
     },
@@ -789,7 +789,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 613.48822619766
+        "elapsed_ms": 466.1439126357436
       },
       "request_count": 1
     },
@@ -873,7 +873,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 49.385824240744114
+        "elapsed_ms": 79.02014348655939
       },
       "request_count": 1
     },
@@ -951,7 +951,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 455.72187611833215
+        "elapsed_ms": 478.67863811552525
       },
       "request_count": 1
     },
@@ -1017,7 +1017,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 616.8542350642383
+        "elapsed_ms": 556.1381885781884
       },
       "request_count": 1
     },
@@ -1091,7 +1091,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 341.0006738267839
+        "elapsed_ms": 346.49316128343344
       },
       "request_count": 2
     },
@@ -1163,7 +1163,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 631.8308138288558
+        "elapsed_ms": 470.38020100444555
       },
       "request_count": 1
     },
@@ -1235,7 +1235,7 @@
           "chunks_seen": 2
         },
         "notes": [],
-        "elapsed_ms": 259.35365026816726
+        "elapsed_ms": 261.6889011114836
       },
       "request_count": 1
     },
@@ -1307,7 +1307,7 @@
           "chunks_seen": 1
         },
         "notes": [],
-        "elapsed_ms": 351.7793291248381
+        "elapsed_ms": 344.02263816446066
       },
       "request_count": 1
     },
@@ -1379,7 +1379,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 383.2972729578614
+        "elapsed_ms": 381.4461585134268
       },
       "request_count": 1
     },
@@ -1451,7 +1451,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 756.2301768921316
+        "elapsed_ms": 561.8054047226906
       },
       "request_count": 1
     },
@@ -1523,7 +1523,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 307.7566619031131
+        "elapsed_ms": 326.16511452943087
       },
       "request_count": 1
     },
@@ -1598,7 +1598,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 537.55549993366
+        "elapsed_ms": 516.6848683729768
       },
       "request_count": 1
     },
@@ -1673,7 +1673,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 224.29020516574383
+        "elapsed_ms": 254.41403687000275
       },
       "request_count": 1
     },
@@ -1748,7 +1748,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 435.7032482512295
+        "elapsed_ms": 422.0721833407879
       },
       "request_count": 2
     },
@@ -1823,7 +1823,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 843.6422222293913
+        "elapsed_ms": 806.917617097497
       },
       "request_count": 1
     },
@@ -1898,7 +1898,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 675.6578059867024
+        "elapsed_ms": 555.7510172948241
       },
       "request_count": 1
     },
@@ -1976,7 +1976,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 261.77637791261077
+        "elapsed_ms": 346.82988934218884
       },
       "request_count": 1
     },
@@ -2054,7 +2054,7 @@
           "chunks_seen": 2
         },
         "notes": [],
-        "elapsed_ms": 369.89568220451474
+        "elapsed_ms": 380.81792555749416
       },
       "request_count": 1
     },
@@ -2132,7 +2132,7 @@
           "chunks_seen": 1
         },
         "notes": [],
-        "elapsed_ms": 384.4982641749084
+        "elapsed_ms": 373.9907070994377
       },
       "request_count": 1
     },
@@ -2210,7 +2210,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 378.65920504555106
+        "elapsed_ms": 376.92040018737316
       },
       "request_count": 1
     },
@@ -2288,7 +2288,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 691.7726872488856
+        "elapsed_ms": 815.961848013103
       },
       "request_count": 1
     },
@@ -2366,7 +2366,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 873.3600890263915
+        "elapsed_ms": 570.2553857117891
       },
       "request_count": 1
     },
@@ -2444,7 +2444,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 211.51462802663445
+        "elapsed_ms": 214.63605388998985
       },
       "request_count": 1
     },
@@ -2516,7 +2516,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 362.81792679801583
+        "elapsed_ms": 244.81725320219994
       },
       "request_count": 1
     },
@@ -2588,7 +2588,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 228.620367590338
+        "elapsed_ms": 385.298197157681
       },
       "request_count": 1
     },
@@ -2660,7 +2660,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 426.1041972786188
+        "elapsed_ms": 322.7738421410322
       },
       "request_count": 2
     },
@@ -2732,7 +2732,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 933.2655291073024
+        "elapsed_ms": 752.2918628528714
       },
       "request_count": 1
     },
@@ -2804,7 +2804,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 899.4583529420197
+        "elapsed_ms": 846.2232612073421
       },
       "request_count": 1
     },
@@ -2876,7 +2876,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 305.18991872668266
+        "elapsed_ms": 252.15142872184515
       },
       "request_count": 1
     },
@@ -2948,7 +2948,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 366.29660008475184
+        "elapsed_ms": 268.60640570521355
       },
       "request_count": 1
     },
@@ -3020,7 +3020,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 387.30832329019904
+        "elapsed_ms": 365.2224186807871
       },
       "request_count": 1
     },
@@ -3092,7 +3092,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 372.39406211301684
+        "elapsed_ms": 367.54409223794937
       },
       "request_count": 2
     },
@@ -3164,7 +3164,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 896.4617773890495
+        "elapsed_ms": 556.7858666181564
       },
       "request_count": 1
     },
@@ -3236,7 +3236,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 651.1462768539786
+        "elapsed_ms": 819.0507907420397
       },
       "request_count": 1
     },
@@ -3308,7 +3308,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 299.34834502637386
+        "elapsed_ms": 328.37970461696386
       },
       "request_count": 1
     },
@@ -3393,7 +3393,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 333.4431550465524
+        "elapsed_ms": 270.8694962784648
       },
       "request_count": 1
     },
@@ -3480,7 +3480,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 340.70764295756817
+        "elapsed_ms": 332.99944270402193
       },
       "request_count": 1
     },
@@ -3565,7 +3565,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 226.98503220453858
+        "elapsed_ms": 285.0208831951022
       },
       "request_count": 2
     },
@@ -3650,7 +3650,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 637.6757826656103
+        "elapsed_ms": 399.4666002690792
       },
       "request_count": 1
     },
@@ -3735,7 +3735,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 445.76770113781095
+        "elapsed_ms": 419.2334320396185
       },
       "request_count": 1
     },
@@ -3820,7 +3820,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 51.12919490784407
+        "elapsed_ms": 73.72773438692093
       },
       "request_count": 1
     },
@@ -3905,7 +3905,7 @@
           "chunks_seen": 7
         },
         "notes": [],
-        "elapsed_ms": 384.3838321045041
+        "elapsed_ms": 391.76832884550095
       },
       "request_count": 1
     },
@@ -3992,7 +3992,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 228.86021155864
+        "elapsed_ms": 351.83524806052446
       },
       "request_count": 1
     },
@@ -4041,7 +4041,7 @@
         },
         "tool_calls": [
           {
-            "id": "d20a9e54-a334-4565-be8f-cadf8c580510",
+            "id": "a09fa255-7df3-46fa-8153-85963da4f1f2",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": false,
@@ -4068,7 +4068,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 235.4241688735783
+        "elapsed_ms": 249.20135363936424
       },
       "request_count": 2
     },
@@ -4153,7 +4153,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 889.3345920369029
+        "elapsed_ms": 811.265186406672
       },
       "request_count": 1
     },
@@ -4238,7 +4238,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 682.6410908252001
+        "elapsed_ms": 849.5968310162425
       },
       "request_count": 1
     },
@@ -4323,7 +4323,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 229.0606740862131
+        "elapsed_ms": 354.08931504935026
       },
       "request_count": 1
     },
@@ -4401,7 +4401,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 231.9987779483199
+        "elapsed_ms": 353.229989297688
       },
       "request_count": 1
     },
@@ -4479,7 +4479,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 337.66993321478367
+        "elapsed_ms": 331.4565373584628
       },
       "request_count": 1
     },
@@ -4557,7 +4557,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 358.7620980106294
+        "elapsed_ms": 341.82998817414045
       },
       "request_count": 2
     },
@@ -4635,7 +4635,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 618.6315510421991
+        "elapsed_ms": 505.1318434998393
       },
       "request_count": 1
     },
@@ -4713,7 +4713,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 615.2545530349016
+        "elapsed_ms": 552.114493213594
       },
       "request_count": 1
     },
@@ -4791,7 +4791,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 76.6153521835804
+        "elapsed_ms": 49.516755156219006
       },
       "request_count": 1
     },
@@ -4875,7 +4875,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 349.2327407002449
+        "elapsed_ms": 241.72461684793234
       },
       "request_count": 1
     },
@@ -4959,7 +4959,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 339.2712287604809
+        "elapsed_ms": 328.2221369445324
       },
       "request_count": 1
     },
@@ -5043,7 +5043,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 338.50551629438996
+        "elapsed_ms": 357.40492958575487
       },
       "request_count": 2
     },
@@ -5127,7 +5127,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 415.87545815855265
+        "elapsed_ms": 583.6002910509706
       },
       "request_count": 1
     },
@@ -5211,7 +5211,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 461.42088808119297
+        "elapsed_ms": 401.6341706737876
       },
       "request_count": 1
     },
@@ -5295,7 +5295,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 73.20231990888715
+        "elapsed_ms": 73.57477396726608
       },
       "request_count": 1
     },
@@ -5356,7 +5356,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.6533620655536652
+        "elapsed_ms": 1.7464123666286469
       },
       "request_count": 0
     },
@@ -5434,7 +5434,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 330.0274470821023
+        "elapsed_ms": 594.1968597471714
       },
       "request_count": 1
     },
@@ -5512,7 +5512,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 329.91653122007847
+        "elapsed_ms": 321.0318712517619
       },
       "request_count": 1
     },
@@ -5590,7 +5590,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 229.37841387465596
+        "elapsed_ms": 603.1667310744524
       },
       "request_count": 2
     },
@@ -5668,7 +5668,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 439.9251830764115
+        "elapsed_ms": 561.0722089186311
       },
       "request_count": 1
     },
@@ -5746,7 +5746,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 604.8068860545754
+        "elapsed_ms": 440.8886730670929
       },
       "request_count": 1
     },
@@ -5824,7 +5824,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 54.21872576698661
+        "elapsed_ms": 74.83721431344748
       },
       "request_count": 1
     },
@@ -5904,7 +5904,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 386.0609079711139
+        "elapsed_ms": 374.8734025284648
       },
       "request_count": 1
     },
@@ -5984,7 +5984,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 337.0857210829854
+        "elapsed_ms": 235.4434048756957
       },
       "request_count": 1
     },
@@ -6064,7 +6064,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 327.4049456231296
+        "elapsed_ms": 427.5184851139784
       },
       "request_count": 2
     },
@@ -6142,7 +6142,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 846.8045587651432
+        "elapsed_ms": 679.3347718194127
       },
       "request_count": 1
     },
@@ -6220,7 +6220,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 883.8984351605177
+        "elapsed_ms": 681.341172195971
       },
       "request_count": 1
     },
@@ -6298,7 +6298,7 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 221.3397049345076
+        "elapsed_ms": 331.19573071599007
       },
       "request_count": 1
     },
@@ -6376,7 +6376,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 349.62624311447144
+        "elapsed_ms": 348.7493861466646
       },
       "request_count": 1
     },
@@ -6454,7 +6454,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 758.0322539433837
+        "elapsed_ms": 834.4042534008622
       },
       "request_count": 1
     },
@@ -6536,7 +6536,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 228.93867827951908
+        "elapsed_ms": 326.4773739501834
       },
       "request_count": 1
     },
@@ -6616,7 +6616,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 659.3537298031151
+        "elapsed_ms": 554.8085700720549
       },
       "request_count": 1
     },
@@ -6696,7 +6696,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 76.13928196951747
+        "elapsed_ms": 76.35052967816591
       },
       "request_count": 1
     },
@@ -6776,7 +6776,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 387.5436866655946
+        "elapsed_ms": 388.79356160759926
       },
       "request_count": 1
     },
@@ -6856,7 +6856,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 876.6244440339506
+        "elapsed_ms": 819.1883284598589
       },
       "request_count": 1
     },
@@ -6936,7 +6936,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 223.61234482377768
+        "elapsed_ms": 341.0542858764529
       },
       "request_count": 1
     },
@@ -7008,7 +7008,223 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 318.87271208688617
+        "elapsed_ms": 270.43456863611937
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/usage.cached-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=1126 (primary); truth.usage.total=1126"
+        },
+        {
+          "id": "cached-input-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.cached_input=1080 (primary); truth.usage.cached_input=1080"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "litellm",
+          "version": "1.105.5",
+          "language": "python",
+          "api": "litellm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "A hot pan helps mushrooms brown instead of releasing water and turning soggy. Heat the pan first, then add the mushrooms in a single layer; if they crowd the pan, cook them in batches.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 1083,
+          "cached_input": 1080,
+          "output": 43,
+          "reasoning": 0,
+          "total": 1126,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 538.8950388878584
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/usage.cached-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=1130 (primary); truth.usage.total=1130"
+        },
+        {
+          "id": "cached-input-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.cached_input=1080 (primary); truth.usage.cached_input=1080"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "litellm",
+          "version": "1.105.5",
+          "language": "python",
+          "api": "litellm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "completed",
+          "surface": "primary",
+          "source": "status"
+        },
+        "text": {
+          "value": "A hot pan helps mushrooms brown instead of sitting in their released moisture and turning soggy. Heat the pan first, then add the mushrooms in a single layer; if they crowd the pan, cook them in batches.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 1083,
+          "cached_input": 1080,
+          "output": 47,
+          "reasoning": 0,
+          "total": 1130,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 53.50138712674379
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "anthropic",
+      "fixture": "anthropic/usage.reasoning-tokens",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=400 (primary); truth.usage.total=400"
+        },
+        {
+          "id": "reasoning-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.reasoning=312 (primary); truth.usage.reasoning=312"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "litellm",
+          "version": "1.105.5",
+          "language": "python",
+          "api": "litellm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "11 pots contain three seedlings: 11 times 3 plus 7 times 2 equals 47.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 52,
+          "cached_input": 0,
+          "output": 348,
+          "reasoning": 312,
+          "total": 400,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 219.11912690848112
       },
       "request_count": 1
     },
@@ -7080,7 +7296,151 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 374.902768060565
+        "elapsed_ms": 438.88851813971996
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/usage.reasoning-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=135 (primary); truth.usage.total=135"
+        },
+        {
+          "id": "reasoning-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.reasoning=52 (primary); truth.usage.reasoning=52"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "litellm",
+          "version": "1.105.5",
+          "language": "python",
+          "api": "litellm.completion"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "choices[0].finish_reason"
+        },
+        "text": {
+          "value": "11 pots contain three seedlings. Check: \\(11\\times3 + 7\\times2 = 47\\), and \\(11+7=18\\).",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 41,
+          "cached_input": 0,
+          "output": 94,
+          "reasoning": 52,
+          "total": 135,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 362.1673062443733
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/usage.reasoning-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=142 (primary); truth.usage.total=142"
+        },
+        {
+          "id": "reasoning-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.reasoning=58 (primary); truth.usage.reasoning=58"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "litellm",
+          "version": "1.105.5",
+          "language": "python",
+          "api": "litellm.responses"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "completed",
+          "surface": "primary",
+          "source": "status"
+        },
+        "text": {
+          "value": "**11 pots** contain three seedlings. Check: \\(11 \\times 3 + 7 \\times 2 = 47\\), and \\(11+7=18\\).",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 41,
+          "cached_input": 0,
+          "output": 101,
+          "reasoning": 58,
+          "total": 142,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 76.46059338003397
       },
       "request_count": 1
     },
@@ -7146,7 +7506,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 256.42968295142055
+        "elapsed_ms": 306.38343188911676
       },
       "request_count": 1
     },
@@ -7212,7 +7572,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 356.33375914767385
+        "elapsed_ms": 437.8907075151801
       },
       "request_count": 1
     },
@@ -7278,7 +7638,7 @@
           "chunks_seen": 29
         },
         "notes": [],
-        "elapsed_ms": 368.7025560066104
+        "elapsed_ms": 403.25407963246107
       },
       "request_count": 2
     },
@@ -7344,7 +7704,7 @@
           "chunks_seen": 24
         },
         "notes": [],
-        "elapsed_ms": 638.4816458448768
+        "elapsed_ms": 706.8397589027882
       },
       "request_count": 1
     },
@@ -7410,7 +7770,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 561.0706340521574
+        "elapsed_ms": 696.2265260517597
       },
       "request_count": 1
     }

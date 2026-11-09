@@ -7,22 +7,22 @@
     "language": "python"
   },
   "run": {
-    "at": "2026-10-26T16:10:13Z",
-    "git_sha": "7d632a25413e0c2dcf91cda1f02855adec548a2c",
+    "at": "2026-11-09T00:59:29Z",
+    "git_sha": "f81137db01e3a0381fb8820c0cbf6659ed392f52",
     "ci_run": null,
     "runner": "wiretruth 0.3.0.dev0",
     "packages": {
       "annotated-types": "0.8.0",
       "anthropic": "1.14.0",
-      "anyio": "4.15.1",
+      "anyio": "4.16.0",
       "certifi": "2026.10.23",
       "cffi": "2.1.1",
       "charset-normalizer": "3.5.2",
       "cryptography": "50.0.2",
       "distro": "1.9.0",
       "docstring-parser": "0.18.0",
-      "genai-prices": "0.1.13",
-      "google-auth": "2.62.0",
+      "genai-prices": "0.2.1",
+      "google-auth": "2.62.1",
       "google-genai": "2.31.0",
       "griffelib": "2.4.1",
       "h11": "0.16.0",
@@ -31,23 +31,23 @@
       "httpx": "0.28.1",
       "httpx2": "2.16.0",
       "idna": "3.20",
-      "jiter": "0.18.0",
-      "logfire-api": "5.3.0",
+      "jiter": "0.19.0",
+      "logfire-api": "5.5.0",
       "openai": "3.31.0",
-      "opentelemetry-api": "1.45.1",
-      "pyasn1": "0.6.4",
+      "opentelemetry-api": "1.45.2",
+      "pyasn1": "0.6.5",
       "pyasn1-modules": "0.4.2",
       "pycparser": "3.12",
-      "pydantic": "2.14.1",
+      "pydantic": "2.14.3",
       "pydantic-ai-slim": "2.61.0",
-      "pydantic-core": "2.50.1",
+      "pydantic-core": "2.50.4",
       "pydantic-graph": "2.61.0",
       "requests": "2.34.2",
       "sniffio": "1.3.1",
       "tenacity": "9.1.4",
       "truststore": "0.10.5",
       "typing-extensions": "4.16.0",
-      "typing-inspection": "0.4.4",
+      "typing-inspection": "0.4.5",
       "urllib3": "2.8.0",
       "websockets": "16.1.1"
     }
@@ -121,7 +121,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 191.4807897992432
+        "elapsed_ms": 285.4342581704259
       },
       "request_count": 1
     },
@@ -193,7 +193,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 212.07668306306005
+        "elapsed_ms": 205.25560155510902
       },
       "request_count": 1
     },
@@ -254,7 +254,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.4454671181738377
+        "elapsed_ms": 1.4165490865707397
       },
       "request_count": 0
     },
@@ -326,7 +326,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 223.36220368742943
+        "elapsed_ms": 217.92567521333694
       },
       "request_count": 1
     },
@@ -412,7 +412,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 186.76381325349212
+        "elapsed_ms": 270.5575078725815
       },
       "request_count": 1
     },
@@ -498,7 +498,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 293.0804989300668
+        "elapsed_ms": 283.74313097447157
       },
       "request_count": 1
     },
@@ -559,7 +559,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.4082519337534904
+        "elapsed_ms": 0.9844908490777016
       },
       "request_count": 0
     },
@@ -645,7 +645,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 169.6920250542462
+        "elapsed_ms": 157.9525712877512
       },
       "request_count": 1
     },
@@ -731,7 +731,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 227.6480458676815
+        "elapsed_ms": 223.06034993380308
       },
       "request_count": 1
     },
@@ -817,7 +817,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 377.64547392725945
+        "elapsed_ms": 277.0313350483775
       },
       "request_count": 1
     },
@@ -895,7 +895,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 164.67482689768076
+        "elapsed_ms": 166.12372919917107
       },
       "request_count": 1
     },
@@ -963,7 +963,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 168.35456062108278
+        "elapsed_ms": 233.05640183389187
       },
       "request_count": 1
     },
@@ -1024,7 +1024,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.4581438153982162
+        "elapsed_ms": 0.9547052904963493
       },
       "request_count": 0
     },
@@ -1096,7 +1096,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 161.53578693047166
+        "elapsed_ms": 265.0377182289958
       },
       "request_count": 1
     },
@@ -1168,7 +1168,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 247.9286533780396
+        "elapsed_ms": 181.82498402893543
       },
       "request_count": 1
     },
@@ -1240,7 +1240,7 @@
           "chunks_seen": 2
         },
         "notes": [],
-        "elapsed_ms": 208.1670630723238
+        "elapsed_ms": 291.33317805826664
       },
       "request_count": 1
     },
@@ -1301,7 +1301,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.4375890605151653
+        "elapsed_ms": 0.9300168603658676
       },
       "request_count": 0
     },
@@ -1373,7 +1373,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 264.37491923570633
+        "elapsed_ms": 236.83286551386118
       },
       "request_count": 1
     },
@@ -1445,7 +1445,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 279.1401003487408
+        "elapsed_ms": 405.90602066367865
       },
       "request_count": 1
     },
@@ -1519,7 +1519,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 226.1949167586863
+        "elapsed_ms": 227.71109361201525
       },
       "request_count": 1
     },
@@ -1593,7 +1593,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 289.3102318048477
+        "elapsed_ms": 196.6326180845499
       },
       "request_count": 1
     },
@@ -1654,7 +1654,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.3450318947434425
+        "elapsed_ms": 0.9040785953402519
       },
       "request_count": 0
     },
@@ -1729,7 +1729,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 232.43572004139423
+        "elapsed_ms": 289.1948092728853
       },
       "request_count": 1
     },
@@ -1804,7 +1804,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 278.72780011966825
+        "elapsed_ms": 280.13609535992146
       },
       "request_count": 1
     },
@@ -1878,7 +1878,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 308.4661099128425
+        "elapsed_ms": 390.7013516873121
       },
       "request_count": 1
     },
@@ -1956,7 +1956,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 232.57597209885716
+        "elapsed_ms": 235.99942214787006
       },
       "request_count": 1
     },
@@ -2034,7 +2034,7 @@
           "chunks_seen": 2
         },
         "notes": [],
-        "elapsed_ms": 246.13750400021672
+        "elapsed_ms": 203.37693393230438
       },
       "request_count": 1
     },
@@ -2095,7 +2095,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.4382470399141312
+        "elapsed_ms": 1.4312677085399628
       },
       "request_count": 0
     },
@@ -2173,7 +2173,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 268.8261726871133
+        "elapsed_ms": 255.72712812572718
       },
       "request_count": 1
     },
@@ -2251,7 +2251,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 254.97000943869352
+        "elapsed_ms": 227.40565240383148
       },
       "request_count": 1
     },
@@ -2329,7 +2329,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 394.5067310705781
+        "elapsed_ms": 389.30577505379915
       },
       "request_count": 1
     },
@@ -2401,7 +2401,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 163.31736091524363
+        "elapsed_ms": 167.09238663315773
       },
       "request_count": 1
     },
@@ -2473,7 +2473,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 195.8031472750008
+        "elapsed_ms": 296.56016547232866
       },
       "request_count": 1
     },
@@ -2534,7 +2534,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.4314190484583378
+        "elapsed_ms": 0.9349603205919266
       },
       "request_count": 0
     },
@@ -2606,7 +2606,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 294.21833204105496
+        "elapsed_ms": 307.62641597539186
       },
       "request_count": 1
     },
@@ -2678,7 +2678,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 313.3075968362391
+        "elapsed_ms": 308.6466984823346
       },
       "request_count": 1
     },
@@ -2750,7 +2750,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 429.46434719488025
+        "elapsed_ms": 421.77537456154823
       },
       "request_count": 1
     },
@@ -2822,7 +2822,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 226.7183680087328
+        "elapsed_ms": 225.37849564105272
       },
       "request_count": 1
     },
@@ -2894,7 +2894,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 329.419425688684
+        "elapsed_ms": 207.57777616381645
       },
       "request_count": 1
     },
@@ -2955,7 +2955,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.4265268109738827
+        "elapsed_ms": 1.4149099588394165
       },
       "request_count": 0
     },
@@ -3027,7 +3027,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 242.17192735522985
+        "elapsed_ms": 232.8804461285472
       },
       "request_count": 1
     },
@@ -3099,7 +3099,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 239.36516884714365
+        "elapsed_ms": 255.72532042860985
       },
       "request_count": 1
     },
@@ -3171,7 +3171,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 428.5561554133892
+        "elapsed_ms": 384.38789267092943
       },
       "request_count": 1
     },
@@ -3256,7 +3256,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 197.8034069761634
+        "elapsed_ms": 185.37466321140528
       },
       "request_count": 1
     },
@@ -3341,7 +3341,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 310.1435718126595
+        "elapsed_ms": 236.31773330271244
       },
       "request_count": 1
     },
@@ -3402,7 +3402,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.5217801555991173
+        "elapsed_ms": 1.474110409617424
       },
       "request_count": 0
     },
@@ -3487,7 +3487,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 164.46946328505874
+        "elapsed_ms": 233.2225488498807
       },
       "request_count": 1
     },
@@ -3572,7 +3572,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 204.7495199367404
+        "elapsed_ms": 228.86526957154274
       },
       "request_count": 1
     },
@@ -3657,7 +3657,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 316.1556851118803
+        "elapsed_ms": 412.4338589608669
       },
       "request_count": 1
     },
@@ -3742,7 +3742,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 191.75934419035912
+        "elapsed_ms": 257.22492951899767
       },
       "request_count": 1
     },
@@ -3827,7 +3827,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 319.4828205741942
+        "elapsed_ms": 304.23508398234844
       },
       "request_count": 1
     },
@@ -3888,7 +3888,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 0.9406763128936291
+        "elapsed_ms": 0.970013439655304
       },
       "request_count": 0
     },
@@ -3973,7 +3973,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 231.0076616704464
+        "elapsed_ms": 203.37791088968515
       },
       "request_count": 1
     },
@@ -4058,7 +4058,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 298.8837258890271
+        "elapsed_ms": 301.7725022509694
       },
       "request_count": 1
     },
@@ -4143,7 +4143,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 282.4965799227357
+        "elapsed_ms": 264.22472577542067
       },
       "request_count": 1
     },
@@ -4229,7 +4229,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 191.86416594311595
+        "elapsed_ms": 182.86611326038837
       },
       "request_count": 1
     },
@@ -4315,7 +4315,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 309.3999079428613
+        "elapsed_ms": 286.4207895472646
       },
       "request_count": 1
     },
@@ -4376,7 +4376,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.9346520528197289
+        "elapsed_ms": 0.9567607194185257
       },
       "request_count": 0
     },
@@ -4462,7 +4462,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 234.98662002384663
+        "elapsed_ms": 238.01228310912848
       },
       "request_count": 1
     },
@@ -4548,7 +4548,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 241.09288677573204
+        "elapsed_ms": 233.55400562286377
       },
       "request_count": 1
     },
@@ -4634,7 +4634,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 288.87661872431636
+        "elapsed_ms": 364.8038152605295
       },
       "request_count": 1
     },
@@ -4730,7 +4730,7 @@
         "notes": [
           "retries: 1 (2 model requests)"
         ],
-        "elapsed_ms": 300.8970501832664
+        "elapsed_ms": 308.7567090988159
       },
       "request_count": 2
     },
@@ -4826,7 +4826,7 @@
         "notes": [
           "retries: 1 (2 model requests)"
         ],
-        "elapsed_ms": 248.67236008867621
+        "elapsed_ms": 236.90816387534142
       },
       "request_count": 2
     },
@@ -4887,7 +4887,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.4405511319637299
+        "elapsed_ms": 1.5454934909939766
       },
       "request_count": 0
     },
@@ -4983,7 +4983,7 @@
         "notes": [
           "retries: 1 (2 model requests)"
         ],
-        "elapsed_ms": 251.8730261363089
+        "elapsed_ms": 268.67474149912596
       },
       "request_count": 2
     },
@@ -5079,7 +5079,7 @@
         "notes": [
           "retries: 1 (2 model requests)"
         ],
-        "elapsed_ms": 251.12581998109818
+        "elapsed_ms": 241.26156140118837
       },
       "request_count": 2
     },
@@ -5175,7 +5175,7 @@
         "notes": [
           "retries: 1 (2 model requests)"
         ],
-        "elapsed_ms": 349.3821625597775
+        "elapsed_ms": 416.5571238845587
       },
       "request_count": 2
     },
@@ -5284,7 +5284,7 @@
         "notes": [
           "retries: 1 (2 model requests)"
         ],
-        "elapsed_ms": 202.2302057594061
+        "elapsed_ms": 298.32087084650993
       },
       "request_count": 2
     },
@@ -5362,7 +5362,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 273.9984788931906
+        "elapsed_ms": 207.41970371454954
       },
       "request_count": 1
     },
@@ -5440,7 +5440,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 279.0848519653082
+        "elapsed_ms": 199.70800913870335
       },
       "request_count": 1
     },
@@ -5501,7 +5501,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.4637368731200695
+        "elapsed_ms": 1.5033697709441185
       },
       "request_count": 0
     },
@@ -5579,7 +5579,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 166.40054900199175
+        "elapsed_ms": 227.45516803115606
       },
       "request_count": 1
     },
@@ -5657,7 +5657,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 233.5662329569459
+        "elapsed_ms": 227.23949514329433
       },
       "request_count": 1
     },
@@ -5735,7 +5735,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 428.7210088223219
+        "elapsed_ms": 310.71152817457914
       },
       "request_count": 1
     },
@@ -5813,7 +5813,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 178.1059647910297
+        "elapsed_ms": 230.8062259107828
       },
       "request_count": 1
     },
@@ -5891,7 +5891,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 225.54564708843827
+        "elapsed_ms": 290.3162781149149
       },
       "request_count": 1
     },
@@ -5952,7 +5952,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.4390693977475166
+        "elapsed_ms": 1.6051065176725388
       },
       "request_count": 0
     },
@@ -6032,7 +6032,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 243.19987697526813
+        "elapsed_ms": 306.7193627357483
       },
       "request_count": 1
     },
@@ -6112,7 +6112,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 310.3590407408774
+        "elapsed_ms": 262.7212544903159
       },
       "request_count": 1
     },
@@ -6190,7 +6190,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 320.4499422572553
+        "elapsed_ms": 319.5910919457674
       },
       "request_count": 1
     },
@@ -6268,7 +6268,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 284.3804252333939
+        "elapsed_ms": 210.606106556952
       },
       "request_count": 1
     },
@@ -6346,7 +6346,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 295.6888470798731
+        "elapsed_ms": 308.4248909726739
       },
       "request_count": 1
     },
@@ -6428,7 +6428,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 286.71538224443793
+        "elapsed_ms": 273.7524388357997
       },
       "request_count": 1
     },
@@ -6518,7 +6518,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 161.46934824064374
+        "elapsed_ms": 232.72565752267838
       },
       "request_count": 1
     },
@@ -6608,7 +6608,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 399.3082223460078
+        "elapsed_ms": 398.1401976197958
       },
       "request_count": 1
     },
@@ -6698,7 +6698,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 229.38302997499704
+        "elapsed_ms": 215.61802923679352
       },
       "request_count": 1
     },
@@ -6788,7 +6788,7 @@
           "chunks_seen": 12
         },
         "notes": [],
-        "elapsed_ms": 281.3827199861407
+        "elapsed_ms": 275.6214216351509
       },
       "request_count": 1
     },
@@ -6878,7 +6878,7 @@
           "chunks_seen": 12
         },
         "notes": [],
-        "elapsed_ms": 408.65475963801146
+        "elapsed_ms": 325.80465357750654
       },
       "request_count": 1
     },
@@ -6950,7 +6950,223 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 254.70956834033132
+        "elapsed_ms": 248.5037036240101
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/usage.cached-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=1126 (primary); truth.usage.total=1126"
+        },
+        {
+          "id": "cached-input-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.cached_input=1080 (primary); truth.usage.cached_input=1080"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "pydantic-ai",
+          "version": "2.61.0",
+          "language": "python",
+          "api": "Agent.run"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "ModelResponse.finish_reason"
+        },
+        "text": {
+          "value": "A hot pan helps mushrooms brown instead of releasing water and turning soggy. Heat the pan first, then add the mushrooms in a single layer; if they crowd the pan, cook them in batches.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 1083,
+          "cached_input": 1080,
+          "output": 43,
+          "reasoning": 0,
+          "total": 1126,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 204.91086412221193
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/usage.cached-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=1130 (primary); truth.usage.total=1130"
+        },
+        {
+          "id": "cached-input-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.cached_input=1080 (primary); truth.usage.cached_input=1080"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "pydantic-ai",
+          "version": "2.61.0",
+          "language": "python",
+          "api": "Agent.run"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "completed",
+          "surface": "primary",
+          "source": "ModelResponse.finish_reason"
+        },
+        "text": {
+          "value": "A hot pan helps mushrooms brown instead of sitting in their released moisture and turning soggy. Heat the pan first, then add the mushrooms in a single layer; if they crowd the pan, cook them in batches.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 1083,
+          "cached_input": 1080,
+          "output": 47,
+          "reasoning": 0,
+          "total": 1130,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 254.1608987376094
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "anthropic",
+      "fixture": "anthropic/usage.reasoning-tokens",
+      "fixture_tier": "documented",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=400 (primary); truth.usage.total=400"
+        },
+        {
+          "id": "reasoning-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.reasoning=312 (primary); truth.usage.reasoning=312"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "pydantic-ai",
+          "version": "2.61.0",
+          "language": "python",
+          "api": "Agent.run"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "end_turn",
+          "surface": "primary",
+          "source": "ModelResponse.finish_reason"
+        },
+        "text": {
+          "value": "11 pots contain three seedlings: 11 times 3 plus 7 times 2 equals 47.",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 52,
+          "cached_input": 0,
+          "output": 348,
+          "reasoning": 312,
+          "total": 400,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 271.48377150297165
       },
       "request_count": 1
     },
@@ -7022,7 +7238,151 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 200.19247010350227
+        "elapsed_ms": 194.97731141746044
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "openai-chat",
+      "fixture": "openai-chat/usage.reasoning-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=135 (primary); truth.usage.total=135"
+        },
+        {
+          "id": "reasoning-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.reasoning=52 (primary); truth.usage.reasoning=52"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "pydantic-ai",
+          "version": "2.61.0",
+          "language": "python",
+          "api": "Agent.run"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "stop",
+          "surface": "primary",
+          "source": "ModelResponse.finish_reason"
+        },
+        "text": {
+          "value": "11 pots contain three seedlings. Check: \\(11\\times3 + 7\\times2 = 47\\), and \\(11+7=18\\).",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 41,
+          "cached_input": 0,
+          "output": 94,
+          "reasoning": 52,
+          "total": 135,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 160.32596584409475
+      },
+      "request_count": 1
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "openai-responses",
+      "fixture": "openai-responses/usage.reasoning-tokens",
+      "fixture_tier": "recorded",
+      "grade": "PASS",
+      "requirements": [
+        {
+          "id": "total-reconciles",
+          "level": "MUST",
+          "status": "SATISFIED",
+          "evidence": "usage.total=142 (primary); truth.usage.total=142"
+        },
+        {
+          "id": "reasoning-reported",
+          "level": "SHOULD",
+          "status": "SATISFIED",
+          "evidence": "usage.reasoning=58 (primary); truth.usage.reasoning=58"
+        }
+      ],
+      "notes": [],
+      "observation": {
+        "format": "wiretruth.observation/v1",
+        "library": {
+          "name": "pydantic-ai",
+          "version": "2.61.0",
+          "language": "python",
+          "api": "Agent.run"
+        },
+        "outcome": "returned",
+        "unsupported_reason": null,
+        "error": null,
+        "finish": {
+          "value": "stop",
+          "raw": "completed",
+          "surface": "primary",
+          "source": "ModelResponse.finish_reason"
+        },
+        "text": {
+          "value": "**11 pots** contain three seedlings. Check: \\(11 \\times 3 + 7 \\times 2 = 47\\), and \\(11+7=18\\).",
+          "surface": "primary"
+        },
+        "structured": {
+          "attempted": false,
+          "returned_as_success": false,
+          "value": null
+        },
+        "tool_calls": [],
+        "usage": {
+          "input": 41,
+          "cached_input": 0,
+          "output": 101,
+          "reasoning": 58,
+          "total": 142,
+          "surface": {
+            "input": "primary",
+            "output": "primary",
+            "total": "primary",
+            "cached_input": "primary",
+            "reasoning": "primary"
+          }
+        },
+        "stream": {
+          "used": false,
+          "completed": null,
+          "chunks_seen": null
+        },
+        "notes": [],
+        "elapsed_ms": 270.19159868359566
       },
       "request_count": 1
     },
@@ -7088,7 +7448,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 240.44745322316885
+        "elapsed_ms": 217.13420655578375
       },
       "request_count": 1
     },
@@ -7154,7 +7514,7 @@
           "chunks_seen": 7
         },
         "notes": [],
-        "elapsed_ms": 280.45443492010236
+        "elapsed_ms": 294.9811089783907
       },
       "request_count": 1
     },
@@ -7215,7 +7575,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.4261710457503796
+        "elapsed_ms": 1.408236101269722
       },
       "request_count": 0
     },
@@ -7281,7 +7641,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 269.52547719702125
+        "elapsed_ms": 329.428774304688
       },
       "request_count": 1
     },
@@ -7347,7 +7707,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 233.44497988000512
+        "elapsed_ms": 270.2522138133645
       },
       "request_count": 1
     }

@@ -830,8 +830,53 @@
       }
     },
     {
+      "scenario": "usage.cached-tokens",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "total-reconciles": "SATISFIED",
+        "cached-input-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "usage.cached-tokens",
+      "provider": "openai-responses",
+      "grade": "PASS",
+      "requirements": {
+        "total-reconciles": "SATISFIED",
+        "cached-input-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "anthropic",
+      "grade": "PASS",
+      "requirements": {
+        "total-reconciles": "SATISFIED",
+        "reasoning-reported": "SATISFIED"
+      }
+    },
+    {
       "scenario": "usage.reasoning-tokens",
       "provider": "gemini",
+      "grade": "PASS",
+      "requirements": {
+        "total-reconciles": "SATISFIED",
+        "reasoning-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "openai-chat",
+      "grade": "PASS",
+      "requirements": {
+        "total-reconciles": "SATISFIED",
+        "reasoning-reported": "SATISFIED"
+      }
+    },
+    {
+      "scenario": "usage.reasoning-tokens",
+      "provider": "openai-responses",
       "grade": "PASS",
       "requirements": {
         "total-reconciles": "SATISFIED",
