@@ -11,6 +11,8 @@ finding).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-09
+
 ### Added
 - Validation page with committed grades before and after upstream bug fixes and links to the reproducing fixtures.
 - Recorder warm-up for cached prompts: a scenario with `"recording": {"warm_up": true}` sends its request twice
@@ -30,7 +32,6 @@ finding).
 
 ### Changed
 - The any-llm shim pins any-llm-sdk 1.40.2.
-- Development version is now `0.3.0.dev0`.
 
 ### Fixed
 - Derived-fixture examples include `--replace` so they regenerate committed fixtures.
@@ -281,6 +282,7 @@ finding).
 - any-llm 1.33.0, the first library results: PASS on all three truncation scenarios on `openai-chat`
   ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)).
 
-[Unreleased]: https://github.com/kartsan03/wiretruth/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/kartsan03/wiretruth/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/kartsan03/wiretruth/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/kartsan03/wiretruth/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/kartsan03/wiretruth/releases/tag/v0.1.0
