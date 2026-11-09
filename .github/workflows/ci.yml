@@ -113,3 +113,4 @@ jobs:
           assert set(schema_names()) == expected, sorted(expected ^ set(schema_names()))"
       - run: .wheel-env/bin/wiretruth lint
       - run: .wheel-env/bin/wiretruth catalog --check
+      - run: .wheel-env/bin/wiretruth site --out _site_wheel
