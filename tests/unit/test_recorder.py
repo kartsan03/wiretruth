@@ -144,7 +144,9 @@ def test_warm_up_records_only_the_second_response(root, monkeypatch, warm_up):
         path.write_text(json.dumps(doc))
     scenario = load_scenario(path)
     first = (
-        b'{"model":"gpt-6-luna","choices":[{"message":{"content":"First"},"finish_reason":"stop"}]}'
+        b'{"model":"gpt-6-luna","choices":[{"message":{"content":"First"},"finish_reason":"stop"}],'
+        b'"usage":{"prompt_tokens":1500,"completion_tokens":5,"total_tokens":1505,'
+        b'"prompt_tokens_details":{"cached_tokens":1024}}}'
     )
     second = first.replace(b"First", b"Second")
     send = MagicMock(
@@ -191,6 +193,31 @@ def test_failed_warm_up_stops_before_the_second_request(root, scenario, monkeypa
             env={},
         )
     send.assert_called_once()
+    assert not (root / "suite/fixtures").exists()
+
+
+@pytest.mark.parametrize("details", ['{"cached_tokens":0}', "{}"])
+def test_warm_up_without_a_cache_hit_writes_nothing(root, scenario, monkeypatch, details):
+    body = (
+        '{"model":"gpt-6-luna","choices":[{"message":{"content":"Hi"},"finish_reason":"stop"}],'
+        '"usage":{"prompt_tokens":1500,"completion_tokens":5,"total_tokens":1505,'
+        f'"prompt_tokens_details":{details}}}}}'
+    ).encode()
+    send = MagicMock(
+        return_value=recorder.Response(200, {"content-type": "application/json"}, [body], "clean")
+    )
+    monkeypatch.setattr(recorder, "send", send)
+    with pytest.raises(RecordError, match="reports no cached input tokens"):
+        record_scenario(
+            openai_chat,
+            replace(scenario, warm_up=True),
+            model="gpt-6-luna",
+            key=KEY,
+            root=root,
+            base_url=openai_chat.API_BASE,
+            env={},
+        )
+    assert send.call_count == 2
     assert not (root / "suite/fixtures").exists()
 
 

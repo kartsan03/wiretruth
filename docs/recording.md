@@ -21,8 +21,9 @@ fixture in `suite/fixtures/<provider>/<scenario>.json`.
 
 A scenario can set `"recording": {"warm_up": true}` to warm a prompt cache. The recorder sends the identical
 request twice, discards the first response and stores only the second exchange. A non-2xx warm-up stops the
-recording before the second request. This doubles the number of paid calls; caching discounts may change the
-combined token cost. Dry runs say when warm-up is enabled.
+recording before the second request, and nothing is written if the second response reports no cached input
+tokens. This doubles the number of paid calls; caching discounts may change the combined token cost. Dry runs say
+when warm-up is enabled.
 
 ## What a fixture stores
 
@@ -146,8 +147,7 @@ The midstream error frame is a `data: {"error": {…}}` event, the form the offi
 [streaming code](https://github.com/googleapis/python-genai/blob/main/google/genai/_api_client.py) treats a
 chunk that starts with `{"error":` as an API error). `usage.cached-tokens` uses the warm-up for Gemini's implicit
 cache. Cache hits are best effort on the free tier and the minimum prompt size for 3.5 Flash-Lite isn't documented,
-so record it with `--model gemini-3.5-flash-lite` and check that the fixture's `cachedContentTokenCount` is above
-zero before you commit it.
+so record it with `--model gemini-3.5-flash-lite`; the recorder writes nothing when the cache wasn't hit.
 
 ## Anthropic documented fixtures
 

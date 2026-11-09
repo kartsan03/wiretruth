@@ -69,7 +69,7 @@ def usage(**changes: object) -> Observation:
 
 
 @pytest.mark.parametrize("provider", [openai_chat, openai_responses])
-def test_openai_usage_checks_do_not_add_cached_input_or_reasoning_twice(provider):
+def test_openai_inclusive_usage_truth_and_checks(provider):
     input_field, output_field = (
         ("prompt_tokens", "completion_tokens")
         if provider is openai_chat
@@ -103,6 +103,8 @@ def test_openai_usage_checks_do_not_add_cached_input_or_reasoning_twice(provider
         }
     )
     truth = replace(TRUTH, usage=Usage(**provider.extract_truth([exchange], None)["usage"]))
+    assert (truth.usage.input, truth.usage.cached_input) == (1500, 1024)
+    assert (truth.usage.output, truth.usage.reasoning, truth.usage.total) == (100, 80, 1600)
     obs = usage(input=1500, cached_input=1024, output=100, reasoning=80, total=1600)
     for total in (1600, None):
         assert (

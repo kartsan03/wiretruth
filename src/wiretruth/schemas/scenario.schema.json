@@ -58,7 +58,7 @@
       "additionalProperties": false,
       "properties": {
         "warm_up": {
-          "description": "Send the identical request once first, discard its response, and record only the second exchange.",
+          "description": "Send the identical request once first, discard its response, and record only the second exchange, which must report cached input tokens.",
           "type": "boolean",
           "default": false
         }
