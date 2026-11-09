@@ -3,7 +3,7 @@
 from collections import Counter
 from pathlib import Path
 
-from wiretruth.formats import load_fixture, load_scenario
+from wiretruth.formats import Fixture, Scenario, load_fixture, load_scenario
 from wiretruth.lint import SetupError
 
 
@@ -11,7 +11,8 @@ def _cell(text: str) -> str:
     return text.replace("|", r"\|").replace("\r\n", "\n").replace("\r", "\n").replace("\n", "<br>")
 
 
-def render(root: Path) -> str:
+def load_suite(root: Path) -> tuple[dict[str, list[Scenario]], dict[str, Fixture]]:
+    """Load scenarios in catalog order and fixtures by id for catalog and site builds."""
     directory = root / "suite" / "scenarios"
     if not directory.is_dir():
         raise SetupError(f"{directory}: no such directory")
@@ -26,8 +27,13 @@ def render(root: Path) -> str:
     fixtures = [
         load_fixture(path) for path in sorted((root / "suite" / "fixtures").glob("*/*.json"))
     ]
-    tiers = {fixture.id: fixture.tier for fixture in fixtures}
-    counts = Counter(fixture.tier for fixture in fixtures)
+    return families, {fixture.id: fixture for fixture in fixtures}
+
+
+def render(root: Path) -> str:
+    families, fixtures = load_suite(root)
+    tiers = {fixture.id: fixture.tier for fixture in fixtures.values()}
+    counts = Counter(fixture.tier for fixture in fixtures.values())
     providers = {
         provider
         for scenarios in families.values()
