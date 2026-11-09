@@ -47,6 +47,15 @@ MEANINGS = {
     "HARNESS": "Our problem, not the library's.",
 }
 BAR_GRADES = ("PASS", "LOSSY", "WRONG", "CRASH", "HANG", "HARNESS")
+# Recordings made with the suite's older prompts: the site shows their grades, not their text.
+TEXT_WITHHELD = frozenset(
+    {
+        "openai-chat/truncation.structured-output",
+        "openai-chat/truncation.text",
+        "openai-chat/truncation.text-stream",
+    }
+)
+WITHHELD_NOTE = "Details on the cell page."
 
 
 class Library(NamedTuple):
@@ -378,7 +387,9 @@ def _index(
                             href=_cell_path(library.name, scenario.id, provider),
                             tip=tip,
                             label=_label(cell),
-                            evidence=_evidence(cell),
+                            evidence=WITHHELD_NOTE
+                            if cell["fixture"] in TEXT_WITHHELD
+                            else _evidence(cell),
                         )
                     )
                 rows.append(
@@ -540,12 +551,15 @@ def _upstream(entries: list[JsonObject], library: str, scenario: str, provider: 
 def _cell(library: Library, cell: JsonObject, fixture: Fixture, upstream: list[JsonObject]) -> str:
     scenario, provider = _text(cell, "scenario"), _text(cell, "provider")
     observation = _object(cell.get("observation") or {})
+    withheld = fixture.id in TEXT_WITHHELD
     repeated = {
         f"{r['level']} {r['id']}: {r['status']}: {r['evidence']}"
         for r in _objects(cell, "requirements")
     }
     notes = [note for note in cast(list[str], cell["notes"]) if note not in repeated]
     notes.extend(f"shim: {note}" for note in cast(list[str], observation.get("notes") or []))
+    if withheld:
+        notes = []
     truth = fixture.truth
     # The JSON summaries use the original validated documents, retaining all nested fields.
     reported = (
@@ -562,6 +576,7 @@ def _cell(library: Library, cell: JsonObject, fixture: Fixture, upstream: list[J
                     "error",
                     "unsupported_reason",
                 ]
+                if not (withheld and key == "text")
             }
         )
         if observation
@@ -572,7 +587,7 @@ def _cell(library: Library, cell: JsonObject, fixture: Fixture, upstream: list[J
         {
             "finish": truth.finish,
             "raw_finish": truth.raw_finish,
-            "text": truth.text,
+            **({} if withheld else {"text": truth.text}),
             "tool_calls": [cast(JsonObject, dict(call.__dict__)) for call in truth.tool_calls],
             "usage": cast(
                 JsonObject,
@@ -612,7 +627,7 @@ def _cell(library: Library, cell: JsonObject, fixture: Fixture, upstream: list[J
                             }[_text(r, "status")],
                             status=r["status"],
                         ),
-                        _escaped(r["evidence"]),
+                        _escaped("Not shown on this site." if withheld else r["evidence"]),
                     ]
                     for r in _objects(cell, "requirements")
                 ),
@@ -623,8 +638,28 @@ def _cell(library: Library, cell: JsonObject, fixture: Fixture, upstream: list[J
             )
             if notes
             else "",
+            "notice": _html(
+                '<p class="muted">This recording was made with the suite\'s older prompts, so this '
+                "site doesn't show its response text or evidence quoting it. The "
+                '<a href="$fixture">fixture file</a> has the full exchange.</p>',
+                fixture=f"{REPO_URL}/blob/main/suite/fixtures/{fixture.id}.json",
+            )
+            if withheld
+            else "",
             "sent": sent,
             "reported": reported,
+            "wire": ""
+            if withheld
+            else _html(
+                "<details><summary>Wire excerpt</summary><pre>$wire</pre></details>",
+                wire=_wire(fixture),
+            ),
+            "observation": ""
+            if withheld
+            else _html(
+                "<details><summary>Full observation JSON</summary><pre>$json</pre></details>",
+                json=_json(cell["observation"]),
+            ),
             "provenance": _provenance(fixture),
             "reproduce": snippet,
             "upstream": _upstream(upstream, library.name, scenario, provider),
@@ -645,8 +680,6 @@ def _cell(library: Library, cell: JsonObject, fixture: Fixture, upstream: list[J
         version=_version(library.versions[0]),
         scenario=scenario,
         provider=provider,
-        wire=_wire(fixture),
-        observation=_json(cell["observation"]),
     )
 
 

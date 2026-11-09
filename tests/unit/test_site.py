@@ -9,8 +9,9 @@ from urllib.parse import unquote, urlsplit
 import pytest
 
 from wiretruth.cli import main
+from wiretruth.formats import load_fixture
 from wiretruth.lint import SetupError
-from wiretruth.site.build import _compare_versions, _evidence, build
+from wiretruth.site.build import TEXT_WITHHELD, _compare_versions, _evidence, build
 
 REPO = Path(__file__).resolve().parents[2]
 RESULT = REPO / "results" / "any-llm" / "1.40.2.json"
@@ -339,7 +340,7 @@ def test_requirement_notes_are_filtered_exactly(root: Path) -> None:
 
 
 def test_grade_status_and_fact_rendering(built: Path) -> None:
-    cell = (built / "cells" / "any-llm" / "truncation.text" / "openai-chat.html").read_text()
+    cell = (built / "cells" / "any-llm" / "truncation.text" / "openai-responses.html").read_text()
     assert '<dt>Text</dt><dd><div class="plain-value">' in cell
     assert '<dt>Text</dt><dd><dl class="facts">' in cell
     assert "<dt>Usage</dt><dd><pre>" in cell
@@ -365,3 +366,16 @@ def test_a_cell_whose_fixture_is_gone_is_a_setup_error(root: Path) -> None:
     ):
         build(root, root / "_site")
     assert not (root / "_site").exists()
+
+
+def test_older_recordings_keep_their_text_off_the_site(built: Path) -> None:
+    pages = {path: path.read_text() for path in built.rglob("*.html")}
+    for fixture_id in TEXT_WITHHELD:
+        fixture = load_fixture(REPO / "suite" / "fixtures" / f"{fixture_id}.json")
+        assert fixture.truth.text
+        quoted = escape(fixture.truth.text[:24], quote=True)
+        assert not [path for path, text in pages.items() if quoted in text], fixture_id
+        provider, scenario = fixture_id.split("/")
+        page = pages[built / "cells" / "any-llm" / scenario / f"{provider}.html"]
+        assert "older prompts" in page
+        assert "Wire excerpt" not in page and "Full observation JSON" not in page
