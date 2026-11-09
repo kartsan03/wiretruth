@@ -11,6 +11,9 @@ finding).
 
 ## [Unreleased]
 
+### Added
+- `wiretruth site` builds a static HTML results site from committed results and suite data.
+
 ### Changed
 - The TanStack AI shim pins `@tanstack/ai` 1.4.0, `@tanstack/ai-ollama` 1.1.1, `@tanstack/ai-gemini` 1.2.1,
   `@tanstack/ai-anthropic` 1.1.1 and `@tanstack/ai-openai` 1.1.1.

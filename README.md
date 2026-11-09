@@ -89,6 +89,7 @@ uv run wiretruth run --lib litellm
 uv run wiretruth run --lib pydantic-ai
 uv run wiretruth run --lib vercel-ai
 uv run wiretruth run --lib tanstack-ai
+uv run wiretruth site
 ```
 
 The Vercel AI SDK and TanStack AI shims also need Node.js and npm. The runner builds their pinned dependencies
