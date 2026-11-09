@@ -138,11 +138,11 @@ legend { font-size: 14px; color: var(--ink-2); padding: 0; margin-bottom: 8px; }
 .toggle input:checked + span { background: #fff; color: #17181a; }
 .toggle input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
 .toggle input:not(:checked) + span:hover { background: var(--panel); }
-.table-wrap { max-width: 100%; }
+.table-wrap { max-width: 100%; overflow-x: auto; }
 table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; table-layout: auto; }
 .short { white-space: nowrap; width: 1%; }
 .num { text-align: right; font-variant-numeric: tabular-nums; }
-th, td { text-align: left; vertical-align: top; padding: 16px; border-bottom: 1px solid var(--rule); }
+th, td { text-align: left; vertical-align: top; padding: 16px; border-bottom: 1px solid var(--rule); overflow-wrap: break-word; }
 th { font-weight: 600; }
 thead th { background: var(--surface); }
 table th:first-child, table td:first-child { padding-left: 8px; }
@@ -242,8 +242,6 @@ footer p { color: var(--ink-3); }
   .comparison-panel { padding: 16px; }
   th, td { padding: 8px; }
   .table-wrap table { font-size: 12px; }
-  .table-wrap .short { white-space: normal; width: auto; }
-  .table-wrap .grade { white-space: normal; overflow-wrap: anywhere; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
