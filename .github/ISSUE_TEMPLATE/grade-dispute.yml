@@ -12,8 +12,8 @@ body:
     id: cell
     attributes:
       label: Cell
-      description: The library and version, the scenario and the provider, with a link to the results file.
-      placeholder: "any-llm 1.33.0 · truncation.text · openai-chat · results/any-llm/1.33.0.json"
+      description: Link to the cell's page on the results matrix (or the library and version, scenario and provider).
+      placeholder: "https://kartsan03.github.io/wiretruth/cells/any-llm/stream.missing-finish/gemini.html"
     validations:
       required: true
   - type: dropdown

@@ -9,13 +9,15 @@ happened.
 [![PyPI](https://img.shields.io/pypi/v/wiretruth?label=PyPI)](https://pypi.org/project/wiretruth/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/kartsan03/wiretruth/blob/main/LICENSE)
 
+[![Pass counts per library on the wiretruth results site](https://raw.githubusercontent.com/kartsan03/wiretruth/main/docs/img/matrix.png)](https://kartsan03.github.io/wiretruth/)
+
 wiretruth tests any-llm, LiteLLM, pydantic-ai, the Vercel AI SDK and TanStack AI across six APIs: OpenAI Chat
 Completions and Responses, Ollama's native and OpenAI-compatible endpoints, Gemini GenerateContent and Anthropic
 Messages. That is 24 scenarios and 100 cells per library. pydantic-ai and the Vercel AI SDK support only the OpenAI-compatible Ollama
 endpoint; their native Ollama cells are UNSUPPORTED.
 The Anthropic responses are transcribed from Anthropic's documentation rather than recorded: each of those fixtures
-is marked `documented` and links the page it comes from. More providers and libraries follow, and a public
-results matrix arrives in v0.4. Until then, the grades are in
+is marked `documented` and links the page it comes from. More providers and libraries follow.
+The [results matrix](https://kartsan03.github.io/wiretruth/) shows the grades from
 [`results/`](https://github.com/kartsan03/wiretruth/tree/main/results).
 
 ## Why
