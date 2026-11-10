@@ -12,6 +12,9 @@ finding).
 ## [Unreleased]
 
 ### Added
+- `wiretruth lint` checks that each stored PASS, LOSSY or WRONG grade follows from the cell's MUST statuses, and
+  reports duplicate requirement ids, repeated cells, `upstream.json` entries whose library has no results and
+  `released` entries without `fixed_in`. It also checks the built-in reference and liar shim manifests.
 - `wiretruth site` builds a static HTML results site from committed results and suite data.
 - The results site is published to https://kartsan03.github.io/wiretruth/ on every push to main and serves
   the JSON schemas at their `$id` URLs.
@@ -22,6 +25,11 @@ finding).
 - `truncation.text`, `truncation.text-stream` and `truncation.structured-output` send their base prompts on
   `openai-chat` too; the `openai-chat` overrides that kept the prompts of the first recording are gone. The
   current `openai-chat` fixtures still hold that recording until they are recorded again.
+- `results/upstream.json`: [BerriAI/litellm#33678](https://github.com/BerriAI/litellm/issues/33678) is
+  `fix-merged` ([#49183](https://github.com/BerriAI/litellm/pull/49183), not in a release yet). The LiteLLM
+  `tools.parallel-calls-stream` cell over `ollama` stays WRONG until
+  [BerriAI/litellm#46543](https://github.com/BerriAI/litellm/issues/46543) is fixed too.
+- The results site index no longer shows a suite version; each results file keeps its `suite_version`.
 
 ### Results
 - TanStack AI 1.4.0: 50 PASS, 1 LOSSY, 1 WRONG and 48 UNSUPPORTED of 100 cells
