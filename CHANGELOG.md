@@ -23,8 +23,8 @@ finding).
 - The TanStack AI shim pins `@tanstack/ai` 1.4.0, `@tanstack/ai-ollama` 1.1.1, `@tanstack/ai-gemini` 1.2.1,
   `@tanstack/ai-anthropic` 1.1.1 and `@tanstack/ai-openai` 1.1.1.
 - `truncation.text`, `truncation.text-stream` and `truncation.structured-output` send their base prompts on
-  `openai-chat` too; the `openai-chat` overrides that kept the prompts of the first recording are gone. The
-  current `openai-chat` fixtures still hold that recording until they are recorded again.
+  `openai-chat` too, and their `openai-chat` fixtures are recorded again on those prompts (`gpt-6-luna`,
+  2026-11-10). The first recordings stay as `@2026-10-07` variants, which no cell uses.
 - `results/upstream.json`: [BerriAI/litellm#33678](https://github.com/BerriAI/litellm/issues/33678) is
   `fix-merged` ([#49183](https://github.com/BerriAI/litellm/pull/49183), not in a release yet). The LiteLLM
   `tools.parallel-calls-stream` cell over `ollama` stays WRONG until

@@ -151,7 +151,7 @@ scenarios.
 
 ## A worked example: structured output cut off by the token limit
 
-The scenario `truncation.structured-output` asks for a list of ten Ukrainian cities as JSON matching a schema, with
+The scenario `truncation.structured-output` asks for ten Greek islands and their seas as JSON matching a schema, with
 `max_output_tokens: 24`. Twenty-four tokens aren't enough, so the model stops halfway through the object. The call
 also turns reasoning off: current models reason by default, and a small token limit would otherwise be spent on
 reasoning before any JSON appears.
@@ -169,8 +169,8 @@ and `…` marks cut values. Real fixtures live in `suite/fixtures/`, and `wiretr
     "stream": false,
     "max_output_tokens": 24,
     "reasoning": {"effort": "none"},
-    "messages": [{"role": "user", "content": "List ten large Ukrainian cities as JSON: …"}],
-    "output_schema": {"type": "object", "properties": {"cities": {"type": "array", "…": "…"}}, "required": ["cities"]}
+    "messages": [{"role": "user", "content": "List ten Greek islands and the sea each one lies in. Write the names in Greek."}],
+    "output_schema": {"type": "object", "properties": {"islands": {"type": "array", "…": "…"}}, "required": ["islands"]}
   },
   "requirements": [
     {"id": "no-partial-success", "level": "MUST", "check": "no_success_structured_value",
@@ -197,11 +197,11 @@ fixture for this scenario looks like this:
     "match": {"method": "POST", "path": "/v1/chat/completions"},
     "response": {"status": 200, "body": {"json": {
       "choices": [{"index": 0, "finish_reason": "length",
-                   "message": {"role": "assistant", "content": "{\"cities\":[{\"name\":\"Kyiv\",\"oblast\":\"Ky"}}],
+                   "message": {"role": "assistant", "content": "{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ"}}],
       "usage": {"…": "…"}
     }}}
   }],
-  "truth": {"finish": "length", "raw_finish": "length", "text": "{\"cities\":[{\"name\":\"Kyiv\",\"oblast\":\"Ky",
+  "truth": {"finish": "length", "raw_finish": "length", "text": "{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ",
             "structured": null, "error": null, "usage": {"…": "…"}}
 }
 ```
@@ -249,7 +249,7 @@ NOT_OBSERVABLE: the call failed loudly, but the caller can't tell that raising t
 ```json
 {"outcome": "returned",
  "finish": {"value": "stop", "raw": "length", "surface": "primary", "source": "result.finish_reason"},
- "structured": {"attempted": true, "returned_as_success": true, "value": {"cities": [{"name": "Kyiv", "oblast": "Ky"}]}}}
+ "structured": {"attempted": true, "returned_as_success": true, "value": {"islands": [{"name": "Κρήτη", "sea": "Κρητικό Πέ"}]}}}
 ```
 
 `no-partial-success` is CONTRADICTED: one incomplete record came back as if it were the whole answer.
