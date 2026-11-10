@@ -57,6 +57,7 @@ from wiretruth.results import (
     write_results,
 )
 from wiretruth.runner import DEFAULT_JOBS, compare_grades, load_expected_grades, run_suite
+from wiretruth.site.build import build as build_site
 from wiretruth.transforms import TRANSFORMS, derive
 
 EXIT_CHECK = 1
@@ -69,6 +70,7 @@ COMMANDS = {
     "derive": "derive a fixture by transforming recorded or documented responses",
     "lint": "validate suite data and results",
     "catalog": "generate the scenario catalog from suite data",
+    "site": "build the static results site from results/ and suite/",
     "envs": "list, build or prune per-library environments",
 }
 
@@ -104,6 +106,18 @@ def build_parser() -> argparse.ArgumentParser:
             )
             subparser.add_argument(
                 "--check", action="store_true", help="exit 1 if the output file is stale or missing"
+            )
+        elif name == "site":
+            subparser.add_argument(
+                "--root",
+                type=Path,
+                default=Path(),
+                help="repository root that holds results/ and suite/ (default: current directory)",
+            )
+            subparser.add_argument(
+                "--out",
+                default="_site",
+                help="output directory relative to the root (default: _site)",
             )
         elif name == "run":
             shim = subparser.add_mutually_exclusive_group(required=True)
@@ -263,6 +277,20 @@ def run_catalog(args: argparse.Namespace) -> int:
     except (SetupError, OSError) as error:
         print(f"wiretruth catalog: {error}", file=sys.stderr)
         return EXIT_USAGE
+    return 0
+
+
+def run_site(args: argparse.Namespace) -> int:
+    try:
+        out = args.root / args.out
+        count = build_site(args.root, out)
+    except FormatError as error:
+        print(error, file=sys.stderr)
+        return EXIT_CHECK
+    except (SetupError, OSError) as error:
+        print(f"wiretruth site: {error}", file=sys.stderr)
+        return EXIT_USAGE
+    print(f"wiretruth site: {count} pages in {out}")
     return 0
 
 
@@ -541,6 +569,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return run_lint(Path(args.path))
     if args.command == "catalog":
         return run_catalog(args)
+    if args.command == "site":
+        return run_site(args)
     if args.command == "serve":
         return run_serve(args.fixture, args.port)
     if args.command == "record":
