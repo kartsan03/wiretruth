@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 from collections import Counter
 from collections.abc import Iterable, Mapping
 from datetime import datetime
-from functools import cmp_to_key
 from html import escape
 from importlib import resources
 from importlib.resources.abc import Traversable
@@ -93,15 +93,12 @@ def _version(doc: JsonObject) -> str:
     return _text(_object(doc["library"]), "version")
 
 
-def _compare_versions(left: str, right: str) -> int:
-    a, b = left.split("."), right.split(".")
-    for x, y in zip(a, b, strict=False):
-        if x.isdecimal() and y.isdecimal():
-            if int(x) != int(y):
-                return 1 if int(x) > int(y) else -1
-        elif x != y:
-            return 1 if x > y else -1
-    return (len(a) > len(b)) - (len(a) < len(b))
+def _version_key(version: str) -> tuple[tuple[int, ...], bool, str]:
+    """Order by the numeric release; a suffix such as ``rc1`` or ``-beta.2`` sorts before it."""
+    match = re.match(r"\d+(?:\.\d+)*", version)
+    numbers = match.group(0) if match else ""
+    suffix = version[len(numbers) :]
+    return tuple(int(part) for part in numbers.split(".") if part), not suffix, suffix
 
 
 def _cell_map(doc: JsonObject) -> dict[tuple[str, str], JsonObject]:
@@ -112,7 +109,6 @@ def _cell_map(doc: JsonObject) -> dict[tuple[str, str], JsonObject]:
 
 def _libraries(root: Path) -> list[Library]:
     libraries = []
-    version_key = cmp_to_key(_compare_versions)
     for directory in sorted((root / "results").iterdir()):
         if not directory.is_dir():
             continue
@@ -121,7 +117,7 @@ def _libraries(root: Path) -> list[Library]:
         ]
         if not versions:
             continue
-        versions.sort(key=lambda doc: version_key(_version(doc)), reverse=True)
+        versions.sort(key=lambda doc: _version_key(_version(doc)), reverse=True)
         manifest = None
         for path in sorted((root / "shims").glob(f"*/{directory.name}/wiretruth-shim.json")):
             candidate = load_shim_manifest(path)
@@ -412,7 +408,7 @@ def _index(
     )
     suite = max(
         (_text(doc, "suite_version") for doc in current),
-        key=cmp_to_key(_compare_versions),
+        key=_version_key,
         default="unavailable",
     )
     return _template(
@@ -469,7 +465,7 @@ def _wire(fixture: Fixture) -> str:
     for exchange in fixture.exchanges:
         body = exchange.body
         if body.kind == "json":
-            text = _json(body.data)
+            text = json.dumps(body.data, ensure_ascii=False, indent=2)  # the provider's key order
         elif body.kind == "text":
             text = str(body.data)
         else:

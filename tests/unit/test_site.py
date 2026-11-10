@@ -11,7 +11,7 @@ import pytest
 from wiretruth.cli import main
 from wiretruth.formats import load_fixture
 from wiretruth.lint import SetupError
-from wiretruth.site.build import TEXT_WITHHELD, _compare_versions, _evidence, build
+from wiretruth.site.build import TEXT_WITHHELD, _evidence, _version_key, build
 
 REPO = Path(__file__).resolve().parents[2]
 RESULT = REPO / "results" / "any-llm" / "1.40.2.json"
@@ -193,11 +193,19 @@ def test_missing_input_exits_2(
     assert not (tmp_path / "_site").exists()
 
 
-@pytest.mark.parametrize("left,right", [("1.10.0", "1.9.0"), ("2.0", "1.99"), ("1.b", "1.a")])
-def test_version_order(left: str, right: str) -> None:
-    assert _compare_versions(left, right) > 0
-    assert _compare_versions(right, left) < 0
-    assert _compare_versions(left, left) == 0
+@pytest.mark.parametrize(
+    "newer,older",
+    [
+        ("1.10.0", "1.9.0"),
+        ("2.0", "1.99"),
+        ("1.10", "1.9a"),
+        ("1.0.0", "1.0.0rc1"),
+        ("7.0.153", "7.0.153-rc.1"),
+        ("1.0.0rc2", "1.0.0rc1"),
+    ],
+)
+def test_version_order(newer: str, older: str) -> None:
+    assert _version_key(newer) > _version_key(older)
 
 
 def test_current_history_missing_and_retired_cells(root: Path) -> None:
@@ -272,7 +280,11 @@ def test_summary_uses_applicable_cells_and_complete_header_counts(root: Path) ->
     text = unescape(summary[1])
     assert "<strong data-ui-number>2</strong> <span>of 3 pass</span>" in text
     assert "1 unsupported" in text
-    assert "96 not covered" in text
+    pairs = sum(
+        len(json.loads(path.read_text())["providers"])
+        for path in (root / "suite" / "scenarios").glob("*/*.json")
+    )
+    assert f"{pairs - 4} not covered" in text
     assert re.findall(r'class="segment (\S+)"', text) == ["pass", "wrong"]
     assert re.findall(r'class="grade-pill (\S+)"', text) == ["pass", "wrong"]
     header = re.search(r'id="library-any-llm".*?<small>(.*?)</small>', index, re.S)
@@ -289,6 +301,7 @@ def test_matrix_groups_providers_by_scenario(built: Path) -> None:
         for path in (REPO / "suite" / "scenarios").glob("*/*.json")
     }
     assert len(groups) == len(scenarios)
+    libraries = [path for path in (REPO / "results").iterdir() if path.is_dir()]
     for group in groups:
         scenario_id = re.search(r'data-scenario="([^"]+)"', group)
         assert scenario_id is not None
@@ -296,7 +309,7 @@ def test_matrix_groups_providers_by_scenario(built: Path) -> None:
         heading, *providers = re.findall(r"(.*?)</tr>", group, re.S)
         assert f"<code>{scenario['id']}</code>" in heading
         assert escape(scenario["title"], quote=True) in heading
-        assert 'colspan="6"' in heading
+        assert f'colspan="{len(libraries) + 1}"' in heading
         providers = [row for row in providers if 'class="matrix-row"' in row]
         assert len(providers) == len(scenario["providers"])
         for row, provider in zip(providers, sorted(scenario["providers"]), strict=True):
@@ -379,3 +392,13 @@ def test_older_recordings_keep_their_text_off_the_site(built: Path) -> None:
         page = pages[built / "cells" / "any-llm" / scenario / f"{provider}.html"]
         assert "older prompts" in page
         assert "Wire excerpt" not in page and "Full observation JSON" not in page
+
+
+def test_wire_excerpt_keeps_the_provider_key_order(built: Path) -> None:
+    fixture = json.loads(
+        (REPO / "suite" / "fixtures" / "openai-responses" / "truncation.text.json").read_text()
+    )
+    body = fixture["exchanges"][-1]["response"]["body"]["json"]
+    assert list(body) != sorted(body)
+    page = (built / "cells" / "any-llm" / "truncation.text" / "openai-responses.html").read_text()
+    assert escape(json.dumps(body, ensure_ascii=False, indent=2), quote=True) in page
