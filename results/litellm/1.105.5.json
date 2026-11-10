@@ -1,16 +1,16 @@
 {
   "format": "wiretruth.results/v1",
-  "suite_version": "0.3.0.dev0",
+  "suite_version": "0.4.0.dev0",
   "library": {
     "name": "litellm",
     "version": "1.105.5",
     "language": "python"
   },
   "run": {
-    "at": "2026-11-09T00:57:17Z",
-    "git_sha": "f81137db01e3a0381fb8820c0cbf6659ed392f52",
+    "at": "2026-11-10T20:27:15Z",
+    "git_sha": "3505e2386e726506556a14bf14c7a0952f1f9ba2",
     "ci_run": null,
-    "runner": "wiretruth 0.3.0.dev0",
+    "runner": "wiretruth 0.4.0.dev0",
     "packages": {
       "aiohappyeyeballs": "2.7.1",
       "aiohttp": "3.14.5",
@@ -18,8 +18,8 @@
       "annotated-types": "0.8.0",
       "anyio": "4.16.0",
       "attrs": "26.1.0",
-      "boto3": "1.43.126",
-      "botocore": "1.43.126",
+      "boto3": "1.43.127",
+      "botocore": "1.43.127",
       "certifi": "2026.10.23",
       "charset-normalizer": "3.5.2",
       "click": "8.5.1",
@@ -141,7 +141,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 232.68009535968304
+        "elapsed_ms": 344.8163866996765
       },
       "request_count": 1
     },
@@ -213,7 +213,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 343.6450809240341
+        "elapsed_ms": 324.8111894354224
       },
       "request_count": 1
     },
@@ -285,7 +285,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 358.3276430144906
+        "elapsed_ms": 233.4890179336071
       },
       "request_count": 2
     },
@@ -357,7 +357,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 548.739050514996
+        "elapsed_ms": 367.96373408287764
       },
       "request_count": 1
     },
@@ -444,7 +444,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 334.83307249844074
+        "elapsed_ms": 285.2570731192827
       },
       "request_count": 1
     },
@@ -530,7 +530,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 227.8488101437688
+        "elapsed_ms": 318.19103099405766
       },
       "request_count": 1
     },
@@ -617,7 +617,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 350.8198345080018
+        "elapsed_ms": 338.37688993662596
       },
       "request_count": 2
     },
@@ -703,7 +703,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 446.31072599440813
+        "elapsed_ms": 585.8344985172153
       },
       "request_count": 1
     },
@@ -789,7 +789,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 466.1439126357436
+        "elapsed_ms": 535.6366839259863
       },
       "request_count": 1
     },
@@ -873,7 +873,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 79.02014348655939
+        "elapsed_ms": 50.85695721209049
       },
       "request_count": 1
     },
@@ -951,7 +951,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 478.67863811552525
+        "elapsed_ms": 371.74991704523563
       },
       "request_count": 1
     },
@@ -1017,7 +1017,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 556.1381885781884
+        "elapsed_ms": 548.4413336962461
       },
       "request_count": 1
     },
@@ -1091,7 +1091,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 346.49316128343344
+        "elapsed_ms": 238.39781899005175
       },
       "request_count": 2
     },
@@ -1163,7 +1163,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 470.38020100444555
+        "elapsed_ms": 400.56337881833315
       },
       "request_count": 1
     },
@@ -1235,7 +1235,7 @@
           "chunks_seen": 2
         },
         "notes": [],
-        "elapsed_ms": 261.6889011114836
+        "elapsed_ms": 371.25214748084545
       },
       "request_count": 1
     },
@@ -1307,7 +1307,7 @@
           "chunks_seen": 1
         },
         "notes": [],
-        "elapsed_ms": 344.02263816446066
+        "elapsed_ms": 361.5959044545889
       },
       "request_count": 1
     },
@@ -1379,7 +1379,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 381.4461585134268
+        "elapsed_ms": 261.5422774106264
       },
       "request_count": 1
     },
@@ -1451,7 +1451,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 561.8054047226906
+        "elapsed_ms": 687.0813686400652
       },
       "request_count": 1
     },
@@ -1523,7 +1523,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 326.16511452943087
+        "elapsed_ms": 208.55051930993795
       },
       "request_count": 1
     },
@@ -1598,7 +1598,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 516.6848683729768
+        "elapsed_ms": 605.4759901016951
       },
       "request_count": 1
     },
@@ -1673,7 +1673,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 254.41403687000275
+        "elapsed_ms": 238.15962858498096
       },
       "request_count": 1
     },
@@ -1748,7 +1748,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 422.0721833407879
+        "elapsed_ms": 415.80080334097147
       },
       "request_count": 2
     },
@@ -1823,7 +1823,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 806.917617097497
+        "elapsed_ms": 631.0552945360541
       },
       "request_count": 1
     },
@@ -1898,7 +1898,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 555.7510172948241
+        "elapsed_ms": 823.7005164846778
       },
       "request_count": 1
     },
@@ -1976,7 +1976,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 346.82988934218884
+        "elapsed_ms": 325.32400730997324
       },
       "request_count": 1
     },
@@ -2054,7 +2054,7 @@
           "chunks_seen": 2
         },
         "notes": [],
-        "elapsed_ms": 380.81792555749416
+        "elapsed_ms": 380.85411954671144
       },
       "request_count": 1
     },
@@ -2132,7 +2132,7 @@
           "chunks_seen": 1
         },
         "notes": [],
-        "elapsed_ms": 373.9907070994377
+        "elapsed_ms": 349.0985883399844
       },
       "request_count": 1
     },
@@ -2210,7 +2210,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 376.92040018737316
+        "elapsed_ms": 377.4006087332964
       },
       "request_count": 1
     },
@@ -2288,7 +2288,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 815.961848013103
+        "elapsed_ms": 822.8794513270259
       },
       "request_count": 1
     },
@@ -2366,7 +2366,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 570.2553857117891
+        "elapsed_ms": 842.2525050118566
       },
       "request_count": 1
     },
@@ -2444,7 +2444,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 214.63605388998985
+        "elapsed_ms": 281.86057414859533
       },
       "request_count": 1
     },
@@ -2516,7 +2516,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 244.81725320219994
+        "elapsed_ms": 367.8286410868168
       },
       "request_count": 1
     },
@@ -2588,7 +2588,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 385.298197157681
+        "elapsed_ms": 230.56630045175552
       },
       "request_count": 1
     },
@@ -2660,7 +2660,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 322.7738421410322
+        "elapsed_ms": 423.25817327946424
       },
       "request_count": 2
     },
@@ -2732,7 +2732,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 752.2918628528714
+        "elapsed_ms": 602.9403237625957
       },
       "request_count": 1
     },
@@ -2804,7 +2804,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 846.2232612073421
+        "elapsed_ms": 822.6900696754456
       },
       "request_count": 1
     },
@@ -2876,7 +2876,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 252.15142872184515
+        "elapsed_ms": 325.63566975295544
       },
       "request_count": 1
     },
@@ -2948,7 +2948,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 268.60640570521355
+        "elapsed_ms": 379.0789907798171
       },
       "request_count": 1
     },
@@ -3020,7 +3020,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 365.2224186807871
+        "elapsed_ms": 358.0133970826864
       },
       "request_count": 1
     },
@@ -3092,7 +3092,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 367.54409223794937
+        "elapsed_ms": 370.83661556243896
       },
       "request_count": 2
     },
@@ -3164,7 +3164,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 556.7858666181564
+        "elapsed_ms": 840.564495883882
       },
       "request_count": 1
     },
@@ -3236,7 +3236,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 819.0507907420397
+        "elapsed_ms": 563.6318456381559
       },
       "request_count": 1
     },
@@ -3308,7 +3308,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 328.37970461696386
+        "elapsed_ms": 318.0766645818949
       },
       "request_count": 1
     },
@@ -3393,7 +3393,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 270.8694962784648
+        "elapsed_ms": 338.89192808419466
       },
       "request_count": 1
     },
@@ -3480,7 +3480,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 332.99944270402193
+        "elapsed_ms": 220.62067408114672
       },
       "request_count": 1
     },
@@ -3565,7 +3565,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 285.0208831951022
+        "elapsed_ms": 351.7113709822297
       },
       "request_count": 2
     },
@@ -3650,7 +3650,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 399.4666002690792
+        "elapsed_ms": 595.7068149000406
       },
       "request_count": 1
     },
@@ -3735,7 +3735,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 419.2334320396185
+        "elapsed_ms": 539.6993821486831
       },
       "request_count": 1
     },
@@ -3820,7 +3820,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 73.72773438692093
+        "elapsed_ms": 52.34889592975378
       },
       "request_count": 1
     },
@@ -3905,7 +3905,7 @@
           "chunks_seen": 7
         },
         "notes": [],
-        "elapsed_ms": 391.76832884550095
+        "elapsed_ms": 409.62393674999475
       },
       "request_count": 1
     },
@@ -3992,7 +3992,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 351.83524806052446
+        "elapsed_ms": 338.2083736360073
       },
       "request_count": 1
     },
@@ -4041,7 +4041,7 @@
         },
         "tool_calls": [
           {
-            "id": "a09fa255-7df3-46fa-8153-85963da4f1f2",
+            "id": "2f23c42e-bd01-4986-9930-ce4b44c20a64",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": false,
@@ -4068,7 +4068,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 249.20135363936424
+        "elapsed_ms": 242.66346544027328
       },
       "request_count": 2
     },
@@ -4153,7 +4153,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 811.265186406672
+        "elapsed_ms": 832.7504033222795
       },
       "request_count": 1
     },
@@ -4238,7 +4238,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 849.5968310162425
+        "elapsed_ms": 823.3062755316496
       },
       "request_count": 1
     },
@@ -4323,7 +4323,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 354.08931504935026
+        "elapsed_ms": 213.70495576411486
       },
       "request_count": 1
     },
@@ -4401,7 +4401,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 353.229989297688
+        "elapsed_ms": 213.65797333419323
       },
       "request_count": 1
     },
@@ -4479,7 +4479,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 331.4565373584628
+        "elapsed_ms": 328.44545505940914
       },
       "request_count": 1
     },
@@ -4557,7 +4557,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 341.82998817414045
+        "elapsed_ms": 334.1834330931306
       },
       "request_count": 2
     },
@@ -4635,7 +4635,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 505.1318434998393
+        "elapsed_ms": 553.1789707019925
       },
       "request_count": 1
     },
@@ -4713,7 +4713,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 552.114493213594
+        "elapsed_ms": 379.0279123932123
       },
       "request_count": 1
     },
@@ -4791,7 +4791,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 49.516755156219006
+        "elapsed_ms": 70.11296227574348
       },
       "request_count": 1
     },
@@ -4875,7 +4875,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 241.72461684793234
+        "elapsed_ms": 334.956138394773
       },
       "request_count": 1
     },
@@ -4959,7 +4959,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 328.2221369445324
+        "elapsed_ms": 212.40968350321054
       },
       "request_count": 1
     },
@@ -5043,7 +5043,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 357.40492958575487
+        "elapsed_ms": 341.96478966623545
       },
       "request_count": 2
     },
@@ -5127,7 +5127,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 583.6002910509706
+        "elapsed_ms": 382.6385913416743
       },
       "request_count": 1
     },
@@ -5154,13 +5154,13 @@
           "id": "text-reported",
           "level": "SHOULD",
           "status": "SATISFIED",
-          "evidence": "text.value=\"{\\\"cities\\\":[{\\\"name\\\":\\\"Київ\\\",\\\"oblast\\\":\\\"Київська область\\\"},{\\\"\" (primary); truth.text=\"{\\\"cities\\\":[{\\\"name\\\":\\\"Київ\\\",\\\"oblast\\\":\\\"Київська область\\\"},{\\\"\""
+          "evidence": "text.value=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\\\"Κρητικό Πέ\" (primary); truth.text=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\\\"Κρητικό Πέ\""
         },
         {
           "id": "usage-reported",
           "level": "SHOULD",
           "status": "SATISFIED",
-          "evidence": "usage.input=71 (primary); truth.usage.input=71; usage.output=24 (primary); truth.usage.output=24"
+          "evidence": "usage.input=72 (primary); truth.usage.input=72; usage.output=24 (primary); truth.usage.output=24"
         }
       ],
       "notes": [],
@@ -5182,7 +5182,7 @@
           "source": "choices[0].finish_reason"
         },
         "text": {
-          "value": "{\"cities\":[{\"name\":\"Київ\",\"oblast\":\"Київська область\"},{\"",
+          "value": "{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ",
           "surface": "primary"
         },
         "structured": {
@@ -5192,11 +5192,11 @@
         },
         "tool_calls": [],
         "usage": {
-          "input": 71,
+          "input": 72,
           "cached_input": 0,
           "output": 24,
           "reasoning": 0,
-          "total": 95,
+          "total": 96,
           "surface": {
             "input": "primary",
             "output": "primary",
@@ -5211,7 +5211,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 401.6341706737876
+        "elapsed_ms": 542.4254555255175
       },
       "request_count": 1
     },
@@ -5295,7 +5295,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 73.57477396726608
+        "elapsed_ms": 48.09701442718506
       },
       "request_count": 1
     },
@@ -5356,7 +5356,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.7464123666286469
+        "elapsed_ms": 1.7662690952420235
       },
       "request_count": 0
     },
@@ -5434,7 +5434,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 594.1968597471714
+        "elapsed_ms": 353.3757794648409
       },
       "request_count": 1
     },
@@ -5512,7 +5512,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 321.0318712517619
+        "elapsed_ms": 395.96550818532705
       },
       "request_count": 1
     },
@@ -5590,7 +5590,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 603.1667310744524
+        "elapsed_ms": 334.4867192208767
       },
       "request_count": 2
     },
@@ -5668,7 +5668,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 561.0722089186311
+        "elapsed_ms": 423.1777209788561
       },
       "request_count": 1
     },
@@ -5689,13 +5689,13 @@
           "id": "text-reported",
           "level": "SHOULD",
           "status": "SATISFIED",
-          "evidence": "text.value=\"Kyiv, the capital of Ukraine, has a history stretching back\" (primary); truth.text=\"Kyiv, the capital of Ukraine, has a history stretching back\""
+          "evidence": "text.value=\"Octopuses are masters of disguise, able to change colour in\" (primary); truth.text=\"Octopuses are masters of disguise, able to change colour in\""
         },
         {
           "id": "usage-reported",
           "level": "SHOULD",
           "status": "SATISFIED",
-          "evidence": "usage.input=21 (primary); truth.usage.input=21; usage.output=16 (primary); truth.usage.output=16"
+          "evidence": "usage.input=24 (primary); truth.usage.input=24; usage.output=16 (primary); truth.usage.output=16"
         }
       ],
       "notes": [],
@@ -5717,7 +5717,7 @@
           "source": "choices[0].finish_reason"
         },
         "text": {
-          "value": "Kyiv, the capital of Ukraine, has a history stretching back",
+          "value": "Octopuses are masters of disguise, able to change colour in",
           "surface": "primary"
         },
         "structured": {
@@ -5727,11 +5727,11 @@
         },
         "tool_calls": [],
         "usage": {
-          "input": 21,
+          "input": 24,
           "cached_input": 0,
           "output": 16,
           "reasoning": 0,
-          "total": 37,
+          "total": 40,
           "surface": {
             "input": "primary",
             "output": "primary",
@@ -5746,7 +5746,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 440.8886730670929
+        "elapsed_ms": 561.82243488729
       },
       "request_count": 1
     },
@@ -5824,7 +5824,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 74.83721431344748
+        "elapsed_ms": 47.785730101168156
       },
       "request_count": 1
     },
@@ -5904,7 +5904,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 374.8734025284648
+        "elapsed_ms": 380.7455897331238
       },
       "request_count": 1
     },
@@ -5984,7 +5984,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 235.4434048756957
+        "elapsed_ms": 351.82502679526806
       },
       "request_count": 1
     },
@@ -6064,7 +6064,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 427.5184851139784
+        "elapsed_ms": 417.59912576526403
       },
       "request_count": 2
     },
@@ -6142,7 +6142,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 679.3347718194127
+        "elapsed_ms": 573.8191427662969
       },
       "request_count": 1
     },
@@ -6163,7 +6163,7 @@
           "id": "text-reported",
           "level": "SHOULD",
           "status": "SATISFIED",
-          "evidence": "text.value=\"Kyiv, the capital of Ukraine, has a history spanning more\" (primary); truth.text=\"Kyiv, the capital of Ukraine, has a history spanning more\""
+          "evidence": "text.value=\"Octopuses hide from predators by changing the colour and appearance of\" (primary); truth.text=\"Octopuses hide from predators by changing the colour and appearance of\""
         },
         {
           "id": "usage-reported",
@@ -6191,7 +6191,7 @@
           "source": "choices[0].finish_reason"
         },
         "text": {
-          "value": "Kyiv, the capital of Ukraine, has a history spanning more",
+          "value": "Octopuses hide from predators by changing the colour and appearance of",
           "surface": "primary"
         },
         "structured": {
@@ -6220,7 +6220,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 681.341172195971
+        "elapsed_ms": 730.2830601111054
       },
       "request_count": 1
     },
@@ -6298,7 +6298,7 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 331.19573071599007
+        "elapsed_ms": 333.9449055492878
       },
       "request_count": 1
     },
@@ -6376,7 +6376,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 348.7493861466646
+        "elapsed_ms": 351.3481803238392
       },
       "request_count": 1
     },
@@ -6454,7 +6454,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 834.4042534008622
+        "elapsed_ms": 622.267086058855
       },
       "request_count": 1
     },
@@ -6536,7 +6536,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 326.4773739501834
+        "elapsed_ms": 336.70725021511316
       },
       "request_count": 1
     },
@@ -6616,7 +6616,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 554.8085700720549
+        "elapsed_ms": 557.2797683998942
       },
       "request_count": 1
     },
@@ -6696,7 +6696,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 76.35052967816591
+        "elapsed_ms": 77.6901338249445
       },
       "request_count": 1
     },
@@ -6776,7 +6776,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 388.79356160759926
+        "elapsed_ms": 383.4903221577406
       },
       "request_count": 1
     },
@@ -6856,7 +6856,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 819.1883284598589
+        "elapsed_ms": 600.1779837533832
       },
       "request_count": 1
     },
@@ -6936,7 +6936,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 341.0542858764529
+        "elapsed_ms": 330.9953222051263
       },
       "request_count": 1
     },
@@ -7008,7 +7008,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 270.43456863611937
+        "elapsed_ms": 304.7083579003811
       },
       "request_count": 1
     },
@@ -7080,7 +7080,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 538.8950388878584
+        "elapsed_ms": 372.55874928086996
       },
       "request_count": 1
     },
@@ -7152,7 +7152,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 53.50138712674379
+        "elapsed_ms": 75.5554074421525
       },
       "request_count": 1
     },
@@ -7224,7 +7224,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 219.11912690848112
+        "elapsed_ms": 331.1861725524068
       },
       "request_count": 1
     },
@@ -7296,7 +7296,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 438.88851813971996
+        "elapsed_ms": 329.62573040276766
       },
       "request_count": 1
     },
@@ -7368,7 +7368,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 362.1673062443733
+        "elapsed_ms": 356.3285255804658
       },
       "request_count": 1
     },
@@ -7440,7 +7440,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 76.46059338003397
+        "elapsed_ms": 55.53928762674332
       },
       "request_count": 1
     },
@@ -7506,7 +7506,7 @@
           "chunks_seen": 4
         },
         "notes": [],
-        "elapsed_ms": 306.38343188911676
+        "elapsed_ms": 361.7961881682277
       },
       "request_count": 1
     },
@@ -7572,7 +7572,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 437.8907075151801
+        "elapsed_ms": 282.68764819949865
       },
       "request_count": 1
     },
@@ -7638,7 +7638,7 @@
           "chunks_seen": 29
         },
         "notes": [],
-        "elapsed_ms": 403.25407963246107
+        "elapsed_ms": 491.1130489781499
       },
       "request_count": 2
     },
@@ -7704,7 +7704,7 @@
           "chunks_seen": 24
         },
         "notes": [],
-        "elapsed_ms": 706.8397589027882
+        "elapsed_ms": 675.9165497496724
       },
       "request_count": 1
     },
@@ -7770,7 +7770,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 696.2265260517597
+        "elapsed_ms": 527.3590311408043
       },
       "request_count": 1
     }

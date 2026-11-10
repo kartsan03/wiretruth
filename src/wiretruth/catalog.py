@@ -33,7 +33,8 @@ def load_suite(root: Path) -> tuple[dict[str, list[Scenario]], dict[str, Fixture
 def render(root: Path) -> str:
     families, fixtures = load_suite(root)
     tiers = {fixture.id: fixture.tier for fixture in fixtures.values()}
-    counts = Counter(fixture.tier for fixture in fixtures.values())
+    # A dated variant (<scenario>@<date>) is kept for reference; no cell uses it.
+    counts = Counter(fixture.tier for fixture in fixtures.values() if "@" not in fixture.id)
     providers = {
         provider
         for scenarios in families.values()
