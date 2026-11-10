@@ -563,7 +563,8 @@ def test_the_request_for_truncation_text() -> None:
         "messages": [
             {
                 "role": "user",
-                "content": "Write a 200-word paragraph about the history of Kyiv, in English.",
+                "content": "Write a 200-word paragraph about how octopuses change colour "
+                "to hide from predators.",
             }
         ],
         "max_completion_tokens": 16,

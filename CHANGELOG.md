@@ -19,6 +19,9 @@ finding).
 ### Changed
 - The TanStack AI shim pins `@tanstack/ai` 1.4.0, `@tanstack/ai-ollama` 1.1.1, `@tanstack/ai-gemini` 1.2.1,
   `@tanstack/ai-anthropic` 1.1.1 and `@tanstack/ai-openai` 1.1.1.
+- `truncation.text`, `truncation.text-stream` and `truncation.structured-output` send their base prompts on
+  `openai-chat` too; the `openai-chat` overrides that kept the prompts of the first recording are gone. The
+  current `openai-chat` fixtures still hold that recording until they are recorded again.
 
 ### Results
 - TanStack AI 1.4.0: 50 PASS, 1 LOSSY, 1 WRONG and 48 UNSUPPORTED of 100 cells

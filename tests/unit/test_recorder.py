@@ -901,7 +901,8 @@ def test_dry_run_prints_the_exact_request(
         '  "messages": [\n'
         "    {\n"
         '      "role": "user",\n'
-        '      "content": "Write a 200-word paragraph about the history of Kyiv, in English."\n'
+        '      "content": "Write a 200-word paragraph about how octopuses change colour '
+        'to hide from predators."\n'
         "    }\n"
         "  ],\n"
         '  "max_completion_tokens": 16,\n'

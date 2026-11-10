@@ -216,14 +216,14 @@ Content-Type: application/json
 Accept: application/json
 User-Agent: wiretruth/0.3.0
 Accept-Encoding: identity
-Content-Length: 229
+Content-Length: 248
 
 {
   "model": "gpt-6-luna",
   "messages": [
     {
       "role": "user",
-      "content": "Write a 200-word paragraph about the history of Kyiv, in English."
+      "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
     }
   ],
   "max_completion_tokens": 16,
