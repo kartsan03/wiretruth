@@ -103,11 +103,11 @@
     "scenarios": ["tools.parallel-calls-stream"],
     "providers": ["ollama"],
     "issue": "https://github.com/BerriAI/litellm/issues/33678",
-    "pr": null,
-    "status": "reported",
+    "pr": "https://github.com/BerriAI/litellm/pull/49183",
+    "status": "fix-merged",
     "fixed_in": null,
     "opened": "2026-07-17",
-    "notes": "Existing upstream issue, not opened by wiretruth. Native Ollama sends function.index 0 and 1 in separate chunks; LiteLLM does not lift that field to the delta tool-call index. Delta resets its default index to zero for each chunk, so ordinary index-based assembly merges two argument objects into one unparseable call (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/types/utils.py#L1555-L1573). The Ollama parser also replaces the wire ids with UUIDs, reported separately as https://github.com/BerriAI/litellm/issues/46543."
+    "notes": "Existing upstream issue, not opened by wiretruth. Native Ollama sends function.index 0 and 1 in separate chunks; LiteLLM does not lift that field to the delta tool-call index. Delta resets its default index to zero for each chunk, so ordinary index-based assembly merges two argument objects into one unparseable call (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/types/utils.py#L1555-L1573). The Ollama parser also replaces the wire ids with UUIDs, reported separately as https://github.com/BerriAI/litellm/issues/46543. Closed upstream on 2026-11-09: https://github.com/BerriAI/litellm/pull/49183 gives each streamed tool call its own index on main, and the backport https://github.com/BerriAI/litellm/pull/50718 is merged to lts/1.108.x but not in a release yet (v1.108.4 predates it). The cell stays WRONG until the replaced ids (https://github.com/BerriAI/litellm/issues/46543) are fixed too."
   },
   {
     "library": "litellm",
