@@ -30,6 +30,11 @@ finding).
   `tools.parallel-calls-stream` cell over `ollama` stays WRONG until
   [BerriAI/litellm#46543](https://github.com/BerriAI/litellm/issues/46543) is fixed too.
 - The results site index no longer shows a suite version; each results file keeps its `suite_version`.
+- `results/upstream.json` links the upstream reports for 17 LOSSY cells:
+  [mozilla-ai/any-llm#1637](https://github.com/mozilla-ai/any-llm/issues/1637) and
+  [TanStack/ai#2130](https://github.com/TanStack/ai/issues/2130) (a stream that ends before its terminal signal
+  returns normally), and [pydantic/pydantic-ai#12399](https://github.com/pydantic/pydantic-ai/issues/12399) for
+  truncated structured output and, in a comment there, truncated tool-call arguments.
 
 ### Results
 - TanStack AI 1.4.0: 50 PASS, 1 LOSSY, 1 WRONG and 48 UNSUPPORTED of 100 cells
