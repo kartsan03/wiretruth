@@ -86,9 +86,11 @@ jobs:
             uv run coverage report --include="*/wiretruth/$module.py" --show-missing --fail-under=100
           done
       # The oldest jsonschema that pyproject.toml allows. Only formats.py uses jsonschema, so
-      # one Python version is enough.
+      # one Python version and the tests that validate documents are enough.
       - if: matrix.python-version == '3.11'
-        run: uv run --with "jsonschema==4.21.0" pytest -q
+        run: >-
+          uv run --with "jsonschema==4.21.0" pytest -q
+          tests/unit/test_formats.py tests/unit/test_lint.py tests/unit/test_suite_data.py
 
   suite:
     runs-on: ubuntu-latest
