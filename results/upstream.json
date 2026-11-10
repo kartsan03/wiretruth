@@ -77,6 +77,17 @@
     "notes": "any-llm documents the fallback: Anthropic stop reasons without an OpenAI counterpart (stop_sequence, pause_turn) fall through to stop, and the lookup defaults to stop for any unfamiliar value (https://github.com/mozilla-ai/any-llm/blob/1.33.0/src/any_llm/providers/anthropic/utils.py#L40-L50, unchanged on main at 18ed82b). The caller cannot tell such a stop from a normal one."
   },
   {
+    "library": "any-llm",
+    "scenarios": ["stream.missing-finish"],
+    "providers": ["anthropic", "gemini", "ollama", "ollama-openai", "openai-chat"],
+    "issue": "https://github.com/mozilla-ai/any-llm/issues/1637",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-11-10",
+    "notes": "A stream that ends before the provider's terminal signal returns the partial chunks normally, with no error and no incomplete flag (reproduced on 1.40.2 and 1.50.0). The OpenAI Responses path reports the output item as incomplete and passes."
+  },
+  {
     "library": "litellm",
     "scenarios": ["finish.unknown-value"],
     "providers": ["anthropic", "gemini", "ollama", "ollama-openai", "openai-chat"],
@@ -176,6 +187,39 @@
     "notes": "A stream that ends cleanly before the provider's terminal event finishes with ModelResponse.state 'complete' and finish_reason None, although the docs define 'incomplete' as a streamed response stopped before completion. Responses marks the response incomplete, but _ContinuationStreamedResponse.get() replaces it with complete once iteration ends; the Anthropic and Google adapters never set incomplete. The Chat Completions case is #6610 (documented-behavior). pydantic-ai's triage bot reproduced all three adapters and labelled the issue p:2-high and needs-maintainer-discussion (2026-10-25): the open question is whether a stream that ends before the provider's terminal event should report state 'incomplete'."
   },
   {
+    "library": "pydantic-ai",
+    "scenarios": ["truncation.structured-output", "truncation.structured-output-forced-tool"],
+    "providers": ["anthropic", "gemini", "ollama-openai", "openai-chat", "openai-responses"],
+    "issue": "https://github.com/pydantic/pydantic-ai/issues/12399",
+    "pr": "https://github.com/pydantic/pydantic-ai/pull/12407",
+    "status": "confirmed",
+    "fixed_in": null,
+    "opened": "2026-11-03",
+    "notes": "Existing upstream issue, opened by a maintainer, not by wiretruth. Cut-off structured output is retried, then fails with UnexpectedModelBehavior('Exceeded maximum output retries'); the length finish is only in the captured messages. https://github.com/pydantic/pydantic-ai/pull/12406, merged after 2.66.0 and not in a release yet, raises right away with a message naming the token limit; https://github.com/pydantic/pydantic-ai/pull/12407 (open) adds the typed OutputTokenLimitExceeded."
+  },
+  {
+    "library": "pydantic-ai",
+    "scenarios": ["truncation.tool-call-args", "truncation.tool-call-args-stream"],
+    "providers": ["openai-chat", "openai-responses"],
+    "issue": "https://github.com/pydantic/pydantic-ai/issues/12399",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-11-10",
+    "notes": "Reported in a comment on the token-limit issue: https://github.com/pydantic/pydantic-ai/issues/12399#issuecomment-6780480981. Tool-call arguments cut off at the limit fail validation and end in the per-tool retry limit (UnexpectedModelBehavior: Tool 'create_event' exceeded max retries count of 0), not in IncompleteToolCall; reproduced on 2.61.0 and 2.66.0 with an ExternalToolset."
+  },
+  {
+    "library": "pydantic-ai",
+    "scenarios": ["truncation.tool-call-args-stream"],
+    "providers": ["anthropic"],
+    "issue": "https://github.com/pydantic/pydantic-ai/issues/12399",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-11-10",
+    "notes": "Same report as the entry above, for the streamed Anthropic cell (the non-streamed Anthropic cell passes)."
+  },
+  {
     "library": "vercel-ai",
     "scenarios": ["stream.missing-finish"],
     "providers": ["openai-chat", "openai-responses", "anthropic", "gemini"],
@@ -229,5 +273,16 @@
     "fixed_in": "@tanstack/openai-base 1.0.0 (@tanstack/ai-openai 1.0.0)",
     "opened": "2026-10-21",
     "notes": "@tanstack/openai-base Chat Completions picks tool_calls over a pending finish_reason \"length\" once TOOL_CALL_END was emitted for the unfinished arguments. The core then treats the arguments as a parse failure and the agent loop sends the conversation back to the model: 5 requests in the fixture replay. Fixed by #1874: a pending 'length' now wins over the tool-call flag, so 1.0.0 reports length and sends one request."
+  },
+  {
+    "library": "tanstack-ai",
+    "scenarios": ["stream.missing-finish"],
+    "providers": ["gemini"],
+    "issue": "https://github.com/TanStack/ai/issues/2130",
+    "pr": null,
+    "status": "reported",
+    "fixed_in": null,
+    "opened": "2026-11-10",
+    "notes": "The Gemini adapter emits RUN_FINISHED only for a chunk with finishReason; a stream that ends without one stops with no terminal event and no error (@tanstack/ai-gemini 1.2.1). The Anthropic adapter got a terminal outcome for the same case in @tanstack/ai-anthropic 1.1.1 (https://github.com/TanStack/ai/pull/2042)."
   }
 ]
