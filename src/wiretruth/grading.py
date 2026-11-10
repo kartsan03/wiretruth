@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from typing import Literal
 
@@ -61,6 +61,16 @@ class CellGrade:
     rule: int
     requirements: tuple[RequirementResult, ...]
     notes: tuple[str, ...]
+
+
+def must_grade(statuses: Iterable[Status]) -> Grade:
+    """Apply rules 6-8 to MUST requirement statuses."""
+    must = set(statuses)
+    if "CONTRADICTED" in must:
+        return "WRONG"
+    if "NOT_OBSERVABLE" in must:
+        return "LOSSY"
+    return "PASS"
 
 
 def _applicable(scenario: Scenario, provider: str) -> tuple[Requirement, ...]:
@@ -174,12 +184,8 @@ def grade_cell(
         for result in requirements
         if result.status != "SATISFIED"
     )
-    must = {result.status for result in requirements if result.level == "MUST"}
     if obs.outcome == "raised" and obs.error is not None and obs.error.category == "internal":
         crash = f"internal error: {obs.error.type}: {obs.error.message}"
         return CellGrade("CRASH", 5, requirements, (crash, *notes))
-    if "CONTRADICTED" in must:
-        return CellGrade("WRONG", 6, requirements, notes)
-    if "NOT_OBSERVABLE" in must:
-        return CellGrade("LOSSY", 7, requirements, notes)
-    return CellGrade("PASS", 8, requirements, notes)
+    grade = must_grade(result.status for result in requirements if result.level == "MUST")
+    return CellGrade(grade, {"WRONG": 6, "LOSSY": 7, "PASS": 8}[grade], requirements, notes)

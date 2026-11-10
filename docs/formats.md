@@ -47,7 +47,7 @@ different languages.
 | `suite/fixtures/<provider>/<scenario>@<date>.json` | an older recording of the same fixture, such as `@2026-11-02`, kept for reference, which no cell uses by default ([ADR 0005](adr/0005-provenance-tiers.md)). A streamed, aborted or otherwise different form of a call is its own scenario, such as `tools.parallel-calls-stream` |
 | `results/<library>/<version>.json` | [results](#results--wiretruthresultsv1) |
 | `results/upstream.json` | [upstream tracking](#upstream-tracking) |
-| `shims/…/wiretruth-shim.json` | [shim manifest](#shim-manifest--wiretruthshimv1) (not checked by `wiretruth lint` yet) |
+| `shims/…/wiretruth-shim.json` | [shim manifest](#shim-manifest--wiretruthshimv1) |
 
 Call specs and observations are messages between the runner and a shim, not files in the repository.
 
@@ -57,19 +57,28 @@ Call specs and observations are messages between the runner and a shim, not file
 wiretruth lint [PATH]
 ```
 
-Lint validates every `.json` file under `PATH/suite/` and `PATH/results/` (`PATH` defaults to the current
-directory). Then it checks the files against each other:
+Lint validates every `.json` file under `PATH/suite/` and `PATH/results/`, and the shim manifests at
+`PATH/shims/<language>/<library>/wiretruth-shim.json`, `PATH/shims/reference/wiretruth-shim.json` and
+`PATH/shims/liar/wiretruth-shim.json` (`PATH` defaults to the current directory). Then it checks:
 
 - each file's path matches its id;
 - each scenario's `bug_class` is in the registry;
 - each fixture's scenario exists and lists the fixture's provider;
 - each derived fixture's `derived_from.fixture` exists;
 - each results file's path matches its `library.name` and `library.version`;
+- each results cell's requirement ids are unique, and each scenario + provider pair occurs only once per file;
+- each PASS, LOSSY or WRONG cell has requirements, has no internal raised error (which grades CRASH), and its
+  grade follows from its MUST statuses; CRASH, HANG, UNSUPPORTED and HARNESS grades aren't recomputed;
+- each upstream entry's library has a `results/<library>/` directory, and each `released` entry has a nonempty
+  `fixed_in` (free text); these checks are skipped when `results/` is missing;
+- each shim manifest matches the shim manifest schema;
+- each JavaScript shim manifest's `packages` equals its adjacent `package.json` `dependencies` exactly;
 - no other JSON file sits under `suite/` or `results/`;
 - each fixture's `truth` matches the truth its provider module computes from its exchanges (today for
   `openai-chat`, `openai-responses`, `ollama`, `ollama-openai`, `gemini` and `anthropic`; lint notes the providers it can't check yet);
-- no file under `suite/` or `results/`, JSON or not, contains anything that looks like a key, a token, an
-  organization or project id, or a credential header ([the secret scan](recording.md#the-secret-scan)).
+- no file under `suite/` or `results/` (JSON or not), shim manifest or JavaScript shim's `package.json` contains
+  anything that looks like a key, a token, an organization or project id, or a credential header
+  ([the secret scan](recording.md#the-secret-scan)).
 
 It prints one line per problem, with every problem in a file, as `<file>: <JSON path>: <message>`:
 

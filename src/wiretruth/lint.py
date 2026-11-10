@@ -1,4 +1,4 @@
-"""``wiretruth lint``: validate suite/ and results/, file by file and against each other.
+"""``wiretruth lint``: validate suite/, results/ and shim manifests and their consistency.
 
 Each file's kind comes from where it lives:
 
@@ -7,6 +7,8 @@ Each file's kind comes from where it lives:
     suite/fixtures/<provider>/<id>.json          fixture
     results/upstream.json                        upstream
     results/<library>/<version>.json             results
+    shims/<name>/wiretruth-shim.json             shim manifest (shims/reference, shims/liar)
+    shims/<language>/<name>/wiretruth-shim.json  shim manifest (+ package.json for JavaScript)
 
 Every file also goes through the secret scan, and every fixture's truth is recomputed from its
 exchanges by its provider module, when that provider has one yet. No problem lint reports repeats
@@ -24,7 +26,7 @@ from functools import partial
 from pathlib import Path
 from typing import TypeVar, cast
 
-from wiretruth.checks import CHECKS
+from wiretruth.checks import CHECKS, Status
 from wiretruth.formats import (
     Fixture,
     FormatError,
@@ -42,6 +44,7 @@ from wiretruth.formats import (
     parse_json,
     read_json,
 )
+from wiretruth.grading import must_grade
 from wiretruth.providers import PROVIDERS
 from wiretruth.secret_scan import scan_headers, scan_text
 
@@ -201,6 +204,7 @@ def lint(root: Path) -> Report:
     scenarios: dict[str, tuple[Path, Scenario | None]] = {}
     fixtures: dict[str, tuple[Path, Fixture | None, JsonValue]] = {}
     results_files: list[tuple[Path, JsonObject]] = []
+    upstream_entries: list[JsonObject] = []
 
     for path in paths:
         report.files += 1
@@ -225,6 +229,8 @@ def lint(root: Path) -> Report:
             loaded_doc = _load(partial(load_document, kind), path, report)
             if kind == "results" and loaded_doc is not None:
                 results_files.append((path, cast(JsonObject, loaded_doc)))
+            elif kind == "upstream" and loaded_doc is not None:
+                upstream_entries = cast(list[JsonObject], loaded_doc)
 
     def problem(path: Path, where: str, message: str) -> None:
         report.problems.append(Problem(str(path), where, message))
@@ -280,8 +286,62 @@ def lint(root: Path) -> Report:
             if library[key] != expected:
                 message = f"{library[key]!r} doesn't match the file path: expected {expected!r}"
                 problem(path, f"$.library.{key}", message)
+        seen_cells: set[tuple[str, str]] = set()
+        for i, cell in enumerate(cast(list[JsonObject], doc["cells"])):
+            scenario_id, provider = cast(str, cell["scenario"]), cast(str, cell["provider"])
+            cell_key = (scenario_id, provider)
+            if cell_key in seen_cells:
+                problem(path, f"$.cells[{i}]", f"duplicate cell {scenario_id} {provider}")
+            seen_cells.add(cell_key)
+            requirements = cast(list[JsonObject], cell["requirements"])
+            seen_ids: set[str] = set()
+            for j, item in enumerate(requirements):
+                requirement_id = cast(str, item["id"])
+                if requirement_id in seen_ids:
+                    problem(
+                        path,
+                        f"$.cells[{i}].requirements[{j}].id",
+                        f"duplicate requirement id {requirement_id!r}",
+                    )
+                seen_ids.add(requirement_id)
+            grade = cell["grade"]
+            if grade not in ("PASS", "LOSSY", "WRONG"):
+                continue
+            where = f"$.cells[{i}].grade"
+            if not requirements:
+                problem(path, where, f"{grade} cell has no requirements")
+                continue
+            observation = cell["observation"]
+            if (
+                isinstance(observation, dict)
+                and observation["outcome"] == "raised"
+                and isinstance(error := observation["error"], dict)
+                and error["category"] == "internal"
+            ):
+                problem(path, where, f"{grade} has an internal raised error, which gives CRASH")
+                continue
+            expected_grade = must_grade(
+                cast(Status, item["status"]) for item in requirements if item["level"] == "MUST"
+            )
+            if grade != expected_grade:
+                message = (
+                    f"{grade} doesn't follow from its MUST statuses, which give {expected_grade}"
+                )
+                problem(path, where, message)
 
-    for path in sorted((root / "shims").glob("*/*/wiretruth-shim.json")):
+    path = results / "upstream.json"
+    for i, entry in enumerate(upstream_entries):
+        library_name = cast(str, entry["library"])
+        if not (results / library_name).is_dir():
+            problem(path, f"$[{i}].library", f"no results directory for {library_name!r}")
+        if entry["status"] == "released" and not entry["fixed_in"]:
+            problem(path, f"$[{i}].fixed_in", "a released entry must have a nonempty fixed_in")
+
+    shims = (
+        root / "shims"
+    )  # the built-in shims/reference and shims/liar, and shims/<language>/<name>
+    manifests = [*shims.glob("*/wiretruth-shim.json"), *shims.glob("*/*/wiretruth-shim.json")]
+    for path in sorted(manifests):
         report.files += 1
         _scan_secrets(path, report)
         manifest = _load(load_shim_manifest, path, report)
