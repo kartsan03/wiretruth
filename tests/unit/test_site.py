@@ -234,7 +234,7 @@ def test_current_history_missing_and_retired_cells(root: Path) -> None:
     build(root, out)
     index = (out / "index.html").read_text()
     assert "any-llm 1.10.0" in index and "any-llm 1.9.0" not in index
-    assert "Suite 0.10.0" in index and "Updated 2021-02-03" in index
+    assert "Suite" not in index and "Updated 2021-02-03" in index
     assert "errors.retired-example" not in index
     assert not (out / "cells" / "any-llm" / "errors.retired-example").exists()
     assert f'id="any-llm/{missing["scenario"]}/{missing["provider"]}"' in index

@@ -406,11 +406,6 @@ def _index(
         (datetime.fromisoformat(_text(_object(doc["run"]), "at")) for doc in current),
         default=None,
     )
-    suite = max(
-        (_text(doc, "suite_version") for doc in current),
-        key=_version_key,
-        default="unavailable",
-    )
     return _template(
         "index.html",
         fragments={
@@ -428,7 +423,6 @@ def _index(
             "legend": _legend(),
         },
         updated=updated.date().isoformat() if updated else "unavailable",
-        suite=suite,
     )
 
 
