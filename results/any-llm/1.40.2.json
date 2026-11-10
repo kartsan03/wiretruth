@@ -1,16 +1,16 @@
 {
   "format": "wiretruth.results/v1",
-  "suite_version": "0.3.0.dev0",
+  "suite_version": "0.4.0.dev0",
   "library": {
     "name": "any-llm",
     "version": "1.40.2",
     "language": "python"
   },
   "run": {
-    "at": "2026-11-09T00:54:25Z",
-    "git_sha": "f81137db01e3a0381fb8820c0cbf6659ed392f52",
+    "at": "2026-11-10T20:22:10Z",
+    "git_sha": "3505e2386e726506556a14bf14c7a0952f1f9ba2",
     "ci_run": null,
-    "runner": "wiretruth 0.3.0.dev0",
+    "runner": "wiretruth 0.4.0.dev0",
     "packages": {
       "annotated-types": "0.8.0",
       "anthropic": "0.125.0",
@@ -122,7 +122,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 146.6367393732071
+        "elapsed_ms": 163.71998097747564
       },
       "request_count": 1
     },
@@ -196,7 +196,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 698.3995968475938
+        "elapsed_ms": 576.0596049949527
       },
       "request_count": 1
     },
@@ -268,7 +268,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 144.8483057320118
+        "elapsed_ms": 124.74890798330307
       },
       "request_count": 1
     },
@@ -340,7 +340,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 147.1249870955944
+        "elapsed_ms": 143.37601512670517
       },
       "request_count": 1
     },
@@ -427,7 +427,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 141.9316092506051
+        "elapsed_ms": 148.27326126396656
       },
       "request_count": 1
     },
@@ -516,7 +516,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 558.9318973943591
+        "elapsed_ms": 520.5258606001735
       },
       "request_count": 1
     },
@@ -603,7 +603,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 182.80034139752388
+        "elapsed_ms": 174.52279664576054
       },
       "request_count": 1
     },
@@ -687,7 +687,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 149.9878680333495
+        "elapsed_ms": 135.89796889573336
       },
       "request_count": 1
     },
@@ -771,7 +771,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 119.6167441084981
+        "elapsed_ms": 98.73904660344124
       },
       "request_count": 1
     },
@@ -855,7 +855,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 214.15238082408905
+        "elapsed_ms": 157.98492077738047
       },
       "request_count": 1
     },
@@ -933,7 +933,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 134.58038307726383
+        "elapsed_ms": 161.50500252842903
       },
       "request_count": 1
     },
@@ -1001,7 +1001,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 95.98380513489246
+        "elapsed_ms": 148.5037049278617
       },
       "request_count": 1
     },
@@ -1073,7 +1073,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 130.22314943373203
+        "elapsed_ms": 167.66436956822872
       },
       "request_count": 1
     },
@@ -1145,7 +1145,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 129.9385465681553
+        "elapsed_ms": 138.42111639678478
       },
       "request_count": 1
     },
@@ -1217,7 +1217,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 180.51131535321474
+        "elapsed_ms": 173.7686526030302
       },
       "request_count": 1
     },
@@ -1291,7 +1291,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 659.5151303336024
+        "elapsed_ms": 544.6984823793173
       },
       "request_count": 1
     },
@@ -1363,7 +1363,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 220.62334138900042
+        "elapsed_ms": 163.91154192388058
       },
       "request_count": 1
     },
@@ -1435,7 +1435,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 130.3717838600278
+        "elapsed_ms": 130.80602511763573
       },
       "request_count": 1
     },
@@ -1507,7 +1507,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 228.93124166876078
+        "elapsed_ms": 194.5281522348523
       },
       "request_count": 1
     },
@@ -1581,7 +1581,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 170.31778674572706
+        "elapsed_ms": 170.41339445859194
       },
       "request_count": 1
     },
@@ -1657,7 +1657,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 504.37754299491644
+        "elapsed_ms": 761.2541867420077
       },
       "request_count": 1
     },
@@ -1731,7 +1731,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 251.0053850710392
+        "elapsed_ms": 267.96215679496527
       },
       "request_count": 1
     },
@@ -1805,7 +1805,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 208.87405052781105
+        "elapsed_ms": 187.57942132651806
       },
       "request_count": 1
     },
@@ -1879,7 +1879,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 180.3080216050148
+        "elapsed_ms": 190.0935247540474
       },
       "request_count": 1
     },
@@ -1951,7 +1951,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 225.90834368020296
+        "elapsed_ms": 253.5750800743699
       },
       "request_count": 1
     },
@@ -2029,7 +2029,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 119.36899926513433
+        "elapsed_ms": 173.2979379594326
       },
       "request_count": 1
     },
@@ -2109,7 +2109,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 652.5316666811705
+        "elapsed_ms": 482.0492723956704
       },
       "request_count": 1
     },
@@ -2187,7 +2187,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 159.5854302868247
+        "elapsed_ms": 216.96847770363092
       },
       "request_count": 1
     },
@@ -2265,7 +2265,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 165.89463129639626
+        "elapsed_ms": 127.64426600188017
       },
       "request_count": 1
     },
@@ -2343,7 +2343,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 170.56790366768837
+        "elapsed_ms": 175.43886974453926
       },
       "request_count": 1
     },
@@ -2421,7 +2421,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 152.18951925635338
+        "elapsed_ms": 236.03923246264458
       },
       "request_count": 1
     },
@@ -2493,7 +2493,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 150.21921135485172
+        "elapsed_ms": 171.64285015314817
       },
       "request_count": 1
     },
@@ -2567,7 +2567,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 737.8454590216279
+        "elapsed_ms": 676.7580844461918
       },
       "request_count": 1
     },
@@ -2639,7 +2639,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 263.5606415569782
+        "elapsed_ms": 260.86741872131824
       },
       "request_count": 1
     },
@@ -2711,7 +2711,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 195.18830254673958
+        "elapsed_ms": 234.0368377044797
       },
       "request_count": 1
     },
@@ -2783,7 +2783,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 231.69916030019522
+        "elapsed_ms": 230.2895588800311
       },
       "request_count": 1
     },
@@ -2855,7 +2855,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 272.4015209823847
+        "elapsed_ms": 275.018148124218
       },
       "request_count": 1
     },
@@ -2927,7 +2927,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 156.15584701299667
+        "elapsed_ms": 124.28839597851038
       },
       "request_count": 1
     },
@@ -3001,7 +3001,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 748.2101190835238
+        "elapsed_ms": 734.2257909476757
       },
       "request_count": 1
     },
@@ -3073,7 +3073,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 143.9576419070363
+        "elapsed_ms": 156.69403038918972
       },
       "request_count": 1
     },
@@ -3145,7 +3145,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 153.64213846623898
+        "elapsed_ms": 159.98560283333063
       },
       "request_count": 1
     },
@@ -3217,7 +3217,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 158.3502683788538
+        "elapsed_ms": 156.80373553186655
       },
       "request_count": 1
     },
@@ -3289,7 +3289,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 160.98933294415474
+        "elapsed_ms": 277.3643033578992
       },
       "request_count": 1
     },
@@ -3374,7 +3374,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 97.48469572514296
+        "elapsed_ms": 142.85535737872124
       },
       "request_count": 1
     },
@@ -3461,7 +3461,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 505.8228615671396
+        "elapsed_ms": 641.4431584998965
       },
       "request_count": 1
     },
@@ -3476,11 +3476,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"77ecdd8a-566d-4ba1-b098-d7a3b3082999\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"3a4cba16-a57a-4657-b28a-8ac89eaea7d9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"81193cdc-7f88-4adc-8e6c-ac29f9b61b66\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"4e915b8d-84fe-4964-a833-09d08f617d15\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"77ecdd8a-566d-4ba1-b098-d7a3b3082999\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"3a4cba16-a57a-4657-b28a-8ac89eaea7d9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"81193cdc-7f88-4adc-8e6c-ac29f9b61b66\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_9epwsqu6\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"4e915b8d-84fe-4964-a833-09d08f617d15\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_bvzy1ra9\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -3510,7 +3510,7 @@
         },
         "tool_calls": [
           {
-            "id": "77ecdd8a-566d-4ba1-b098-d7a3b3082999",
+            "id": "81193cdc-7f88-4adc-8e6c-ac29f9b61b66",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -3519,7 +3519,7 @@
             }
           },
           {
-            "id": "3a4cba16-a57a-4657-b28a-8ac89eaea7d9",
+            "id": "4e915b8d-84fe-4964-a833-09d08f617d15",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -3548,7 +3548,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 185.151144862175
+        "elapsed_ms": 188.51633928716183
       },
       "request_count": 1
     },
@@ -3633,7 +3633,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 151.89024060964584
+        "elapsed_ms": 150.9873103350401
       },
       "request_count": 1
     },
@@ -3718,7 +3718,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 145.98930440843105
+        "elapsed_ms": 152.96803507953882
       },
       "request_count": 1
     },
@@ -3803,7 +3803,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 177.13190335780382
+        "elapsed_ms": 299.91261288523674
       },
       "request_count": 1
     },
@@ -3888,7 +3888,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 185.3636708110571
+        "elapsed_ms": 186.8945872411132
       },
       "request_count": 1
     },
@@ -3975,7 +3975,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 745.5443628132343
+        "elapsed_ms": 540.0206623598933
       },
       "request_count": 1
     },
@@ -3990,11 +3990,11 @@
           "id": "calls-reported",
           "level": "MUST",
           "status": "CONTRADICTED",
-          "evidence": "tool_calls[0] id=\"fc700b93-a9ac-4907-8da1-a7b38a28658c\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"265e0a1f-ef64-4209-b6b9-e3b5c9e3a181\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+          "evidence": "tool_calls[0] id=\"4e8b9dda-3fa3-4763-af44-dcab08600e3f\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"babaee2f-2591-4efd-bafd-5af506b87982\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
         }
       ],
       "notes": [
-        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"fc700b93-a9ac-4907-8da1-a7b38a28658c\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"265e0a1f-ef64-4209-b6b9-e3b5c9e3a181\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
+        "MUST calls-reported: CONTRADICTED: tool_calls[0] id=\"4e8b9dda-3fa3-4763-af44-dcab08600e3f\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; truth id=\"call_8uaqob2r\", name=\"get_weather\", args={\"city\": \"São Paulo\"}, parsed=true; tool_calls[1] id=\"babaee2f-2591-4efd-bafd-5af506b87982\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true; truth id=\"call_nyjtbrz4\", name=\"get_weather\", args={\"city\": \"Zürich\"}, parsed=true"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -4024,7 +4024,7 @@
         },
         "tool_calls": [
           {
-            "id": "fc700b93-a9ac-4907-8da1-a7b38a28658c",
+            "id": "4e8b9dda-3fa3-4763-af44-dcab08600e3f",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"S\\u00e3o Paulo\"}",
             "arguments_parsed_ok": true,
@@ -4033,7 +4033,7 @@
             }
           },
           {
-            "id": "265e0a1f-ef64-4209-b6b9-e3b5c9e3a181",
+            "id": "babaee2f-2591-4efd-bafd-5af506b87982",
             "name": "get_weather",
             "arguments_raw": "{\"city\": \"Z\\u00fcrich\"}",
             "arguments_parsed_ok": true,
@@ -4062,7 +4062,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 188.54450155049562
+        "elapsed_ms": 192.92589463293552
       },
       "request_count": 1
     },
@@ -4147,7 +4147,7 @@
           "chunks_seen": 3
         },
         "notes": [],
-        "elapsed_ms": 140.33599756658077
+        "elapsed_ms": 151.67380031198263
       },
       "request_count": 1
     },
@@ -4232,7 +4232,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 203.52622959762812
+        "elapsed_ms": 166.18796531111002
       },
       "request_count": 1
     },
@@ -4317,7 +4317,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 232.3213992640376
+        "elapsed_ms": 254.7148186713457
       },
       "request_count": 1
     },
@@ -4395,7 +4395,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 144.45974491536617
+        "elapsed_ms": 148.8561499863863
       },
       "request_count": 1
     },
@@ -4473,7 +4473,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 724.2791717872024
+        "elapsed_ms": 853.8833865895867
       },
       "request_count": 1
     },
@@ -4551,7 +4551,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 176.64509918540716
+        "elapsed_ms": 197.06612266600132
       },
       "request_count": 1
     },
@@ -4629,7 +4629,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 98.95375091582537
+        "elapsed_ms": 141.22547954320908
       },
       "request_count": 1
     },
@@ -4707,7 +4707,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 146.57384436577559
+        "elapsed_ms": 191.44371524453163
       },
       "request_count": 1
     },
@@ -4785,7 +4785,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 152.16816775500774
+        "elapsed_ms": 257.121792063117
       },
       "request_count": 1
     },
@@ -4875,7 +4875,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 154.19873595237732
+        "elapsed_ms": 106.44666291773319
       },
       "request_count": 1
     },
@@ -4967,7 +4967,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 744.6671957150102
+        "elapsed_ms": 777.6496708393097
       },
       "request_count": 1
     },
@@ -5057,7 +5057,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 170.8577610552311
+        "elapsed_ms": 201.07495598495007
       },
       "request_count": 1
     },
@@ -5147,7 +5147,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 151.1901654303074
+        "elapsed_ms": 164.51420914381742
       },
       "request_count": 1
     },
@@ -5174,13 +5174,13 @@
           "id": "text-reported",
           "level": "SHOULD",
           "status": "SATISFIED",
-          "evidence": "text.value=\"{\\\"cities\\\":[{\\\"name\\\":\\\"Київ\\\",\\\"oblast\\\":\\\"Київська область\\\"},{\\\"\" (primary); truth.text=\"{\\\"cities\\\":[{\\\"name\\\":\\\"Київ\\\",\\\"oblast\\\":\\\"Київська область\\\"},{\\\"\""
+          "evidence": "text.value=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\\\"Κρητικό Πέ\" (primary); truth.text=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\\\"Κρητικό Πέ\""
         },
         {
           "id": "usage-reported",
           "level": "SHOULD",
           "status": "SATISFIED",
-          "evidence": "usage.input=71 (primary); truth.usage.input=71; usage.output=24 (primary); truth.usage.output=24"
+          "evidence": "usage.input=72 (primary); truth.usage.input=72; usage.output=24 (primary); truth.usage.output=24"
         }
       ],
       "notes": [],
@@ -5196,7 +5196,7 @@
         "unsupported_reason": null,
         "error": {
           "type": "openai.LengthFinishReasonError",
-          "message": "Could not parse response content as the length limit was reached - CompletionUsage(completion_tokens=24, prompt_tokens=71, total_tokens=95, completion_tokens_details=CompletionTokensDetails(accepted_prediction_tokens=0, audio_tokens=0, reasoning_tokens=0, rejected_prediction_tokens=0, text_tokens=None), prompt_tokens_details=PromptTokensDetails(audio_tokens=0, cache_write_tokens=0, cached_tokens=0, image_tokens=None, text_tokens=None))",
+          "message": "Could not parse response content as the length limit was reached - CompletionUsage(completion_tokens=24, prompt_tokens=72, total_tokens=96, completion_tokens_details=CompletionTokensDetails(accepted_prediction_tokens=0, audio_tokens=0, reasoning_tokens=0, rejected_prediction_tokens=0, text_tokens=None), prompt_tokens_details=PromptTokensDetails(audio_tokens=0, cache_write_tokens=0, cached_tokens=0, image_tokens=None, text_tokens=None))",
           "category": "truncation",
           "retry_after": null,
           "stack_top": "openai/lib/_parsing/_completions.py:110"
@@ -5208,7 +5208,7 @@
           "source": "error.completion.choices[0].finish_reason"
         },
         "text": {
-          "value": "{\"cities\":[{\"name\":\"Київ\",\"oblast\":\"Київська область\"},{\"",
+          "value": "{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ",
           "surface": "primary"
         },
         "structured": {
@@ -5218,11 +5218,11 @@
         },
         "tool_calls": [],
         "usage": {
-          "input": 71,
+          "input": 72,
           "cached_input": 0,
           "output": 24,
           "reasoning": 0,
-          "total": 95,
+          "total": 96,
           "surface": {
             "input": "primary",
             "output": "primary",
@@ -5237,7 +5237,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 161.60812508314848
+        "elapsed_ms": 204.9852591007948
       },
       "request_count": 1
     },
@@ -5331,7 +5331,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 210.50405967980623
+        "elapsed_ms": 318.62801872193813
       },
       "request_count": 1
     },
@@ -5392,7 +5392,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 0.8562076836824417
+        "elapsed_ms": 1.4513442292809486
       },
       "request_count": 0
     },
@@ -5470,7 +5470,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 151.5681752935052
+        "elapsed_ms": 136.88611704856157
       },
       "request_count": 1
     },
@@ -5550,7 +5550,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 677.9063334688544
+        "elapsed_ms": 726.3535037636757
       },
       "request_count": 1
     },
@@ -5628,7 +5628,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 126.32177397608757
+        "elapsed_ms": 176.07120517641306
       },
       "request_count": 1
     },
@@ -5706,7 +5706,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 127.05528363585472
+        "elapsed_ms": 133.6092483252287
       },
       "request_count": 1
     },
@@ -5727,13 +5727,13 @@
           "id": "text-reported",
           "level": "SHOULD",
           "status": "SATISFIED",
-          "evidence": "text.value=\"Kyiv, the capital of Ukraine, has a history stretching back\" (primary); truth.text=\"Kyiv, the capital of Ukraine, has a history stretching back\""
+          "evidence": "text.value=\"Octopuses are masters of disguise, able to change colour in\" (primary); truth.text=\"Octopuses are masters of disguise, able to change colour in\""
         },
         {
           "id": "usage-reported",
           "level": "SHOULD",
           "status": "SATISFIED",
-          "evidence": "usage.input=21 (primary); truth.usage.input=21; usage.output=16 (primary); truth.usage.output=16"
+          "evidence": "usage.input=24 (primary); truth.usage.input=24; usage.output=16 (primary); truth.usage.output=16"
         }
       ],
       "notes": [],
@@ -5755,7 +5755,7 @@
           "source": "choices[0].finish_reason"
         },
         "text": {
-          "value": "Kyiv, the capital of Ukraine, has a history stretching back",
+          "value": "Octopuses are masters of disguise, able to change colour in",
           "surface": "primary"
         },
         "structured": {
@@ -5765,11 +5765,11 @@
         },
         "tool_calls": [],
         "usage": {
-          "input": 21,
+          "input": 24,
           "cached_input": 0,
           "output": 16,
           "reasoning": 0,
-          "total": 37,
+          "total": 40,
           "surface": {
             "input": "primary",
             "output": "primary",
@@ -5784,7 +5784,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 147.67837803810835
+        "elapsed_ms": 146.3166093453765
       },
       "request_count": 1
     },
@@ -5862,7 +5862,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 243.654016405344
+        "elapsed_ms": 170.5823903903365
       },
       "request_count": 1
     },
@@ -5940,7 +5940,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 137.50978000462055
+        "elapsed_ms": 144.1169148311019
       },
       "request_count": 1
     },
@@ -6020,7 +6020,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 697.0313107594848
+        "elapsed_ms": 679.6956090256572
       },
       "request_count": 1
     },
@@ -6098,7 +6098,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 235.5594364926219
+        "elapsed_ms": 303.88675536960363
       },
       "request_count": 1
     },
@@ -6176,7 +6176,7 @@
           "chunks_seen": 17
         },
         "notes": [],
-        "elapsed_ms": 225.819643586874
+        "elapsed_ms": 192.01047159731388
       },
       "request_count": 1
     },
@@ -6197,7 +6197,7 @@
           "id": "text-reported",
           "level": "SHOULD",
           "status": "SATISFIED",
-          "evidence": "text.value=\"Kyiv, the capital of Ukraine, has a history spanning more\" (primary); truth.text=\"Kyiv, the capital of Ukraine, has a history spanning more\""
+          "evidence": "text.value=\"Octopuses hide from predators by changing the colour and appearance of\" (primary); truth.text=\"Octopuses hide from predators by changing the colour and appearance of\""
         },
         {
           "id": "usage-reported",
@@ -6225,7 +6225,7 @@
           "source": "choices[0].finish_reason"
         },
         "text": {
-          "value": "Kyiv, the capital of Ukraine, has a history spanning more",
+          "value": "Octopuses hide from predators by changing the colour and appearance of",
           "surface": "primary"
         },
         "structured": {
@@ -6254,7 +6254,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 197.305909357965
+        "elapsed_ms": 216.3267470896244
       },
       "request_count": 1
     },
@@ -6332,7 +6332,7 @@
           "chunks_seen": 21
         },
         "notes": [],
-        "elapsed_ms": 209.3968903645873
+        "elapsed_ms": 246.7668605968356
       },
       "request_count": 1
     },
@@ -6412,7 +6412,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 725.1187153160572
+        "elapsed_ms": 561.611426062882
       },
       "request_count": 1
     },
@@ -6490,7 +6490,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 201.938571408391
+        "elapsed_ms": 234.35583617538214
       },
       "request_count": 1
     },
@@ -6572,7 +6572,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 140.0197558104992
+        "elapsed_ms": 145.019905641675
       },
       "request_count": 1
     },
@@ -6652,7 +6652,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 140.0891449302435
+        "elapsed_ms": 107.29274619370699
       },
       "request_count": 1
     },
@@ -6732,7 +6732,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 274.4183633476496
+        "elapsed_ms": 174.87739212810993
       },
       "request_count": 1
     },
@@ -6812,7 +6812,7 @@
           "chunks_seen": 15
         },
         "notes": [],
-        "elapsed_ms": 169.92522962391376
+        "elapsed_ms": 186.40529457479715
       },
       "request_count": 1
     },
@@ -6892,7 +6892,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 187.93064262717962
+        "elapsed_ms": 187.02630512416363
       },
       "request_count": 1
     },
@@ -6972,7 +6972,7 @@
           "chunks_seen": 14
         },
         "notes": [],
-        "elapsed_ms": 202.5777120143175
+        "elapsed_ms": 175.66389963030815
       },
       "request_count": 1
     },
@@ -7044,7 +7044,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 96.58505953848362
+        "elapsed_ms": 150.4864376038313
       },
       "request_count": 1
     },
@@ -7116,7 +7116,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 147.14306220412254
+        "elapsed_ms": 109.77350920438766
       },
       "request_count": 1
     },
@@ -7188,7 +7188,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 230.33141437917948
+        "elapsed_ms": 203.26563715934753
       },
       "request_count": 1
     },
@@ -7262,7 +7262,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 111.78264021873474
+        "elapsed_ms": 144.65297479182482
       },
       "request_count": 1
     },
@@ -7334,7 +7334,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 720.7499416545033
+        "elapsed_ms": 717.3303496092558
       },
       "request_count": 1
     },
@@ -7406,7 +7406,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 99.27442017942667
+        "elapsed_ms": 107.84056782722473
       },
       "request_count": 1
     },
@@ -7478,7 +7478,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 241.66841618716717
+        "elapsed_ms": 192.85672158002853
       },
       "request_count": 1
     },
@@ -7544,7 +7544,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 143.27719993889332
+        "elapsed_ms": 152.94722747057676
       },
       "request_count": 1
     },
@@ -7612,7 +7612,7 @@
         "notes": [
           "Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default."
         ],
-        "elapsed_ms": 605.4824702441692
+        "elapsed_ms": 729.1633011773229
       },
       "request_count": 1
     },
@@ -7678,7 +7678,7 @@
           "chunks_seen": 28
         },
         "notes": [],
-        "elapsed_ms": 316.6811652481556
+        "elapsed_ms": 326.01103838533163
       },
       "request_count": 1
     },
@@ -7744,7 +7744,7 @@
           "chunks_seen": 24
         },
         "notes": [],
-        "elapsed_ms": 237.1761603280902
+        "elapsed_ms": 247.0293678343296
       },
       "request_count": 1
     },
@@ -7810,7 +7810,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 176.95381492376328
+        "elapsed_ms": 175.07983651012182
       },
       "request_count": 1
     }
