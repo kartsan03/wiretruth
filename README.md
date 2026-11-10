@@ -227,9 +227,10 @@ The TanStack AI run grades its 100 cells 50 PASS, 1 LOSSY, 1 WRONG and 48 UNSUPP
 Its `chat()` always requests a streamed response, so the non-streamed fixtures don't apply to it.
 
 No API keys are needed. Everything runs against stored responses on `127.0.0.1`. The first run downloads the
-selected library into `.wiretruth/envs/`; later runs work offline. `uv run wiretruth run --shim shims/reference`
-runs the built-in reference client, which must pass every cell. The scenarios, fixtures and shims live in this
-repository, so wiretruth runs from a clone.
+selected library: a Python library into `.wiretruth/envs/`, a JavaScript library into `node_modules` next to its
+shim. Later runs work offline. `uv run wiretruth run --shim shims/reference` runs the built-in reference client,
+which must pass every cell. The scenarios, fixtures and shims live in this repository, so wiretruth runs from a
+clone.
 
 Releases are also on [PyPI](https://pypi.org/project/wiretruth/) (`pip install wiretruth`). The package is the
 command only, so run it inside a checkout of the matching release tag (for example `v0.3.0`); on `main`, use

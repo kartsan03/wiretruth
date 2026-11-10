@@ -2,6 +2,7 @@ import json
 import shutil
 from collections.abc import Callable
 from pathlib import Path
+from typing import cast
 
 import pytest
 
@@ -50,6 +51,7 @@ def root(tmp_path: Path) -> Path:
     results = tmp_path / "results"
     _write(results / "litellm" / "1.103.1.json", _sample("results/litellm-1.103.1.json"))
     shutil.copy(VALID / "upstream" / "upstream.json", results / "upstream.json")
+    (results / "tanstack-ai").mkdir()  # the upstream sample's library
     return tmp_path
 
 
@@ -238,6 +240,204 @@ def _rewrite(path: Path, change: Callable[[JsonObject], None]) -> None:
     doc = json.loads(path.read_text(encoding="utf-8"))
     change(doc)
     _write(path, doc)
+
+
+@pytest.mark.parametrize(
+    "grade,status,expected",
+    [
+        ("PASS", "CONTRADICTED", "WRONG"),
+        ("PASS", "NOT_OBSERVABLE", "LOSSY"),
+        ("LOSSY", "CONTRADICTED", "WRONG"),
+        ("LOSSY", "SATISFIED", "PASS"),
+        ("WRONG", "NOT_OBSERVABLE", "LOSSY"),
+        ("WRONG", "SATISFIED", "PASS"),
+    ],
+)
+def test_results_grade_must_follow_must_statuses(root: Path, grade, status, expected) -> None:
+    def edit(doc: JsonObject) -> None:
+        cell = cast(list[JsonObject], doc["cells"])[0]
+        cell["grade"] = grade
+        cast(list[JsonObject], cell["requirements"])[0]["status"] = status
+
+    path = "results/litellm/1.103.1.json"
+    _rewrite(root / path, edit)
+    assert _lines(root) == [
+        f"{path}: $.cells[0].grade: "
+        f"{grade} doesn't follow from its MUST statuses, which give {expected}"
+    ]
+
+
+@pytest.mark.parametrize("grade", ["PASS", "LOSSY", "WRONG"])
+def test_results_grade_requires_requirements(root: Path, grade: str) -> None:
+    def edit(doc: JsonObject) -> None:
+        cast(list[JsonObject], doc["cells"])[0].update(grade=grade, requirements=[])
+
+    path = "results/litellm/1.103.1.json"
+    _rewrite(root / path, edit)
+    assert _lines(root) == [f"{path}: $.cells[0].grade: {grade} cell has no requirements"]
+
+
+@pytest.mark.parametrize(
+    "grade,status", [("PASS", "SATISFIED"), ("LOSSY", "NOT_OBSERVABLE"), ("WRONG", "CONTRADICTED")]
+)
+def test_results_grade_cannot_have_internal_raised_error(root: Path, grade, status) -> None:
+    def edit(doc: JsonObject) -> None:
+        cell = cast(list[JsonObject], doc["cells"])[0]
+        observation = _sample("observation/raised.json")
+        cast(JsonObject, observation["error"])["category"] = "internal"
+        cell.update(grade=grade, observation=observation)
+        cast(list[JsonObject], cell["requirements"])[0]["status"] = status
+
+    path = "results/litellm/1.103.1.json"
+    _rewrite(root / path, edit)
+    assert _lines(root) == [
+        f"{path}: $.cells[0].grade: {grade} has an internal raised error, which gives CRASH"
+    ]
+
+
+@pytest.mark.parametrize("grade", ["CRASH", "HANG", "UNSUPPORTED", "HARNESS"])
+@pytest.mark.parametrize("status", [None, "CONTRADICTED"])
+def test_results_run_grades_are_not_recomputed(root: Path, grade: str, status: str | None) -> None:
+    def edit(doc: JsonObject) -> None:
+        cell = cast(list[JsonObject], doc["cells"])[0]
+        if grade == "CRASH":
+            observation = _sample("observation/raised.json")
+            cast(JsonObject, observation["error"])["category"] = "internal"
+        elif grade == "UNSUPPORTED":
+            observation = _sample("observation/unsupported.json")
+        else:
+            observation = None
+        cell.update(grade=grade, observation=observation)
+        if status is None:
+            cell["requirements"] = []
+        else:
+            cast(list[JsonObject], cell["requirements"])[0]["status"] = status
+
+    _rewrite(root / "results/litellm/1.103.1.json", edit)
+    assert _lines(root) == []
+
+
+def test_results_should_statuses_do_not_change_grade(root: Path) -> None:
+    def edit(doc: JsonObject) -> None:
+        cell = cast(list[JsonObject], doc["cells"])[0]
+        cast(list[JsonObject], cell["requirements"])[0].update(
+            level="SHOULD", status="CONTRADICTED"
+        )
+
+    _rewrite(root / "results/litellm/1.103.1.json", edit)
+    assert _lines(root) == []
+
+
+@pytest.mark.parametrize("grade", ["WRONG", "HARNESS"])
+def test_results_requirement_ids_are_unique(root: Path, grade: str) -> None:
+    def edit(doc: JsonObject) -> None:
+        cell = cast(list[JsonObject], doc["cells"])[0]
+        cell["grade"] = grade
+        requirements = cast(list[JsonObject], cell["requirements"])
+        requirements[0]["status"] = {"LOSSY": "NOT_OBSERVABLE", "WRONG": "CONTRADICTED"}.get(
+            grade, "SATISFIED"
+        )
+        requirements.append({**requirements[0], "level": "SHOULD", "status": "SATISFIED"})
+
+    path = "results/litellm/1.103.1.json"
+    _rewrite(root / path, edit)
+    assert _lines(root) == [
+        f"{path}: $.cells[0].requirements[1].id: duplicate requirement id 'cause-is-truncation'"
+    ]
+
+
+@pytest.mark.parametrize("grade", ["WRONG", "HARNESS"])
+def test_results_scenario_provider_pairs_are_unique(root: Path, grade: str) -> None:
+    def edit(doc: JsonObject) -> None:
+        cells = cast(list[JsonObject], doc["cells"])
+        cells[0]["grade"] = grade
+        cast(list[JsonObject], cells[0]["requirements"])[0]["status"] = {
+            "LOSSY": "NOT_OBSERVABLE",
+            "WRONG": "CONTRADICTED",
+        }.get(grade, "SATISFIED")
+        cells.append(cells[0].copy())
+
+    path = "results/litellm/1.103.1.json"
+    _rewrite(root / path, edit)
+    assert _lines(root) == [
+        f"{path}: $.cells[2]: duplicate cell truncation.text-stream openai-chat"
+    ]
+
+
+def test_results_grade_and_duplicate_requirement_are_both_reported(root: Path) -> None:
+    relative = "results/litellm/1.105.5.json"
+    shutil.copy(REPO / relative, root / relative)
+    doc = json.loads((root / relative).read_text())
+    index = next(
+        i
+        for i, cell in enumerate(doc["cells"])
+        if cell["scenario"] == "finish.unknown-value" and cell["provider"] == "anthropic"
+    )
+    duplicate_index = next(
+        j + 1
+        for j, requirement in enumerate(doc["cells"][index]["requirements"])
+        if requirement["id"] == "finish-is-other"
+    )
+
+    def edit(doc: JsonObject) -> None:
+        cell = cast(list[JsonObject], doc["cells"])[index]
+        cell["grade"] = "PASS"
+        requirements = cast(list[JsonObject], cell["requirements"])
+        requirement = next(item for item in requirements if item["id"] == "finish-is-other")
+        assert requirement["status"] == "CONTRADICTED"
+        requirements.insert(0, {**requirement, "status": "SATISFIED"})
+
+    _rewrite(root / relative, edit)
+    assert _lines(root) == [
+        f"{relative}: $.cells[{index}].requirements[{duplicate_index}].id: "
+        "duplicate requirement id 'finish-is-other'",
+        f"{relative}: $.cells[{index}].grade: "
+        "PASS doesn't follow from its MUST statuses, which give WRONG",
+    ]
+
+
+def test_upstream_library_needs_a_results_directory(root: Path) -> None:
+    path = root / "results/upstream.json"
+    entries = json.loads(path.read_text())
+    entries[0]["library"] = "missing"
+    _write(path, entries)
+    (root / "results/missing").write_text("")
+    assert _lines(root) == [
+        "results/upstream.json: $[0].library: no results directory for 'missing'"
+    ]
+
+
+@pytest.mark.parametrize("fixed_in", [None, ""])
+def test_upstream_released_needs_fixed_in(root: Path, fixed_in: str | None) -> None:
+    path = root / "results/upstream.json"
+    entries = json.loads(path.read_text())
+    entries[0].update(status="released", fixed_in=fixed_in)
+    _write(path, entries)
+    assert _lines(root) == [
+        "results/upstream.json: $[0].fixed_in: a released entry must have a nonempty fixed_in"
+    ]
+
+
+@pytest.mark.parametrize("name", ["reference", "liar"])
+def test_builtin_shim_manifests_are_validated(root: Path, name: str) -> None:
+    relative = f"shims/{name}/wiretruth-shim.json"
+    _write(root / relative, json.loads((REPO / relative).read_text()))
+    assert _lines(root) == []
+    _rewrite(root / relative, lambda doc: doc.update(format="invalid"))
+    assert _lines(root) == [f"{relative}: $.format: 'wiretruth.shim/v1' was expected"]
+
+
+@pytest.mark.parametrize("name", ["reference", "liar"])
+def test_builtin_shim_manifests_are_secret_scanned(root: Path, name: str) -> None:
+    relative = f"shims/{name}/wiretruth-shim.json"
+    _write(root / relative, json.loads((REPO / relative).read_text()))
+    _rewrite(root / relative, lambda doc: doc.update(config_notes=["sk-" + "a" * 20]))
+    (problem,) = lint(root).problems
+    assert problem.file == str(root / relative)
+    assert problem.where.startswith("line ")
+    assert problem.message == (
+        "looks like an sk- API key; remove it, and revoke the credential if it is real"
+    )
 
 
 def test_a_truth_that_doesnt_match_the_exchanges(root: Path) -> None:

@@ -82,7 +82,7 @@ p { color: var(--ink-2); }
 section { margin: 40px 0; min-width: 0; }
 .intro { padding-top: 40px; }
 .intro p { max-width: 80ch; }
-.metadata { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 14px; }
+.metadata { font-size: 14px; }
 .muted, small { color: var(--ink-3); }
 small { display: block; font-size: 12px; font-weight: 400; margin-top: 4px; }
 code, pre {
