@@ -97,12 +97,14 @@ def test_cell_escaping(root: Path, newline: str) -> None:
 
 def test_missing_fixture_and_dated_variant(root: Path) -> None:
     path = root / "suite" / "fixtures" / "openai-chat" / "truncation.text.json"
+    summary = next(line for line in render(root).splitlines() if " scenarios; " in line)
     variant = load_document("fixture", VALID / "fixture" / "derived-chunks-abort.json")
     assert isinstance(variant, dict)
     variant.update(id="openai-chat/truncation.text@2026-10-01", scenario="truncation.text")
     _write(path.with_name("truncation.text@2026-10-01.json"), variant)
     row = next(line for line in render(root).splitlines() if line.startswith("| `truncation.text`"))
     assert "openai-chat `recorded`" in row
+    assert summary in render(root).splitlines()  # the variant isn't counted
     path.unlink()
     row = next(line for line in render(root).splitlines() if line.startswith("| `truncation.text`"))
     assert "openai-chat `no fixture`" in row
