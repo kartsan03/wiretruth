@@ -91,6 +91,12 @@ def test_real_build_pages_and_determinism(built: Path) -> None:
         assert (built / "static" / "fonts" / name).read_bytes() == (
             REPO / "src" / "wiretruth" / "site" / "static" / "fonts" / name
         ).read_bytes()
+    schemas = {path.name for path in (REPO / "src" / "wiretruth" / "schemas").iterdir()}
+    for name in schemas:
+        assert (built / "schemas" / name).read_bytes() == (
+            REPO / "src" / "wiretruth" / "schemas" / name
+        ).read_bytes()
+    assert {path.name for path in (built / "schemas").iterdir()} == schemas
 
 
 def test_all_links_fragments_tooltips_and_css_urls_resolve(built: Path) -> None:
@@ -382,7 +388,11 @@ def test_a_cell_whose_fixture_is_gone_is_a_setup_error(root: Path) -> None:
 
 
 def test_older_recordings_keep_their_text_off_the_site(built: Path) -> None:
-    pages = {path: path.read_text() for path in built.rglob("*.html")}
+    pages = {
+        path: path.read_text()
+        for path in built.rglob("*")
+        if path.is_file() and path.suffix != ".woff2"
+    }
     for fixture_id in TEXT_WITHHELD:
         fixture = load_fixture(REPO / "suite" / "fixtures" / f"{fixture_id}.json")
         assert fixture.truth.text
