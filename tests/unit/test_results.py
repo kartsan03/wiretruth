@@ -28,10 +28,31 @@ from wiretruth.results import (
     write_results,
 )
 from wiretruth.runner import GLYPHS, CellResult, ExpectedGrade, RunReport, compare_grades
+from wiretruth.site.build import _version_key
 
 REPO = Path(__file__).resolve().parents[2]
 AT = datetime(2026, 10, 10, 15, 4, 5, 123456, tzinfo=timezone(timedelta(hours=2)))
 SHA = "f7033ff"
+
+
+def test_latest_results_do_not_contain_old_fixture_text():
+    old_texts = [
+        json.loads(
+            (REPO / "suite/fixtures/openai-chat" / f"{scenario}@2026-10-07.json").read_text()
+        )["truth"]["text"]
+        for scenario in (
+            "truncation.text",
+            "truncation.text-stream",
+            "truncation.structured-output",
+        )
+    ]
+    for directory in sorted((REPO / "results").iterdir()):
+        if not directory.is_dir():
+            continue
+        path = max(directory.glob("*.json"), key=lambda path: _version_key(path.stem))
+        written = path.read_text(encoding="utf-8")  # write_results escapes as json.dumps does
+        for text in old_texts:
+            assert json.dumps(text, ensure_ascii=False)[1:-1] not in written, path
 
 
 @pytest.fixture
