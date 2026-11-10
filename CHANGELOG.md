@@ -13,6 +13,8 @@ finding).
 
 ### Added
 - `wiretruth site` builds a static HTML results site from committed results and suite data.
+- The results site is published to https://kartsan03.github.io/wiretruth/ on every push to main and serves
+  the JSON schemas at their `$id` URLs.
 
 ### Changed
 - The TanStack AI shim pins `@tanstack/ai` 1.4.0, `@tanstack/ai-ollama` 1.1.1, `@tanstack/ai-gemini` 1.2.1,

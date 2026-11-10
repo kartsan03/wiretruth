@@ -11,6 +11,7 @@ date-released: "2026-11-09"
 authors:
   - alias: kartsan03
 repository-code: "https://github.com/kartsan03/wiretruth"
+url: "https://kartsan03.github.io/wiretruth/"
 license: MIT
 keywords:
   - llm

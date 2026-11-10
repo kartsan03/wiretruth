@@ -822,4 +822,5 @@ def build(root: Path, out: Path) -> int:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8", newline="\n")
     _copy_static(resources.files("wiretruth.site") / "static", out / "static")
+    _copy_static(resources.files("wiretruth") / "schemas", out / "schemas")
     return len(pages)
