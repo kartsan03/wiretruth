@@ -337,9 +337,7 @@ def lint(root: Path) -> Report:
         if entry["status"] == "released" and not entry["fixed_in"]:
             problem(path, f"$[{i}].fixed_in", "a released entry must have a nonempty fixed_in")
 
-    shims = (
-        root / "shims"
-    )  # the built-in shims/reference and shims/liar, and shims/<language>/<name>
+    shims = root / "shims"
     manifests = [*shims.glob("*/wiretruth-shim.json"), *shims.glob("*/*/wiretruth-shim.json")]
     for path in sorted(manifests):
         report.files += 1
