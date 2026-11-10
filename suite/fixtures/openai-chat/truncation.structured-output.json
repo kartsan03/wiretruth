@@ -5,19 +5,19 @@
   "provider": "openai-chat",
   "tier": "recorded",
   "provenance": {
-    "recorded_at": "2026-10-07T16:46:11Z",
+    "recorded_at": "2026-11-10T20:10:19Z",
     "requested_model": "gpt-6-luna",
     "returned_model": "gpt-6-luna",
-    "recorder": "wiretruth 0.1.0.dev0",
-    "source_commit": "db258d0",
-    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/37654608733",
-    "raw_sha256": "7b7ab1e0245e64d7bb7aaa5994f934fc130ec495a1135ab5efae534db3671096",
+    "recorder": "wiretruth 0.4.0.dev0",
+    "source_commit": "32b6a8f",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/42892575092",
+    "raw_sha256": "e9bfdf61a9a38bdd2d0a7f0ca6945810f95bbfbb2ea4c6273c2cb8f86cdc73e2",
     "request": {
       "model": "gpt-6-luna",
       "messages": [
         {
           "role": "user",
-          "content": "List ten large Ukrainian cities with their oblast. Назви міст пиши українською."
+          "content": "List ten Greek islands and the sea each one lies in. Write the names in Greek."
         }
       ],
       "max_completion_tokens": 24,
@@ -28,7 +28,7 @@
           "schema": {
             "type": "object",
             "properties": {
-              "cities": {
+              "islands": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -36,20 +36,20 @@
                     "name": {
                       "type": "string"
                     },
-                    "oblast": {
+                    "sea": {
                       "type": "string"
                     }
                   },
                   "required": [
                     "name",
-                    "oblast"
+                    "sea"
                   ],
                   "additionalProperties": false
                 }
               }
             },
             "required": [
-              "cities"
+              "islands"
             ],
             "additionalProperties": false
           },
@@ -74,16 +74,16 @@
         },
         "body": {
           "json": {
-            "id": "chatcmpl-EWP4PmkbGZG58JdS98V8N8NmdFPAo",
+            "id": "chatcmpl-EimSbrSUy62MoDs7OPLFoo7hYvPlx",
             "object": "chat.completion",
-            "created": 1791391573,
+            "created": 1794341421,
             "model": "gpt-6-luna",
             "choices": [
               {
                 "index": 0,
                 "message": {
                   "role": "assistant",
-                  "content": "{\"cities\":[{\"name\":\"Київ\",\"oblast\":\"Київська область\"},{\"",
+                  "content": "{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ",
                   "refusal": null,
                   "annotations": []
                 },
@@ -91,9 +91,9 @@
               }
             ],
             "usage": {
-              "prompt_tokens": 71,
+              "prompt_tokens": 72,
               "completion_tokens": 24,
-              "total_tokens": 95,
+              "total_tokens": 96,
               "prompt_tokens_details": {
                 "cached_tokens": 0,
                 "cache_write_tokens": 0,
@@ -117,22 +117,22 @@
   "truth": {
     "finish": "length",
     "raw_finish": "length",
-    "text": "{\"cities\":[{\"name\":\"Київ\",\"oblast\":\"Київська область\"},{\"",
+    "text": "{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ",
     "tool_calls": [],
     "structured": null,
     "error": null,
     "stream_completed": null,
     "usage": {
-      "input": 71,
+      "input": 72,
       "cached_input": 0,
       "output": 24,
       "reasoning": 0,
-      "total": 95,
+      "total": 96,
       "alternatives": {},
       "raw": {
-        "prompt_tokens": 71,
+        "prompt_tokens": 72,
         "completion_tokens": 24,
-        "total_tokens": 95,
+        "total_tokens": 96,
         "prompt_tokens_details": {
           "cached_tokens": 0,
           "cache_write_tokens": 0,

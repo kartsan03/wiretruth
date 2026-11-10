@@ -5,19 +5,19 @@
   "provider": "openai-chat",
   "tier": "recorded",
   "provenance": {
-    "recorded_at": "2026-10-07T16:46:15Z",
+    "recorded_at": "2026-11-10T20:10:26Z",
     "requested_model": "gpt-6-luna",
     "returned_model": "gpt-6-luna",
-    "recorder": "wiretruth 0.1.0.dev0",
-    "source_commit": "db258d0",
-    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/37654608733",
-    "raw_sha256": "ab1df6877afd6c6434be4c2e3bf4ce240578614d78d6a31aea291962737dae34",
+    "recorder": "wiretruth 0.4.0.dev0",
+    "source_commit": "32b6a8f",
+    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/42892575092",
+    "raw_sha256": "d383fdcfcf8748a256941c3f47c9d45785bedf9d310aaa32cacdde1bc58c7cd5",
     "request": {
       "model": "gpt-6-luna",
       "messages": [
         {
           "role": "user",
-          "content": "Write a 200-word paragraph about the history of Kyiv, in English."
+          "content": "Write a 200-word paragraph about how octopuses change colour to hide from predators."
         }
       ],
       "max_completion_tokens": 16,
@@ -39,16 +39,16 @@
         },
         "body": {
           "json": {
-            "id": "chatcmpl-EWP4SaSkFDlauld1wMMvsHUgDRu1s",
+            "id": "chatcmpl-EimShociVq0Gl4rntVsMeKkjOSf5m",
             "object": "chat.completion",
-            "created": 1791391576,
+            "created": 1794341427,
             "model": "gpt-6-luna",
             "choices": [
               {
                 "index": 0,
                 "message": {
                   "role": "assistant",
-                  "content": "Kyiv, the capital of Ukraine, has a history stretching back",
+                  "content": "Octopuses are masters of disguise, able to change colour in",
                   "refusal": null,
                   "annotations": []
                 },
@@ -56,9 +56,9 @@
               }
             ],
             "usage": {
-              "prompt_tokens": 21,
+              "prompt_tokens": 24,
               "completion_tokens": 16,
-              "total_tokens": 37,
+              "total_tokens": 40,
               "prompt_tokens_details": {
                 "cached_tokens": 0,
                 "cache_write_tokens": 0,
@@ -82,22 +82,22 @@
   "truth": {
     "finish": "length",
     "raw_finish": "length",
-    "text": "Kyiv, the capital of Ukraine, has a history stretching back",
+    "text": "Octopuses are masters of disguise, able to change colour in",
     "tool_calls": [],
     "structured": null,
     "error": null,
     "stream_completed": null,
     "usage": {
-      "input": 21,
+      "input": 24,
       "cached_input": 0,
       "output": 16,
       "reasoning": 0,
-      "total": 37,
+      "total": 40,
       "alternatives": {},
       "raw": {
-        "prompt_tokens": 21,
+        "prompt_tokens": 24,
         "completion_tokens": 16,
-        "total_tokens": 37,
+        "total_tokens": 40,
         "prompt_tokens_details": {
           "cached_tokens": 0,
           "cache_write_tokens": 0,
