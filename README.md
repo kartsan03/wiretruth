@@ -32,7 +32,7 @@ wiretruth has this case recorded as `truncation.structured-output` on `openai-ch
 | Library | What the caller gets | Grade |
 |---|---|---|
 | any-llm 1.40.2 | Raises `openai.LengthFinishReasonError`. Its `completion` has `finish_reason: "length"` and the token usage. | ✓ PASS |
-| LiteLLM 1.105.5 | Returns the cut-off JSON as text in `message.content` with `finish_reason: "length"` and parses none of it. | ✓ PASS |
+| LiteLLM 1.109.0 | Returns the cut-off JSON as text in `message.content` with `finish_reason: "length"` and parses none of it. | ✓ PASS |
 | pydantic-ai 2.61.0 | Retries once, then raises `UnexpectedModelBehavior("Exceeded maximum output retries (1)")`. The `length` finish is only in the messages that `capture_run_messages()` keeps. | ~ LOSSY |
 | Vercel AI SDK 7.0.153 | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
 
@@ -215,8 +215,8 @@ any-llm 1.40.2: 100 cells, 87 PASS, 6 LOSSY, 6 WRONG, 1 UNSUPPORTED
 stderr: .wiretruth/runs/20261109T005301.682490Z
 ```
 
-The LiteLLM run grades its 100 cells 86 PASS, 13 WRONG and 1 UNSUPPORTED. Every cell, with its evidence, is in
-[`results/litellm/1.105.5.json`](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.105.5.json).
+The LiteLLM run grades its 100 cells 90 PASS, 9 WRONG and 1 UNSUPPORTED. Every cell, with its evidence, is in
+[`results/litellm/1.109.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.109.0.json).
 The pydantic-ai run grades its 100 cells 63 PASS, 16 LOSSY, 6 WRONG and 15 UNSUPPORTED (native Ollama), in
 [`results/pydantic-ai/2.61.0.json`](https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.61.0.json).
 The Vercel AI SDK run grades its 100 cells 84 PASS and 16 UNSUPPORTED (native Ollama, and the Anthropic

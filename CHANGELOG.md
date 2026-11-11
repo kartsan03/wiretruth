@@ -35,8 +35,21 @@ finding).
   [TanStack/ai#2130](https://github.com/TanStack/ai/issues/2130) (a stream that ends before its terminal signal
   returns normally), and [pydantic/pydantic-ai#12399](https://github.com/pydantic/pydantic-ai/issues/12399) for
   truncated structured output and, in a comment there, truncated tool-call arguments.
+- The LiteLLM shim pins `litellm` 1.109.0 and `openai` 3.49.0, the newest `openai` that LiteLLM 1.109.0 allows.
+- `results/upstream.json`: [BerriAI/litellm#46542](https://github.com/BerriAI/litellm/issues/46542) is `released`
+  for four providers ([#47665](https://github.com/BerriAI/litellm/pull/47665), 1.109.0); its `gemini` cell stays
+  `reported`. [TanStack/ai#2130](https://github.com/TanStack/ai/issues/2130) links the open fix
+  [#2124](https://github.com/TanStack/ai/pull/2124).
 
 ### Results
+- LiteLLM 1.109.0: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
+  ([results/litellm/1.109.0.json](results/litellm/1.109.0.json)). `stream.missing-finish` over `anthropic`,
+  `ollama`, `ollama-openai` and `openai-chat` moves WRONG → PASS: a stream that ends without a finish reason now
+  raises instead of finishing as `stop` ([BerriAI/litellm#46542](https://github.com/BerriAI/litellm/issues/46542),
+  [#47665](https://github.com/BerriAI/litellm/pull/47665)). Over `gemini` it stays WRONG: LiteLLM's Gemini parser
+  sets `stop` on every chunk without `finishReason`. Native Ollama calls no longer send `POST /api/show` first, so
+  SHOULD `one-request` on `request.no-injected-options` is met, with no grade change.
+  [1.105.5 results](results/litellm/1.105.5.json) retain the earlier grades.
 - TanStack AI 1.4.0: 50 PASS, 1 LOSSY, 1 WRONG and 48 UNSUPPORTED of 100 cells
   ([results/tanstack-ai/1.4.0.json](results/tanstack-ai/1.4.0.json)). `truncation.text-stream` over `ollama` moves
   WRONG → PASS: a stream cut off by `done_reason: "length"` now finishes as `length`
