@@ -118,18 +118,29 @@
     "status": "fix-merged",
     "fixed_in": null,
     "opened": "2026-07-17",
-    "notes": "Existing upstream issue, not opened by wiretruth. Native Ollama sends function.index 0 and 1 in separate chunks; LiteLLM does not lift that field to the delta tool-call index. Delta resets its default index to zero for each chunk, so ordinary index-based assembly merges two argument objects into one unparseable call (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/types/utils.py#L1555-L1573). The Ollama parser also replaces the wire ids with UUIDs, reported separately as https://github.com/BerriAI/litellm/issues/46543. Closed upstream on 2026-11-09: https://github.com/BerriAI/litellm/pull/49183 gives each streamed tool call its own index on main, and the backport https://github.com/BerriAI/litellm/pull/50718 is merged to lts/1.108.x but not in a release yet (v1.108.4 predates it). The cell stays WRONG until the replaced ids (https://github.com/BerriAI/litellm/issues/46543) are fixed too."
+    "notes": "Existing upstream issue, not opened by wiretruth. Native Ollama sends function.index 0 and 1 in separate chunks; LiteLLM does not lift that field to the delta tool-call index. Delta resets its default index to zero for each chunk, so ordinary index-based assembly merges two argument objects into one unparseable call (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/types/utils.py#L1555-L1573). The Ollama parser also replaces the wire ids with UUIDs, reported separately as https://github.com/BerriAI/litellm/issues/46543. Closed upstream on 2026-11-09: https://github.com/BerriAI/litellm/pull/49183 gives each streamed tool call its own index on main, and the backport https://github.com/BerriAI/litellm/pull/50718 shipped in v1.108.5 on the lts/1.108.x line. v1.109.0, the version tested, was branched from main on 2026-11-02, before #49183 merged, so it contains neither; the status stays fix-merged until a release the shim can use contains the fix. The cell stays WRONG until the replaced ids (https://github.com/BerriAI/litellm/issues/46543) are fixed too."
   },
   {
     "library": "litellm",
     "scenarios": ["stream.missing-finish"],
-    "providers": ["anthropic", "gemini", "ollama", "ollama-openai", "openai-chat"],
+    "providers": ["anthropic", "ollama", "ollama-openai", "openai-chat"],
+    "issue": "https://github.com/BerriAI/litellm/issues/46542",
+    "pr": "https://github.com/BerriAI/litellm/pull/47665",
+    "status": "released",
+    "fixed_in": "1.109.0",
+    "opened": "2026-10-14",
+    "notes": "A stream that ends cleanly without any finish reason is reported with finish_reason stop. CustomStreamWrapper.finish_reason_handler falls back to stop when no finish reason was received (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/litellm_core_utils/streaming_handler.py#L1715-L1727). The Responses path keeps the missing finish and passes. Fixed by #47665, which doesn't link the issue: from 1.109.0 such a stream raises MidStreamFallbackError (\"Stream ended before a finish_reason was received\"). Gemini is still affected (next entry)."
+  },
+  {
+    "library": "litellm",
+    "scenarios": ["stream.missing-finish"],
+    "providers": ["gemini"],
     "issue": "https://github.com/BerriAI/litellm/issues/46542",
     "pr": null,
     "status": "reported",
     "fixed_in": null,
     "opened": "2026-10-14",
-    "notes": "A stream that ends cleanly without any finish reason is reported with finish_reason stop. CustomStreamWrapper.finish_reason_handler falls back to stop when no finish reason was received (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/litellm_core_utils/streaming_handler.py#L1715-L1727). The Responses path keeps the missing finish and passes."
+    "notes": "Still reported as stop in 1.109.0. The Gemini stream parser gives every chunk without finishReason finish_reason stop (_check_finish_reason falls back to stop: https://github.com/BerriAI/litellm/blob/v1.109.0/litellm/llms/vertex_ai/gemini/vertex_and_google_ai_studio_gemini.py#L2477-L2490), so the wrapper sees a finish reason on every chunk and the end-of-stream check from #47665 never runs."
   },
   {
     "library": "litellm",
@@ -279,7 +290,7 @@
     "scenarios": ["stream.missing-finish"],
     "providers": ["gemini"],
     "issue": "https://github.com/TanStack/ai/issues/2130",
-    "pr": null,
+    "pr": "https://github.com/TanStack/ai/pull/2124",
     "status": "reported",
     "fixed_in": null,
     "opened": "2026-11-10",
