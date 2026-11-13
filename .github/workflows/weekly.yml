@@ -23,6 +23,8 @@ jobs:
     outputs:
       changed: ${{ steps.weekly.outputs.changed }}
       date: ${{ steps.weekly.outputs.date }}
+      # A re-run of only `open-pr` gets a new attempt number but needs this attempt's artifact.
+      artifact: weekly-${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -71,7 +73,7 @@ jobs:
           persist-credentials: false
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: weekly-${{ github.run_attempt }}
+          name: ${{ needs.run.outputs.artifact }}
           path: ${{ runner.temp }}/weekly
       - name: Push and open the results PR
         shell: bash
@@ -92,7 +94,7 @@ jobs:
               exit 1
             fi
           done < "$RUNNER_TEMP/weekly-paths"
-          branch="results/weekly-${WEEKLY_DATE}-${GITHUB_RUN_ID}"
+          branch="results/weekly-${WEEKLY_DATE}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           git push --quiet "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
             "weekly:refs/heads/${branch}"
           args=(--base main --head "$branch" --title "chore(results): weekly run ${WEEKLY_DATE}" \
