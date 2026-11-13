@@ -4,10 +4,10 @@
   "type": "module",
   "engines": {"node": ">=22"},
   "dependencies": {
-    "@ai-sdk/anthropic": "4.0.88",
-    "@ai-sdk/google": "4.0.105",
-    "@ai-sdk/openai": "4.0.102",
-    "@ai-sdk/openai-compatible": "3.0.78",
-    "ai": "7.0.153"
+    "@ai-sdk/anthropic": "4.0.103",
+    "@ai-sdk/google": "4.0.119",
+    "@ai-sdk/openai": "4.0.116",
+    "@ai-sdk/openai-compatible": "3.0.91",
+    "ai": "7.0.171"
   }
 }
