@@ -36,6 +36,10 @@ wiretruth has this case recorded as `truncation.structured-output` on `openai-ch
 | pydantic-ai 2.61.0 | Retries once, then raises `UnexpectedModelBehavior("Exceeded maximum output retries (1)")`. The `length` finish is only in the messages that `capture_run_messages()` keeps. | ~ LOSSY |
 | Vercel AI SDK 7.0.153 | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
 
+pydantic-ai 2.68.0 raises `OutputTokenLimitExceeded` on the first response instead, naming the token limit, and
+grades PASS ([pydantic/pydantic-ai#12399](https://github.com/pydantic/pydantic-ai/issues/12399)); the cut-off text
+and the usage are still only in the captured messages.
+
 pydantic-ai's grades for structured output use `NativeOutput`, the provider's own JSON mode, because that is how
 the fixtures were recorded. It is opt-in: by default pydantic-ai asks for a forced tool call instead on every API
 here except Anthropic, and no scenario covers that path yet. On `gpt-6-luna` that default request is rejected with the same 400

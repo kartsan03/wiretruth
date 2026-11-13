@@ -24,7 +24,7 @@ finding).
   listed instead.
 
 ### Changed
-- The TanStack AI shim pins `@tanstack/ai` 1.4.0, `@tanstack/ai-ollama` 1.1.1, `@tanstack/ai-gemini` 1.2.1,
+- The TanStack AI shim pins `@tanstack/ai` 1.4.0, `@tanstack/ai-ollama` 1.1.1, `@tanstack/ai-gemini` 1.2.2,
   `@tanstack/ai-anthropic` 1.1.1 and `@tanstack/ai-openai` 1.1.1.
 - `truncation.text`, `truncation.text-stream` and `truncation.structured-output` send their base prompts on
   `openai-chat` too, and their `openai-chat` fixtures are recorded again on those prompts (`gpt-6-luna`,
@@ -40,7 +40,7 @@ finding).
   [TanStack/ai#2130](https://github.com/TanStack/ai/issues/2130) (a stream that ends before its terminal signal
   returns normally), and [pydantic/pydantic-ai#12399](https://github.com/pydantic/pydantic-ai/issues/12399) for
   truncated structured output and, in a comment there, truncated tool-call arguments.
-- The LiteLLM shim pins `litellm` 1.109.0 and `openai` 3.49.0, the newest `openai` that LiteLLM 1.109.0 allows.
+- The LiteLLM shim pins `litellm` 1.109.1 and `openai` 3.50.0.
 - `results/upstream.json`: [BerriAI/litellm#46542](https://github.com/BerriAI/litellm/issues/46542) is `released`
   for four providers ([#47665](https://github.com/BerriAI/litellm/pull/47665), 1.109.0); its `gemini` cell stays
   `reported`. [TanStack/ai#2130](https://github.com/TanStack/ai/issues/2130) links the open fix

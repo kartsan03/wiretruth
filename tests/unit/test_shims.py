@@ -1,4 +1,5 @@
 import json
+import re
 import runpy
 import subprocess
 import sys
@@ -509,7 +510,7 @@ def test_any_llm_provider_mapping_offline(monkeypatch, capsys, stream, effort, p
 def test_any_llm_gemini_manifest_pins_extra_dependency():
     manifest = load_shim_manifest(REPO / "shims/python/any-llm/wiretruth-shim.json")
     assert "gemini" in manifest.providers
-    assert "google-genai" in manifest.packages
+    assert re.fullmatch(r"\d+(\.\d+)+", manifest.packages["google-genai"])
     assert any("reasoning_effort none" in note for note in manifest.config_notes)
 
 
@@ -712,7 +713,7 @@ def test_any_llm_anthropic_scenario_options_offline(monkeypatch, capsys, scenari
 
 def test_any_llm_anthropic_manifest_pins_sdk_and_documents_surfaces():
     manifest = load_shim_manifest(REPO / "shims/python/any-llm/wiretruth-shim.json")
-    assert "anthropic" in manifest.packages
+    assert re.fullmatch(r"\d+(\.\d+)+", manifest.packages["anthropic"])
     assert "anthropic" in manifest.providers
     for raw, expected in [
         ("end_turn", "stop"),
