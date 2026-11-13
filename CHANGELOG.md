@@ -18,6 +18,10 @@ finding).
 - `wiretruth site` builds a static HTML results site from committed results and suite data.
 - The results site is published to https://kartsan03.github.io/wiretruth/ on every push to main and serves
   the JSON schemas at their `$id` URLs.
+- A weekly workflow runs every library shim against its latest releases and opens a pull request with the new
+  results files, version pins, `Results` entries and grade changes. A pull request with a new WRONG, CRASH or HANG
+  cell that has no upstream report is labelled `blocked`; a release that can't be graded keeps its pin and is
+  listed instead.
 
 ### Changed
 - The TanStack AI shim pins `@tanstack/ai` 1.4.0, `@tanstack/ai-ollama` 1.1.1, `@tanstack/ai-gemini` 1.2.1,
@@ -30,6 +34,7 @@ finding).
   `tools.parallel-calls-stream` cell over `ollama` stays WRONG until
   [BerriAI/litellm#46543](https://github.com/BerriAI/litellm/issues/46543) is fixed too.
 - The results site index no longer shows a suite version; each results file keeps its `suite_version`.
+- The README links the results matrix for each library's grades instead of listing their counts.
 - `results/upstream.json` links the upstream reports for 17 LOSSY cells:
   [mozilla-ai/any-llm#1637](https://github.com/mozilla-ai/any-llm/issues/1637) and
   [TanStack/ai#2130](https://github.com/TanStack/ai/issues/2130) (a stream that ends before its terminal signal
