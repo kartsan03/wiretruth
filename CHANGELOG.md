@@ -11,6 +11,8 @@ finding).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-13
+
 ### Added
 - `wiretruth lint` checks that each stored PASS, LOSSY or WRONG grade follows from the cell's MUST statuses, and
   reports duplicate requirement ids, repeated cells, `upstream.json` entries whose library has no results and
@@ -358,7 +360,8 @@ finding).
 - any-llm 1.33.0, the first library results: PASS on all three truncation scenarios on `openai-chat`
   ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)).
 
-[Unreleased]: https://github.com/kartsan03/wiretruth/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/kartsan03/wiretruth/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/kartsan03/wiretruth/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/kartsan03/wiretruth/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/kartsan03/wiretruth/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/kartsan03/wiretruth/releases/tag/v0.1.0
