@@ -2,7 +2,7 @@
   "format": "wiretruth.shim/v1",
   "name": "litellm",
   "language": "python",
-  "packages": {"litellm": "1.109.0", "openai": "3.49.0"},
+  "packages": {"litellm": "1.109.1", "openai": "3.50.0"},
   "primary_package": "litellm",
   "entry": ["python", "shim.py"],
   "env": {"LITELLM_LOCAL_MODEL_COST_MAP": "True", "LITELLM_LOCAL_ANTHROPIC_BETA_HEADERS": "True"},
