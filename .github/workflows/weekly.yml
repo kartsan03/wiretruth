@@ -3,6 +3,10 @@ name: weekly
 # Two jobs: `run` installs and grades new releases without credentials, then hands a bundle to
 # `open-pr`. Only `open-pr` holds the PAT, in the main-only `weekly` environment. Using a PAT to
 # open the results PR lets its CI run.
+#
+# WT_BOT_TOKEN: a fine-grained personal access token for this repository only, with Contents and
+# Pull requests read and write, stored as a secret of the `weekly` environment (deployments from
+# `main` only). The `blocked` label must exist.
 
 on:
   schedule:
@@ -87,10 +91,17 @@ jobs:
           git bundle verify "$artifact/weekly.bundle"
           git fetch "$artifact/weekly.bundle" weekly:weekly
           allowed='^(results/[a-z0-9][a-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9.+_-]*\.json|shims/(python|js)/[a-z0-9][a-z0-9._-]*/(wiretruth-shim\.json|package\.json|package-lock\.json)|CHANGELOG\.md)$'
-          git diff --no-renames --name-status HEAD weekly > "$RUNNER_TEMP/weekly-paths"
-          while IFS=$'\t' read -r status path; do
-            if [[ ! "$status" =~ ^[AM]$ || ! "$path" =~ $allowed ]]; then
-              echo "Rejected bundle path: $status $path" >&2
+          # Only added or modified regular files on these paths, and lockfiles that resolve to the npm registry.
+          git diff --no-renames --raw HEAD weekly > "$RUNNER_TEMP/weekly-paths"
+          while IFS=$'\t' read -r meta path; do
+            read -r _ mode _ _ status <<< "$meta"
+            if [[ ! "$status" =~ ^[AM]$ || "$mode" != 100644 || ! "$path" =~ $allowed ]]; then
+              echo "Rejected bundle path: $status $mode $path" >&2
+              exit 1
+            fi
+            if [[ "$path" == */package-lock.json ]] && git show "weekly:$path" \
+              | grep -o '"resolved": *"[^"]*"' | grep -v '"https://registry\.npmjs\.org/'; then
+              echo "Rejected lockfile source in $path" >&2
               exit 1
             fi
           done < "$RUNNER_TEMP/weekly-paths"
