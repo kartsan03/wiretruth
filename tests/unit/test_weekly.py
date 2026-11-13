@@ -1,9 +1,13 @@
+import json
+import subprocess
 from dataclasses import replace
+from pathlib import Path
 
 import pytest
 
+from wiretruth import weekly
 from wiretruth.formats import ShimManifest
-from wiretruth.results import SavedResults
+from wiretruth.results import SavedResults, write_results
 from wiretruth.runner import ExpectedGrade
 from wiretruth.weekly import (
     PinCheck,
@@ -282,3 +286,119 @@ def test_pr_body_none_matches_and_up_to_date(update):
     assert "- sample: matches" in body
     assert "blocked" not in body and "Actions run" not in body
     assert "## Versions\n\nnone" in pr_body([], [], {}, [], None)
+
+
+@pytest.fixture
+def weekly_repo(tmp_path, monkeypatch):
+    samples = Path(__file__).resolve().parents[1] / "samples/valid"
+    root = tmp_path / "repo"
+    path = root / "shims/python/sample/wiretruth-shim.json"
+    path.parent.mkdir(parents=True)
+    manifest = json.loads((samples / "shim-manifest/minimal.json").read_text())
+    manifest.update(
+        name="sample", primary_package="sample-sdk", packages={"sample-sdk": "1", "companion": "1"}
+    )
+    path.write_text(json.dumps(manifest, indent=2) + "\n")
+    document = json.loads((samples / "results/litellm-1.103.1.json").read_text())
+    document["library"].update(name="sample", version="1")
+    document["run"]["packages"] = manifest["packages"]
+    document["cells"] = document["cells"][:1]
+    document["cells"][0]["observation"] = None
+    write_results(root, document)
+    (root / "results/upstream.json").write_text("[]\n")
+    (root / "CHANGELOG.md").write_text("# Changelog\n\n## [Unreleased]\n")
+    subprocess.run(["git", "init", "--quiet", str(root)], check=True)
+    weekly.commit(root, "test: initial data", ".")
+    pins = {"sample-sdk": "2", "companion": "1"}
+    monkeypatch.setattr(weekly, "release_metadata", lambda *args: {"version": pins["sample-sdk"]})
+    monkeypatch.setattr(weekly, "resolve_pins", lambda *args: pins.copy())
+    monkeypatch.setattr(weekly, "build_env", lambda *args: None)
+    monkeypatch.setattr(weekly, "offline_run", lambda *args: pytest.fail("unexpected run"))
+    return root, pins
+
+
+HARNESS_ERROR = "wiretruth run: --write-results: 1 HARNESS cell; fix the shim or the harness first"
+
+
+def write_weekly_results(root):
+    manifest = weekly.formats.load_shim_manifest(root / "shims/python/sample/wiretruth-shim.json")
+    document = json.loads((root / "results/sample/1.json").read_text())
+    document["library"]["version"] = manifest.packages[manifest.primary_package]
+    document["run"].update(
+        git_sha=weekly.git(root, "rev-parse", "HEAD"), packages=dict(manifest.packages)
+    )
+    document["cells"][0]["grade"] = "WRONG"
+    document["cells"][0]["requirements"][0]["status"] = "CONTRADICTED"
+    return write_results(root, document)
+
+
+def test_bump_unchanged_pins_makes_no_commit(weekly_repo):
+    root, pins = weekly_repo
+    pins["sample-sdk"] = "1"
+    before = weekly.git(root, "rev-parse", "HEAD")
+    assert weekly.bump(root, "sample", []) is None
+    assert weekly.git(root, "rev-parse", "HEAD") == before
+    assert weekly.git(root, "status", "--porcelain") == ""
+
+
+@pytest.mark.parametrize("companion_only", [False, True], ids=["new-primary", "new-companion"])
+def test_bump_harness_restores_head_pins_and_results(weekly_repo, monkeypatch, companion_only):
+    root, pins = weekly_repo
+    if companion_only:
+        pins.update({"sample-sdk": "1", "companion": "2"})
+    before = weekly.git(root, "rev-parse", "HEAD")
+    manifest = root / "shims/python/sample/wiretruth-shim.json"
+    baseline = root / "results/sample/1.json"
+    original_manifest, original_results = manifest.read_bytes(), baseline.read_bytes()
+
+    def fail_run(root, name, flag):
+        assert (name, flag) == ("sample", "--write-results")
+        assert weekly.git(root, "rev-parse", "HEAD") != before
+        write_weekly_results(root)
+        return subprocess.CompletedProcess(
+            [], 1, "truncation.text-stream ? HARNESS\n", HARNESS_ERROR
+        )
+
+    monkeypatch.setattr(weekly, "offline_run", fail_run)
+    outcome = weekly.bump(root, "sample", [])
+    assert f"skipped sample {pins['sample-sdk']}:" in outcome
+    assert HARNESS_ERROR in outcome and "truncation.text-stream ? HARNESS" in outcome
+    assert weekly.git(root, "rev-parse", "HEAD") == before
+    assert manifest.read_bytes() == original_manifest
+    assert baseline.read_bytes() == original_results
+    assert not (root / "results/sample/2.json").exists()
+    assert weekly.git(root, "status", "--porcelain") == ""
+
+
+@pytest.mark.parametrize("success", [True, False], ids=["blocked-results", "skipped-release"])
+def test_main_writes_artifacts_and_outputs(weekly_repo, tmp_path, monkeypatch, success):
+    root, _ = weekly_repo
+    out, output, summary = (tmp_path / name for name in ("out", "github-output", "summary"))
+    monkeypatch.chdir(root)
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+
+    def run(root, name, flag):
+        assert name == "sample"
+        if flag == "--check-against":
+            return subprocess.CompletedProcess([], 0, "", "")
+        assert flag == "--write-results"
+        write_weekly_results(root)
+        return subprocess.CompletedProcess(
+            [], 0 if success else 1, "", "" if success else HARNESS_ERROR
+        )
+
+    monkeypatch.setattr(weekly, "offline_run", run)
+    assert weekly.main(["--lib", "sample", "--out", str(out)]) == (0 if success else 1)
+    assert (out / "weekly.bundle").exists() is success
+    assert (out / "blocked").exists() is success
+    body = (out / "pr-body.md").read_text()
+    assert "- sample: matches" in body
+    assert summary.read_text() == body
+    if success:
+        assert "`truncation.text-stream` over `openai-chat`: WRONG" in body
+    else:
+        assert "skipped sample 2:" in body and HARNESS_ERROR in body
+    lines = output.read_text().splitlines()
+    assert f"changed={'true' if success else 'false'}" in lines
+    assert any(line.startswith("date=") for line in lines)
