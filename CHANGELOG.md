@@ -47,6 +47,16 @@ finding).
   [#2124](https://github.com/TanStack/ai/pull/2124).
 
 ### Results
+- any-llm 1.50.0: 87 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 100 cells
+  ([results/any-llm/1.50.0.json](results/any-llm/1.50.0.json)). No grade changes from 1.40.2.
+- litellm 1.109.1: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
+  ([results/litellm/1.109.1.json](results/litellm/1.109.1.json)). No grade changes from 1.109.0.
+- pydantic-ai 2.68.0: 63 PASS, 16 LOSSY, 6 WRONG and 15 UNSUPPORTED of 100 cells
+  ([results/pydantic-ai/2.68.0.json](results/pydantic-ai/2.68.0.json)). No grade changes from 2.61.0.
+- tanstack-ai 1.4.0: 50 PASS, 1 LOSSY, 1 WRONG and 48 UNSUPPORTED of 100 cells
+  ([results/tanstack-ai/1.4.0.json](results/tanstack-ai/1.4.0.json)). No grade changes from 1.4.0.
+- vercel-ai 7.0.171: 84 PASS and 16 UNSUPPORTED of 100 cells
+  ([results/vercel-ai/7.0.171.json](results/vercel-ai/7.0.171.json)). No grade changes from 7.0.153.
 - LiteLLM 1.109.0: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
   ([results/litellm/1.109.0.json](results/litellm/1.109.0.json)). `stream.missing-finish` over `anthropic`,
   `ollama`, `ollama-openai` and `openai-chat` moves WRONG → PASS: a stream that ends without a finish reason now
