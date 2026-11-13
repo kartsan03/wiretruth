@@ -6,7 +6,7 @@
   "dependencies": {
     "@tanstack/ai": "1.4.0",
     "@tanstack/ai-anthropic": "1.1.1",
-    "@tanstack/ai-gemini": "1.2.1",
+    "@tanstack/ai-gemini": "1.2.2",
     "@tanstack/ai-ollama": "1.1.1",
     "@tanstack/ai-openai": "1.1.1"
   }
