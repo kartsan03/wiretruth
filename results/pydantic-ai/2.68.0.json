@@ -7,9 +7,9 @@
     "language": "python"
   },
   "run": {
-    "at": "2026-11-13T05:07:19Z",
-    "git_sha": "60b32a642d2af48cbe4653cce45d5188bbc854b8",
-    "ci_run": "https://github.com/kartsan03/wiretruth/actions/runs/43368629394",
+    "at": "2026-11-13T05:29:13Z",
+    "git_sha": "157c802d3f2cb439286a0e7b59ad865280e82cd7",
+    "ci_run": null,
     "runner": "wiretruth 0.4.0.dev0",
     "packages": {
       "annotated-types": "0.8.0",
@@ -121,7 +121,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 537.2942040000908
+        "elapsed_ms": 682.7542446553707
       },
       "request_count": 1
     },
@@ -193,7 +193,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 569.8258979999764
+        "elapsed_ms": 674.895322881639
       },
       "request_count": 1
     },
@@ -205,7 +205,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -216,7 +216,7 @@
           "api": "Agent.run"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -254,7 +254,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.2212529999260369
+        "elapsed_ms": 1.339244656264782
       },
       "request_count": 0
     },
@@ -326,7 +326,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 438.07533199992577
+        "elapsed_ms": 171.64418287575245
       },
       "request_count": 1
     },
@@ -412,7 +412,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 197.4170610000101
+        "elapsed_ms": 188.91024682670832
       },
       "request_count": 1
     },
@@ -498,7 +498,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 247.52260599996134
+        "elapsed_ms": 189.37626387923956
       },
       "request_count": 1
     },
@@ -510,7 +510,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -521,7 +521,7 @@
           "api": "Agent.run"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -559,7 +559,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.2657170000238693
+        "elapsed_ms": 1.81613489985466
       },
       "request_count": 0
     },
@@ -645,7 +645,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 142.89104299996325
+        "elapsed_ms": 131.1334129422903
       },
       "request_count": 1
     },
@@ -731,7 +731,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 147.3950289999948
+        "elapsed_ms": 148.32564629614353
       },
       "request_count": 1
     },
@@ -817,7 +817,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 376.55428499999744
+        "elapsed_ms": 372.6785983890295
       },
       "request_count": 1
     },
@@ -895,7 +895,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 124.51513400003478
+        "elapsed_ms": 115.79157877713442
       },
       "request_count": 1
     },
@@ -963,7 +963,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 146.42561699997714
+        "elapsed_ms": 128.6284774541855
       },
       "request_count": 1
     },
@@ -975,7 +975,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -986,7 +986,7 @@
           "api": "Agent.run"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -1024,7 +1024,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.3867839999193166
+        "elapsed_ms": 1.1607157066464424
       },
       "request_count": 0
     },
@@ -1096,7 +1096,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 138.7495989999934
+        "elapsed_ms": 99.60053022950888
       },
       "request_count": 1
     },
@@ -1168,7 +1168,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 170.857696999974
+        "elapsed_ms": 173.76536969095469
       },
       "request_count": 1
     },
@@ -1240,7 +1240,7 @@
           "chunks_seen": 2
         },
         "notes": [],
-        "elapsed_ms": 232.49133199999505
+        "elapsed_ms": 197.47148267924786
       },
       "request_count": 1
     },
@@ -1252,7 +1252,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -1263,7 +1263,7 @@
           "api": "Agent.run_stream_events"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -1301,7 +1301,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.4783550000174728
+        "elapsed_ms": 1.1548707261681557
       },
       "request_count": 0
     },
@@ -1373,7 +1373,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 182.91906100000688
+        "elapsed_ms": 183.6136355996132
       },
       "request_count": 1
     },
@@ -1445,7 +1445,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 276.2795159999314
+        "elapsed_ms": 242.59947706013918
       },
       "request_count": 1
     },
@@ -1519,7 +1519,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 150.90886300004058
+        "elapsed_ms": 128.32263112068176
       },
       "request_count": 1
     },
@@ -1593,7 +1593,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 223.58650499995747
+        "elapsed_ms": 243.98919101804495
       },
       "request_count": 1
     },
@@ -1605,7 +1605,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -1616,7 +1616,7 @@
           "api": "Agent.run_stream_events"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -1654,7 +1654,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.346196999975291
+        "elapsed_ms": 1.695753075182438
       },
       "request_count": 0
     },
@@ -1729,7 +1729,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 213.97214799992526
+        "elapsed_ms": 197.8850681334734
       },
       "request_count": 1
     },
@@ -1804,7 +1804,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 181.80798299999879
+        "elapsed_ms": 191.51760917156935
       },
       "request_count": 1
     },
@@ -1878,7 +1878,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 309.0918469999906
+        "elapsed_ms": 241.19713716208935
       },
       "request_count": 1
     },
@@ -1956,7 +1956,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 146.47344200000134
+        "elapsed_ms": 134.14273411035538
       },
       "request_count": 1
     },
@@ -2034,7 +2034,7 @@
           "chunks_seen": 2
         },
         "notes": [],
-        "elapsed_ms": 235.08765000008225
+        "elapsed_ms": 192.77880899608135
       },
       "request_count": 1
     },
@@ -2046,7 +2046,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -2057,7 +2057,7 @@
           "api": "Agent.run_stream_events"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -2095,7 +2095,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.4080339999509306
+        "elapsed_ms": 1.7058802768588066
       },
       "request_count": 0
     },
@@ -2173,7 +2173,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 176.03195999993204
+        "elapsed_ms": 132.21159484237432
       },
       "request_count": 1
     },
@@ -2251,7 +2251,7 @@
           "chunks_seen": 8
         },
         "notes": [],
-        "elapsed_ms": 166.6709500000252
+        "elapsed_ms": 166.15546215325594
       },
       "request_count": 1
     },
@@ -2329,7 +2329,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 252.30540200004725
+        "elapsed_ms": 308.69069416075945
       },
       "request_count": 1
     },
@@ -2401,7 +2401,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 151.56658699993386
+        "elapsed_ms": 120.59410754591227
       },
       "request_count": 1
     },
@@ -2473,7 +2473,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 243.87041900001805
+        "elapsed_ms": 192.1937484294176
       },
       "request_count": 1
     },
@@ -2485,7 +2485,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -2496,7 +2496,7 @@
           "api": "Agent.run_stream_events"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -2534,7 +2534,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.4397019999705662
+        "elapsed_ms": 1.215968281030655
       },
       "request_count": 0
     },
@@ -2606,7 +2606,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 200.86548100005075
+        "elapsed_ms": 169.90341898053885
       },
       "request_count": 1
     },
@@ -2678,7 +2678,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 232.58611200003543
+        "elapsed_ms": 219.2327044904232
       },
       "request_count": 1
     },
@@ -2750,7 +2750,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 335.0543830000561
+        "elapsed_ms": 341.1315502598882
       },
       "request_count": 1
     },
@@ -2822,7 +2822,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 149.22903199999382
+        "elapsed_ms": 131.98291324079037
       },
       "request_count": 1
     },
@@ -2894,7 +2894,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 248.258465000049
+        "elapsed_ms": 189.96721971780062
       },
       "request_count": 1
     },
@@ -2906,7 +2906,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -2917,7 +2917,7 @@
           "api": "Agent.run_stream_events"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -2955,7 +2955,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.445213000010881
+        "elapsed_ms": 1.8966048955917358
       },
       "request_count": 0
     },
@@ -3027,7 +3027,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 159.69537800003764
+        "elapsed_ms": 107.89498034864664
       },
       "request_count": 1
     },
@@ -3099,7 +3099,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 160.66857300006632
+        "elapsed_ms": 145.2124323695898
       },
       "request_count": 1
     },
@@ -3171,7 +3171,7 @@
           "chunks_seen": 20
         },
         "notes": [],
-        "elapsed_ms": 306.9284189999735
+        "elapsed_ms": 199.0442182868719
       },
       "request_count": 1
     },
@@ -3256,7 +3256,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 195.89735500005645
+        "elapsed_ms": 175.72720628231764
       },
       "request_count": 1
     },
@@ -3341,7 +3341,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 239.6348490000264
+        "elapsed_ms": 200.1907704398036
       },
       "request_count": 1
     },
@@ -3353,7 +3353,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -3364,7 +3364,7 @@
           "api": "Agent.run"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -3402,7 +3402,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.4179910000393647
+        "elapsed_ms": 1.7302818596363068
       },
       "request_count": 0
     },
@@ -3487,7 +3487,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 146.91709600003833
+        "elapsed_ms": 139.3241100013256
       },
       "request_count": 1
     },
@@ -3572,7 +3572,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 140.6859619999068
+        "elapsed_ms": 132.50529021024704
       },
       "request_count": 1
     },
@@ -3657,7 +3657,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 289.87510199999633
+        "elapsed_ms": 337.95111905783415
       },
       "request_count": 1
     },
@@ -3742,7 +3742,7 @@
           "chunks_seen": 13
         },
         "notes": [],
-        "elapsed_ms": 159.06436199998097
+        "elapsed_ms": 206.01721666753292
       },
       "request_count": 1
     },
@@ -3827,7 +3827,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 230.5877269999428
+        "elapsed_ms": 237.86648083478212
       },
       "request_count": 1
     },
@@ -3839,7 +3839,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -3850,7 +3850,7 @@
           "api": "Agent.run_stream_events"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -3888,7 +3888,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.3451259999328613
+        "elapsed_ms": 1.6639651730656624
       },
       "request_count": 0
     },
@@ -3973,7 +3973,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 154.33155900007023
+        "elapsed_ms": 197.9358308017254
       },
       "request_count": 1
     },
@@ -4058,7 +4058,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 182.74172500002805
+        "elapsed_ms": 233.3181956782937
       },
       "request_count": 1
     },
@@ -4143,7 +4143,7 @@
           "chunks_seen": 11
         },
         "notes": [],
-        "elapsed_ms": 306.6090429999804
+        "elapsed_ms": 399.9264966696501
       },
       "request_count": 1
     },
@@ -4229,7 +4229,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 188.83445100004792
+        "elapsed_ms": 203.40429618954659
       },
       "request_count": 1
     },
@@ -4315,7 +4315,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 245.63659900002222
+        "elapsed_ms": 395.84157429635525
       },
       "request_count": 1
     },
@@ -4327,7 +4327,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -4338,7 +4338,7 @@
           "api": "Agent.run"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -4376,7 +4376,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.4233020000347096
+        "elapsed_ms": 1.1567650362849236
       },
       "request_count": 0
     },
@@ -4462,7 +4462,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 118.63554299998214
+        "elapsed_ms": 345.9687577560544
       },
       "request_count": 1
     },
@@ -4548,7 +4548,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 131.1310889999504
+        "elapsed_ms": 193.67955811321735
       },
       "request_count": 1
     },
@@ -4634,7 +4634,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 317.3689120000063
+        "elapsed_ms": 398.66112638264894
       },
       "request_count": 1
     },
@@ -4643,7 +4643,7 @@
       "provider": "anthropic",
       "fixture": "anthropic/truncation.structured-output",
       "fixture_tier": "documented",
-      "grade": "LOSSY",
+      "grade": "PASS",
       "requirements": [
         {
           "id": "no-partial-success",
@@ -4654,8 +4654,8 @@
         {
           "id": "cause-is-truncation",
           "level": "MUST",
-          "status": "NOT_OBSERVABLE",
-          "evidence": "finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false"
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"truncation\"; structured.returned_as_success=false"
         },
         {
           "id": "text-reported",
@@ -4671,7 +4671,6 @@
         }
       ],
       "notes": [
-        "MUST cause-is-truncation: NOT_OBSERVABLE: finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false",
         "SHOULD text-reported: NOT_OBSERVABLE: text.value=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\" (raw); truth.text=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\"",
         "SHOULD usage-reported: NOT_OBSERVABLE: usage.input=25 (raw); truth.usage.input=25; usage.output=24 (raw); truth.usage.output=24"
       ],
@@ -4688,7 +4687,7 @@
         "error": {
           "type": "pydantic_ai.exceptions.OutputTokenLimitExceeded",
           "message": "Model token limit (24) exceeded while generating structured output, resulting in incomplete JSON. Increase the `max_tokens` model setting, or simplify the prompt to result in a shorter response that will fit within the limit.",
-          "category": "validation",
+          "category": "truncation",
           "retry_after": null,
           "stack_top": "pydantic_ai/_agent_graph.py:4407"
         },
@@ -4728,7 +4727,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 199.169119999965
+        "elapsed_ms": 229.12267595529556
       },
       "request_count": 1
     },
@@ -4737,7 +4736,7 @@
       "provider": "gemini",
       "fixture": "gemini/truncation.structured-output",
       "fixture_tier": "recorded",
-      "grade": "LOSSY",
+      "grade": "PASS",
       "requirements": [
         {
           "id": "no-partial-success",
@@ -4748,8 +4747,8 @@
         {
           "id": "cause-is-truncation",
           "level": "MUST",
-          "status": "NOT_OBSERVABLE",
-          "evidence": "finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false"
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"truncation\"; structured.returned_as_success=false"
         },
         {
           "id": "text-reported",
@@ -4765,7 +4764,6 @@
         }
       ],
       "notes": [
-        "MUST cause-is-truncation: NOT_OBSERVABLE: finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false",
         "SHOULD text-reported: NOT_OBSERVABLE: text.value=\"{\\n  \\\"islands\\\":\" (raw); truth.text=\"{\\n  \\\"islands\\\":\"",
         "SHOULD usage-reported: NOT_OBSERVABLE: usage.input=19 (raw); truth.usage.input=19; usage.output=7 (raw); truth.usage.output=7"
       ],
@@ -4782,7 +4780,7 @@
         "error": {
           "type": "pydantic_ai.exceptions.OutputTokenLimitExceeded",
           "message": "Model token limit (24) exceeded while generating structured output, resulting in incomplete JSON. Increase the `max_tokens` model setting, or simplify the prompt to result in a shorter response that will fit within the limit.",
-          "category": "validation",
+          "category": "truncation",
           "retry_after": null,
           "stack_top": "pydantic_ai/_agent_graph.py:4407"
         },
@@ -4822,7 +4820,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 206.6751600000316
+        "elapsed_ms": 218.0416462942958
       },
       "request_count": 1
     },
@@ -4834,7 +4832,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -4845,7 +4843,7 @@
           "api": "Agent.run"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -4883,7 +4881,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.2918450000825032
+        "elapsed_ms": 1.7217956483364105
       },
       "request_count": 0
     },
@@ -4892,7 +4890,7 @@
       "provider": "ollama-openai",
       "fixture": "ollama-openai/truncation.structured-output",
       "fixture_tier": "recorded",
-      "grade": "LOSSY",
+      "grade": "PASS",
       "requirements": [
         {
           "id": "no-partial-success",
@@ -4903,8 +4901,8 @@
         {
           "id": "cause-is-truncation",
           "level": "MUST",
-          "status": "NOT_OBSERVABLE",
-          "evidence": "finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false"
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"truncation\"; structured.returned_as_success=false"
         },
         {
           "id": "text-reported",
@@ -4920,7 +4918,6 @@
         }
       ],
       "notes": [
-        "MUST cause-is-truncation: NOT_OBSERVABLE: finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false",
         "SHOULD text-reported: NOT_OBSERVABLE: text.value=\"{\\n  \\\"islands\\\": [\\n    {\\n      \\\"name\\\": \\\"Αύγουστος\\\",\" (raw); truth.text=\"{\\n  \\\"islands\\\": [\\n    {\\n      \\\"name\\\": \\\"Αύγουστος\\\",\"",
         "SHOULD usage-reported: NOT_OBSERVABLE: usage.input=30 (raw); truth.usage.input=30; usage.output=24 (raw); truth.usage.output=24"
       ],
@@ -4937,7 +4934,7 @@
         "error": {
           "type": "pydantic_ai.exceptions.OutputTokenLimitExceeded",
           "message": "Model token limit (24) exceeded while generating structured output, resulting in incomplete JSON. Increase the `max_tokens` model setting, or simplify the prompt to result in a shorter response that will fit within the limit.",
-          "category": "validation",
+          "category": "truncation",
           "retry_after": null,
           "stack_top": "pydantic_ai/_agent_graph.py:4407"
         },
@@ -4977,7 +4974,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 153.25167699995745
+        "elapsed_ms": 143.59016995877028
       },
       "request_count": 1
     },
@@ -4986,7 +4983,7 @@
       "provider": "openai-chat",
       "fixture": "openai-chat/truncation.structured-output",
       "fixture_tier": "recorded",
-      "grade": "LOSSY",
+      "grade": "PASS",
       "requirements": [
         {
           "id": "no-partial-success",
@@ -4997,8 +4994,8 @@
         {
           "id": "cause-is-truncation",
           "level": "MUST",
-          "status": "NOT_OBSERVABLE",
-          "evidence": "finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false"
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"truncation\"; structured.returned_as_success=false"
         },
         {
           "id": "text-reported",
@@ -5014,7 +5011,6 @@
         }
       ],
       "notes": [
-        "MUST cause-is-truncation: NOT_OBSERVABLE: finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false",
         "SHOULD text-reported: NOT_OBSERVABLE: text.value=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\\\"Κρητικό Πέ\" (raw); truth.text=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\\\"Κρητικό Πέ\"",
         "SHOULD usage-reported: NOT_OBSERVABLE: usage.input=72 (raw); truth.usage.input=72; usage.output=24 (raw); truth.usage.output=24"
       ],
@@ -5031,7 +5027,7 @@
         "error": {
           "type": "pydantic_ai.exceptions.OutputTokenLimitExceeded",
           "message": "Model token limit (24) exceeded while generating structured output, resulting in incomplete JSON. Increase the `max_tokens` model setting, or simplify the prompt to result in a shorter response that will fit within the limit.",
-          "category": "validation",
+          "category": "truncation",
           "retry_after": null,
           "stack_top": "pydantic_ai/_agent_graph.py:4407"
         },
@@ -5071,7 +5067,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 158.51977900001657
+        "elapsed_ms": 94.8176858946681
       },
       "request_count": 1
     },
@@ -5080,7 +5076,7 @@
       "provider": "openai-responses",
       "fixture": "openai-responses/truncation.structured-output",
       "fixture_tier": "recorded",
-      "grade": "LOSSY",
+      "grade": "PASS",
       "requirements": [
         {
           "id": "no-partial-success",
@@ -5091,8 +5087,8 @@
         {
           "id": "cause-is-truncation",
           "level": "MUST",
-          "status": "NOT_OBSERVABLE",
-          "evidence": "finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false"
+          "status": "SATISFIED",
+          "evidence": "finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"truncation\"; structured.returned_as_success=false"
         },
         {
           "id": "text-reported",
@@ -5108,7 +5104,6 @@
         }
       ],
       "notes": [
-        "MUST cause-is-truncation: NOT_OBSERVABLE: finish.value=\"length\" (raw: ModelResponse.finish_reason); truth.finish=\"length\"; error.category=\"validation\"; structured.returned_as_success=false",
         "SHOULD text-reported: NOT_OBSERVABLE: text.value=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\\\"Κρητικό Πέ\" (raw); truth.text=\"{\\\"islands\\\":[{\\\"name\\\":\\\"Κρήτη\\\",\\\"sea\\\":\\\"Κρητικό Πέ\"",
         "SHOULD usage-reported: NOT_OBSERVABLE: usage.input=68 (raw); truth.usage.input=68; usage.output=24 (raw); truth.usage.output=24"
       ],
@@ -5125,7 +5120,7 @@
         "error": {
           "type": "pydantic_ai.exceptions.OutputTokenLimitExceeded",
           "message": "Model token limit (24) exceeded while generating structured output, resulting in incomplete JSON. Increase the `max_tokens` model setting, or simplify the prompt to result in a shorter response that will fit within the limit.",
-          "category": "validation",
+          "category": "truncation",
           "retry_after": null,
           "stack_top": "pydantic_ai/_agent_graph.py:4407"
         },
@@ -5165,7 +5160,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 266.73036899990166
+        "elapsed_ms": 340.07426258176565
       },
       "request_count": 1
     },
@@ -5274,7 +5269,7 @@
         "notes": [
           "retries: 1 (2 model requests)"
         ],
-        "elapsed_ms": 188.03190799997083
+        "elapsed_ms": 209.54633224755526
       },
       "request_count": 2
     },
@@ -5352,7 +5347,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 183.4134749999521
+        "elapsed_ms": 112.58653271943331
       },
       "request_count": 1
     },
@@ -5430,7 +5425,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 225.8082140000397
+        "elapsed_ms": 188.63988108932972
       },
       "request_count": 1
     },
@@ -5442,7 +5437,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -5453,7 +5448,7 @@
           "api": "Agent.run"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -5491,7 +5486,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 1.4590389999966646
+        "elapsed_ms": 1.7621619626879692
       },
       "request_count": 0
     },
@@ -5569,7 +5564,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 119.58896500004812
+        "elapsed_ms": 131.32248260080814
       },
       "request_count": 1
     },
@@ -5647,7 +5642,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 145.88582099997893
+        "elapsed_ms": 114.08743727952242
       },
       "request_count": 1
     },
@@ -5725,7 +5720,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 274.85166600001776
+        "elapsed_ms": 321.27888035029173
       },
       "request_count": 1
     },
@@ -5803,7 +5798,7 @@
           "chunks_seen": 9
         },
         "notes": [],
-        "elapsed_ms": 163.08124700003646
+        "elapsed_ms": 146.405722014606
       },
       "request_count": 1
     },
@@ -5881,7 +5876,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 197.3585970000613
+        "elapsed_ms": 194.71545424312353
       },
       "request_count": 1
     },
@@ -5893,7 +5888,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -5904,7 +5899,7 @@
           "api": "Agent.run_stream_events"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -5942,7 +5937,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.2149610000733446
+        "elapsed_ms": 1.2707887217402458
       },
       "request_count": 0
     },
@@ -6022,7 +6017,7 @@
           "chunks_seen": 19
         },
         "notes": [],
-        "elapsed_ms": 203.40751000003365
+        "elapsed_ms": 208.35186168551445
       },
       "request_count": 1
     },
@@ -6102,7 +6097,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 208.7120579999464
+        "elapsed_ms": 166.27649310976267
       },
       "request_count": 1
     },
@@ -6180,7 +6175,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 290.37135700002636
+        "elapsed_ms": 312.78317142277956
       },
       "request_count": 1
     },
@@ -6258,7 +6253,7 @@
           "chunks_seen": 6
         },
         "notes": [],
-        "elapsed_ms": 230.17524700003378
+        "elapsed_ms": 247.35249672085047
       },
       "request_count": 1
     },
@@ -6336,7 +6331,7 @@
           "chunks_seen": 16
         },
         "notes": [],
-        "elapsed_ms": 195.38402599994242
+        "elapsed_ms": 178.2542122527957
       },
       "request_count": 1
     },
@@ -6418,7 +6413,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 173.82312300003377
+        "elapsed_ms": 178.08231618255377
       },
       "request_count": 1
     },
@@ -6508,7 +6503,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 131.13426600000366
+        "elapsed_ms": 102.15335618704557
       },
       "request_count": 1
     },
@@ -6598,7 +6593,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 317.5158429999101
+        "elapsed_ms": 387.55766674876213
       },
       "request_count": 1
     },
@@ -6688,7 +6683,7 @@
           "chunks_seen": 10
         },
         "notes": [],
-        "elapsed_ms": 150.71806900004958
+        "elapsed_ms": 136.2979281693697
       },
       "request_count": 1
     },
@@ -6778,7 +6773,7 @@
           "chunks_seen": 12
         },
         "notes": [],
-        "elapsed_ms": 189.7633160000396
+        "elapsed_ms": 254.20726370066404
       },
       "request_count": 1
     },
@@ -6868,7 +6863,7 @@
           "chunks_seen": 12
         },
         "notes": [],
-        "elapsed_ms": 289.6746899999698
+        "elapsed_ms": 366.1212883889675
       },
       "request_count": 1
     },
@@ -6940,7 +6935,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 187.3983479999879
+        "elapsed_ms": 204.88364063203335
       },
       "request_count": 1
     },
@@ -7012,7 +7007,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 148.9627760000758
+        "elapsed_ms": 245.6197300925851
       },
       "request_count": 1
     },
@@ -7084,7 +7079,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 280.8231660000047
+        "elapsed_ms": 337.5477707013488
       },
       "request_count": 1
     },
@@ -7156,7 +7151,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 203.57953300003828
+        "elapsed_ms": 206.29862416535616
       },
       "request_count": 1
     },
@@ -7228,7 +7223,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 245.47712399999
+        "elapsed_ms": 309.8166286945343
       },
       "request_count": 1
     },
@@ -7300,7 +7295,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 152.10199799992097
+        "elapsed_ms": 193.09838395565748
       },
       "request_count": 1
     },
@@ -7372,7 +7367,7 @@
           "chunks_seen": null
         },
         "notes": [],
-        "elapsed_ms": 254.8997500000496
+        "elapsed_ms": 421.76419869065285
       },
       "request_count": 1
     },
@@ -7438,7 +7433,7 @@
           "chunks_seen": 5
         },
         "notes": [],
-        "elapsed_ms": 155.7471590000432
+        "elapsed_ms": 168.94167475402355
       },
       "request_count": 1
     },
@@ -7504,7 +7499,7 @@
           "chunks_seen": 7
         },
         "notes": [],
-        "elapsed_ms": 242.5804460000336
+        "elapsed_ms": 244.9404476210475
       },
       "request_count": 1
     },
@@ -7516,7 +7511,7 @@
       "grade": "UNSUPPORTED",
       "requirements": [],
       "notes": [
-        "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
+        "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. (https://ai.pydantic.dev/models/ollama/)"
       ],
       "observation": {
         "format": "wiretruth.observation/v1",
@@ -7527,7 +7522,7 @@
           "api": "Agent.run_stream_events"
         },
         "outcome": "unsupported",
-        "unsupported_reason": "pydantic-ai 2.61.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
+        "unsupported_reason": "pydantic-ai 2.68.0 implements OllamaModel via OpenAI-compatible Chat Completions only; there is no native /api/chat client. https://ai.pydantic.dev/models/ollama/",
         "error": null,
         "finish": {
           "value": null,
@@ -7565,7 +7560,7 @@
           "chunks_seen": 0
         },
         "notes": [],
-        "elapsed_ms": 1.4636170000130733
+        "elapsed_ms": 1.7038704827427864
       },
       "request_count": 0
     },
@@ -7631,7 +7626,7 @@
           "chunks_seen": 25
         },
         "notes": [],
-        "elapsed_ms": 238.11158800003795
+        "elapsed_ms": 233.68965089321136
       },
       "request_count": 1
     },
@@ -7697,7 +7692,7 @@
           "chunks_seen": 18
         },
         "notes": [],
-        "elapsed_ms": 195.46835099993132
+        "elapsed_ms": 201.8946958705783
       },
       "request_count": 1
     }
