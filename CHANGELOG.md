@@ -64,8 +64,9 @@ finding).
   ([pydantic/pydantic-ai#12399](https://github.com/pydantic/pydantic-ai/issues/12399),
   [#12407](https://github.com/pydantic/pydantic-ai/pull/12407)). The forced-tool and tool-call truncation cells stay
   LOSSY. [2.61.0 results](results/pydantic-ai/2.61.0.json) retain the earlier grades.
-- tanstack-ai 1.4.0: 50 PASS, 1 LOSSY, 1 WRONG and 48 UNSUPPORTED of 100 cells
-  ([results/tanstack-ai/1.4.0.json](results/tanstack-ai/1.4.0.json)). No grade changes from 1.4.0.
+- tanstack-ai 1.4.0 with `@tanstack/ai-gemini` 1.2.2: 50 PASS, 1 LOSSY, 1 WRONG and 48 UNSUPPORTED of 100 cells
+  ([results/tanstack-ai/1.4.0.json](results/tanstack-ai/1.4.0.json), rewritten). No grade changes from the 1.4.0
+  run with `@tanstack/ai-gemini` 1.2.1.
 - vercel-ai 7.0.171: 84 PASS and 16 UNSUPPORTED of 100 cells
   ([results/vercel-ai/7.0.171.json](results/vercel-ai/7.0.171.json)). No grade changes from 7.0.153.
 - LiteLLM 1.109.0: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
