@@ -120,7 +120,12 @@ def observe_error(error):
     # https://ai.pydantic.dev/api/exceptions/#pydantic_ai.exceptions.UnexpectedModelBehavior
     if "Model token limit" in str(error):
         category = "truncation"
-    if error.__cause__ is not None and type(error.__cause__).__name__ == "ValidationError":
+    # A truncation error raised from the validation error it caused stays a truncation.
+    if (
+        category != "truncation"
+        and error.__cause__ is not None
+        and type(error.__cause__).__name__ == "ValidationError"
+    ):
         category = "validation"
     obs.update(
         outcome="raised",

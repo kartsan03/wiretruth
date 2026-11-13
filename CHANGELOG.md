@@ -24,7 +24,7 @@ finding).
   listed instead.
 
 ### Changed
-- The TanStack AI shim pins `@tanstack/ai` 1.4.0, `@tanstack/ai-ollama` 1.1.1, `@tanstack/ai-gemini` 1.2.1,
+- The TanStack AI shim pins `@tanstack/ai` 1.4.0, `@tanstack/ai-ollama` 1.1.1, `@tanstack/ai-gemini` 1.2.2,
   `@tanstack/ai-anthropic` 1.1.1 and `@tanstack/ai-openai` 1.1.1.
 - `truncation.text`, `truncation.text-stream` and `truncation.structured-output` send their base prompts on
   `openai-chat` too, and their `openai-chat` fixtures are recorded again on those prompts (`gpt-6-luna`,
@@ -40,13 +40,35 @@ finding).
   [TanStack/ai#2130](https://github.com/TanStack/ai/issues/2130) (a stream that ends before its terminal signal
   returns normally), and [pydantic/pydantic-ai#12399](https://github.com/pydantic/pydantic-ai/issues/12399) for
   truncated structured output and, in a comment there, truncated tool-call arguments.
-- The LiteLLM shim pins `litellm` 1.109.0 and `openai` 3.49.0, the newest `openai` that LiteLLM 1.109.0 allows.
+- The LiteLLM shim pins `litellm` 1.109.1 and `openai` 3.50.0.
 - `results/upstream.json`: [BerriAI/litellm#46542](https://github.com/BerriAI/litellm/issues/46542) is `released`
   for four providers ([#47665](https://github.com/BerriAI/litellm/pull/47665), 1.109.0); its `gemini` cell stays
   `reported`. [TanStack/ai#2130](https://github.com/TanStack/ai/issues/2130) links the open fix
   [#2124](https://github.com/TanStack/ai/pull/2124).
+- The pydantic-ai shim reports `OutputTokenLimitExceeded` as a truncation error, also when the validation error of
+  the cut-off output is its cause.
+- `results/upstream.json`: [pydantic/pydantic-ai#12399](https://github.com/pydantic/pydantic-ai/issues/12399) is
+  `released` for `truncation.structured-output` ([#12407](https://github.com/pydantic/pydantic-ai/pull/12407),
+  2.68.0). Its forced-tool and tool-call cells keep their status: 2.68.0 still ends them in
+  `UnexpectedModelBehavior`.
 
 ### Results
+- any-llm 1.50.0: 87 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 100 cells
+  ([results/any-llm/1.50.0.json](results/any-llm/1.50.0.json)). No grade changes from 1.40.2.
+- litellm 1.109.1: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
+  ([results/litellm/1.109.1.json](results/litellm/1.109.1.json)). No grade changes from 1.109.0.
+- pydantic-ai 2.68.0: 68 PASS, 11 LOSSY, 6 WRONG and 15 UNSUPPORTED of 100 cells
+  ([results/pydantic-ai/2.68.0.json](results/pydantic-ai/2.68.0.json)). `truncation.structured-output` over
+  `anthropic`, `gemini`, `ollama-openai`, `openai-chat` and `openai-responses` moves LOSSY → PASS: structured output
+  cut off at the token limit now raises `OutputTokenLimitExceeded` instead of failing after retries
+  ([pydantic/pydantic-ai#12399](https://github.com/pydantic/pydantic-ai/issues/12399),
+  [#12407](https://github.com/pydantic/pydantic-ai/pull/12407)). The forced-tool and tool-call truncation cells stay
+  LOSSY. [2.61.0 results](results/pydantic-ai/2.61.0.json) retain the earlier grades.
+- tanstack-ai 1.4.0 with `@tanstack/ai-gemini` 1.2.2: 50 PASS, 1 LOSSY, 1 WRONG and 48 UNSUPPORTED of 100 cells
+  ([results/tanstack-ai/1.4.0.json](results/tanstack-ai/1.4.0.json), rewritten). No grade changes from the 1.4.0
+  run with `@tanstack/ai-gemini` 1.2.1.
+- vercel-ai 7.0.171: 84 PASS and 16 UNSUPPORTED of 100 cells
+  ([results/vercel-ai/7.0.171.json](results/vercel-ai/7.0.171.json)). No grade changes from 7.0.153.
 - LiteLLM 1.109.0: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
   ([results/litellm/1.109.0.json](results/litellm/1.109.0.json)). `stream.missing-finish` over `anthropic`,
   `ollama`, `ollama-openai` and `openai-chat` moves WRONG → PASS: a stream that ends without a finish reason now

@@ -199,14 +199,25 @@
   },
   {
     "library": "pydantic-ai",
-    "scenarios": ["truncation.structured-output", "truncation.structured-output-forced-tool"],
+    "scenarios": ["truncation.structured-output"],
     "providers": ["anthropic", "gemini", "ollama-openai", "openai-chat", "openai-responses"],
     "issue": "https://github.com/pydantic/pydantic-ai/issues/12399",
     "pr": "https://github.com/pydantic/pydantic-ai/pull/12407",
+    "status": "released",
+    "fixed_in": "2.68.0",
+    "opened": "2026-11-03",
+    "notes": "Existing upstream issue, opened by a maintainer, not by wiretruth. Up to 2.66.0, cut-off structured output was retried, then failed with UnexpectedModelBehavior('Exceeded maximum output retries'); the length finish was only in the captured messages. Since 2.68.0 (https://github.com/pydantic/pydantic-ai/pull/12406 and https://github.com/pydantic/pydantic-ai/pull/12407) it raises OutputTokenLimitExceeded right away. The partial text and usage stay in the captured messages only, which the SHOULD requirements note."
+  },
+  {
+    "library": "pydantic-ai",
+    "scenarios": ["truncation.structured-output-forced-tool"],
+    "providers": ["anthropic"],
+    "issue": "https://github.com/pydantic/pydantic-ai/issues/12399",
+    "pr": null,
     "status": "confirmed",
     "fixed_in": null,
     "opened": "2026-11-03",
-    "notes": "Existing upstream issue, opened by a maintainer, not by wiretruth. Cut-off structured output is retried, then fails with UnexpectedModelBehavior('Exceeded maximum output retries'); the length finish is only in the captured messages. https://github.com/pydantic/pydantic-ai/pull/12406, merged after 2.66.0 and not in a release yet, raises right away with a message naming the token limit; https://github.com/pydantic/pydantic-ai/pull/12407 (open) adds the typed OutputTokenLimitExceeded."
+    "notes": "Existing upstream issue, opened by a maintainer, not by wiretruth. Structured output through a forced tool goes through the tool-call path: on 2.68.0 it still ends in UnexpectedModelBehavior, not OutputTokenLimitExceeded, although https://github.com/pydantic/pydantic-ai/pull/12407 closed the issue."
   },
   {
     "library": "pydantic-ai",
@@ -217,7 +228,7 @@
     "status": "reported",
     "fixed_in": null,
     "opened": "2026-11-10",
-    "notes": "Reported in a comment on the token-limit issue: https://github.com/pydantic/pydantic-ai/issues/12399#issuecomment-6780480981. Tool-call arguments cut off at the limit fail validation and end in the per-tool retry limit (UnexpectedModelBehavior: Tool 'create_event' exceeded max retries count of 0), not in IncompleteToolCall; reproduced on 2.61.0 and 2.66.0 with an ExternalToolset."
+    "notes": "Reported in a comment on the token-limit issue: https://github.com/pydantic/pydantic-ai/issues/12399#issuecomment-6780480981. Tool-call arguments cut off at the limit fail validation and end in the per-tool retry limit (UnexpectedModelBehavior: Tool 'create_event' exceeded max retries count of 0), not in IncompleteToolCall; reproduced on 2.61.0 and 2.66.0 with an ExternalToolset. Unchanged on 2.68.0, where https://github.com/pydantic/pydantic-ai/pull/12407 closed the issue without changing the per-tool path."
   },
   {
     "library": "pydantic-ai",

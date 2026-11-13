@@ -15,6 +15,7 @@ be later than the first release containing the fix.
 | TanStack AI [#1852](https://github.com/TanStack/ai/issues/1852): native Ollama stream cut by the token limit finishes as `stop`; fixed by [#2077](https://github.com/TanStack/ai/pull/2077) in `@tanstack/ai-ollama` 1.1.1 | wiretruth | `truncation.text-stream`: `ollama` | 1.0.0 → WRONG | 1.4.0 → PASS | [before](../results/tanstack-ai/1.0.0.json), [after](../results/tanstack-ai/1.4.0.json) |
 | LiteLLM [#46542](https://github.com/BerriAI/litellm/issues/46542): a stream that ends without a finish reason is reported as `stop`; fixed by [#47665](https://github.com/BerriAI/litellm/pull/47665), which doesn't link the issue (the link is inferred from the changed behaviour; the issue stays open for `gemini`) | wiretruth | `stream.missing-finish`: `anthropic`, `ollama`, `ollama-openai`, `openai-chat` | 1.105.5 → WRONG | 1.109.0 → PASS | [before](../results/litellm/1.105.5.json), [after](../results/litellm/1.109.0.json) |
 | pydantic-ai [#7816](https://github.com/pydantic/pydantic-ai/issues/7816): unfamiliar finish values rejected; fixed by [#11119](https://github.com/pydantic/pydantic-ai/pull/11119) | reported by others, confirmed by wiretruth | `finish.unknown-value`: `openai-chat`, `ollama-openai` | 2.56.0 → WRONG | 2.61.0 → LOSSY | [before](../results/pydantic-ai/2.56.0.json), [after](../results/pydantic-ai/2.61.0.json) |
+| pydantic-ai [#12399](https://github.com/pydantic/pydantic-ai/issues/12399): truncated structured output fails after retries with a generic error; fixed by [#12407](https://github.com/pydantic/pydantic-ai/pull/12407) | reported by others, confirmed by wiretruth | `truncation.structured-output`: `anthropic`, `gemini`, `ollama-openai`, `openai-chat`, `openai-responses` | 2.61.0 → LOSSY | 2.68.0 → PASS | [before](../results/pydantic-ai/2.61.0.json), [after](../results/pydantic-ai/2.68.0.json) |
 
 pydantic-ai keeps the response and the original value in `provider_details`, but exposes no finish reason.
 That is LOSSY, not PASS. wiretruth's later report was closed as a duplicate of #7816.
@@ -50,6 +51,13 @@ Replaying fixtures recorded on today's models is fine: the wire shape is what ma
   (`claude-sonnet-5-5`, derived from documented), and [ollama](../suite/fixtures/ollama/stream.missing-finish.json)
   and [ollama-openai](../suite/fixtures/ollama-openai/stream.missing-finish.json) (both `qwen3.5:0.8b`, derived).
   The `gemini` cell stays WRONG in 1.109.0.
+- **pydantic-ai #12399:** [truncation.structured-output](../suite/fixtures/openai-chat/truncation.structured-output.json)
+  over `openai-chat` (`gpt-6-luna`, recorded 2026-11-10),
+  [openai-responses](../suite/fixtures/openai-responses/truncation.structured-output.json) (`gpt-6-luna`, recorded
+  2026-10-11), [ollama-openai](../suite/fixtures/ollama-openai/truncation.structured-output.json) (`qwen3.5:0.8b`,
+  recorded 2026-10-12), [gemini](../suite/fixtures/gemini/truncation.structured-output.json)
+  (`gemini-3.5-flash-lite`, recorded 2026-10-13) and [anthropic](../suite/fixtures/anthropic/truncation.structured-output.json)
+  (`claude-sonnet-5-5`, documented). The forced-tool and tool-call truncation cells stay LOSSY in 2.68.0.
 
 The other consecutive result comparisons add no fixed-bug rows: LiteLLM 1.105.1 → 1.105.5 and any-llm
 1.38.0 → 1.40.2 have unchanged grades. The Vercel comparisons change only the cells listed above.
