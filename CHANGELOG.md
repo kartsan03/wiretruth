@@ -11,6 +11,17 @@ finding).
 
 ## [Unreleased]
 
+
+### Results
+- any-llm 1.51.0: 87 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 100 cells
+  ([results/any-llm/1.51.0.json](results/any-llm/1.51.0.json)). No grade changes from 1.50.0.
+- litellm 1.109.1: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
+  ([results/litellm/1.109.1.json](results/litellm/1.109.1.json)). No grade changes from 1.109.1.
+- pydantic-ai 2.68.0: 68 PASS, 11 LOSSY, 6 WRONG and 15 UNSUPPORTED of 100 cells
+  ([results/pydantic-ai/2.68.0.json](results/pydantic-ai/2.68.0.json)). No grade changes from 2.68.0.
+- vercel-ai 7.0.173: 84 PASS and 16 UNSUPPORTED of 100 cells
+  ([results/vercel-ai/7.0.173.json](results/vercel-ai/7.0.173.json)). No grade changes from 7.0.171.
+
 ## [0.4.0] - 2026-11-13
 
 ### Added
