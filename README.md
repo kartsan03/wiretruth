@@ -243,7 +243,7 @@ prints what the library reported as JSON on stdout. The
 [pydantic-ai shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/pydantic-ai/shim.py),
 [Vercel AI SDK shim](https://github.com/kartsan03/wiretruth/blob/main/shims/js/vercel-ai/shim.mjs) and
 [TanStack AI shim](https://github.com/kartsan03/wiretruth/blob/main/shims/js/tanstack-ai/shim.mjs) are examples. The
-protocol is in [shims/README.md](https://github.com/kartsan03/wiretruth/blob/main/shims/README.md); to propose a
+steps are in [Writing a shim](https://github.com/kartsan03/wiretruth/blob/main/docs/writing-a-shim.md); to propose a
 library, [open a new-library issue](https://github.com/kartsan03/wiretruth/issues/new?template=new-library.yml).
 
 ## Related work

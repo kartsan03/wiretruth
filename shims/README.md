@@ -78,4 +78,9 @@ deliberately hides truncation, drops usage, reports partial structured output as
 errors and removes raw values. Their expected grades and every evaluated requirement status are checked in CI;
 `--check-grades` runs every cell and exits 1 for any difference. Setup errors exit 2; a run without a comparison exits 0.
 
-The [format reference](../docs/formats.md) defines the call spec, observation and manifest fields.
+A documented finish field on an error goes in the observation's `finish` with `surface: "primary"` and a `source`
+naming that error field, such as `error.completion.choices[0].finish_reason`; the checks read it even when the
+outcome is `raised`. The run summary prints each observation note under its cell as `shim: <note>`.
+
+[Writing a shim](../docs/writing-a-shim.md) is the step-by-step guide with a complete example. The
+[format reference](../docs/formats.md) defines the call spec, observation and manifest fields.
