@@ -42,7 +42,8 @@ the same bytes:
 
 The table is a snapshot: each library name links to the results file its row comes from, and the
 [scenario page](https://kartsan03.github.io/wiretruth/scenarios/truncation.structured-output.html) shows the current
-grades. TanStack AI isn't listed because it streams every call, so this non-streamed fixture is UNSUPPORTED there.
+grades. TanStack AI isn't listed: its structured output streams on this API, so this non-streamed fixture is
+UNSUPPORTED there.
 
 wiretruth runs the same recorded edge cases through every library it supports and grades each one against what the
 provider sent.
@@ -296,10 +297,11 @@ flowchart LR
     G --> M[matrix]
 ```
 
-- **Fixtures** are verbatim HTTP responses with provenance: when, which model, and which CI run recorded them.
+- **Fixtures** are provider HTTP responses stored with their provenance: for a recorded one, when, which model and
+  which CI run. Stream events are kept as sent; JSON bodies are parsed and written back in the same key order.
 - **Truth** is computed from the wire by a small parser for each provider API, with no SDK involved.
 - **Shims** call each library the way its documentation shows, with default settings, and report only what its
-  public API exposes.
+  public API exposes. A setting a fixture needs is declared in the shim's manifest.
 - **Checks** compare what the library reported with the truth. **Grades** fold the checks into one verdict per cell.
 - **Self-tests:** a reference client must pass every cell, and a deliberately wrong client must fail in known ways.
 
@@ -310,18 +312,18 @@ flowchart LR
   are public. Each fixture links its run.
 - **Documented:** transcribed from official API docs when there is no key for that provider (Anthropic today).
   Each fixture links its source page.
-- **Derived:** a recorded response with one deterministic change, such as a stream that stops before its finish
-  event, for cases a provider can't be made to produce on demand. Each fixture gives the reason and evidence that
-  the shape happens.
+- **Derived:** a recorded or documented response with one deterministic change, such as a stream that stops before
+  its finish event, for cases a provider can't be made to produce on demand. Each fixture gives the reason and
+  evidence that the shape happens.
 
-Every cell shows its tier. When a fixture is re-recorded, the old one stays in the suite as a dated file. Details:
+Every cell shows its tier. By default, re-recording keeps the old fixture in the suite as a dated file. Details:
 [docs/recording.md](https://github.com/kartsan03/wiretruth/blob/main/docs/recording.md) and
 [docs/derived-fixtures.md](https://github.com/kartsan03/wiretruth/blob/main/docs/derived-fixtures.md).
 
 ## Disclosure and upstream fixes
 
-A cell turns WRONG, CRASH or HANG on `main` only after the library has an upstream issue for it: one this project
-opened, or an existing one it links to. When a fix ships, the weekly run picks up the release, and the changelog's
+A cell turns WRONG, CRASH or HANG on `main` only after the finding is on record upstream: an issue this project
+opened, an existing issue it links to, or the library's own documentation of the behavior. When a fix ships, the weekly run picks up the release, and the changelog's
 Results section names the fix. Every report and its status is in
 [`results/upstream.json`](https://github.com/kartsan03/wiretruth/blob/main/results/upstream.json), and each cell
 page on the site shows the reports for that cell. The policy:

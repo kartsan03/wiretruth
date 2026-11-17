@@ -15,7 +15,7 @@ If you maintain or use a library and think a grade is wrong, open a
 [grade dispute](https://github.com/kartsan03/wiretruth/issues/new?template=grade-dispute.yml). Include the cell
 link and what you think the library does. You'll get a response within 7 days. If the scenario or the shim was
 wrong, it gets fixed and the changelog credits you. If the behavior is intended and documented, the cell gets a
-note linking to your documentation. The full policy is in [Disclosure](docs/disclosure.md).
+note that cites your documentation. The full policy is in [Disclosure](docs/disclosure.md).
 
 ## Adding a library
 
@@ -24,10 +24,13 @@ note linking to your documentation. The full policy is in [Disclosure](docs/disc
 3. Run `uv run wiretruth run --lib <library>` until there are no HARNESS (`?`) cells.
 4. Open a pull request with the shim, its manifest and the results file it produced, as described in
    [Submitting](docs/writing-a-shim.md#submitting). If the run shows WRONG, CRASH or HANG cells, say so in the pull
-   request; those cells reach `main` only after the library has an upstream issue for them.
+   request; those cells reach `main` only after the finding is on record upstream
+   ([Disclosure](docs/disclosure.md#report-before-publishing)).
 
-Shims call the library the way its own documentation shows, with default settings. If the library can't express a
-scenario that way, mark it unsupported in the manifest with a documentation link instead of working around it.
+Shims call the library the way its own documentation shows, with default settings. A setting a fixture needs goes
+in the manifest's `config_notes` with the reason. If the library can't express a scenario that way, mark it
+unsupported in the manifest with a documentation link instead of working around it. The one exception, a reasoning
+setting the library can't send, is in [ADR 0006](docs/adr/0006-default-library-config.md).
 
 ## Adding a scenario
 
