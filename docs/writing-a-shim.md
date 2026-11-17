@@ -26,8 +26,10 @@ A shim MUST:
 3. Print exactly one `wiretruth.observation/v1` document to stdout and exit 0, also when the library raises.
 4. Print nothing else to stdout. Logs go to stderr. If the library or a dependency writes to stdout, silence it with
    a documented option or redirect it (Python: `contextlib.redirect_stdout(sys.stderr)`).
-5. Catch failures that escape the library call and report them in the observation: an exception from a background
-   thread or an event loop callback in Python, `unhandledRejection` and `uncaughtException` in JavaScript.
+5. Catch failures that escape the library call and report them in the observation, the same way as an exception
+   from the call. In Python, set `threading.excepthook` and, if the library runs an asyncio event loop, the loop's
+   exception handler; in JavaScript, handle `unhandledRejection` and `uncaughtException`. The example below needs
+   neither, because the client it calls starts no threads or loops.
 6. Send the request the fixture replays: the same endpoint, streamed or not, the same number of requests. A wrong
    endpoint or stream mode grades HARNESS, and so does a result with no request at all, unless it is a
    `validation` or `internal` error the library raised before sending. If the library's documented call can't send
@@ -82,14 +84,21 @@ library's documented argument:
   `reasoning` apply when they aren't `null` or empty.
 - A field the library can't send makes the cell unsupported. Exception: if the library can't send a `reasoning`
   effort (often `none`), make the call without it and add a `notes` entry. The response is the same either way.
+- `output_schema` is a JSON Schema. Use the library's documented structured-output call, the one that parses the
+  result. If that call takes a type instead of a schema (a Pydantic model, a zod schema), build the type from
+  `output_schema`: that maps the input and leaves the output to the library. Cover the schema features the
+  scenarios use and exit non-zero on anything else.
 - `extra` holds hints for one scenario, such as `{"include_usage": true}`. Pass a hint only when the library has a
   documented switch for it. Otherwise leave it out and add a `notes` entry.
 
 **Unsupported.** When the library's documented call can't express a cell (a provider it doesn't speak, a setting
 it can't send, a request shape it never makes), print an observation with `outcome: "unsupported"` and an
 `unsupported_reason` that ends with a docs link. List the same scenario and providers in the manifest's
-`unsupported`. A cell the shim reports as unsupported but the manifest doesn't list grades HARNESS. Describe the
-library's design, not a defect: "The SDK has no native Ollama client".
+`unsupported`. Each entry names one scenario id exactly (no patterns); `providers` limits it to some providers,
+and leaving it out covers them all. For a provider the library doesn't speak, add one entry per scenario that
+lists that provider; the [scenario catalog](scenarios.md) shows which scenarios each provider has. A cell the shim
+reports as unsupported but the manifest doesn't list grades HARNESS. Describe the library's design, not a defect:
+"The SDK has no native Ollama client".
 
 ## Writing the observation
 
