@@ -39,8 +39,9 @@ A shim MUST:
 
 A shim MUST NOT:
 
-- Work around the library: no patching, no private imports, no retries, no catching and continuing, no repairing
-  or re-parsing output the library gave up on, no copying raw values into primary fields.
+- Work around the library: no patching, no private imports, no retries of your own (keep the library's built-in
+  retries, which are a default), no catching and continuing, no repairing or re-parsing output the library gave up
+  on, no copying raw values into primary fields.
 - Change a library default unless it has to, and then only with a `config_notes` entry that says why
   ([decision 0006](adr/0006-default-library-config.md)).
 - Read credentials, provider URLs or SDK settings from anywhere other than the variables below.
@@ -87,7 +88,9 @@ library's documented argument:
 - `output_schema` is a JSON Schema. Use the library's documented structured-output call, the one that parses the
   result. If that call takes a type instead of a schema (a Pydantic model, a zod schema), build the type from
   `output_schema`: that maps the input and leaves the output to the library. Cover the schema features the
-  scenarios use and exit non-zero on anything else.
+  scenarios use and exit non-zero on anything else. `schema_type` in the
+  [openai-python shim](../shims/python/openai-python/shim.py) does this with Pydantic's `create_model` in about
+  20 lines.
 - `extra` holds hints for one scenario, such as `{"include_usage": true}`. Pass a hint only when the library has a
   documented switch for it. Otherwise leave it out and add a `notes` entry.
 
@@ -116,7 +119,10 @@ How to fill the fields that need a decision:
   and `api` the entry point the shim called, such as `ollama.Client.chat`.
 - **`finish`**: `value` is the library's value mapped through the manifest's `finish_map`; an unmapped value
   becomes `other`. `raw` is the provider's own string, such as `MAX_TOKENS`, and only when the library exposes it.
-  If the library normalized it, `raw` is `null`. `source` is the attribute path you read.
+  If the library normalized it, `raw` is `null`. `source` is the attribute path you read. When the library spreads
+  the finish over several fields (a status plus a reason, or a completed status whose output holds tool calls),
+  read them in a fixed order, put the field you used in `source` and its string in `raw`, and describe the order
+  in the manifest's `surfaces`.
 - **Finish on an error.** When the library raises an error that carries a documented finish field (for example a
   length error with the partial completion attached), report it in `finish` with `surface: "primary"` and a
   `source` that names the error field, such as `error.completion.choices[0].finish_reason`.
@@ -124,11 +130,17 @@ How to fill the fields that need a decision:
 - **`structured`**: `attempted` is true when the call has an `output_schema`. `returned_as_success` is true only
   when the library handed back a parsed value without an error; `value` is that value.
 - **`tool_calls`**: `arguments_raw` is the arguments text the library exposes. `arguments_parsed_ok` and
-  `arguments` come from parsing that text as JSON (`json.loads`, `JSON.parse`).
+  `arguments` come from parsing that text as JSON (`json.loads`, `JSON.parse`). In a stream, joining the
+  documented deltas is reading, not repairing: concatenate each call's argument fragments by its index and keep its
+  id and name. When the library also hands back the complete call (a done event, the final response), read that
+  instead of adding it to the fragments.
 - **`usage`**: the five counts, each with its own surface.
 - **`stream`**: `chunks_seen` counts what the library yielded. `completed` is the library's own signal that the
-  stream ended normally (a final event, a done flag, a completed status), or `null` when it gives none. Don't set
-  it to true because iteration ended without an exception: a stream cut before its final event ends the same way.
+  stream ended normally. If the library has one (a final event, a done flag, a completed status), report `true`
+  when it arrives and `false` when the stream ends without it. Report `null` only when the library has no such
+  signal, such as an iterator that consumes the end-of-stream marker itself and ends the same way without it. Don't
+  set it to true because iteration ended without an exception, and don't count an event that closes one output item
+  as the end of the stream.
 - **`notes`**: anything the grader should know, such as a setting the library couldn't send. The run summary
   prints each note under its cell as `shim: <note>`, and the results file and the cell page keep them.
 
@@ -136,7 +148,8 @@ How to fill the fields that need a decision:
 
 - `type` is the fully qualified type. `category` comes from the manifest's `error_map`: the first entry whose
   `type` is the error's type or one of its base classes. `stack_top` is the raising frame's `file:line`, relative
-  to the library's install directory.
+  to `site-packages` (Python) or `node_modules` (JavaScript), such as `openai/_base_client.py:1042`; a frame in a
+  dependency keeps that package's name.
 - A built-in exception raised inside the library code (`KeyError`, `TypeError`) gets category `internal` and grades
   CRASH. If the library raises a built-in type on purpose, add an `error_map` entry with `message_regex` and a
   `source` link to the raising line.
@@ -159,7 +172,8 @@ it short:
   come first, because the first match wins.
 - `config_notes`: each change from the library's defaults and why; also call fields the shim leaves unmapped
   because no cell uses them.
-- `docs`: the pages the shim's calls come from. Check every link and anchor with `curl` before you submit.
+- `docs`: the pages the shim's calls come from. Before you submit, check that every link opens (`curl -sL`) and
+  that each `#anchor` names a heading on that page; a page that opens can still have a dead anchor.
 
 ## A full example
 
@@ -216,7 +230,9 @@ if call["provider"] != "ollama" or call["tools"] or call["output_schema"] or cal
 FIELDS = ("input", "cached_input", "output", "reasoning", "total")
 obs = {
     "format": "wiretruth.observation/v1",
-    "library": dict(name="example", version=version("ollama"), language="python", api="ollama.Client.chat"),
+    "library": dict(
+        name="example", version=version("ollama"), language="python", api="ollama.Client.chat"
+    ),
     "outcome": "returned",
     "unsupported_reason": None,
     "error": None,
@@ -236,7 +252,9 @@ def observe(response):
         text.update(value=(text["value"] or "") + response.message.content, surface="primary")
     if response.done_reason is not None:
         value = manifest["finish_map"].get(response.done_reason, "other")
-        obs["finish"].update(value=value, raw=response.done_reason, surface="primary", source="done_reason")
+        obs["finish"].update(
+            value=value, raw=response.done_reason, surface="primary", source="done_reason"
+        )
     for name, attr in (("input", "prompt_eval_count"), ("output", "eval_count")):
         if getattr(response, attr) is not None:
             obs["usage"][name] = getattr(response, attr)
@@ -248,7 +266,9 @@ try:
     client = ollama.Client(host=os.environ["WIRETRUTH_BASE_URL_OLLAMA"])
     options = {"num_predict": call["max_output_tokens"]} if call["max_output_tokens"] else None
     think = False if (call["reasoning"] or {}).get("effort") == "none" else None
-    result = client.chat(call["model"], call["messages"], stream=call["stream"], options=options, think=think)
+    result = client.chat(
+        call["model"], call["messages"], stream=call["stream"], options=options, think=think
+    )
     if call["stream"]:
         for chunk in result:
             obs["stream"]["chunks_seen"] += 1
@@ -265,8 +285,13 @@ except Exception as error:
     category = next((e["category"] for e in manifest["error_map"] if e["type"] in types), default)
     relative = frame.filename.partition("/site-packages/")[2]
     obs["outcome"] = "raised"
-    obs["error"] = dict(type=types[0], message=str(error)[:500], category=category, retry_after=None,
-                        stack_top=f"{relative}:{frame.lineno}" if relative else None)
+    obs["error"] = dict(
+        type=types[0],
+        message=str(error)[:500],
+        category=category,
+        retry_after=None,
+        stack_top=f"{relative}:{frame.lineno}" if relative else None,
+    )
     if call["stream"]:
         obs["stream"]["completed"] = False
 obs["elapsed_ms"] = (time.monotonic() - started) * 1000
@@ -292,12 +317,12 @@ finish.stop-sequence ollama
   the shim exited with code 1
 
 example 0.6.3: 4 cells, 3 PASS, 1 HARNESS
-stderr: .wiretruth/runs/20261117T015135.723994Z
+stderr: .wiretruth/runs/20261117T022334.286246Z
 ```
 
 `finish.stop-sequence` sends `stop`, which this example doesn't map. A real shim would pass `options.stop` and
 cover tools, structured output and the other providers its library speaks. The
-[any-llm shim](../shims/python/any-llm/) is a complete Python shim; the
+[openai-python shim](../shims/python/openai-python/) is a complete Python shim built from this page; the
 [Vercel AI SDK shim](../shims/js/vercel-ai/) is a complete JavaScript one.
 
 ## JavaScript shims
