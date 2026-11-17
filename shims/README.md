@@ -16,6 +16,7 @@ wiretruth run --lib pydantic-ai --write-results
 wiretruth run --lib pydantic-ai --check-against
 wiretruth run --lib vercel-ai
 wiretruth run --lib tanstack-ai
+wiretruth run --lib openai-python
 ```
 
 The library shims are [any-llm](python/any-llm/) and [LiteLLM](python/litellm/), each covering OpenAI Chat
@@ -26,6 +27,8 @@ Gemini GenerateContent and Anthropic Messages. Native Ollama requires a communit
 [TanStack AI](js/tanstack-ai/) covers all six APIs. Its text calls always stream over HTTP, including
 `chat({ stream: false })`, so non-streamed text fixtures are unsupported. Structured output also streams on
 these OpenAI, Anthropic, Gemini and compatible models; native Ollama uses a single non-streamed schema request.
+The [OpenAI Python SDK](python/openai-python/) covers OpenAI Chat Completions and Responses and OpenAI-compatible
+Ollama; the other APIs are unsupported.
 Their manifests document the observed surfaces, exact package versions and unsupported features.
 
 The runner reads `wiretruth-shim.json` in the shim directory and starts its `entry` argv there. A Python entry
