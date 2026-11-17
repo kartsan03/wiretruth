@@ -11,6 +11,19 @@ finding).
 
 ## [Unreleased]
 
+### Added
+- `docs/writing-a-shim.md`: how to write a shim, with the rules, the environment, a complete example on the ollama
+  Python client, local testing and submitting. `shims/README.md`, the README, CONTRIBUTING and the new-library form
+  link it.
+- OpenAI Python SDK (`openai`) 3.52.0 shim for OpenAI Chat Completions and Responses and OpenAI-compatible Ollama.
+  Native Ollama, Gemini GenerateContent and Anthropic Messages are other APIs, so those cells are UNSUPPORTED.
+
+### Results
+- OpenAI Python SDK 3.52.0: 47 PASS, 3 LOSSY and 50 UNSUPPORTED of 100 cells. A Chat Completions stream that ends
+  without its finish chunk ends like a complete one (`stream.missing-finish` on OpenAI Chat and OpenAI-compatible
+  Ollama), and `responses.parse()` raises a validation error, without a finish, on a response cut at the token
+  limit (`truncation.structured-output` on Responses).
+
 ## [0.4.0] - 2026-11-13
 
 ### Added
