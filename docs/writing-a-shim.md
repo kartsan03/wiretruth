@@ -85,6 +85,8 @@ library's documented argument:
   `reasoning` apply when they aren't `null` or empty.
 - A field the library can't send makes the cell unsupported. Exception: if the library can't send a `reasoning`
   effort (often `none`), make the call without it and add a `notes` entry. The response is the same either way.
+- If the library sends a field exactly as you pass it (the token-limit field, for example), the `request.*` cells
+  grade your choice, not the library. Pass the field the provider's docs name, and say so in a `notes` entry.
 - `output_schema` is a JSON Schema. Use the library's documented structured-output call, the one that parses the
   result. If that call takes a type instead of a schema (a Pydantic model, a zod schema), build the type from
   `output_schema`: that maps the input and leaves the output to the library. Cover the schema features the

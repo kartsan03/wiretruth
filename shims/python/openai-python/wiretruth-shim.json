@@ -57,7 +57,7 @@
   ],
   "config_notes": [
     "API key and base_url point the default synchronous OpenAI client at replay. SDK retry, timeout and response-validation defaults are unchanged; the shim performs no retries.",
-    "max_output_tokens maps to max_completion_tokens for openai-chat, max_tokens for ollama-openai, and max_output_tokens for openai-responses.",
+    "max_output_tokens maps to max_completion_tokens for openai-chat, max_tokens for ollama-openai, and max_output_tokens for openai-responses. The SDK sends whichever field the caller passes, so request.max-tokens-field and request.max-tokens-ollama-openai grade this choice: max_completion_tokens because the SDK marks max_tokens deprecated in its favor, max_tokens because Ollama's OpenAI compatibility page lists only that field.",
     "Structured calls build Pydantic types from the supplied schema: required object properties, additionalProperties=false, arrays and strings. Other schema features stop the shim as unmapped.",
     "Responses stop sequences and streamed structured output are not mapped because no supported-provider cell uses them. No graded call fields are omitted."
   ],
@@ -72,6 +72,7 @@
     "https://github.com/openai/openai-python/blob/v3.52.0/helpers.md#differences-from-create",
     "https://github.com/openai/openai-python/blob/v3.52.0/api.md#completions-1",
     "https://github.com/openai/openai-python/blob/v3.52.0/src/openai/resources/responses/api.md#responses",
+    "https://github.com/openai/openai-python/blob/v3.52.0/src/openai/types/chat/completion_create_params.py#L196-L205",
     "https://docs.ollama.com/api/openai-compatibility"
   ]
 }

@@ -223,6 +223,11 @@ else:
             else "max_completion_tokens"
         )
         params[limit] = call["max_output_tokens"]
+        if call["scenario"].startswith("request."):
+            # The SDK sends the field it is given, so these cells grade the shim's choice.
+            obs["notes"].append(
+                f"The SDK sends the token-limit field the caller passes; this shim passes {limit}."
+            )
     if call["reasoning"]:
         params["reasoning" if responses else "reasoning_effort"] = (
             call["reasoning"] if responses else call["reasoning"]["effort"]
