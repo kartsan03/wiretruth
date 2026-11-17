@@ -6,8 +6,12 @@ This is the map of wiretruth's documentation. Start with Concepts if you're new.
 
 - [Concepts](concepts.md): providers, scenarios, fixtures, truth, shims, observations, surfaces and grades, with one
   example followed from fixture to grade.
+- [FAQ](faq.md): fairness to libraries, recorded versus live responses, fixture tiers, LOSSY grades, providers,
+  library CI, what the suite doesn't catch and who pays for recording.
 - [Validation against fixed bugs](validation.md): committed grades before and after upstream fixes, with the
   fixtures that reproduce them.
+- [Disclosure](disclosure.md): when findings are reported upstream, what each upstream status means, documented
+  behavior and grade disputes.
 
 ## Reference
 
