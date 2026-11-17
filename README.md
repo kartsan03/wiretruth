@@ -23,30 +23,26 @@ The [results matrix](https://kartsan03.github.io/wiretruth/) shows the grades fr
 
 ## Why
 
-A model hits its output token limit halfway through a JSON object. The provider says so plainly:
-`"finish_reason": "length"`. What your code sees depends on the SDK in between. If the SDK raises a generic JSON
-parse error, nothing tells you that a higher limit would fix it. If it returns the partial object as a success,
-your pipeline stores an incomplete record.
+A streamed reply stops early. The connection closes cleanly, but the last event, the one with `finish_reason`,
+never arrives. The text so far ends mid-sentence: "A traditional Japanese breakfast is built around rice, soup,
+and a". What your code sees depends on the SDK in between. If the SDK reports a normal stop, your app shows or
+stores half an answer as a complete one. If it reports nothing, your code has to notice the missing finish reason
+itself.
 
-wiretruth has this case recorded as `truncation.structured-output` on `openai-chat`. Replayed through each library:
+wiretruth replays this case as `stream.missing-finish` on `openai-chat`. Every library gets the same bytes:
 
 | Library | What the caller gets | Grade |
 |---|---|---|
-| any-llm 1.40.2 | Raises `openai.LengthFinishReasonError`. Its `completion` has `finish_reason: "length"` and the token usage. | ✓ PASS |
-| LiteLLM 1.109.0 | Returns the cut-off JSON as text in `message.content` with `finish_reason: "length"` and parses none of it. | ✓ PASS |
-| pydantic-ai 2.61.0 | Retries once, then raises `UnexpectedModelBehavior("Exceeded maximum output retries (1)")`. The `length` finish is only in the messages that `capture_run_messages()` keeps. | ~ LOSSY |
-| Vercel AI SDK 7.0.153 | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
+| [LiteLLM](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.109.1.json) | Raises `MidStreamFallbackError`: "Stream ended before a finish_reason was received". | ✓ PASS |
+| [TanStack AI](https://github.com/kartsan03/wiretruth/blob/main/results/tanstack-ai/1.4.0.json) | Ends the stream with a `RUN_ERROR` event whose code is `incomplete-stream`. | ✓ PASS |
+| [Vercel AI SDK](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.173.json) | Ends `fullStream` with a finish part whose `finishReason` is `"interrupted"`. | ✓ PASS |
+| [any-llm](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.51.0.json) | Returns the partial text with no error and no finish reason. | ~ LOSSY |
+| [OpenAI Python SDK](https://github.com/kartsan03/wiretruth/blob/main/results/openai-python/3.52.0.json) | Yields the chunks and stops. None of them has a `finish_reason`. | ~ LOSSY |
+| [pydantic-ai](https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.68.0.json) | Returns the partial text as a complete response with `finish_reason: "stop"`. This default is intended ([pydantic/pydantic-ai#6610](https://github.com/pydantic/pydantic-ai/issues/6610)): the opt-in profile setting `openai_chat_streaming_requires_finish_reason` raises `ModelAPIError` instead. | ✗ WRONG |
 
-pydantic-ai 2.68.0 raises `OutputTokenLimitExceeded` on the first response instead, naming the token limit, and
-grades PASS ([pydantic/pydantic-ai#12399](https://github.com/pydantic/pydantic-ai/issues/12399)); the cut-off text
-and the usage are still only in the captured messages.
-
-pydantic-ai's grades for structured output use `NativeOutput`, the provider's own JSON mode, because that is how
-the fixtures were recorded. It is opt-in: by default pydantic-ai asks for a forced tool call instead on every API
-here except Anthropic, and no scenario covers that path yet. On `gpt-6-luna` that default request is rejected with the same 400
-that `request.tools-with-reasoning-chat` replays (function tools without `reasoning_effort: "none"`). The Vercel AI
-SDK sends a JSON schema by default on every API here except OpenAI-compatible Ollama, where it defaults to JSON-object
-mode; its shim opts into the documented `supportsStructuredOutputs` setting there.
+Each library name links to the results file its row comes from. The
+[scenario page](https://kartsan03.github.io/wiretruth/scenarios/stream.missing-finish.html) shows the current grade
+for every library and provider.
 
 wiretruth runs the same recorded edge cases through every library it supports and grades each one against what the
 provider sent.
@@ -84,6 +80,7 @@ partial text in the truncation scenarios, add a note when they aren't met. How g
 [docs/grading.md](https://github.com/kartsan03/wiretruth/blob/main/docs/grading.md).
 Scenario catalog: [docs/scenarios.md](https://github.com/kartsan03/wiretruth/blob/main/docs/scenarios.md).
 Fixed-bug validation: [docs/validation.md](https://github.com/kartsan03/wiretruth/blob/main/docs/validation.md).
+Common questions: [docs/faq.md](https://github.com/kartsan03/wiretruth/blob/main/docs/faq.md).
 
 ## Quickstart
 
@@ -101,7 +98,7 @@ uv run wiretruth site
 ```
 
 The Vercel AI SDK and TanStack AI shims also need Node.js and npm. The runner builds their pinned dependencies
-automatically; see [Shims](shims/README.md) for supported providers and structured-output modes.
+automatically; see [Shims](https://github.com/kartsan03/wiretruth/blob/main/shims/README.md) for supported providers and structured-output modes.
 
 The any-llm run reports (see [`results/any-llm/1.40.2.json`](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.40.2.json)):
 
@@ -236,17 +233,96 @@ Releases are also on [PyPI](https://pypi.org/project/wiretruth/) (`pip install w
 command only, so run it inside a checkout of the matching release tag (for example `v0.4.0`); on `main`, use
 `uv run` as above.
 
+## Reproduce a cell without wiretruth
+
+Every cell can be reproduced with plain library code. `wiretruth serve` serves one fixture on `127.0.0.1`:
+
+```bash
+uv run wiretruth serve openai-chat/stream.missing-finish --port 8765
+```
+
+```text
+wiretruth serve: openai-chat/stream.missing-finish on http://127.0.0.1:8765
+openai-chat base URL: http://127.0.0.1:8765/v1
+Press Ctrl-C to stop.
+```
+
+In another terminal, call it the way you normally would. With the OpenAI Python SDK (`pip install openai`):
+
+```python
+from openai import OpenAI
+
+client = OpenAI(base_url="http://127.0.0.1:8765/v1", api_key="unused")
+stream = client.chat.completions.create(
+    model="gpt-6-luna",
+    messages=[{"role": "user", "content": "Describe a traditional Japanese breakfast."}],
+    stream=True,
+)
+finish = None
+for chunk in stream:
+    for choice in chunk.choices:
+        print(choice.delta.content or "", end="")
+        finish = choice.finish_reason or finish
+print("\nfinish_reason:", finish)
+```
+
+```text
+A traditional Japanese breakfast is built around rice, soup, and a
+finish_reason: None
+```
+
+The server answers every request to that path with the recorded response, so the prompt and the model don't change
+what comes back.
+
 ## Add your library
 
 A shim is a small program. It reads a call spec as JSON on stdin, calls your library the way its docs show, and
 prints what the library reported as JSON on stdout. The
-[any-llm shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/any-llm/shim.py),
-[LiteLLM shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/litellm/shim.py),
-[pydantic-ai shim](https://github.com/kartsan03/wiretruth/blob/main/shims/python/pydantic-ai/shim.py),
-[Vercel AI SDK shim](https://github.com/kartsan03/wiretruth/blob/main/shims/js/vercel-ai/shim.mjs) and
-[TanStack AI shim](https://github.com/kartsan03/wiretruth/blob/main/shims/js/tanstack-ai/shim.mjs) are examples. The
-steps are in [Writing a shim](https://github.com/kartsan03/wiretruth/blob/main/docs/writing-a-shim.md); to propose a
-library, [open a new-library issue](https://github.com/kartsan03/wiretruth/issues/new?template=new-library.yml).
+[shims in this repository](https://github.com/kartsan03/wiretruth/tree/main/shims) are examples. The steps are in
+[Writing a shim](https://github.com/kartsan03/wiretruth/blob/main/docs/writing-a-shim.md); to propose a library,
+[open a new-library issue](https://github.com/kartsan03/wiretruth/issues/new?template=new-library.yml).
+
+## How it works
+
+```mermaid
+flowchart LR
+    R[recorded provider bytes] --> S[replay server on 127.0.0.1]
+    S <--> L[the library, via its base URL option]
+    L --> O[what the library reported]
+    O --> G[grade against the wire truth]
+    G --> M[matrix]
+```
+
+- **Fixtures** are verbatim HTTP responses with provenance: when, which model, and which CI run recorded them.
+- **Truth** is computed from the wire by a small parser for each provider API, with no SDK involved.
+- **Shims** call each library the way its documentation shows, with default settings, and report only what its
+  public API exposes.
+- **Checks** compare what the library reported with the truth. **Grades** fold the checks into one verdict per cell.
+- **Self-tests:** a reference client must pass every cell, and a deliberately wrong client must fail in known ways.
+
+## Fixture provenance
+
+- **Recorded:** real provider responses, recorded by a
+  [manual CI workflow](https://github.com/kartsan03/wiretruth/blob/main/.github/workflows/record.yml) whose runs
+  are public. Each fixture links its run.
+- **Documented:** transcribed from official API docs when there is no key for that provider (Anthropic today).
+  Each fixture links its source page.
+- **Derived:** a recorded response with one deterministic change, such as a stream that stops before its finish
+  event, for cases a provider can't be made to produce on demand. Each fixture gives the reason and evidence that
+  the shape happens.
+
+Every cell shows its tier. When a fixture is re-recorded, the old one stays in the suite as a dated file. Details:
+[docs/recording.md](https://github.com/kartsan03/wiretruth/blob/main/docs/recording.md) and
+[docs/derived-fixtures.md](https://github.com/kartsan03/wiretruth/blob/main/docs/derived-fixtures.md).
+
+## Disclosure and upstream fixes
+
+A cell turns WRONG, CRASH or HANG on `main` only after the library has an upstream issue for it: one this project
+opened, or an existing one it links to. When a fix ships, the weekly run picks up the release, and the changelog's
+Results section names the fix. Every report and its status is in
+[`results/upstream.json`](https://github.com/kartsan03/wiretruth/blob/main/results/upstream.json), and each cell
+page on the site shows the reports for that cell. The policy:
+[docs/disclosure.md](https://github.com/kartsan03/wiretruth/blob/main/docs/disclosure.md).
 
 ## Related work
 

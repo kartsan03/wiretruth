@@ -56,6 +56,12 @@ mode; the shim opts into its documented `supportsStructuredOutputs` setting to m
 On Anthropic, `claude-haiku-4-5` and `claude-sonnet-5-5` both default to native `output_config.format`, so the
 forced-tool fixture is unsupported. Provider options and documentation links are in the manifest.
 
+pydantic-ai's structured-output cells use `NativeOutput`, the provider's own JSON mode, because that is how the
+fixtures were recorded. It is opt-in: by default pydantic-ai asks for a forced tool call on every API here except
+Anthropic. On `gpt-6-luna` that default request is rejected with the same 400 that
+`request.tools-with-reasoning-chat` replays (function tools without `reasoning_effort: "none"`). Only
+`truncation.structured-output-forced-tool`, on Anthropic, uses the forced tool call (`ToolOutput`).
+
 The shim reads one `wiretruth.call/v1` document from stdin, prints exactly one `wiretruth.observation/v1` document
 to stdout and exits 0, including when its library raises. Unexpected exceptions belong in the observation too.
 Logs go to stderr; the runner keeps them under `.wiretruth/runs/<UTC timestamp>/`, one file per cell.
