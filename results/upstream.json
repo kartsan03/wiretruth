@@ -85,7 +85,7 @@
     "status": "reported",
     "fixed_in": null,
     "opened": "2026-11-10",
-    "notes": "A stream that ends before the provider's terminal signal returns the partial chunks normally, with no error and no incomplete flag (reproduced on 1.40.2 and 1.50.0). The OpenAI Responses path reports the output item as incomplete and passes."
+    "notes": "A stream that ends before the provider's terminal signal returns the partial chunks normally, with no error and no incomplete flag (reproduced on 1.40.2, 1.50.0 and 1.51.0). The OpenAI Responses path reports the output item as incomplete and passes. https://github.com/mozilla-ai/any-llm/pull/1645 (merged 2026-11-16, after 1.51.0) fixes the same case in the messages() bridge only; its description says completion() streams are unchanged, and the shim calls completion()."
   },
   {
     "library": "litellm",
