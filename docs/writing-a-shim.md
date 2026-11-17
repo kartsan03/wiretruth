@@ -96,14 +96,14 @@ library's documented argument:
 - `extra` holds hints for one scenario, such as `{"include_usage": true}`. Pass a hint only when the library has a
   documented switch for it. Otherwise leave it out and add a `notes` entry.
 
-**Unsupported.** When the library's documented call can't express a cell (a provider it doesn't speak, a setting
-it can't send, a request shape it never makes), print an observation with `outcome: "unsupported"` and an
-`unsupported_reason` that ends with a docs link. List the same scenario and providers in the manifest's
-`unsupported`. Each entry names one scenario id exactly (no patterns); `providers` limits it to some providers,
-and leaving it out covers them all. For a provider the library doesn't speak, add one entry per scenario that
-lists that provider; the [scenario catalog](scenarios.md) shows which scenarios each provider has. A cell the shim
-reports as unsupported but the manifest doesn't list grades HARNESS. Describe the library's design, not a defect:
-"The SDK has no native Ollama client".
+**Unsupported.** When the library's documented call can't express a cell (a provider it doesn't speak, a setting it
+can't send, a request shape it never makes, such as TanStack AI's `chat()`, which always streams), print an
+observation with `outcome: "unsupported"` and an `unsupported_reason` that ends with a docs link. List the same
+scenario and providers in the manifest's `unsupported`. Each entry names one scenario id exactly (no patterns);
+`providers` limits it to some providers, and leaving it out covers them all. For a provider the library doesn't
+speak, add one entry per scenario that lists that provider; the [scenario catalog](scenarios.md) shows which
+scenarios each provider has. A cell the shim reports as unsupported but the manifest doesn't list grades HARNESS.
+Describe the library's design, not a defect: "The SDK has no native Ollama client".
 
 ## Writing the observation
 
