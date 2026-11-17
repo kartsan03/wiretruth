@@ -97,6 +97,9 @@ def test_real_build_pages_and_determinism(built: Path) -> None:
             REPO / "src" / "wiretruth" / "schemas" / name
         ).read_bytes()
     assert {path.name for path in (built / "schemas").iterdir()} == schemas
+    method = (built / "method.html").read_text()
+    for page in ("disclosure.md", "faq.md"):
+        assert f'href="https://github.com/kartsan03/wiretruth/blob/main/docs/{page}"' in method
 
 
 def test_all_links_fragments_tooltips_and_css_urls_resolve(built: Path) -> None:
