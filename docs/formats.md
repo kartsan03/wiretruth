@@ -352,6 +352,9 @@ Every graded cell for one library version.
 | `run` | `{at, git_sha, ci_run, runner, packages}` | When and where the run happened; `ci_run` is a URL or `null`; `packages` maps installed packages to versions (Python freeze; JavaScript top-level entries in `node_modules/.package-lock.json`, including scoped names) |
 | `cells` | list of [cells](#cell) | |
 
+`run.git_sha` is the commit checked out for the run. Results written on a pull request branch carry that branch's
+commit, which a clone of `main` doesn't have after the squash merge; it stays reachable through the pull request.
+
 ### Cell
 
 | Field | Type | Meaning |

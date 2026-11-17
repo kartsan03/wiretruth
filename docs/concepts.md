@@ -3,8 +3,7 @@
 This page is for anyone new to wiretruth. After reading it, you should be able to explain how a provider response
 becomes a grade for a library, and what each grade means.
 
-wiretruth is still being built. This page describes the design that the code implements as it lands. The reasoning
-behind each design choice is in the [decision records](index.md#decisions).
+The reasoning behind each design choice is in the [decision records](index.md#decisions).
 
 ## The short version
 

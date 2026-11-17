@@ -17,6 +17,17 @@ finding).
   link it.
 - OpenAI Python SDK (`openai`) 3.52.0 shim for OpenAI Chat Completions and Responses and OpenAI-compatible Ollama.
   Native Ollama, Gemini GenerateContent and Anthropic Messages are other APIs, so those cells are UNSUPPORTED.
+- `docs/faq.md` and `docs/disclosure.md` (when findings are reported upstream, what each `upstream.json` status
+  means, documented behavior, grade disputes). The README, `docs/index.md` and the site's method page link them.
+- README sections: reproducing a cell with plain library code, how it works, fixture provenance, and disclosure.
+- Discussions, linked from the issue chooser as "Question or idea".
+
+### Changed
+- The README "Why" example is now `truncation.structured-output` on OpenAI Responses, from each library's newest
+  results, with each row linked to its results file.
+- CONTRIBUTING covers disputing a grade, adding a library and adding a scenario, and lists every CI check.
+- SECURITY.md: a security-relevant finding in a tested library keeps its results off `main` until a fix ships or
+  90 days pass.
 
 ### Results
 - OpenAI Python SDK 3.52.0: 47 PASS, 3 LOSSY and 50 UNSUPPORTED of 100 cells. A Chat Completions stream that ends

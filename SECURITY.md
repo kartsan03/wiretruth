@@ -20,8 +20,8 @@ In scope:
 Out of scope:
 
 - Bugs in the libraries being tested. Report those to the library. If a finding looks security-relevant for a
-  tested library, we use that library's private advisory channel, and the matrix cell shows "under disclosure"
-  until a fix ships or 90 days pass.
+  tested library, we use that library's private advisory channel, and its results stay off `main` until a fix
+  ships or 90 days pass ([disclosure policy](https://github.com/kartsan03/wiretruth/blob/main/docs/disclosure.md)).
 
 ## Supported versions
 
