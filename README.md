@@ -23,26 +23,26 @@ The [results matrix](https://kartsan03.github.io/wiretruth/) shows the grades fr
 
 ## Why
 
-A streamed reply stops early. The connection closes cleanly, but the last event, the one with `finish_reason`,
-never arrives. The text so far ends mid-sentence: "A traditional Japanese breakfast is built around rice, soup,
-and a". What your code sees depends on the SDK in between. If the SDK reports a normal stop, your app shows or
-stores half an answer as a complete one. If it reports nothing, your code has to notice the missing finish reason
-itself.
+A model hits its output token limit halfway through a JSON object. The provider says so plainly: the OpenAI
+Responses API returns `"status": "incomplete"` with `"incomplete_details": {"reason": "max_output_tokens"}`. What
+your code sees depends on the SDK in between. If the SDK raises a generic JSON parse error, nothing tells you that
+a higher limit would fix it. If it returns the partial object as a success, your pipeline stores an incomplete
+record.
 
-wiretruth replays this case as `stream.missing-finish` on `openai-chat`. Every library gets the same bytes:
+wiretruth has this response recorded as `truncation.structured-output` on `openai-responses`. Every library gets
+the same bytes:
 
 | Library | What the caller gets | Grade |
 |---|---|---|
-| [LiteLLM](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.109.1.json) | Raises `MidStreamFallbackError`: "Stream ended before a finish_reason was received". | ✓ PASS |
-| [TanStack AI](https://github.com/kartsan03/wiretruth/blob/main/results/tanstack-ai/1.4.0.json) | Ends the stream with a `RUN_ERROR` event whose code is `incomplete-stream`. | ✓ PASS |
-| [Vercel AI SDK](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.173.json) | Ends `fullStream` with a finish part whose `finishReason` is `"interrupted"`. | ✓ PASS |
-| [any-llm](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.51.0.json) | Returns the partial text with no error and no finish reason. | ~ LOSSY |
-| [OpenAI Python SDK](https://github.com/kartsan03/wiretruth/blob/main/results/openai-python/3.52.0.json) | Yields the chunks and stops. None of them has a `finish_reason`. | ~ LOSSY |
-| [pydantic-ai](https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.68.0.json) | Returns the partial text as a complete response with `finish_reason: "stop"`. This default is intended ([pydantic/pydantic-ai#6610](https://github.com/pydantic/pydantic-ai/issues/6610)): the opt-in profile setting `openai_chat_streaming_requires_finish_reason` raises `ModelAPIError` instead. | ✗ WRONG |
+| [LiteLLM](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.109.1.json) | Returns the response with `incomplete_details.reason: "max_output_tokens"`, the cut-off JSON as text and the token usage, and parses none of it. | ✓ PASS |
+| [pydantic-ai](https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.68.0.json) | Raises `OutputTokenLimitExceeded`, which names the token limit. The cut-off text and the usage are only in the messages that `capture_run_messages()` keeps. | ✓ PASS |
+| [Vercel AI SDK](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.173.json) | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
+| [any-llm](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.51.0.json) | Raises pydantic's `ValidationError` ("Invalid JSON: EOF while parsing a string"), with no finish reason and no usage. | ~ LOSSY |
+| [OpenAI Python SDK](https://github.com/kartsan03/wiretruth/blob/main/results/openai-python/3.52.0.json) | `responses.parse()` raises pydantic's `ValidationError` ("Invalid JSON: EOF while parsing a string"), with no finish reason and no usage. | ~ LOSSY |
 
-Each library name links to the results file its row comes from. The
-[scenario page](https://kartsan03.github.io/wiretruth/scenarios/stream.missing-finish.html) shows the current grade
-for every library and provider.
+The table is a snapshot: each library name links to the results file its row comes from, and the
+[scenario page](https://kartsan03.github.io/wiretruth/scenarios/truncation.structured-output.html) shows the current
+grades. TanStack AI isn't listed because it streams every call, so this non-streamed fixture is UNSUPPORTED there.
 
 wiretruth runs the same recorded edge cases through every library it supports and grades each one against what the
 provider sent.
@@ -238,12 +238,12 @@ command only, so run it inside a checkout of the matching release tag (for examp
 Every cell can be reproduced with plain library code. `wiretruth serve` serves one fixture on `127.0.0.1`:
 
 ```bash
-uv run wiretruth serve openai-chat/stream.missing-finish --port 8765
+uv run wiretruth serve openai-responses/truncation.structured-output --port 8765
 ```
 
 ```text
-wiretruth serve: openai-chat/stream.missing-finish on http://127.0.0.1:8765
-openai-chat base URL: http://127.0.0.1:8765/v1
+wiretruth serve: openai-responses/truncation.structured-output on http://127.0.0.1:8765
+openai-responses base URL: http://127.0.0.1:8765/v1
 Press Ctrl-C to stop.
 ```
 
@@ -251,28 +251,31 @@ In another terminal, call it the way you normally would. With the OpenAI Python 
 
 ```python
 from openai import OpenAI
+from pydantic import BaseModel
+
+
+class Island(BaseModel):
+    name: str
+    sea: str
+
+
+class Islands(BaseModel):
+    islands: list[Island]
+
 
 client = OpenAI(base_url="http://127.0.0.1:8765/v1", api_key="unused")
-stream = client.chat.completions.create(
-    model="gpt-6-luna",
-    messages=[{"role": "user", "content": "Describe a traditional Japanese breakfast."}],
-    stream=True,
-)
-finish = None
-for chunk in stream:
-    for choice in chunk.choices:
-        print(choice.delta.content or "", end="")
-        finish = choice.finish_reason or finish
-print("\nfinish_reason:", finish)
+client.responses.parse(model="gpt-6-luna", input="List ten Greek islands.", text_format=Islands)
 ```
 
 ```text
-A traditional Japanese breakfast is built around rice, soup, and a
-finish_reason: None
+Traceback (most recent call last):
+  ...
+pydantic_core._pydantic_core.ValidationError: 1 validation error for Islands
+  Invalid JSON: EOF while parsing a string at line 1 column 59 [type=json_invalid, input_value='{"islands":[{"name":"Κ...a":"Κρητικό Πέ', input_type=str]
 ```
 
-The server answers every request to that path with the recorded response, so the prompt and the model don't change
-what comes back.
+The error doesn't say that the response stopped at `max_output_tokens`. The server answers every request to that
+path with the recorded response, so the prompt and the model don't change what comes back.
 
 ## Add your library
 

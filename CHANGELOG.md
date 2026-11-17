@@ -23,7 +23,8 @@ finding).
 - Discussions, linked from the issue chooser as "Question or idea".
 
 ### Changed
-- The README "Why" example is now `stream.missing-finish` on OpenAI Chat, with each row linked to its results file.
+- The README "Why" example is now `truncation.structured-output` on OpenAI Responses, from each library's newest
+  results, with each row linked to its results file.
 - CONTRIBUTING covers disputing a grade, adding a library and adding a scenario, and lists every CI check.
 - SECURITY.md: a security-relevant finding in a tested library keeps its results off `main` until a fix ships or
   90 days pass.
