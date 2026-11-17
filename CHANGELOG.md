@@ -11,14 +11,24 @@ finding).
 
 ## [Unreleased]
 
+### Added
+- `docs/writing-a-shim.md`: how to write a shim, with the rules, the environment, a complete example on the ollama
+  Python client, local testing and submitting. `shims/README.md`, the README, CONTRIBUTING and the new-library form
+  link it.
+- OpenAI Python SDK (`openai`) 3.52.0 shim for OpenAI Chat Completions and Responses and OpenAI-compatible Ollama.
+  Native Ollama, Gemini GenerateContent and Anthropic Messages are other APIs, so those cells are UNSUPPORTED.
 
 ### Results
+- OpenAI Python SDK 3.52.0: 47 PASS, 3 LOSSY and 50 UNSUPPORTED of 100 cells. A Chat Completions stream that ends
+  without its finish chunk ends like a complete one (`stream.missing-finish` on OpenAI Chat and OpenAI-compatible
+  Ollama), and `responses.parse()` raises a validation error, without a finish, on a response cut at the token
+  limit (`truncation.structured-output` on Responses).
 - any-llm 1.51.0: 87 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 100 cells
   ([results/any-llm/1.51.0.json](results/any-llm/1.51.0.json)). No grade changes from 1.50.0.
-- litellm 1.109.1: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
-  ([results/litellm/1.109.1.json](results/litellm/1.109.1.json)). No grade changes from 1.109.1.
-- pydantic-ai 2.68.0: 68 PASS, 11 LOSSY, 6 WRONG and 15 UNSUPPORTED of 100 cells
-  ([results/pydantic-ai/2.68.0.json](results/pydantic-ai/2.68.0.json)). No grade changes from 2.68.0.
+- litellm 1.109.1 with `openai` 3.51.0: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
+  ([results/litellm/1.109.1.json](results/litellm/1.109.1.json)). No grade changes.
+- pydantic-ai 2.68.0 with `openai` 3.51.0: 68 PASS, 11 LOSSY, 6 WRONG and 15 UNSUPPORTED of 100 cells
+  ([results/pydantic-ai/2.68.0.json](results/pydantic-ai/2.68.0.json)). No grade changes.
 - vercel-ai 7.0.173: 84 PASS and 16 UNSUPPORTED of 100 cells
   ([results/vercel-ai/7.0.173.json](results/vercel-ai/7.0.173.json)). No grade changes from 7.0.171.
 

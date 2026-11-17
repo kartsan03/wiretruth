@@ -20,6 +20,11 @@ This is the map of wiretruth's documentation. Start with Concepts if you're new.
 - [Derived fixtures](derived-fixtures.md): the six transforms, their evidence and arguments, and how to create a
   fixture with recomputed truth.
 
+## Contribute
+
+- [Writing a shim](writing-a-shim.md): the rules, the environment, what to read and print, a complete example,
+  local testing and submitting a library.
+
 ## Decisions
 
 Each decision record gives the context, the decision, its consequences and the alternatives that were rejected.
@@ -31,7 +36,3 @@ Each decision record gives the context, the decision, its consequences and the a
 - [0005. Provenance tiers for fixtures](adr/0005-provenance-tiers.md)
 - [0006. Libraries run with their default configuration](adr/0006-default-library-config.md)
 - [Template for new records](adr/0000-template.md)
-
-## Coming with the code
-
-The reference page for writing a shim will be added with the code it describes.

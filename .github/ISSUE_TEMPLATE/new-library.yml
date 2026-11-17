@@ -27,5 +27,5 @@ body:
     attributes:
       label: Contribution
       options:
-        - label: I'm willing to write the shim
+        - label: I'm willing to write the shim (see [Writing a shim](https://github.com/kartsan03/wiretruth/blob/main/docs/writing-a-shim.md))
         - label: I maintain this library

@@ -1,7 +1,8 @@
 # Contributing to wiretruth
 
-Thanks for helping. wiretruth is at an early stage, so this guide only covers working on the code itself. Guides
-for adding libraries and scenarios, and for disputing a grade, will be added later.
+Thanks for helping. wiretruth is at an early stage, so this guide only covers working on the code itself. To add a
+library, follow [Writing a shim](docs/writing-a-shim.md). Guides for adding scenarios and for disputing a grade will
+be added later.
 
 ## Development setup
 

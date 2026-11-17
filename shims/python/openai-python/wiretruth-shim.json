@@ -1,0 +1,78 @@
+{
+  "format": "wiretruth.shim/v1",
+  "name": "openai-python",
+  "language": "python",
+  "packages": {"openai": "3.52.0"},
+  "primary_package": "openai",
+  "entry": ["python", "shim.py"],
+  "providers": {
+    "openai-chat": "OpenAI(api_key=WIRETRUTH_API_KEY, base_url=WIRETRUTH_BASE_URL_OPENAI_CHAT).chat.completions.create/parse(...)",
+    "openai-responses": "OpenAI(api_key=WIRETRUTH_API_KEY, base_url=WIRETRUTH_BASE_URL_OPENAI_RESPONSES).responses.create/parse(...)",
+    "ollama-openai": "OpenAI(api_key=WIRETRUTH_API_KEY, base_url=WIRETRUTH_BASE_URL_OLLAMA_OPENAI).chat.completions.create/parse(...); base URL includes /v1"
+  },
+  "surfaces": {
+    "finish": {"primary": "Chat: choices[0].finish_reason, including error.completion.choices[0].finish_reason. Responses: incomplete_details.reason, otherwise status; completed with an output function_call maps to tool_calls, completed with a refusal content part maps to refusal. Raw retains the reason or status string."},
+    "text": {"primary": "Chat: choices[0].message.content; streams join choices[0].delta.content. Responses: output_text; streams join response.output_text.delta.delta. LengthFinishReasonError.completion retains message content."},
+    "structured": {"primary": "Chat parse: choices[0].message.parsed. Responses parse: output_parsed. Pydantic values serialize with model_dump(mode=\"json\")."},
+    "tool_calls": {"primary": "Chat: choices[0].message.tool_calls[].id and function.name/arguments; streams concatenate choices[0].delta.tool_calls by index. Responses: output function_call.call_id/name/arguments; streams read response.output_item.done.item and terminal response.output. Arguments are parsed with json.loads only."},
+    "usage": {"primary": "Chat: usage.prompt_tokens, prompt_tokens_details.cached_tokens, completion_tokens, completion_tokens_details.reasoning_tokens, total_tokens, including LengthFinishReasonError.completion. Responses: usage.input_tokens, input_tokens_details.cached_tokens, output_tokens, output_tokens_details.reasoning_tokens, total_tokens. Stream chunks/events use the same fields."},
+    "stream": {"primary": "Count each SDK yield. Chat create streams expose no completion sentinel; completed stays null. Responses response.completed/response.incomplete are terminal events; response.failed and typed error events report failure. Raised errors set completed=false."}
+  },
+  "finish_map": {"stop": "stop", "length": "length", "tool_calls": "tool_calls", "function_call": "tool_calls", "content_filter": "content_filter", "completed": "stop", "max_output_tokens": "length", "failed": "error", "cancelled": "other", "incomplete": "other", "in_progress": "none", "queued": "none"},
+  "error_map": [
+    {"type": "openai.LengthFinishReasonError", "category": "truncation"},
+    {"type": "openai.ContentFilterFinishReasonError", "category": "content_filter"},
+    {"type": "openai.RateLimitError", "category": "rate_limit"},
+    {"type": "openai.APIResponseValidationError", "category": "validation"},
+    {"type": "openai.APIConnectionError", "category": "network"},
+    {"type": "openai.APIStatusError", "category": "api"},
+    {"type": "openai.APIError", "category": "api"},
+    {"type": "pydantic_core._pydantic_core.ValidationError", "category": "validation"},
+    {"type": "json.decoder.JSONDecodeError", "category": "parse"},
+    {"type": "openai.types.responses.response_error_event.ResponseErrorEvent", "category": "api"},
+    {"type": "openai.types.responses.response_error.ResponseError", "category": "api"}
+  ],
+  "unsupported": [
+    {"scenario": "finish.stop-sequence", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "finish.unknown-value", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "request.no-injected-options", "providers": ["ollama"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "stream.error-midstream", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "stream.missing-finish-abort", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "stream.missing-finish", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "stream.utf8-split", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "stream.utf8", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "tools.parallel-calls-stream", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "tools.parallel-calls", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "truncation.reasoning-only", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "truncation.structured-output-forced-tool", "providers": ["anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "truncation.structured-output", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "truncation.text-stream-usage", "providers": ["gemini"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "truncation.text-stream", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "truncation.text", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "truncation.tool-call-args-stream", "providers": ["anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "truncation.tool-call-args", "providers": ["anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "usage.cached-tokens", "providers": ["anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "usage.reasoning-tokens", "providers": ["gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"},
+    {"scenario": "usage.stream-final-chunk", "providers": ["ollama", "gemini", "anthropic"], "reason": "The SDK provides OpenAI API clients; it has no native Anthropic, Gemini or Ollama wire API client.", "docs": "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage"}
+  ],
+  "config_notes": [
+    "API key and base_url point the default synchronous OpenAI client at replay. SDK retry, timeout and response-validation defaults are unchanged; the shim performs no retries.",
+    "max_output_tokens maps to max_completion_tokens for openai-chat, max_tokens for ollama-openai, and max_output_tokens for openai-responses. The SDK sends whichever field the caller passes, so request.max-tokens-field and request.max-tokens-ollama-openai grade this choice: max_completion_tokens because the SDK marks max_tokens deprecated in its favor, max_tokens because Ollama's OpenAI compatibility page lists only that field.",
+    "Structured calls build Pydantic types from the supplied schema: required object properties, additionalProperties=false, arrays and strings. Other schema features stop the shim as unmapped.",
+    "Responses stop sequences and streamed structured output are not mapped because no supported-provider cell uses them. No graded call fields are omitted."
+  ],
+  "docs": [
+    "https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage",
+    "https://github.com/openai/openai-python/blob/v3.52.0/README.md#streaming-responses",
+    "https://github.com/openai/openai-python/blob/v3.52.0/README.md#configuring-the-http-client",
+    "https://github.com/openai/openai-python/blob/v3.52.0/README.md#handling-errors",
+    "https://github.com/openai/openai-python/blob/v3.52.0/README.md#retries",
+    "https://github.com/openai/openai-python/blob/v3.52.0/helpers.md#auto-parsing-response-content-with-pydantic-models",
+    "https://github.com/openai/openai-python/blob/v3.52.0/helpers.md#parsing-responses-api-output",
+    "https://github.com/openai/openai-python/blob/v3.52.0/helpers.md#differences-from-create",
+    "https://github.com/openai/openai-python/blob/v3.52.0/api.md#completions-1",
+    "https://github.com/openai/openai-python/blob/v3.52.0/src/openai/resources/responses/api.md#responses",
+    "https://github.com/openai/openai-python/blob/v3.52.0/src/openai/types/chat/completion_create_params.py#L196-L205",
+    "https://docs.ollama.com/api/openai-compatibility"
+  ]
+}
