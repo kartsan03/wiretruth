@@ -27,9 +27,9 @@ A shim MUST:
 4. Print nothing else to stdout. Logs go to stderr. If the library or a dependency writes to stdout, silence it with
    a documented option or redirect it (Python: `contextlib.redirect_stdout(sys.stderr)`).
 5. Catch failures that escape the library call and report them in the observation, the same way as an exception
-   from the call. In Python, set `threading.excepthook` and, if the library runs an asyncio event loop, the loop's
-   exception handler; in JavaScript, handle `unhandledRejection` and `uncaughtException`. The example below needs
-   neither, because the client it calls starts no threads or loops.
+   from the call. In Python, if the library runs work on background threads or an asyncio event loop, set
+   `threading.excepthook` or the loop's exception handler; in JavaScript, handle `unhandledRejection` and
+   `uncaughtException`. The example below needs neither, because the client it calls starts no threads or loops.
 6. Send the request the fixture replays: the same endpoint, streamed or not, the same number of requests. A wrong
    endpoint or stream mode grades HARNESS, and so does a result with no request at all, unless it is a
    `validation` or `internal` error the library raised before sending. If the library's documented call can't send

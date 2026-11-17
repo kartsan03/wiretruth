@@ -1,7 +1,6 @@
 import json
 import os
 import sys
-import threading
 import time
 import traceback
 from contextlib import redirect_stdout
@@ -198,8 +197,6 @@ def observe_response(result, streamed=False):
         parsed(result.output_parsed)
 
 
-# This synchronous call path starts no event loop. Also capture escaped thread errors.
-threading.excepthook = lambda args: raised(args.exc_value)
 unsupported = next(
     (
         entry
