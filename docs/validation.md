@@ -14,8 +14,10 @@ be later than the first release containing the fix.
 | TanStack AI [#1853](https://github.com/TanStack/ai/issues/1853): truncated tool call loses the length finish and triggers retries; fixed by [#1874](https://github.com/TanStack/ai/pull/1874) | wiretruth | `truncation.tool-call-args-stream`: `openai-chat` | 0.71.0 → WRONG | 1.0.0 → PASS | [before](../results/tanstack-ai/0.71.0.json), [after](../results/tanstack-ai/1.0.0.json) |
 | TanStack AI [#1852](https://github.com/TanStack/ai/issues/1852): native Ollama stream cut by the token limit finishes as `stop`; fixed by [#2077](https://github.com/TanStack/ai/pull/2077) in `@tanstack/ai-ollama` 1.1.1 | wiretruth | `truncation.text-stream`: `ollama` | 1.0.0 → WRONG | 1.4.0 → PASS | [before](../results/tanstack-ai/1.0.0.json), [after](../results/tanstack-ai/1.4.0.json) |
 | LiteLLM [#46542](https://github.com/BerriAI/litellm/issues/46542): a stream that ends without a finish reason is reported as `stop`; fixed by [#47665](https://github.com/BerriAI/litellm/pull/47665), which doesn't link the issue (the link is inferred from the changed behaviour; the issue stays open for `gemini`) | wiretruth | `stream.missing-finish`: `anthropic`, `ollama`, `ollama-openai`, `openai-chat` | 1.105.5 → WRONG | 1.109.0 → PASS | [before](../results/litellm/1.105.5.json), [after](../results/litellm/1.109.0.json) |
+| TanStack AI [#2130](https://github.com/TanStack/ai/issues/2130): Gemini stream without a finish reason has no terminal event; fixed by [#2124](https://github.com/TanStack/ai/pull/2124) in `@tanstack/ai-gemini` 1.2.3, which doesn't link the issue | wiretruth | `stream.missing-finish`: `gemini` | 1.4.0 → LOSSY | 1.8.0 → PASS | [before](../results/tanstack-ai/1.4.0.json), [after](../results/tanstack-ai/1.8.0.json) |
 | pydantic-ai [#7816](https://github.com/pydantic/pydantic-ai/issues/7816): unfamiliar finish values rejected; fixed by [#11119](https://github.com/pydantic/pydantic-ai/pull/11119) | reported by others, confirmed by wiretruth | `finish.unknown-value`: `openai-chat`, `ollama-openai` | 2.56.0 → WRONG | 2.61.0 → LOSSY | [before](../results/pydantic-ai/2.56.0.json), [after](../results/pydantic-ai/2.61.0.json) |
 | pydantic-ai [#12399](https://github.com/pydantic/pydantic-ai/issues/12399): truncated structured output fails after retries with a generic error; fixed by [#12407](https://github.com/pydantic/pydantic-ai/pull/12407) | reported by others, confirmed by wiretruth | `truncation.structured-output`: `anthropic`, `gemini`, `ollama-openai`, `openai-chat`, `openai-responses` | 2.61.0 → LOSSY | 2.68.0 → PASS | [before](../results/pydantic-ai/2.61.0.json), [after](../results/pydantic-ai/2.68.0.json) |
+| pydantic-ai on Ollama [#7125](https://github.com/ollama/ollama/issues/7125): Ollama's OpenAI-compatible endpoint ignores `max_completion_tokens`, the only limit field `OllamaModel` sent; fixed in pydantic-ai by [#12552](https://github.com/pydantic/pydantic-ai/pull/12552) in 2.69.0, which sends `max_tokens` | reported by others, confirmed by wiretruth | `request.max-tokens-ollama-openai`: `ollama-openai` | 2.68.0 → WRONG | 2.71.0 → PASS | [before](../results/pydantic-ai/2.68.0.json), [after](../results/pydantic-ai/2.71.0.json) |
 
 pydantic-ai keeps the response and the original value in `provider_details`, but exposes no finish reason.
 That is LOSSY, not PASS. wiretruth's later report was closed as a duplicate of #7816.
@@ -46,6 +48,8 @@ Replaying fixtures recorded on today's models is fine: the wire shape is what ma
   (`gpt-6-luna`, recorded 2026-10-11). This is the only cell whose grade changed between these TanStack results.
 - **TanStack #1852:** `ollama` [truncation.text-stream](../suite/fixtures/ollama/truncation.text-stream.json)
   (`qwen3.5:0.8b`, recorded 2026-10-12).
+- **TanStack #2130:** `gemini` [stream.missing-finish](../suite/fixtures/gemini/stream.missing-finish.json)
+  (`gemini-3.5-flash-lite`, derived).
 - **LiteLLM #46542:** [stream.missing-finish](../suite/fixtures/openai-chat/stream.missing-finish.json) over
   `openai-chat` (`gpt-6-luna`, derived), [anthropic](../suite/fixtures/anthropic/stream.missing-finish.json)
   (`claude-sonnet-5-5`, derived from documented), and [ollama](../suite/fixtures/ollama/stream.missing-finish.json)
@@ -57,13 +61,20 @@ Replaying fixtures recorded on today's models is fine: the wire shape is what ma
   2026-10-11), [ollama-openai](../suite/fixtures/ollama-openai/truncation.structured-output.json) (`qwen3.5:0.8b`,
   recorded 2026-10-12), [gemini](../suite/fixtures/gemini/truncation.structured-output.json)
   (`gemini-3.5-flash-lite`, recorded 2026-10-13) and [anthropic](../suite/fixtures/anthropic/truncation.structured-output.json)
-  (`claude-sonnet-5-5`, documented). The forced-tool and tool-call truncation cells stay LOSSY in 2.68.0.
+  (`claude-sonnet-5-5`, documented). The forced-tool and tool-call truncation cells stay LOSSY in 2.71.0.
+- **pydantic-ai on Ollama #7125:** `ollama-openai`
+  [request.max-tokens-ollama-openai](../suite/fixtures/ollama-openai/request.max-tokens-ollama-openai.json)
+  (`qwen3.5:0.8b`, recorded 2026-10-12). The check reads the request, so the cell passes on the field pydantic-ai
+  sends; Ollama itself still ignores `max_completion_tokens` (its fix, #18604, is open).
 
 The other consecutive result comparisons add no fixed-bug rows: LiteLLM 1.105.1 → 1.105.5 and any-llm
 1.38.0 → 1.40.2 have unchanged grades. The Vercel comparisons change only the cells listed above.
 TanStack 1.0.0 → 1.4.0 also moves `stream.missing-finish` over `anthropic` LOSSY → PASS
 ([#2042](https://github.com/TanStack/ai/pull/2042), `@tanstack/ai-anthropic` 1.1.1); wiretruth graded that gap but
-filed no issue for it, so it has no row above.
+filed no issue for it, so it has no row above. TanStack 1.4.0 → 1.8.0 also moves `stream.error-midstream` over
+`gemini` WRONG → PASS: `@google/genai` 2.30.0 still drops the error event
+([googleapis/js-genai#2087](https://github.com/googleapis/js-genai/issues/2087), open), and #2124 reports the
+stream that ends after it as an error. The upstream bug isn't fixed, so it has no row above.
 
 ## Not checked yet
 

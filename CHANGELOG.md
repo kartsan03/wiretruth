@@ -28,29 +28,34 @@ finding).
 - CONTRIBUTING covers disputing a grade, adding a library and adding a scenario, and lists every CI check.
 - SECURITY.md: a security-relevant finding in a tested library keeps its results off `main` until a fix ships or
   90 days pass.
+- The pydantic-ai shim maps `ModelRequestRejectedError` (pydantic-ai 2.69.0 and later refuse some calls before
+  sending them) to the `validation` error category, so a refused call is graded like any other validation error.
 
 ### Results
-- pydantic-ai 2.71.0: 69 PASS, 11 LOSSY, 5 WRONG and 15 UNSUPPORTED of 100 cells
-  ([results/pydantic-ai/2.71.0.json](results/pydantic-ai/2.71.0.json)). Grade changes from 2.68.0:
-  `request.max-tokens-ollama-openai` over `ollama-openai` WRONG → PASS
-  ([upstream](https://github.com/ollama/ollama/issues/7125)).
 - any-llm 1.53.1: 87 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 100 cells
   ([results/any-llm/1.53.1.json](results/any-llm/1.53.1.json)). No grade changes from 1.51.0.
 - litellm 1.110.2: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
   ([results/litellm/1.110.2.json](results/litellm/1.110.2.json)). No grade changes from 1.109.1.
 - openai-python 3.57.0: 47 PASS, 3 LOSSY and 50 UNSUPPORTED of 100 cells
   ([results/openai-python/3.57.0.json](results/openai-python/3.57.0.json)). No grade changes from 3.52.0.
+- pydantic-ai 2.71.0: 69 PASS, 11 LOSSY, 5 WRONG and 15 UNSUPPORTED of 100 cells
+  ([results/pydantic-ai/2.71.0.json](results/pydantic-ai/2.71.0.json)). Grade changes from 2.68.0:
+  `request.max-tokens-ollama-openai` over `ollama-openai` WRONG → PASS: since
+  [#12552](https://github.com/pydantic/pydantic-ai/pull/12552) (2.69.0) pydantic-ai sends Ollama's limit as
+  `max_tokens`, which Ollama reads ([upstream](https://github.com/ollama/ollama/issues/7125)).
 - tanstack-ai 1.8.0: 52 PASS and 48 UNSUPPORTED of 100 cells
   ([results/tanstack-ai/1.8.0.json](results/tanstack-ai/1.8.0.json)). Grade changes from 1.4.0:
-  `stream.error-midstream` over `gemini` WRONG → PASS
-  ([upstream](https://github.com/googleapis/js-genai/issues/2087)); `stream.missing-finish` over `gemini` LOSSY →
-  PASS ([upstream](https://github.com/TanStack/ai/issues/2130)).
+  `stream.missing-finish` over `gemini` LOSSY → PASS ([upstream](https://github.com/TanStack/ai/issues/2130), fixed
+  by [#2124](https://github.com/TanStack/ai/pull/2124) in `@tanstack/ai-gemini` 1.2.3), and `stream.error-midstream`
+  over `gemini` WRONG → PASS through the same end-of-stream error: `@google/genai` 2.30.0 still drops the provider's
+  error event ([upstream](https://github.com/googleapis/js-genai/issues/2087)).
 - vercel-ai 7.0.179: 84 PASS and 16 UNSUPPORTED of 100 cells
   ([results/vercel-ai/7.0.179.json](results/vercel-ai/7.0.179.json)). No grade changes from 7.0.173.
 - OpenAI Python SDK 3.52.0: 47 PASS, 3 LOSSY and 50 UNSUPPORTED of 100 cells. A Chat Completions stream that ends
   without its finish chunk ends like a complete one (`stream.missing-finish` on OpenAI Chat and OpenAI-compatible
   Ollama), and `responses.parse()` raises a validation error, without a finish, on a response cut at the token
-  limit (`truncation.structured-output` on Responses).
+  limit (`truncation.structured-output` on Responses,
+  [upstream](https://github.com/openai/openai-python/issues/2486)).
 - any-llm 1.51.0: 87 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 100 cells
   ([results/any-llm/1.51.0.json](results/any-llm/1.51.0.json)). No grade changes from 1.50.0.
 - litellm 1.109.1 with `openai` 3.51.0: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
