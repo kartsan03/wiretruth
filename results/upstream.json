@@ -173,7 +173,7 @@
     "status": "confirmed",
     "fixed_in": null,
     "opened": "2025-07-22",
-    "notes": "Existing upstream issue, not opened by wiretruth. client.responses.parse(text_format=...) parses output_text without checking the response status, so a response cut at max_output_tokens raises pydantic's ValidationError (EOF while parsing) and the Response, with its status, incomplete_details and usage, never reaches the caller (https://github.com/openai/openai-python/blob/v3.57.0/src/openai/lib/_parsing/_responses.py#L75). Chat Completions' parse() raises LengthFinishReasonError instead (https://github.com/openai/openai-python/blob/v3.57.0/src/openai/lib/_parsing/_completions.py#L109-L110), so those cells pass. An OpenAI maintainer scoped the fix on 2026-09-21, together with the streaming case; outside PRs #3378, #3427 and #3538 are open. Reproduced on 3.57.0 with the recorded fixture."
+    "notes": "Existing upstream issue, not opened by wiretruth. client.responses.parse(text_format=...) parses output_text without checking the response status, so a response cut at max_output_tokens raises pydantic's ValidationError (EOF while parsing) and the Response, with its status, incomplete_details and usage, never reaches the caller (https://github.com/openai/openai-python/blob/v3.57.0/src/openai/lib/_parsing/_responses.py#L75). Chat Completions' parse() raises LengthFinishReasonError instead (https://github.com/openai/openai-python/blob/v3.57.0/src/openai/lib/_parsing/_completions.py#L109-L110), so those cells pass. An OpenAI maintainer scoped the fix on 2026-09-21, together with the streaming case; outside PRs #3378, #3427 and #3538 are open. Reproduced on 3.57.0 with the recorded fixture: https://github.com/openai/openai-python/issues/2486#issuecomment-7059282522."
   },
   {
     "library": "pydantic-ai",
@@ -245,22 +245,22 @@
     "library": "pydantic-ai",
     "scenarios": ["truncation.tool-call-args", "truncation.tool-call-args-stream"],
     "providers": ["openai-chat", "openai-responses"],
-    "issue": "https://github.com/pydantic/pydantic-ai/issues/12399",
+    "issue": "https://github.com/pydantic/pydantic-ai/issues/14120",
     "pr": null,
     "status": "reported",
     "fixed_in": null,
-    "opened": "2026-11-10",
-    "notes": "Reported in a comment on the token-limit issue: https://github.com/pydantic/pydantic-ai/issues/12399#issuecomment-6780480981. Tool-call arguments cut off at the limit fail validation and end in the per-tool retry limit (UnexpectedModelBehavior: Tool 'create_event' exceeded max retries count of 0), not in IncompleteToolCall; reproduced on 2.61.0 and 2.66.0 with an ExternalToolset. Unchanged on 2.68.0, where https://github.com/pydantic/pydantic-ai/pull/12407 closed the issue without changing the per-tool path, and on 2.71.0: https://github.com/pydantic/pydantic-ai/pull/13125 (2.70.0) checks for a cut-off call only on the output-tool path, and the shim declares its tools as external (deferred) tools."
+    "opened": "2026-11-21",
+    "notes": "Tool-call arguments cut off at the token limit (JSON that doesn't parse) in an external (deferred) tool call end in the per-tool retry limit (UnexpectedModelBehavior: Tool 'create_event' exceeded max retries count of 0), not in IncompleteToolCall: _collect_deferred_calls re-raises without the check_incomplete_tool_call() that the function-tool path has (https://github.com/pydantic/pydantic-ai/blob/v2.71.0/pydantic_ai_slim/pydantic_ai/_tool_execution.py#L776-L779). First reported on 2026-11-10 in a comment on the token-limit issue (https://github.com/pydantic/pydantic-ai/issues/12399#issuecomment-6780480981, 2.66.0); unchanged on 2.71.0."
   },
   {
     "library": "pydantic-ai",
     "scenarios": ["truncation.tool-call-args-stream"],
     "providers": ["anthropic"],
-    "issue": "https://github.com/pydantic/pydantic-ai/issues/12399",
+    "issue": "https://github.com/pydantic/pydantic-ai/issues/14120",
     "pr": null,
     "status": "reported",
     "fixed_in": null,
-    "opened": "2026-11-10",
+    "opened": "2026-11-21",
     "notes": "Same report as the entry above, for the streamed Anthropic cell (the non-streamed Anthropic cell passes)."
   },
   {
