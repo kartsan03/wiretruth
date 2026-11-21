@@ -235,11 +235,11 @@
     "scenarios": ["truncation.structured-output-forced-tool"],
     "providers": ["anthropic"],
     "issue": "https://github.com/pydantic/pydantic-ai/issues/12399",
-    "pr": "https://github.com/pydantic/pydantic-ai/pull/13125",
-    "status": "documented-behavior",
+    "pr": null,
+    "status": "confirmed",
     "fixed_in": null,
     "opened": "2026-11-03",
-    "notes": "Existing upstream issue, opened by a maintainer, not by wiretruth. Structured output through a forced tool goes through the output-tool path. https://github.com/pydantic/pydantic-ai/pull/13125 (2.70.0) raises IncompleteToolCall right away when cut-off output tool arguments don't parse, and keeps the retry on purpose for arguments that parse but fail the schema (\"Arguments that parse but that the schema or an output validator rejects keep their retry\"). Its test test_output_tool_args_that_parse_but_are_rejected_with_finish_reason_length_are_retried covers exactly a finish_reason 'length' with arguments that parse, and its recording notes say Anthropic returns a cut-off tool input as a parsed object. This Anthropic fixture's input parses ({\"islands\": [{\"name\": ...}]}) and fails the schema, so on 2.71.0 the run ends in UnexpectedModelBehavior('Exceeded maximum output retries (1)'): https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.71.0.json."
+    "notes": "Existing upstream issue, opened by a maintainer, not by wiretruth. Structured output through a forced tool goes through the output-tool path. https://github.com/pydantic/pydantic-ai/pull/13125 (2.70.0) raises IncompleteToolCall right away when cut-off output tool arguments don't parse, and keeps the retry for arguments that parse but fail the schema; its test test_output_tool_args_that_parse_but_are_rejected_with_finish_reason_length_are_retried covers a finish_reason 'length' response whose arguments parse, and its recording notes say Anthropic returns a cut-off tool input as a parsed object. This Anthropic fixture's input parses and fails the schema, so on 2.71.0 the run still ends in UnexpectedModelBehavior('Exceeded maximum output retries (1)'), not a token-limit error: https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.71.0.json. The maintainers haven't said whether this case is intended."
   },
   {
     "library": "pydantic-ai",
