@@ -2,7 +2,7 @@
   "format": "wiretruth.shim/v1",
   "name": "openai-python",
   "language": "python",
-  "packages": {"openai": "3.52.0"},
+  "packages": {"openai": "3.57.0"},
   "primary_package": "openai",
   "entry": ["python", "shim.py"],
   "providers": {
