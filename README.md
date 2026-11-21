@@ -34,11 +34,15 @@ the same bytes:
 
 | Library | What the caller gets | Grade |
 |---|---|---|
-| [LiteLLM](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.109.1.json) | Returns the response with `incomplete_details.reason: "max_output_tokens"`, the cut-off JSON as text and the token usage, and parses none of it. | ✓ PASS |
-| [pydantic-ai](https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.68.0.json) | Raises `OutputTokenLimitExceeded`, which names the token limit. The cut-off text and the usage are only in the messages that `capture_run_messages()` keeps. | ✓ PASS |
-| [Vercel AI SDK](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.173.json) | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
-| [any-llm](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.51.0.json) | Raises pydantic's `ValidationError` ("Invalid JSON: EOF while parsing a string"), with no finish reason and no usage. | ~ LOSSY |
-| [OpenAI Python SDK](https://github.com/kartsan03/wiretruth/blob/main/results/openai-python/3.52.0.json) | `responses.parse()` raises pydantic's `ValidationError` ("Invalid JSON: EOF while parsing a string"), with no finish reason and no usage. | ~ LOSSY |
+| [LiteLLM](https://github.com/kartsan03/wiretruth/blob/main/results/litellm/1.110.2.json) | Returns the response with `incomplete_details.reason: "max_output_tokens"`, the cut-off JSON as text and the token usage, and parses none of it. | ✓ PASS |
+| [pydantic-ai](https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.71.0.json) | Raises `OutputTokenLimitExceeded`, which names the token limit. The cut-off text and the usage are only in the messages that `capture_run_messages()` keeps. | ✓ PASS |
+| [Vercel AI SDK](https://github.com/kartsan03/wiretruth/blob/main/results/vercel-ai/7.0.179.json) | Raises `NoObjectGeneratedError` with `finishReason: "length"` and the token usage. | ✓ PASS |
+| [any-llm](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.53.1.json) | Raises pydantic's `ValidationError` ("Invalid JSON: EOF while parsing a string"), with no finish reason and no usage. | ~ LOSSY |
+| [OpenAI Python SDK](https://github.com/kartsan03/wiretruth/blob/main/results/openai-python/3.57.0.json) | `responses.parse()` raises pydantic's `ValidationError` ("Invalid JSON: EOF while parsing a string"), with no finish reason and no usage. | ~ LOSSY |
+
+The last two rows are one known bug: any-llm calls the OpenAI SDK's `responses.parse()`, which parses the text
+without checking the response status ([openai/openai-python#2486](https://github.com/openai/openai-python/issues/2486),
+open upstream).
 
 The table is a snapshot: each library name links to the results file its row comes from, and the
 [scenario page](https://kartsan03.github.io/wiretruth/scenarios/truncation.structured-output.html) shows the current
