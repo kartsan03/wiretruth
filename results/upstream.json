@@ -239,7 +239,7 @@
     "status": "documented-behavior",
     "fixed_in": null,
     "opened": "2026-11-03",
-    "notes": "Existing upstream issue, opened by a maintainer, not by wiretruth. Structured output through a forced tool goes through the output-tool path. https://github.com/pydantic/pydantic-ai/pull/13125 (2.70.0) raises IncompleteToolCall right away when cut-off output tool arguments don't parse, and keeps the retry on purpose for arguments that parse but fail the schema (\"Arguments that parse but that the schema or an output validator rejects keep their retry\"). Anthropic returns the cut-off input as an object, which parses, so on 2.71.0 the run still ends in UnexpectedModelBehavior('Exceeded maximum output retries (1)')."
+    "notes": "Existing upstream issue, opened by a maintainer, not by wiretruth. Structured output through a forced tool goes through the output-tool path. https://github.com/pydantic/pydantic-ai/pull/13125 (2.70.0) raises IncompleteToolCall right away when cut-off output tool arguments don't parse, and keeps the retry on purpose for arguments that parse but fail the schema (\"Arguments that parse but that the schema or an output validator rejects keep their retry\"). Its test test_output_tool_args_that_parse_but_are_rejected_with_finish_reason_length_are_retried covers exactly a finish_reason 'length' with arguments that parse, and its recording notes say Anthropic returns a cut-off tool input as a parsed object. This Anthropic fixture's input parses ({\"islands\": [{\"name\": ...}]}) and fails the schema, so on 2.71.0 the run ends in UnexpectedModelBehavior('Exceeded maximum output retries (1)'): https://github.com/kartsan03/wiretruth/blob/main/results/pydantic-ai/2.71.0.json."
   },
   {
     "library": "pydantic-ai",
@@ -250,7 +250,7 @@
     "status": "reported",
     "fixed_in": null,
     "opened": "2026-11-10",
-    "notes": "Reported in a comment on the token-limit issue: https://github.com/pydantic/pydantic-ai/issues/12399#issuecomment-6780480981. Tool-call arguments cut off at the limit fail validation and end in the per-tool retry limit (UnexpectedModelBehavior: Tool 'create_event' exceeded max retries count of 0), not in IncompleteToolCall; reproduced on 2.61.0 and 2.66.0 with an ExternalToolset. Unchanged on 2.68.0, where https://github.com/pydantic/pydantic-ai/pull/12407 closed the issue without changing the per-tool path."
+    "notes": "Reported in a comment on the token-limit issue: https://github.com/pydantic/pydantic-ai/issues/12399#issuecomment-6780480981. Tool-call arguments cut off at the limit fail validation and end in the per-tool retry limit (UnexpectedModelBehavior: Tool 'create_event' exceeded max retries count of 0), not in IncompleteToolCall; reproduced on 2.61.0 and 2.66.0 with an ExternalToolset. Unchanged on 2.68.0, where https://github.com/pydantic/pydantic-ai/pull/12407 closed the issue without changing the per-tool path, and on 2.71.0: https://github.com/pydantic/pydantic-ai/pull/13125 (2.70.0) checks for a cut-off call only on the output-tool path, and the shim declares its tools as external (deferred) tools."
   },
   {
     "library": "pydantic-ai",

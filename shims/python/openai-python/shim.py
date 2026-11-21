@@ -263,7 +263,7 @@ else:
         else:
             obs["notes"].append(f"The chosen SDK call has no mapped switch for extra.{hint}.")
     try:
-        # https://github.com/openai/openai-python/blob/v3.52.0/README.md#configuring-the-http-client
+        # https://github.com/openai/openai-python/blob/v3.57.0/README.md#configuring-the-http-client
         with (
             redirect_stdout(sys.stderr),
             OpenAI(
@@ -273,17 +273,17 @@ else:
         ):
             if structured:
                 if responses:
-                    # https://github.com/openai/openai-python/blob/v3.52.0/helpers.md#parsing-responses-api-output
+                    # https://github.com/openai/openai-python/blob/v3.57.0/helpers.md#parsing-responses-api-output
                     result = client.responses.parse(**params)
                 else:
-                    # https://github.com/openai/openai-python/blob/v3.52.0/helpers.md#auto-parsing-response-content-with-pydantic-models
+                    # https://github.com/openai/openai-python/blob/v3.57.0/helpers.md#auto-parsing-response-content-with-pydantic-models
                     result = client.chat.completions.parse(**params)
             elif responses:
-                # https://github.com/openai/openai-python/blob/v3.52.0/README.md#streaming-responses
-                # https://github.com/openai/openai-python/blob/v3.52.0/README.md#usage
+                # https://github.com/openai/openai-python/blob/v3.57.0/README.md#streaming-responses
+                # https://github.com/openai/openai-python/blob/v3.57.0/README.md#usage
                 result = client.responses.create(**params)
             else:
-                # https://github.com/openai/openai-python/blob/v3.52.0/api.md#completions-1
+                # https://github.com/openai/openai-python/blob/v3.57.0/api.md#completions-1
                 # https://docs.ollama.com/api/openai-compatibility
                 result = client.chat.completions.create(**params)
             if not call["stream"]:
