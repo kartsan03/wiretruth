@@ -74,6 +74,10 @@
       "category": "validation"
     },
     {
+      "type": "pydantic_ai.exceptions.ModelRequestRejectedError",
+      "category": "validation"
+    },
+    {
       "type": "pydantic_ai.exceptions.ModelHTTPError",
       "category": "api"
     },
