@@ -11,6 +11,8 @@ finding).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-21
+
 ### Added
 - `docs/writing-a-shim.md`: how to write a shim, with the rules, the environment, a complete example on the ollama
   Python client, local testing and submitting. `shims/README.md`, the README, CONTRIBUTING and the new-library form
@@ -414,7 +416,8 @@ finding).
 - any-llm 1.33.0, the first library results: PASS on all three truncation scenarios on `openai-chat`
   ([results/any-llm/1.33.0.json](results/any-llm/1.33.0.json)).
 
-[Unreleased]: https://github.com/kartsan03/wiretruth/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/kartsan03/wiretruth/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/kartsan03/wiretruth/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/kartsan03/wiretruth/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/kartsan03/wiretruth/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/kartsan03/wiretruth/compare/v0.1.0...v0.2.0
