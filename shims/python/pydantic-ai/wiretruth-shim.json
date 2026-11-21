@@ -3,9 +3,9 @@
   "name": "pydantic-ai",
   "language": "python",
   "packages": {
-    "pydantic-ai-slim": "2.68.0",
-    "openai": "3.51.0",
-    "anthropic": "2.8.0",
+    "pydantic-ai-slim": "2.71.0",
+    "openai": "3.57.0",
+    "anthropic": "2.12.0",
     "google-genai": "2.34.0"
   },
   "primary_package": "pydantic-ai-slim",
