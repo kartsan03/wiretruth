@@ -85,7 +85,18 @@
     "status": "reported",
     "fixed_in": null,
     "opened": "2026-11-10",
-    "notes": "A stream that ends before the provider's terminal signal returns the partial chunks normally, with no error and no incomplete flag (reproduced on 1.40.2, 1.50.0 and 1.51.0). The OpenAI Responses path reports the output item as incomplete and passes. https://github.com/mozilla-ai/any-llm/pull/1645 (merged 2026-11-16, after 1.51.0) fixes the same case in the messages() bridge only; its description says completion() streams are unchanged, and the shim calls completion()."
+    "notes": "A stream that ends before the provider's terminal signal returns the partial chunks normally, with no error and no incomplete flag (reproduced on 1.40.2, 1.50.0, 1.51.0 and 1.53.1). The OpenAI Responses path reports the output item as incomplete and passes. https://github.com/mozilla-ai/any-llm/pull/1645 (merged 2026-11-16, after 1.51.0) fixes the same case in the messages() bridge only; its description says completion() streams are unchanged, and the shim calls completion(). Outside PRs https://github.com/mozilla-ai/any-llm/pull/1661 (Ollama) and https://github.com/mozilla-ai/any-llm/pull/1666 (OpenAI Chat) are open."
+  },
+  {
+    "library": "any-llm",
+    "scenarios": ["truncation.structured-output"],
+    "providers": ["openai-responses"],
+    "issue": "https://github.com/openai/openai-python/issues/2486",
+    "pr": null,
+    "status": "confirmed",
+    "fixed_in": null,
+    "opened": "2025-07-22",
+    "notes": "Existing upstream issue in a dependency, not opened by wiretruth. any-llm's OpenAI provider calls self.client.responses.parse(text_format=...) (https://github.com/mozilla-ai/any-llm/blob/1.53.1/src/any_llm/providers/openai/base.py#L334), so it inherits the OpenAI SDK's behavior (the openai-python entry): a ValidationError with no finish reason and no usage."
   },
   {
     "library": "litellm",
@@ -118,7 +129,7 @@
     "status": "fix-merged",
     "fixed_in": null,
     "opened": "2026-07-17",
-    "notes": "Existing upstream issue, not opened by wiretruth. Native Ollama sends function.index 0 and 1 in separate chunks; LiteLLM does not lift that field to the delta tool-call index. Delta resets its default index to zero for each chunk, so ordinary index-based assembly merges two argument objects into one unparseable call (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/types/utils.py#L1555-L1573). The Ollama parser also replaces the wire ids with UUIDs, reported separately as https://github.com/BerriAI/litellm/issues/46543. Closed upstream on 2026-11-09: https://github.com/BerriAI/litellm/pull/49183 gives each streamed tool call its own index on main, and the backport https://github.com/BerriAI/litellm/pull/50718 shipped in v1.108.5 on the lts/1.108.x line. v1.109.0, the version tested, was branched from main on 2026-11-02, before #49183 merged, so it contains neither; the status stays fix-merged until a release the shim can use contains the fix. The cell stays WRONG until the replaced ids (https://github.com/BerriAI/litellm/issues/46543) are fixed too."
+    "notes": "Existing upstream issue, not opened by wiretruth. Native Ollama sends function.index 0 and 1 in separate chunks; LiteLLM does not lift that field to the delta tool-call index. Delta resets its default index to zero for each chunk, so ordinary index-based assembly merges two argument objects into one unparseable call (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/types/utils.py#L1555-L1573). The Ollama parser also replaces the wire ids with UUIDs, reported separately as https://github.com/BerriAI/litellm/issues/46543. Closed upstream on 2026-11-09: https://github.com/BerriAI/litellm/pull/49183 gives each streamed tool call its own index on main, and the backport https://github.com/BerriAI/litellm/pull/50718 shipped in v1.108.5 on the lts/1.108.x line. v1.109.0, the version tested, was branched from main on 2026-11-02, before #49183 merged, so it contains neither; the status stays fix-merged until a release the shim can use contains the fix. The cell stays WRONG until the replaced ids (https://github.com/BerriAI/litellm/issues/46543) are fixed too. v1.111.0-rc.3 contains #49183; v1.110.2, the version tested on 2026-11-21, does not."
   },
   {
     "library": "litellm",
@@ -136,11 +147,11 @@
     "scenarios": ["stream.missing-finish"],
     "providers": ["gemini"],
     "issue": "https://github.com/BerriAI/litellm/issues/46542",
-    "pr": null,
-    "status": "reported",
+    "pr": "https://github.com/BerriAI/litellm/pull/53187",
+    "status": "fix-merged",
     "fixed_in": null,
     "opened": "2026-10-14",
-    "notes": "Still reported as stop in 1.109.0. The Gemini stream parser gives every chunk without finishReason finish_reason stop (_check_finish_reason falls back to stop: https://github.com/BerriAI/litellm/blob/v1.109.0/litellm/llms/vertex_ai/gemini/vertex_and_google_ai_studio_gemini.py#L2477-L2490), so the wrapper sees a finish reason on every chunk and the end-of-stream check from #47665 never runs."
+    "notes": "Still reported as stop in 1.109.0. The Gemini stream parser gives every chunk without finishReason finish_reason stop (_check_finish_reason falls back to stop: https://github.com/BerriAI/litellm/blob/v1.109.0/litellm/llms/vertex_ai/gemini/vertex_and_google_ai_studio_gemini.py#L2477-L2490), so the wrapper sees a finish reason on every chunk and the end-of-stream check from #47665 never runs. https://github.com/BerriAI/litellm/pull/53187 (merged on main 2026-11-21, doesn't link the issue) fails a Gemini stream cut before its finish reason; v1.110.2 (tested, still stop) and v1.111.0-rc.3 predate it."
   },
   {
     "library": "litellm",
@@ -152,6 +163,17 @@
     "fixed_in": null,
     "opened": "2026-10-14",
     "notes": "The native Ollama streaming parser replaces each tool-call id that Ollama sends with a random UUID once the arguments look complete (https://github.com/BerriAI/litellm/blob/v1.105.1/litellm/llms/ollama/chat/transformation.py#L480-L489). Separate from the index-0 merge in https://github.com/BerriAI/litellm/issues/33678; fixing that one alone leaves the ids wrong."
+  },
+  {
+    "library": "openai-python",
+    "scenarios": ["truncation.structured-output"],
+    "providers": ["openai-responses"],
+    "issue": "https://github.com/openai/openai-python/issues/2486",
+    "pr": null,
+    "status": "confirmed",
+    "fixed_in": null,
+    "opened": "2025-07-22",
+    "notes": "Existing upstream issue, not opened by wiretruth. client.responses.parse(text_format=...) parses output_text without checking the response status, so a response cut at max_output_tokens raises pydantic's ValidationError (EOF while parsing) and the Response, with its status, incomplete_details and usage, never reaches the caller (https://github.com/openai/openai-python/blob/v3.57.0/src/openai/lib/_parsing/_responses.py#L75). Chat Completions' parse() raises LengthFinishReasonError instead (https://github.com/openai/openai-python/blob/v3.57.0/src/openai/lib/_parsing/_completions.py#L109-L110), so those cells pass. An OpenAI maintainer scoped the fix on 2026-09-21, together with the streaming case; outside PRs #3378, #3427 and #3538 are open. Reproduced on 3.57.0 with the recorded fixture."
   },
   {
     "library": "pydantic-ai",
@@ -169,11 +191,11 @@
     "scenarios": ["request.max-tokens-ollama-openai"],
     "providers": ["ollama-openai"],
     "issue": "https://github.com/ollama/ollama/issues/7125",
-    "pr": "https://github.com/ollama/ollama/pull/18604",
-    "status": "reported",
-    "fixed_in": null,
+    "pr": "https://github.com/pydantic/pydantic-ai/pull/12552",
+    "status": "released",
+    "fixed_in": "2.69.0",
     "opened": "2024-10-08",
-    "notes": "Existing upstream issue, not opened by wiretruth. Ollama's OpenAI-compatible endpoint ignores max_completion_tokens (v0.40.3), and OllamaModel sends only that name (OllamaProvider keeps the OpenAI profile default, openai_chat_supports_max_completion_tokens=True), so the limit never applies. The root cause is in Ollama, as for any-llm; the check reads the request, so retire or rewrite the scenario when Ollama ships the fix."
+    "notes": "Existing upstream issue, not opened by wiretruth. Ollama's OpenAI-compatible endpoint ignores max_completion_tokens (v0.40.3). Up to 2.68.0 OllamaModel sent only that name (OllamaProvider kept the OpenAI profile default, openai_chat_supports_max_completion_tokens=True), so the limit never applied. The root cause is in Ollama, as for any-llm; the check reads the request. pydantic-ai worked around it in https://github.com/pydantic/pydantic-ai/pull/12552 (2.69.0): OllamaModel now sends the limit as max_tokens, so the cell is PASS on 2.71.0. Ollama's own fix (https://github.com/ollama/ollama/pull/18604) is still open, and the any-llm entry stays."
   },
   {
     "library": "pydantic-ai",
@@ -191,11 +213,11 @@
     "scenarios": ["stream.missing-finish"],
     "providers": ["anthropic", "gemini", "openai-responses"],
     "issue": "https://github.com/pydantic/pydantic-ai/issues/10382",
-    "pr": null,
+    "pr": "https://github.com/pydantic/pydantic-ai/pull/14086",
     "status": "confirmed",
     "fixed_in": null,
     "opened": "2026-10-15",
-    "notes": "A stream that ends cleanly before the provider's terminal event finishes with ModelResponse.state 'complete' and finish_reason None, although the docs define 'incomplete' as a streamed response stopped before completion. Responses marks the response incomplete, but _ContinuationStreamedResponse.get() replaces it with complete once iteration ends; the Anthropic and Google adapters never set incomplete. The Chat Completions case is #6610 (documented-behavior). pydantic-ai's triage bot reproduced all three adapters and labelled the issue p:2-high and needs-maintainer-discussion (2026-10-25): the open question is whether a stream that ends before the provider's terminal event should report state 'incomplete'."
+    "notes": "A stream that ends cleanly before the provider's terminal event finishes with ModelResponse.state 'complete' and finish_reason None, although the docs define 'incomplete' as a streamed response stopped before completion. Responses marks the response incomplete, but _ContinuationStreamedResponse.get() replaces it with complete once iteration ends; the Anthropic and Google adapters never set incomplete. The Chat Completions case is #6610 (documented-behavior). pydantic-ai's triage bot reproduced all three adapters and labelled the issue p:2-high and needs-maintainer-discussion (2026-10-25): the open question is whether a stream that ends before the provider's terminal event should report state 'incomplete'. On 2026-11-20 a maintainer chose to report state 'incomplete' without raising on Responses, Anthropic and Google; fix PR https://github.com/pydantic/pydantic-ai/pull/14086 is open."
   },
   {
     "library": "pydantic-ai",
@@ -213,11 +235,11 @@
     "scenarios": ["truncation.structured-output-forced-tool"],
     "providers": ["anthropic"],
     "issue": "https://github.com/pydantic/pydantic-ai/issues/12399",
-    "pr": null,
-    "status": "confirmed",
+    "pr": "https://github.com/pydantic/pydantic-ai/pull/13125",
+    "status": "documented-behavior",
     "fixed_in": null,
     "opened": "2026-11-03",
-    "notes": "Existing upstream issue, opened by a maintainer, not by wiretruth. Structured output through a forced tool goes through the tool-call path: on 2.68.0 it still ends in UnexpectedModelBehavior, not OutputTokenLimitExceeded, although https://github.com/pydantic/pydantic-ai/pull/12407 closed the issue."
+    "notes": "Existing upstream issue, opened by a maintainer, not by wiretruth. Structured output through a forced tool goes through the output-tool path. https://github.com/pydantic/pydantic-ai/pull/13125 (2.70.0) raises IncompleteToolCall right away when cut-off output tool arguments don't parse, and keeps the retry on purpose for arguments that parse but fail the schema (\"Arguments that parse but that the schema or an output validator rejects keep their retry\"). Anthropic returns the cut-off input as an object, which parses, so on 2.71.0 the run still ends in UnexpectedModelBehavior('Exceeded maximum output retries (1)')."
   },
   {
     "library": "pydantic-ai",
@@ -272,7 +294,7 @@
     "status": "confirmed",
     "fixed_in": null,
     "opened": "2026-10-21",
-    "notes": "The cause is in @google/genai, which @tanstack/ai-gemini streams through: processStreamResponse checks for an error object with JSON.parse on the raw network read, before the SSE data: prefix is removed, so an error event never matches; generateContentResponseFromMldev then drops the error field. chat() yields the partial text and ends with no RUN_ERROR or RUN_FINISHED. A bare JSON error body does throw ApiError. Google reproduced it on 2026-10-22 and opened #2094. The Gemini error-event fixture is derived (an error object injected into a recorded stream); no live mid-stream Gemini error has been observed."
+    "notes": "The cause is in @google/genai, which @tanstack/ai-gemini streams through: processStreamResponse checks for an error object with JSON.parse on the raw network read, before the SSE data: prefix is removed, so an error event never matches; generateContentResponseFromMldev then drops the error field. chat() yields the partial text and ends with no RUN_ERROR or RUN_FINISHED. A bare JSON error body does throw ApiError. Google reproduced it on 2026-10-22 and opened #2094. The Gemini error-event fixture is derived (an error object injected into a recorded stream); no live mid-stream Gemini error has been observed. Still unfixed in @google/genai 2.30.0. Since @tanstack/ai-gemini 1.2.3 (https://github.com/TanStack/ai/pull/2124) the stream that ends after the dropped event is reported as RUN_ERROR (truncated-stream), so the cell is PASS on the 1.8.0 results, although the provider's error itself is still not passed on."
   },
   {
     "library": "tanstack-ai",
@@ -302,9 +324,9 @@
     "providers": ["gemini"],
     "issue": "https://github.com/TanStack/ai/issues/2130",
     "pr": "https://github.com/TanStack/ai/pull/2124",
-    "status": "reported",
-    "fixed_in": null,
+    "status": "released",
+    "fixed_in": "@tanstack/ai-gemini 1.2.3",
     "opened": "2026-11-10",
-    "notes": "The Gemini adapter emits RUN_FINISHED only for a chunk with finishReason; a stream that ends without one stops with no terminal event and no error (@tanstack/ai-gemini 1.2.1). The Anthropic adapter got a terminal outcome for the same case in @tanstack/ai-anthropic 1.1.1 (https://github.com/TanStack/ai/pull/2042)."
+    "notes": "The Gemini adapter emits RUN_FINISHED only for a chunk with finishReason; a stream that ends without one stops with no terminal event and no error (@tanstack/ai-gemini 1.2.1). The Anthropic adapter got a terminal outcome for the same case in @tanstack/ai-anthropic 1.1.1 (https://github.com/TanStack/ai/pull/2042). Fixed by https://github.com/TanStack/ai/pull/2124 (@tanstack/ai-gemini 1.2.3), an outside PR that doesn't link the issue: such a stream now ends with RUN_ERROR (truncated-stream, \"Gemini stream ended without a finishReason\"); the cell is PASS on the 1.8.0 results."
   }
 ]
