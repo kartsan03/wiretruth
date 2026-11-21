@@ -30,6 +30,10 @@ finding).
   90 days pass.
 
 ### Results
+- pydantic-ai 2.71.0: 69 PASS, 11 LOSSY, 5 WRONG and 15 UNSUPPORTED of 100 cells
+  ([results/pydantic-ai/2.71.0.json](results/pydantic-ai/2.71.0.json)). Grade changes from 2.68.0:
+  `request.max-tokens-ollama-openai` over `ollama-openai` WRONG → PASS
+  ([upstream](https://github.com/ollama/ollama/issues/7125)).
 - any-llm 1.53.1: 87 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 100 cells
   ([results/any-llm/1.53.1.json](results/any-llm/1.53.1.json)). No grade changes from 1.51.0.
 - litellm 1.110.2: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
