@@ -30,6 +30,19 @@ finding).
   90 days pass.
 
 ### Results
+- any-llm 1.53.1: 87 PASS, 6 LOSSY, 6 WRONG and 1 UNSUPPORTED of 100 cells
+  ([results/any-llm/1.53.1.json](results/any-llm/1.53.1.json)). No grade changes from 1.51.0.
+- litellm 1.110.2: 90 PASS, 9 WRONG and 1 UNSUPPORTED of 100 cells
+  ([results/litellm/1.110.2.json](results/litellm/1.110.2.json)). No grade changes from 1.109.1.
+- openai-python 3.57.0: 47 PASS, 3 LOSSY and 50 UNSUPPORTED of 100 cells
+  ([results/openai-python/3.57.0.json](results/openai-python/3.57.0.json)). No grade changes from 3.52.0.
+- tanstack-ai 1.8.0: 52 PASS and 48 UNSUPPORTED of 100 cells
+  ([results/tanstack-ai/1.8.0.json](results/tanstack-ai/1.8.0.json)). Grade changes from 1.4.0:
+  `stream.error-midstream` over `gemini` WRONG → PASS
+  ([upstream](https://github.com/googleapis/js-genai/issues/2087)); `stream.missing-finish` over `gemini` LOSSY →
+  PASS ([upstream](https://github.com/TanStack/ai/issues/2130)).
+- vercel-ai 7.0.179: 84 PASS and 16 UNSUPPORTED of 100 cells
+  ([results/vercel-ai/7.0.179.json](results/vercel-ai/7.0.179.json)). No grade changes from 7.0.173.
 - OpenAI Python SDK 3.52.0: 47 PASS, 3 LOSSY and 50 UNSUPPORTED of 100 cells. A Chat Completions stream that ends
   without its finish chunk ends like a complete one (`stream.missing-finish` on OpenAI Chat and OpenAI-compatible
   Ollama), and `responses.parse()` raises a validation error, without a finish, on a response cut at the token
