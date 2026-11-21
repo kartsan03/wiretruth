@@ -235,7 +235,7 @@ which must pass every cell. The scenarios, fixtures and shims live in this repos
 clone.
 
 Releases are also on [PyPI](https://pypi.org/project/wiretruth/) (`pip install wiretruth`). The package is the
-command only, so run it inside a checkout of the matching release tag (for example `v0.4.0`); on `main`, use
+command only, so run it inside a checkout of the matching release tag (for example `v0.5.0`); on `main`, use
 `uv run` as above.
 
 ## Reproduce a cell without wiretruth
