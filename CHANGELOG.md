@@ -11,6 +11,11 @@ finding).
 
 ## [Unreleased]
 
+
+### Results
+- vercel-ai 7.0.180: 84 PASS and 16 UNSUPPORTED of 100 cells
+  ([results/vercel-ai/7.0.180.json](results/vercel-ai/7.0.180.json)). No grade changes from 7.0.179.
+
 ## [0.5.0] - 2026-11-21
 
 ### Added
