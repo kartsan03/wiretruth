@@ -11,6 +11,10 @@ finding).
 
 ## [Unreleased]
 
+### Changed
+- README: a shorter opening and Quickstart. The Quickstart sample is now a current any-llm run on one API instead of
+  a full 100-cell run of an older release, and the per-library API coverage moved to a link to `shims/README.md`.
+
 ## [0.5.0] - 2026-11-21
 
 ### Added

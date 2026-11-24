@@ -13,13 +13,12 @@ happened.
 
 wiretruth tests any-llm, LiteLLM, pydantic-ai, the Vercel AI SDK, TanStack AI and the OpenAI Python SDK across six
 APIs: OpenAI Chat Completions and Responses, Ollama's native and OpenAI-compatible endpoints, Gemini GenerateContent
-and Anthropic Messages. That is 24 scenarios and 100 cells per library. pydantic-ai and the Vercel AI SDK support
-only the OpenAI-compatible Ollama endpoint; their native Ollama cells are UNSUPPORTED. The OpenAI Python SDK speaks
-only the two OpenAI APIs and Ollama's OpenAI-compatible endpoint, so its other cells are UNSUPPORTED.
-The Anthropic responses are transcribed from Anthropic's documentation rather than recorded: each of those fixtures
-is marked `documented` and links the page it comes from. More providers and libraries follow.
-The [results matrix](https://kartsan03.github.io/wiretruth/) shows the grades from
-[`results/`](https://github.com/kartsan03/wiretruth/tree/main/results).
+and Anthropic Messages. That is 24 scenarios and 100 cells per library, shown in the
+[results matrix](https://kartsan03.github.io/wiretruth/) (rebuilt from
+[`results/`](https://github.com/kartsan03/wiretruth/tree/main/results) on every push to `main`). Some libraries don't
+speak every API, so those cells are UNSUPPORTED;
+[shims/README.md](https://github.com/kartsan03/wiretruth/blob/main/shims/README.md) lists each shim's coverage.
+Anthropic responses are transcribed from Anthropic's documentation, not recorded (see Fixture provenance below).
 
 ## Why
 
@@ -48,9 +47,6 @@ The table is a snapshot: each library name links to the results file its row com
 [scenario page](https://kartsan03.github.io/wiretruth/scenarios/truncation.structured-output.html) shows the current
 grades. TanStack AI isn't listed: its structured output streams on this API, so this non-streamed fixture is
 UNSUPPORTED there.
-
-wiretruth runs the same recorded edge cases through every library it supports and grades each one against what the
-provider sent.
 
 ## What it checks
 
@@ -81,162 +77,68 @@ The scenarios are in
 | ? | HARNESS | A problem on our side, not the library's. |
 
 Each scenario lists its requirements. MUST requirements set the grade. SHOULD requirements, such as the exact
-partial text in the truncation scenarios, add a note when they aren't met. How grades are computed:
-[docs/grading.md](https://github.com/kartsan03/wiretruth/blob/main/docs/grading.md).
-Scenario catalog: [docs/scenarios.md](https://github.com/kartsan03/wiretruth/blob/main/docs/scenarios.md).
-Fixed-bug validation: [docs/validation.md](https://github.com/kartsan03/wiretruth/blob/main/docs/validation.md).
-Common questions: [docs/faq.md](https://github.com/kartsan03/wiretruth/blob/main/docs/faq.md).
+partial text in the truncation scenarios, add a note when they aren't met. See
+[how grades are computed](https://github.com/kartsan03/wiretruth/blob/main/docs/grading.md), the
+[scenario catalog](https://github.com/kartsan03/wiretruth/blob/main/docs/scenarios.md),
+[fixed-bug validation](https://github.com/kartsan03/wiretruth/blob/main/docs/validation.md) and the
+[FAQ](https://github.com/kartsan03/wiretruth/blob/main/docs/faq.md).
 
 ## Quickstart
 
-You need Python 3.11 or newer and [uv](https://docs.astral.sh/uv/), which builds each library's own environment.
+You need Python 3.11+ and [uv](https://docs.astral.sh/uv/). Node.js and npm are needed only for the Vercel AI SDK
+and TanStack AI shims; the runner builds their pinned dependencies itself. Everything runs against stored responses
+on `127.0.0.1` with no API keys. The first run downloads the selected library into `.wiretruth/envs/` for Python or
+`node_modules` next to the shim for JavaScript, and later runs work offline.
 
 ```bash
 git clone https://github.com/kartsan03/wiretruth && cd wiretruth
-uv run wiretruth run --lib any-llm
-uv run wiretruth run --lib litellm
-uv run wiretruth run --lib pydantic-ai
-uv run wiretruth run --lib vercel-ai
-uv run wiretruth run --lib tanstack-ai
-uv run wiretruth run --lib openai-python
-uv run wiretruth site
+uv run wiretruth run --lib any-llm --provider openai-responses
 ```
 
-The Vercel AI SDK and TanStack AI shims also need Node.js and npm. The runner builds their pinned dependencies
-automatically; see [Shims](https://github.com/kartsan03/wiretruth/blob/main/shims/README.md) for supported providers and structured-output modes.
-
-The any-llm run reports (see [`results/any-llm/1.40.2.json`](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.40.2.json)):
+This prints any-llm's `openai-responses` cells (full results in
+[`results/any-llm/1.53.1.json`](https://github.com/kartsan03/wiretruth/blob/main/results/any-llm/1.53.1.json)):
 
 ```text
-scenario                                  anthropic      gemini   ollama   ollama-openai  openai-chat  openai-responses
-finish.stop-sequence                      ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS
-finish.unknown-value                      ✗ WRONG        ✗ WRONG  ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
-request.max-tokens-field                                                                  ✓ PASS
-request.max-tokens-ollama-openai                                           ✗ WRONG
-request.no-injected-options                                       ✓ PASS
-request.tools-with-reasoning-chat                                                         ✓ PASS
-stream.error-midstream                    ✓ PASS         ✓ PASS   ✓ PASS                  ✓ PASS       ✓ PASS
-stream.missing-finish                     ~ LOSSY        ~ LOSSY  ~ LOSSY  ~ LOSSY        ~ LOSSY      ✓ PASS
-stream.missing-finish-abort               ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-stream.utf8                               ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-stream.utf8-split                         ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-tools.parallel-calls                      ✓ PASS         ✓ PASS   ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
-tools.parallel-calls-stream               ✓ PASS         ✓ PASS   ✗ WRONG  ✓ PASS         ✓ PASS       ✓ PASS
-truncation.reasoning-only                 ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-truncation.structured-output              ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ~ LOSSY
-truncation.structured-output-forced-tool  – UNSUPPORTED
-truncation.text                           ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-truncation.text-stream                    ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS       ✓ PASS
-truncation.text-stream-usage                             ✓ PASS                           ✓ PASS
-truncation.tool-call-args                 ✓ PASS                                          ✓ PASS       ✓ PASS
-truncation.tool-call-args-stream          ✓ PASS                                          ✓ PASS       ✓ PASS
-usage.cached-tokens                       ✓ PASS                                          ✓ PASS       ✓ PASS
-usage.reasoning-tokens                    ✓ PASS         ✓ PASS                           ✓ PASS       ✓ PASS
-usage.stream-final-chunk                  ✓ PASS         ✓ PASS   ✓ PASS   ✓ PASS         ✓ PASS
-
-finish.stop-sequence gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-finish.unknown-value anthropic
-  MUST finish-is-other: CONTRADICTED: finish.value="stop" (primary: choices[0].finish_reason); truth.finish="other"; required finish="other"
-  SHOULD raw-finish-reported: CONTRADICTED: finish.raw="stop"; truth.raw_finish="WIRETRUTH_UNKNOWN_REASON"
-
-finish.unknown-value gemini
-  MUST finish-is-other: CONTRADICTED: finish.value="stop" (primary: choices[0].finish_reason); truth.finish="other"; required finish="other"
-  SHOULD raw-finish-reported: CONTRADICTED: finish.raw="stop"; truth.raw_finish="WIRETRUTH_UNKNOWN_REASON"
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-finish.unknown-value ollama
-  MUST finish-is-other: CONTRADICTED: finish.value="stop" (primary: choices[0].finish_reason); truth.finish="other"; required finish="other"
-  SHOULD raw-finish-reported: CONTRADICTED: finish.raw="stop"; truth.raw_finish="wiretruth_unknown_reason"
-
-request.max-tokens-ollama-openai ollama-openai
-  MUST limit-field: CONTRADICTED: request[0].json_body.max_tokens=absent; required=16
-
-stream.error-midstream gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-stream.missing-finish anthropic
-  MUST stream-incomplete: NOT_OBSERVABLE: stream.completed=null; outcome=returned; truth.stream_completed=false
-
-stream.missing-finish gemini
-  MUST stream-incomplete: NOT_OBSERVABLE: stream.completed=null; outcome=returned; truth.stream_completed=false
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-stream.missing-finish ollama
-  MUST stream-incomplete: NOT_OBSERVABLE: stream.completed=null; outcome=returned; truth.stream_completed=false
-
-stream.missing-finish ollama-openai
-  MUST stream-incomplete: NOT_OBSERVABLE: stream.completed=null; outcome=returned; truth.stream_completed=false
-
-stream.missing-finish openai-chat
-  MUST stream-incomplete: NOT_OBSERVABLE: stream.completed=null; outcome=returned; truth.stream_completed=false
-
-stream.missing-finish-abort gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-stream.utf8 gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-stream.utf8-split gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-tools.parallel-calls gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-tools.parallel-calls ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="81193cdc-7f88-4adc-8e6c-ac29f9b61b66", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_9epwsqu6", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="4e915b8d-84fe-4964-a833-09d08f617d15", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_bvzy1ra9", name="get_weather", args={"city": "Zürich"}, parsed=true
-
-tools.parallel-calls-stream gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-tools.parallel-calls-stream ollama
-  MUST calls-reported: CONTRADICTED: tool_calls[0] id="4e8b9dda-3fa3-4763-af44-dcab08600e3f", name="get_weather", args={"city": "São Paulo"}, parsed=true; truth id="call_8uaqob2r", name="get_weather", args={"city": "São Paulo"}, parsed=true; tool_calls[1] id="babaee2f-2591-4efd-bafd-5af506b87982", name="get_weather", args={"city": "Zürich"}, parsed=true; truth id="call_nyjtbrz4", name="get_weather", args={"city": "Zürich"}, parsed=true
-
-truncation.structured-output gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
+scenario                          openai-responses
+finish.unknown-value              ✓ PASS
+stream.error-midstream            ✓ PASS
+stream.missing-finish             ✓ PASS
+stream.missing-finish-abort       ✓ PASS
+stream.utf8                       ✓ PASS
+stream.utf8-split                 ✓ PASS
+tools.parallel-calls              ✓ PASS
+tools.parallel-calls-stream       ✓ PASS
+truncation.reasoning-only         ✓ PASS
+truncation.structured-output      ~ LOSSY
+truncation.text                   ✓ PASS
+truncation.text-stream            ✓ PASS
+truncation.tool-call-args         ✓ PASS
+truncation.tool-call-args-stream  ✓ PASS
+usage.cached-tokens               ✓ PASS
+usage.reasoning-tokens            ✓ PASS
 
 truncation.structured-output openai-responses
   MUST cause-is-truncation: NOT_OBSERVABLE: finish.value=null (absent); truth.finish="length"; error.category="validation"; structured.returned_as_success=false
   SHOULD text-reported: NOT_OBSERVABLE: text.value=null (absent); truth.text="{\"islands\":[{\"name\":\"Κρήτη\",\"sea\":\"Κρητικό Πέ"
   SHOULD usage-reported: NOT_OBSERVABLE: usage.input=null (absent); truth.usage.input=68; usage.output=null (absent); truth.usage.output=24
 
-truncation.structured-output-forced-tool anthropic
-  any-llm completion maps typed response_format to native output_config.format and has no structured parser for an explicitly forced tool. (https://github.com/mozilla-ai/any-llm/blob/1.40.2/src/any_llm/providers/anthropic/utils.py#L660-L686)
-
-truncation.text gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-truncation.text-stream gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-truncation.text-stream-usage gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-usage.reasoning-tokens anthropic
-  SHOULD reasoning-reported: NOT_OBSERVABLE: usage.reasoning=null (absent); truth.usage.reasoning=312
-
-usage.stream-final-chunk gemini
-  shim: Gemini reasoning_effort none is unsupported by any-llm; omitted to use the model default.
-
-any-llm 1.40.2: 100 cells, 87 PASS, 6 LOSSY, 6 WRONG, 1 UNSUPPORTED
-stderr: .wiretruth/runs/20261109T005301.682490Z
+any-llm 1.53.1: 16 cells, 15 PASS, 1 LOSSY
+stderr: .wiretruth/runs/20261124T042419.885741Z
 ```
 
-Every library's grades, with each cell's evidence, are in the [results matrix](https://kartsan03.github.io/wiretruth/),
-rebuilt from `results/` on every push to `main`. A weekly workflow runs each library's latest releases and
-proposes the new results as a pull request. TanStack AI's `chat()` always requests a streamed response, so the
-non-streamed fixtures don't apply to it.
+That LOSSY row is the same cell shown in the Why table above.
 
-No API keys are needed. Everything runs against stored responses on `127.0.0.1`. The first run downloads the
-selected library: a Python library into `.wiretruth/envs/`, a JavaScript library into `node_modules` next to its
-shim. Later runs work offline. `uv run wiretruth run --shim shims/reference` runs the built-in reference client,
-which must pass every cell. The scenarios, fixtures and shims live in this repository, so wiretruth runs from a
-clone.
+- Other `--lib` values: `litellm`, `pydantic-ai`, `vercel-ai`, `tanstack-ai` and `openai-python`.
+- Leave out `--provider` to run all 100 cells and print evidence for every cell that isn't PASS.
+- Pass `--scenario` with ids or globs, such as `--scenario 'tools.*'`, to run a subset.
+- `uv run wiretruth run --shim shims/reference` runs the built-in reference client, which must pass every cell.
+- `uv run wiretruth site` builds the matrix into `_site/`.
 
-Releases are also on [PyPI](https://pypi.org/project/wiretruth/) (`pip install wiretruth`). The package is the
-command only, so run it inside a checkout of the matching release tag (for example `v0.5.0`); on `main`, use
-`uv run` as above.
+A weekly workflow runs each library's latest releases and proposes the new results as a pull request.
+
+Releases are also on [PyPI](https://pypi.org/project/wiretruth/), where `pip install wiretruth` installs only the
+command. The scenarios, fixtures and shims live in the repository, so run it inside a checkout of the matching
+release tag (for example `v0.5.0`); on `main`, use `uv run`.
 
 ## Reproduce a cell without wiretruth
 
@@ -327,9 +229,9 @@ Every cell shows its tier. By default, re-recording keeps the old fixture in the
 ## Disclosure and upstream fixes
 
 A cell turns WRONG, CRASH or HANG on `main` only after the finding is on record upstream: an issue this project
-opened, an existing issue it links to, or the library's own documentation of the behavior. When a fix ships, the weekly run picks up the release, and the changelog's
-Results section names the fix. Every report and its status is in
-[`results/upstream.json`](https://github.com/kartsan03/wiretruth/blob/main/results/upstream.json), and each cell
+opened, an existing issue it links to, or the library's own documentation of the behavior. When a fix ships, the
+weekly run picks up the release, and the changelog's Results section names the fix. Every report and its status is
+in [`results/upstream.json`](https://github.com/kartsan03/wiretruth/blob/main/results/upstream.json), and each cell
 page on the site shows the reports for that cell. The policy:
 [docs/disclosure.md](https://github.com/kartsan03/wiretruth/blob/main/docs/disclosure.md).
 
@@ -342,10 +244,9 @@ page on the site shows the reports for that cell. The policy:
   conformance for inference engines (vLLM, llama.cpp, Ollama, …).
 - [aimock](https://github.com/CopilotKit/aimock): a mock server for testing AI apps, with record and replay. Use it
   for your app's tests; wiretruth audits the SDK layer itself.
-- [spantruth](https://github.com/Plexito-de/spantruth): a separate project, called wiretruth until 2026-10-12.
-  It replays provider responses through LLM instrumentation libraries (OpenLLMetry, OpenInference, the OpenTelemetry
-  GenAI instrumentation) and checks what they write on spans. Use it for your traces; wiretruth checks what the SDK
-  returns to the caller.
+- [spantruth](https://github.com/Plexito-de/spantruth): a separate project (called wiretruth until 2026-10-12) that
+  replays provider responses through LLM instrumentation libraries and checks what they write on spans. Use it for
+  your traces; wiretruth checks what the SDK returns to the caller.
 - The design borrows from [JSONTestSuite](https://github.com/nst/JSONTestSuite),
   [Wycheproof](https://github.com/C2SP/wycheproof), [toml-test](https://github.com/toml-lang/toml-test) and
   [compat-table](https://github.com/compat-table/compat-table).
