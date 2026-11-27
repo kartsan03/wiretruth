@@ -246,7 +246,9 @@ page on the site shows the reports for that cell. The policy:
   for your app's tests; wiretruth audits the SDK layer itself.
 - [spantruth](https://github.com/Plexito-de/spantruth): a separate project (called wiretruth until 2026-10-12) that
   replays provider responses through LLM instrumentation libraries and checks what they write on spans. Use it for
-  your traces; wiretruth checks what the SDK returns to the caller.
+  your traces; wiretruth checks what the SDK returns to the caller. A
+  [joint page on dropped streams](https://github.com/Plexito-de/spantruth/blob/main/results/2026-11-24-dropped-streams/README.md)
+  shows both layers' results for the same responses, with the wiretruth grades taken from `v0.4.0`.
 - The design borrows from [JSONTestSuite](https://github.com/nst/JSONTestSuite),
   [Wycheproof](https://github.com/C2SP/wycheproof), [toml-test](https://github.com/toml-lang/toml-test) and
   [compat-table](https://github.com/compat-table/compat-table).
